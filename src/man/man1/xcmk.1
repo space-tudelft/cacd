@@ -1,0 +1,55 @@
+.TH XCMK 1ICD "User Commands"
+.UC 4
+.SH NAME
+xcmk - extract CIRCUITMASK out of the layout database
+.SH SYNOPSIS
+.B xcmk
+[\fB-m\fP mlist]
+[\fB-hiurv\fP]
+[\fB-t\fPN]
+[\fB-f\fP ofile]
+cell
+.SH OPTIONS
+.TP
+.B -h
+To get help about program usage.
+.TP
+.B -f
+To specify an alternate output file name
+(the output file name must be next argument).
+.TP
+.B -i
+Extract also the imported cells.
+.TP
+\fB-m\fP mlist
+Use this mask list instead of the default mask list.
+.TP
+.B -r
+Only the root of the cell.
+.TP
+\fB-t\fPN
+Cell names are truncated to N (>= 4) characters.
+.TP
+.B -u
+Output is converted to upper case.
+.TP
+.B -v
+Enable verbose mode.
+.SH DESCRIPTION
+.I Xcmk
+is a program that extracts the complete (Philips) CIRCUITMASK
+layout description out of an ICD layout database.
+A cell is known as a pattern in CMK.
+The current working directory must be the project directory.
+.AU "S. de Graaf"
+.SH FILES
+.TP
+\fCICDPATH/share/lib/process/\fIproc\fP/bmlist.cmk\fP
+(def.: basic mask list)
+.TP
+\fC\&./\fIcell\fP.cmk\fP
+(default: output file)
+.SH SEE ALSO
+Circuitmask User Manual, Philips, August 1978.
+.br
+cmsk(1ICD).

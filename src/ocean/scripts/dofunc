@@ -1,0 +1,141 @@
+#!/bin/csh -f
+#
+onintr wegwezen
+
+set ccargs="" silent="y" name="" justfun="n" removeprep='' doprep='' sil=''
+set tmp = func$$
+
+#@
+#@ USAGE
+#@    dofunc [-C cc_arguments] [-hvsl] func-unit-name[.fun]
+#@
+#@ DESCRIPTION
+#@    Dofunc is an interface to the Nelsis tool "cfun" and
+#@    allows debugging of the sls executable without the
+#@    bloody #line statements that cfun generates.
+#@    Most debuggers become confused with the #line's...
+#@
+#@ OPTIONS
+#@        -C    pass arguments to the C compiler
+#@        -l    just call cfun, no shit
+#@        -k    keep the '.p' and '.c' file (don't remove)
+#@        -v    verbose mode
+#@        -s    silent mode (default)
+#@        -h    help info, print and exit
+#@ EXAMPLE
+#@       % dofunc -CI../include icache.fun
+#@
+
+# use these aliases to write error messages to stderr
+alias stderr	'sh -c "cat >&2"'
+alias msg	'echo \!* | stderr'
+alias printhelp 'sed -n -e "/^#@/s///p" $0 | stderr'
+
+################################################################################
+#		    C O M M A N D   L I N E   P A R S I N G                    #
+################################################################################
+# Reorder the command line arguments and put the new args in $newargv.  We
+# cannot test the exit status of getopt to see if an illegal argument was
+# supplied because the ``-construct does not propagate it to our csh.  So the
+# trick is to compare the number of elements in argv and newargv.
+set newargv=`getopt "hlC:svkp" $argv`
+if ( $#newargv < $#argv ) exit 1
+# Scan the elements of $newargv. The form "--" signals "end-of-arguments".  At
+# any time $thevariable is the name of the shell variable that must be set to
+# the current value of $newarg.
+set thevariable=""
+foreach newarg ( $newargv )
+    shift newargv
+    if ( $thevariable != "" ) then
+         eval set _xx_=\"\$$thevariable\" #set _xx_ to old value of $thevariable
+         set $thevariable=( $_xx_ "$newarg" ) ; set thevariable=""
+    else
+         switch ( $newarg )
+         case --:
+              set argv=($newargv) ; break
+              breaksw
+         case -C:
+              set thevariable="ccargs"
+              breaksw
+         case -s:
+              set silent="y"
+              breaksw
+         case -v:
+              set silent="n"
+              breaksw
+         case -l:
+              set justfun="y"
+              breaksw
+         case -k:
+              set removeprep="-k"
+              breaksw
+         case -p:
+              set doprep="-p"
+              breaksw
+         case -h:
+         default:
+              printhelp
+              exit 0
+         endsw
+    endif
+end
+unset newargv thevariable newarg _xx_
+# (At this point argv is free from command line options)
+
+set argc=${#argv}
+
+if ($argc == 1) then
+     set name=`dirname $1`/`basename $1 .fun`
+     if ( ! -f $name.fun ) then
+	  msg Cannot find \"$name.fun\", ciao...
+	  exit 1
+     endif
+else
+     printhelp
+     exit 1
+endif
+################################################################################
+
+if ($justfun == y) then
+     if ($silent == 'y') set sil="-s"
+     if ("$ccargs" != '') then
+        echo cfun $sil $doprep $removeprep -C\"$ccargs\" $name.fun
+        cfun $sil $doprep $removeprep -C\"$ccargs\" $name.fun
+     else
+        echo cfun $sil $doprep $removeprep $name.fun
+        cfun $sil $doprep $removeprep $name.fun
+     endif
+     exit $status
+endif
+
+# check that all elements of $ccargs start with a '-'
+set newccargs=()
+foreach carg ($ccargs)
+	set firstchar=`echo $carg | sed -e 's/\(.\).*/\1/'`
+	if ( "X$firstchar" != "X-") then
+	     set newccargs=($newccargs "-$carg")
+	else
+	     set newccargs=($newccargs "$carg")
+	endif
+end
+set ccargs=($newccargs) ; unset carg newccargs
+
+################################################################################
+# ok, we finally can go for it...
+#
+touch $name.o
+cfun $doprep -s -k "-CE $ccargs" $name.fun  > /dev/null
+if (X$removeprep != 'X-k') rm $name.p
+
+if ($silent == 'n') echo 'removing #line statements ...'
+sed -e '/^#line/d' < $name.c > $tmp || exit $status
+mv $tmp $name.c || exit $status
+if ($silent == 'n') echo "compiling with -g option:     gcc -g $ccargs -c $name.c"
+gcc -g $ccargs -c $name.c || exit $status
+if ($silent == 'n') echo "updating database:            mv  $name.o  circuit/$name/sls.o"
+mv $name.o circuit/$name/sls.o || exit $status
+exit 0
+
+wegwezen:
+rm -f $name.o $tmp
+exit 1

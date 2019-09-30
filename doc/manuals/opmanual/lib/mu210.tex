@@ -1,0 +1,83 @@
+\subsubsection{mu210}
+
+Functie: 4-line-to-1-line data selector/multiplexer
+
+Terminals: (S1, S2, A, B, C, D, Y, vss, vdd)
+
+
+IEC-symbool:
+%figuur mu210.iec.eps
+\begin{figure}[bth]
+\callpsfig{mu210.iec.eps}{width=.31\textwidth}
+\end{figure}
+
+Waarheidstabel:
+\begin{table}[bth]
+\begin{tabular}{|cc|cccc||c|}
+\hline
+S2	&S1	&A 	&B	&C	&D	&Y\\
+\hline
+L	&L	&L	&-	&-	&-	&L\\
+L	&L	&H	&-	&-	&-	&H\\
+L	&H	&- 	&L	&-	&-	&L\\
+L	&H	&-	&H	&-	&-	&H\\
+H	&L	&-	&-	&L	&-	&L\\
+H	&L	&-	&-	&H	&-	&H\\
+H	&H	&-	&-	&-	&L	&L\\
+H	&H	&-	&-	&-	&H	&H\\
+\hline
+\end{tabular}
+\vspace{.5cm}
+
+	
+Timing parameters:\\
+
+\begin{tabular}{|c|cc|ccc|c|}
+\hline
+Parameter		&From		&To 	&Min	&Typ	&Max	&Unit\\
+\hline
+T$_{PLH}$		&A, B, C, D, S1	&Y	&0.88	&1.3	&2.0	&ns\\
+T$_{PHL}$		&A, B, C, D, S1	&Y	&1.4	&2.1	&3.2	&ns\\
+T$_{PLH}$		&S2		&Y	&0.77	&1.2	&1.7	&ns\\
+T$_{PHL}$		&S2		&Y	&0.57	&0.86	&1.3	&ns\\
+\hline
+$\Delta$T$_{PLH}$	&any		&Y	&-	&-	&1.3	&ns/pF\\
+$\Delta$T$_{PHL}$	&any		&Y	&-	&-	&1.4	&ns/pF\\
+\hline	
+C$_{in}$		&A, B, C, D	&vss	&-	&0.12	&0.18	&pF\\
+C$_{in}$		&S1		&vss	&-	&0.36	&0.54	&pF\\
+C$_{in}$		&S2		&vss	&-	&0.24	&0.36	&pF\\
+\hline
+\end{tabular}
+\end{table}
+
+Equivalent chip oppervlak: 16
+
+Fanout: 3.0 pF
+
+
+
+%figuur mu210.cir.eps
+\begin{figure}[bth]
+Circuit:\\
+
+\callpsfig{mu210.cir.eps}{height=4in}
+\end{figure}
+
+
+
+%figuur mu210.lay.eps
+\begin{figure}[bth]
+Layout:\\
+
+\callpsfig{mu210.lay.eps}{height=4in}
+\end{figure}
+
+
+\clearpage
+
+
+
+
+
+

@@ -1,0 +1,42 @@
+.TH DMQUIT 5ICD "DMI User's Manual"
+.SH NAME
+dmQuit - quit all database interaction
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+int dmQuit (void);
+\fP
+.fi
+.SH DESCRIPTION
+Function
+.B dmQuit
+can be used to check in all cells
+for which a key has been obtained by function dmCheckOut()
+and which have not yet been checked in.
+Function \fBdmQuit\fP closes all open projects with mode \fBQUIT\fP,
+which implies that checked-out cells are checked-in with mode \fBQUIT\fP
+(see dmCloseProject()).
+.PP
+This function must always be called,
+if the application program has called \fBdmInit()\fP,
+before exiting the application program.
+To let this work correctly in all circumstances,
+every application must have a signal handler.
+.SH DIAGNOSTICS
+If properly executed,
+.B dmQuit
+will return \fB0\fP.
+If
+.B dmQuit
+fails \fB-1\fP will be returned.
+External variable
+.B dmerrno
+will be set to indicate the error,
+and a call to function dmError() will be done.
+See functions dmCheckIn() and dmCloseProject() when this might happen.
+.SH SEE ALSO
+dmCheckIn(5ICD),
+dmCloseProject(5ICD),
+dmInit(5ICD).

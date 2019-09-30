@@ -1,0 +1,42 @@
+.ll 77
+.hy
+.TH SDFDELETE 3SDF "THE SEADIF PROGRAMMERS MANUAL"
+.SH NAME
+sdfdelete - functions to delete seadif in-core memory structures
+.SH SYNOPSIS
+ void sdfdeletecirport(CIRPORTPTR ccirport);
+
+ void sdfdeletecirinst(CIRINSTPTR cirinst,int recursively);
+ /* if recursively == TRUE then remove childcircuit
+    if childcircuit->linkcnt becomes zero */
+
+ void sdfdeletenetlist(NETPTR netlist);
+
+ void sdfdeletebuslist(BUSPTR buslist);
+
+ void sdfdeletecircuit(CIRCUITPTR circuit, int recursively);
+
+ void sdfdeletelayout(LAYOUTPTR layout, int recursively);
+
+ void sdfdeletelayport(LAYPORTPTR layport);
+
+ void sdfdeleteslice(SLICEPTR slice, int recursively);
+
+ void sdfdeletelayinst(LAYINSTPTR layinst, intrecursively);
+
+ void sdfdeletewire(WIREPTR wire);
+
+.SH DESCRIPTION
+These functions delete in-core seadif data structures.
+If a seadif datastructure has a \fIlinkcnt\fR field then the functions
+first decrement this count and only if the count becomes 0 the data structure is deleted.
+
+The data-structures participating in a hierarchy can be passed the option \fIrecursively\fR.
+If TRUE it means that de data structures that are lower in the hierarchy also must be deleted.
+(You don't want this parameter to be NIL.)
+.SH "RETURN VALUE"
+No return value.
+.SH AUTHOR
+Paul Stravers, Delft University of Technology.
+.SH "SEE ALSO"
+The file <libstruct.h>

@@ -1,0 +1,36 @@
+64,65c64,65
+<     acap_na :  caa       !cpg  csn !cwn  :  caa @gnd : 100  # n+ bottom
+<     ecap_na : !caa -caa !-cpg -csn !-cwn : -caa @gnd : 300  # n+ sidewall
+---
+>     acap_na :  caa       !cpg  csn !cwn  :  caa @sub : 100  # n+ bottom
+>     ecap_na : !caa -caa !-cpg -csn !-cwn : -caa @sub : 300  # n+ sidewall
+68,69c68,69
+<     acap_cw :  cwn                  :  cwn @gnd : 100  # bottom
+<     ecap_cw : !cwn -cwn             : -cwn @gnd : 800  # sidewall
+---
+>     acap_cw :  cwn                  :  cwn @sub : 100  # bottom
+>     ecap_cw : !cwn -cwn             : -cwn @sub : 800  # sidewall
+77c77
+<     acap_cpg_sub :  cpg                !caa !cwn :  cpg @gnd : 49
+---
+>     acap_cpg_sub :  cpg                !caa !cwn :  cpg @sub : 49
+79c79
+<     ecap_cpg_sub : !cpg -cpg !cmf !cms !caa !cwn : -cpg @gnd : 52
+---
+>     ecap_cpg_sub : !cpg -cpg !cmf !cms !caa !cwn : -cpg @sub : 52
+83c83
+<     acap_cmf_sub :  cmf           !cpg !caa !cwn :  cmf @gnd : 25
+---
+>     acap_cmf_sub :  cmf !cca      !cpg !caa !cwn :  cmf @sub : 25
+85c85
+<     ecap_cmf_sub : !cmf -cmf !cms !cpg !caa !cwn : -cmf @gnd : 52
+---
+>     ecap_cmf_sub : !cmf -cmf !cms !cpg !-cpg !caa !-caa !cwn !-cwn : -cmf @sub : 52
+95c95
+<     acap_cms_sub :  cms      !cmf !cpg !caa !cwn :  cms @gnd : 16
+---
+>     acap_cms_sub :  cms      !cmf !cpg !caa !cwn :  cms @sub : 16
+97c97
+<     ecap_cms_sub : !cms -cms !cmf !cpg !caa !cwn : -cms @gnd : 51
+---
+>     ecap_cms_sub : !cms -cms !cmf !cpg !caa !cwn : -cms @sub : 51

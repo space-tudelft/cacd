@@ -1,0 +1,98 @@
+.TH SPOCK 1ICD "User Commands"
+.UC 4
+.SH NAME
+spock - technology file interface for space
+.SH SYNOPSIS
+\fBspock\fP  [X options]  [-g]
+.SH OPTIONS
+Beside the standard X Toolkit options (e.g. to set the display,
+the geometry, and the foreground color of the program),
+the following other option may be specified:
+.TP
+.B -g
+Do not parse the generation part of the "spock.uis" file.
+.RE
+.SH DESCRIPTION
+.I Spock
+is an X-window (Qt toolkit) based user interface
+for the generation of technology files for the
+.I space(1ICD)
+layout verification system.
+.SH COMMANDS
+Commands are organized in four PullDown Menu's (i.e. \fIFile\fP,
+\fIEdit\fP, \fIProcess\fP and \fIHelp\fP).
+In most cases you don't need to use the Menu's, because most
+commands are also found in the command icon tool bar.
+.PP
+The MenuBar buttons can also be activated by typing the <\fBMeta\fP> key
+and the mnemonic character (the mnemonic
+is the character that is underlined).
+Commands in the PullDown Menu's can also be activated by only typing
+a mnemonic character.
+.PP
+Spock has organized the technology data, you can enter,
+in a number of tabpages.
+Each tabpage has a number of sections, which can be opened.
+Futhermore, the data must be entered in cells of spreadsheets
+or in paramlist fields.
+.PP
+A spreadsheet row must first be created (by "Insert row").
+To give a cell a value, you must first put the cell in edit mode.
+Click on the cell and use the "Enter" key, or double-click on the cell.
+To leave the edit mode, use again the "Enter" key, or go
+to another cell with the navigation keys.
+.PP
+Before you can start, you must initiate a process (see the following commands).
+.PP
+Click on the "New process" command,
+to start data entry for a new technology.
+.PP
+Click on the "Open process" command,
+to continue data entry (or modification) for a saved process data file.
+.PP
+Click on the "Save process" command,
+to save the data entered into the spock interface.
+Don't forget to do this, before you click on the "Quit" button
+and exit spock without any warning.
+.PP
+Click on the "Generate" command,
+to generate technology files for the current process.
+.AU "Xander Burgerhout, S. de Graaf"
+.SH FILES
+.TP
+\fC\&./spock.uis\fP
+spock configuration file
+.TP
+\fC$ICDPATH/share/lib/spock/spock.uis\fP
+spock configuration file
+.TP
+\fC$ICDPATH/share/lib/spock/section_icons\fP
+spock pixmaps directory
+.TP
+\fC$ICDPATH/share/lib/process\fP
+space system process directories
+.TP
+\fC\&./\fIprocess_name\fP.process\fP
+spock process save file
+.TP
+\fC\&./\fIprocess_name\fP\fP
+by user generated process directory
+.TP
+\fC\&./\fIprocess_name\fP/maskdata\fP
+generated maskdata file
+.TP
+\fC\&./\fIprocess_name\fP/space.def.s\fP
+generated tecc element def. file
+.TP
+\fC\&./\fIprocess_name\fP/space.def.p\fP
+generated space parameter file
+.TP
+\fC\&./\fIprocess_name\fP/bmlist.cgi\fP
+generated GDS2 conversion file
+.TP
+\fC\&./\fIprocess_name\fP/epslay.def\fP
+generated PostScript settings
+.SH SEE ALSO
+.nf
+space(1ICD), tecc(1ICD),
+SPACE USER'S MANUAL, SPOCK USER'S MANUAL

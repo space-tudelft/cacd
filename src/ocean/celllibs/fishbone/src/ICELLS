@@ -1,0 +1,184 @@
+
+# This script is to be sourced by ICELLS. It compiles and installs some nelsis
+# libraries in the global cell library tree.
+#
+# This script assumes that the following have been set by ICELLS:
+#      $BINLIBS   (the full path to the directory containing the
+#                  binary version of the libraries)
+#      $SRCLIBS   (the full path to the directory containing the ascii version
+#                  of the libraries, as well as the template directory)
+#      $LIBSCRIPT (the name of this script)
+#
+
+##############################################################################
+# First set some parameters ...
+#
+LIB_PRIM=primitives
+LIB_DIG=digilib8_93
+LIB_G_DIG=g_digilib5_99
+LIB_ANA=analib8_00
+LIB_G_ANA=g_analib8_00
+LIB_RING=ringlib3_05
+LIB_BONDING=bonding11_93
+
+##############################################################################
+# And now for the real work ... The primitives first:
+#
+PROJECT1=$BINLIBS/$LIB_PRIM
+echo "======= creating project $PROJECT1 ======="
+checkOrCreateProject $PROJECT1      # no complaints if already exists
+#
+echo "======= copying source files to $PROJECT1 ======="
+cp $SRCLIBS/$LIB_PRIM/* $PROJECT1 || exit 1
+chmod u+rw $PROJECT1/*
+#
+echo "======= compiling and installing $PROJECT1 ======="
+installCellLibrary $PROJECT1
+#
+echo "======= running \"gnarp -CFb $LIB_PRIM mkLibprim\" ======="
+SEALIB=./seadif; export SEALIB
+chmod u+rw $PROJECT1/seadif/sealib.sdf
+runProgramInLib $PROJECT1 gnarp -CFb $LIB_PRIM mkLibprim
+chmod ugo=r $PROJECT1/seadif/sealib.sdf      # make library read-only
+
+##############################################################################
+# Then comes the digital library:
+#
+PROJECT2=$BINLIBS/$LIB_DIG
+echo "======= creating project $PROJECT2 ======="
+checkOrCreateProject $PROJECT2        # no complaints if already exists
+#
+echo "======= copying source files to $PROJECT2 ======="
+cp $SRCLIBS/$LIB_DIG/* $PROJECT2 || exit 1
+chmod u+rw $PROJECT2/*
+#
+echo "======= importing library $LIB_PRIM ======="
+importCellLibrary $PROJECT2 $PROJECT1
+#
+echo "======= compiling and installing $PROJECT2 ======="
+installCellLibrary $PROJECT2
+#
+echo "======= running \"gnarp -CFb $LIB_DIG mkLibprim\" ======="
+SEALIB=./seadif; export SEALIB
+chmod u+rw $PROJECT2/seadif/sealib.sdf
+runProgramInLib $PROJECT2 gnarp -CFb $LIB_DIG mkLibprim
+chmod ugo=r $PROJECT2/seadif/sealib.sdf      # make library read-only
+
+##############################################################################
+# Then comes the gate version of the digital library:
+#
+PROJECT2=$BINLIBS/$LIB_G_DIG
+echo "======= creating project $PROJECT2 ======="
+checkOrCreateProject $PROJECT2        # no complaints if already exists
+#
+echo "======= copying source files to $PROJECT2 ======="
+cp $SRCLIBS/$LIB_G_DIG/* $PROJECT2 || exit 1
+chmod u+rw $PROJECT2/*
+#
+echo "======= importing library $LIB_PRIM ======="
+importCellLibrary $PROJECT2 $PROJECT1
+#
+echo "======= compiling and installing $PROJECT2 ======="
+installCellLibrary $PROJECT2
+#
+echo "======= running \"gnarp -CFb $LIB_G_DIG mkLibprim\" ======="
+SEALIB=./seadif; export SEALIB
+chmod u+rw $PROJECT2/seadif/sealib.sdf
+runProgramInLib $PROJECT2 gnarp -CFb $LIB_G_DIG mkLibprim
+chmod ugo=r $PROJECT2/seadif/sealib.sdf      # make library read-only
+
+##############################################################################
+# Then comes the analog library:
+#
+PROJECT2=$BINLIBS/$LIB_ANA
+echo "======= creating project $PROJECT2 ======="
+checkOrCreateProject $PROJECT2        # no complaints if already exists
+#
+echo "======= copying source files to $PROJECT2 ======="
+cp $SRCLIBS/$LIB_ANA/* $PROJECT2 || exit 1
+chmod u+rw $PROJECT2/*
+#
+echo "======= importing library $LIB_PRIM ======="
+importCellLibrary $PROJECT2 $PROJECT1
+#
+echo "======= compiling and installing $PROJECT2 ======="
+installCellLibrary $PROJECT2
+#
+echo "======= running \"gnarp -CFb $LIB_ANA mkLibprim\" ======="
+SEALIB=./seadif; export SEALIB
+chmod u+rw $PROJECT2/seadif/sealib.sdf
+runProgramInLib $PROJECT2 gnarp -CFb $LIB_ANA mkLibprim
+chmod ugo=r $PROJECT2/seadif/sealib.sdf      # make library read-only
+
+##############################################################################
+# Then comes the gate version of the analog library:
+#
+PROJECT2=$BINLIBS/$LIB_G_ANA
+echo "======= creating project $PROJECT2 ======="
+checkOrCreateProject $PROJECT2        # no complaints if already exists
+#
+echo "======= copying source files to $PROJECT2 ======="
+cp $SRCLIBS/$LIB_G_ANA/* $PROJECT2 || exit 1
+chmod u+rw $PROJECT2/*
+#
+echo "======= importing library $LIB_PRIM ======="
+importCellLibrary $PROJECT2 $PROJECT1
+#
+echo "======= compiling and installing $PROJECT2 ======="
+installCellLibrary $PROJECT2
+#
+echo "======= running \"gnarp -CFb $LIB_G_ANA mkLibprim\" ======="
+SEALIB=./seadif; export SEALIB
+chmod u+rw $PROJECT2/seadif/sealib.sdf
+runProgramInLib $PROJECT2 gnarp -CFb $LIB_G_ANA mkLibprim
+chmod ugo=r $PROJECT2/seadif/sealib.sdf      # make library read-only
+
+##############################################################################
+# Then comes the ring library:
+#
+PROJECT2=$BINLIBS/$LIB_RING
+echo "======= creating project $PROJECT2 ======="
+checkOrCreateProject $PROJECT2        # no complaints if already exists
+#
+echo "======= copying source files to $PROJECT2 ======="
+cp $SRCLIBS/$LIB_RING/* $PROJECT2 || exit 1
+chmod u+rw $PROJECT2/*
+#
+echo "======= importing library $LIB_PRIM ======="
+importCellLibrary $PROJECT2 $PROJECT1
+#
+echo "======= compiling and installing $PROJECT2 ======="
+installCellLibrary $PROJECT2
+#
+echo "======= running \"gnarp -CFb $LIB_RING mkLibprim\" ======="
+SEALIB=./seadif; export SEALIB
+chmod u+rw $PROJECT2/seadif/sealib.sdf
+runProgramInLib $PROJECT2 gnarp -CFb $LIB_RING mkLibprim
+chmod ugo=r $PROJECT2/seadif/sealib.sdf      # make library read-only
+
+##############################################################################
+# ...and finally the bonding:
+#
+PROJECT2=$BINLIBS/$LIB_BONDING
+echo "======= creating project $PROJECT2 ======="
+checkOrCreateProject $PROJECT2 # no complaints if already exists
+#
+echo "======= copying source files to $PROJECT2 ======="
+cp $SRCLIBS/$LIB_BONDING/* $PROJECT2 || exit 1
+chmod u+rw $PROJECT2/*
+#
+echo "======= importing library $LIB_PRIM ======="
+importCellLibrary $PROJECT2 $PROJECT1
+#
+echo "======= compiling and installing $PROJECT2 ======="
+installCellLibrary $PROJECT2
+#
+echo "======= running \"gnarp -CFb $LIB_BONDING mkLibprim\" ======="
+SEALIB=./seadif; export SEALIB
+chmod u+rw $PROJECT2/seadif/sealib.sdf
+runProgramInLib $PROJECT2 gnarp -CFb $LIB_BONDING mkLibprim
+chmod ugo=r $PROJECT2/seadif/sealib.sdf # make library read-only
+
+##############################################################################
+# We did it!
+echo "======= $LIBSCRIPT: program finished ======="

@@ -1,0 +1,86 @@
+% -*- latex -*-
+
+\chapter{Layout to circuit extraction: 'space' and 'ghoti'}
+\label{extraction}
+\smc{Ocean} provides powerful tools for verifying a layouts. They are indicated
+in the design flow diagram of figure~\ref{oceantools} on
+page~\pageref{oceantools}. The most commonly used 
+used way is layout-to-circuit extraction using \tool{space}, where a netlist
+description (including parasitics) is extracted for a layout.
+\index{layout to circuit extraction|see{\tool{space}}}
+
+\section{The extractor \tool{space}}
+\index{space@\tool{space}|bold}
+\tool{Space} is an advanced layout-to-circuit extractor for analog as well as
+digital circuits. From mask-level layout, \tool{space} produces a circuit
+netlist consisting of transistors. Optionally, this netlist contains also the
+wiring capacitances to substrate (\fname{-c} option) and inter-wire coupling
+capacitances (\fname{-C} option). \tool{Space} can also extract wire
+resistances, but on the version which is supplied with the \smc{ocean} system
+this feature is disabled\footnote{Contact the author Nick van der Meijs if you
+are interested in this feature (email him at: n.p.vandermeijs@tudelft.nl)}.
+These parasitics are extracted very accurately, which enables you to tune your
+circuit for maximum performance with a high reliability. \tool{Space} can
+handle very large circuits.
+
+For a more detailed description of \tool{space} we refer to the {\em
+SPACE User's manual} by Nick van der Meijs and Arjan van Genderen, which is
+included in the \smc{ocean} documentation distribution. 
+Examples of how to use \tool{space} can be found in chapter~\ref{tutorial}
+(especially section~\ref{t-ex}). 
+
+\section{\tool{space}: Capitalization of the cell name}
+\index{capitalization of cell name}
+Calling \tool{space} on a cell \fname{mycell} results in a new circuit cell
+called \fname{Mycell} (watch the capital 'M'!). The capitalization of the
+first character is done to prevent that \tool{space} overwrites the original
+circuit description \fname{mycell}. 
+This convention is also recoqnized by \tool{simeye}. If you run \tool{simeye}
+on the extracted circuit \fname{Mycell}, \tool{simeye} will use the sls-command
+\index{sls!command file}
+file \fname{mycell.cmd} if the file \fname{Mycell.cmd} does not exist. In this
+way you can easily simulate the original and the extracted circuit with the
+same command file.
+
+\section{Purifying netlists: \tool{ghoti}}
+\index{ghoti@\tool{ghoti}|bold}
+\index{removing|unused transistors|see{\tool{ghoti}}}
+\tool{Ghoti} is a purifier for extracted circuit descriptions, much in the same
+way like \tool{fish} is for layouts. The extracted network which results from
+\tool{space} may contain some irrelevant pieces. Especially on a sea-of-gates
+there will be many isolation transistors 
+\index{isolation transistors}
+or totally unused transistors, which
+have no (or hardly any) influence on the function of the circuit. These
+useless elements, however, may cause the simulator some difficulties. The
+\tool{spice} simulator crashes the unconnected transistors (complains about ``singular matrices''). \tool{Spice} will
+also consume considerably more \smc{cpu}-time if useless transistors are
+present.
+
+\tool{Ghoti} was made to solve these problems by purifying the
+netlist. It reads a circuit description, processes it, and write a purified
+circuit with the following features:
+\begin{itemize}
+\item
+all unconnected transistors are removed,
+\item
+all isolation transistors are removed,
+\item
+power nets which are not yet connected are joined.
+\item
+(with \fname{-r} option) reduce series and parallel connections of transistors.
+This option, where \tool{ghoti} collapses any parallel or series connection or
+transistors into one equivalent transistor, is especially useful for analog
+circuits which exceed the capacity of \tool{space}.
+\end{itemize}
+Therefore: {\bf Always \tool{ghoti} before running \tool{spice}!}.
+You can call \tool{ghoti} as often as you like on a cell. 
+
+If the circuit is large (e.g. thousands of transistors, or the entire chip)
+using \tool{ghoti} also reduces the run time of the switch level simulator
+\tool{sls} because the number of elements to keep track of decreases
+drastically. See chapter~\ref{tutorial} for examples on how to run
+\tool{ghoti}. 
+
+
+

@@ -1,0 +1,1139 @@
+/*
+This is a SPOCK version 1.3 user interface specification.
+=========================================================
+Consider this file as part of the source.
+Please do not "just" change this file. You could seriously break
+the spock program. Only edit this file if you know what actions
+will brake compatibility with your saved processes.
+For more information, please refer to the SPOCK source code documentation
+or Xander Burgerhout's graduation report.
+
+The icon path specifies where pixmap(...) properties look for icons.
+*/
+ICONPATH = "$(ICDPATH)/share/lib/spock"
+
+define string Cstr { title("Comment"); }
+define identifier Name { title("Name"); option("unique"); }
+define identifier Id { title("Id"); default(""); }
+define color Xcolor { title("Xspace draw color"); default("#000000"); }
+define integer[0] uint { title("Unsigned"); }
+define real[0]   ureal { title("Unsigned"); }
+define real[1e-27:1e27] Ureal { title("Unit"); }
+
+define dropdown bool {
+	item off{ title("off"); }
+	item on { title("on"); }
+}
+
+define dropdown pintype {
+	item su { title(""); }
+	item ed { title("-"); }
+	item oe { title("="); }
+}
+
+define dropdown layer {
+	title("Mask");
+	adddatafrom(maskdata_sheet.name);
+}
+
+define dropdown layer_new {
+	title("Mask");
+	item atsub { title("@sub"); }
+	adddatafrom(new_sheet.name);
+}
+
+define dropdown layer2 {
+	title("Mask");
+	item atsub { title("@sub"); }
+	adddatafrom(maskdata_sheet.name, new_sheet.name);
+}
+
+define combobox layer_combo {
+	title("Mask");
+	adddatafrom(maskdata_sheet.name, new_sheet.name);
+}
+
+define combobox layer_sub {
+	item atsub { title("@sub"); }
+	adddatafrom(maskdata_sheet.name, new_sheet.name);
+}
+
+define combobox layer_gndsub {
+	item atgnd { title("@gnd"); }
+	item atsub { title("@sub"); }
+	adddatafrom(maskdata_sheet.name, new_sheet.name);
+}
+
+define dropdown def_carr_type {
+	item m { title("metal"); }
+	item n { title("n doped conductor"); }
+	item p { title("p doped conductor"); }
+}
+
+define dropdown def_res_type {
+	item p { title("p"); }
+	item n { title("n"); }
+}
+
+define dropdown def_trans_type {
+	item ver { title("vertical"); }
+	item lat { title("lateral"); }
+}
+
+define dropdown def_layer_type {
+	item normal { title("normal"); }
+	item interconnect { title("interconnect"); }
+	item symbolic { title("symbolic"); }
+}
+
+define dropdown def_gds_tm {
+	item none { title("<none>"); }
+	item term { title("terminal"); }
+	item label { title("label"); }
+}
+
+define conditionlist condlist_s {
+	title("Condition list");
+	adddatafrom(maskdata_sheet.name, maskdata_sheet.comment);
+}
+
+define conditionlist condlist_simp {
+	title("Condition list");
+	adddatafrom(maskdata_sheet.name, maskdata_sheet.comment,
+		new_sheet.name, new_sheet.cond_list);
+}
+
+define conditionlist condlist_ext {
+	title("Condition list");
+	option("extended");
+	adddatafrom(maskdata_sheet.name, maskdata_sheet.comment,
+		new_sheet.name, new_sheet.cond_list);
+}
+
+define dropdown capa_types {
+	item normal	{ title("default"); }
+	item junction	{ title("junction"); }
+}
+
+section units {
+    title("Unit specification");
+    hint("Use this to specify a base for the values you enter\n"
+	"Type only the following values: 1, 1e-3, 1e-6, etc.");
+    pixmap("section_icons/units.xpm");
+    paramlist units_list {
+	Ureal resistance {
+	    title("Sheet resistance unit");
+	    hint("You can specify a base for the values you\n"
+		"will enter below. Use as follows:\n"
+		"If you don't want to type 3e-6, 8e-6 12.5e-6, etc.\n"
+		"but 3, 8, 12.5 instead, type 1e-6 here.");
+	    unit("in ohm");
+	    default("1");
+	}
+	Ureal c_resistance {
+	    title("Contact resistance unit");
+	    unit("in ohm square meter");
+	    default("1e-12");
+	}
+	Ureal s_resistance {
+	    title("Specific resistance unit");
+	    hint("This unit is used for sheet and contact resistances\n"
+		"when set specific_resistance is specified.");
+	    unit("in ohm ...");
+	    default("1");
+	}
+	Ureal a_capacitance {
+	    title("Area capacitance unit");
+	    unit("in farad per square meter");
+	    default("1e-6");
+	}
+	Ureal e_capacitance {
+	    title("Edge capacitance unit");
+	    hint("To specify the unit for edge capacitance or\n"
+		"- if the capacitance is specified by means\n"
+		"  of (distance, capacitivity) pairs -\n"
+		"for lateral capacitance");
+	    unit("in farad per meter");
+	    default("1e-12");
+	}
+	Ureal capacitance {
+	    title("Capacitance unit");
+	    unit("in farad");
+	    default("1e-15");
+	}
+	Ureal distance {
+	    title("Distance unit");
+	    hint("To specify the unit for distance\n"
+		"in (distance, capacitivity) pairs");
+	    unit("in meter");
+	    default("1e-6");
+	}
+	Ureal resize {
+	    title("Resize unit");
+	    hint("To specify the unit for resizing masks");
+	    unit("in meter");
+	    default("1e-6");
+	}
+	Ureal vdimension {
+	    title("Vertical dimension unit");
+	    hint("To specify the unit for space 3D vdimensions");
+	    unit("in meter");
+	    default("1e-6");
+	}
+	Ureal shape {
+	    title("Shape dimension unit");
+	    hint("To specify the unit for space 3D eshapes/cshapes");
+	    unit("in meter");
+	    default("1e-6");
+	}
+    }
+}
+
+section gds2 {
+    title("GDS2 mapping");
+    pixmap("section_icons/lay2gds.xpm");
+    spreadsheet gds2_sheet {
+	layer		mask {}
+	def_gds_tm	textmap	{ title("Text mapping"); }
+	uint		gdsnr	{ title("GDS number"); }
+	uint		gdsdtyp	{ title("GDS datatype"); }
+    }
+}
+
+section resizes {
+    title("Resize list");
+    hint("Definitions for growing and shrinking masks");
+    pixmap("section_icons/resize.xpm");
+    spreadsheet resize_sheet {
+	condlist_simp	cond_list {}
+	layer		mask {}
+	real		grow { title("Grow/shrink value"); }
+	Cstr		comment {}
+    }
+}
+
+section settings {
+    title("Settings");
+    hint("bem_depth and specific_resistance settings");
+    paramlist setting {
+	bool spec_res {
+	    title("specific_res");
+	    hint("When 'on' use the s_resistance unit");
+	}
+	ureal bem_depth {
+	    title("bem_depth ");
+	    hint("The bem_depth is needed for BEM/FEM");
+	    unit("in micron");
+	}
+    }
+}
+
+section wafers {
+    title("Wafer list");
+    hint("Definitions for BEM/FEM substrate resistance extraction");
+    pixmap("section_icons/coupsubres.xpm");
+    spreadsheet wafer_sheet {
+	condlist_simp	cond_list {}
+	ureal		conval { title("Conductivity (S/m)"); default("1"); }
+	ureal		thickn { title("Thickness (um)"); default("1"); }
+	uint		layers { title("Layers"); default("1"); }
+	layer_combo	viamsk { title("Viamask"); }
+	bool		subcon { title("Subconn"); default("on"); }
+	def_res_type	restyp { title("Restype"); }
+	Cstr		comment {}
+    }
+}
+
+section newmasks {
+    title("New mask list");
+    hint("Defines new mask names out of a combination of masks");
+    pixmap("section_icons/newmask.xpm");
+    spreadsheet new_sheet {
+	condlist_s	cond_list {}
+	Name		name {}
+	Cstr		comment {}
+    }
+}
+
+section xcolors {
+    title("Color list");
+    hint("Additional mask color definitions for Xspace");
+    pixmap("section_icons/coloradd.xpm");
+    spreadsheet color_sheet {
+	layer_new	name	{ default(""); }
+	Xcolor		xspace	{}
+    }
+}
+
+section conductors {
+    title("Conductor list");
+    hint("Definitions for the conducting layers in the circuit");
+    pixmap("section_icons/conductor.xpm");
+    spreadsheet conductors_sheet {
+	Id		cond_type { title("Conductor type"); }
+	Name		name {}
+	condlist_simp	cond_list {}
+	layer2		mask { default(""); }
+	ureal		sheet_res { title("Sheet resistivity"); default("0"); }
+	def_carr_type	carr_type { title("Carrier type"); }
+	Cstr		comment {}
+    }
+}
+
+section fets {
+    title("Field-effect transistor list");
+    hint("FET definitions");
+    pixmap("section_icons/fet.xpm");
+    spreadsheet fets_sheet {
+	Name		name {}
+	condlist_simp	cond_list {}
+	layer2		mask_g	{ title("Gate mask"); default(""); }
+	layer2		mask_ds	{ title("Drain/source mask"); default(""); }
+	condlist_simp	cond_dsarea { title("Cond. d/s area"); }
+	layer_sub	mask_b	{ title("Bulk mask"); default(""); }
+	Cstr		comment {}
+    }
+}
+
+section bjts {
+    title("Bipolar transistor list");
+    hint("BJT definitions");
+    pixmap("section_icons/bipolar.xpm");
+    spreadsheet bjts_sheet {
+	Name		name {}
+	condlist_ext	cond_list {}
+	def_trans_type	ttype	{ title("Transistor type"); }
+	layer_combo	mask_em { title("Emitter mask"); }
+	pintype		mask_em_type { title("type"); default(""); }
+	layer_combo	mask_ba { title("Base mask"); }
+	pintype		mask_ba_type { title("type"); default(""); }
+	layer_combo	mask_co { title("Collector mask"); }
+	pintype		mask_co_type { title("type"); default(""); }
+	layer_sub	mask_b	{ title("Bulk mask"); default(""); }
+	Cstr		comment {}
+    }
+}
+
+section connects {
+    title("Connect list");
+    hint("Layer connect definitions");
+    pixmap("section_icons/connect.xpm");
+    spreadsheet connects_sheet {
+	Name		name {}
+	condlist_ext	cond_list {}
+	layer2		mask_1 { title("Mask 1"); default(""); }
+	pintype		mask_1_type { title("type"); default(""); }
+	layer2		mask_2 { title("Mask 2"); default(""); }
+	pintype		mask_2_type { title("type"); default(""); }
+	Cstr		comment {}
+    }
+}
+
+section contacts {
+    title("Contact list");
+    hint("Contact or via definitions");
+    pixmap("section_icons/contact.xpm");
+    spreadsheet contacts_sheet {
+	Id		cont_type { title("Contact type"); }
+	Name		name {}
+	condlist_simp	cond_list {}
+	layer2		mask_1 { title("Mask 1"); default(""); }
+	layer_sub	mask_2 { title("Mask 2"); default(""); }
+	ureal		resistivity { title("Resistivity"); default("0"); }
+	Cstr		comment {}
+    }
+}
+
+section capacitances {
+    title("Capacitance list");
+    hint("Capacitance definitions");
+    pixmap("section_icons/capacitance.xpm");
+    spreadsheet cap_sheet {
+	capa_types	cap_type { title("Type"); }
+	Id		sub_type { title("Sub type"); }
+	Name		name {}
+	condlist_ext	cond_list {}
+	layer_gndsub	mask_1 { title("Mask 1"); }
+	pintype		mask_1_type { title("type"); default(""); }
+	layer_gndsub	mask_2 { title("Mask 2"); default(""); }
+	pintype		mask_2_type { title("type"); default(""); }
+	string		capacitivity { title("Capacitivity"); default("0"); }
+	Cstr		comment {}
+    }
+}
+
+section vdimensions {
+    title("Vertical dimension list");
+    hint("Space 3D vdimensions definitions");
+    pixmap("section_icons/vertical.xpm");
+    spreadsheet vdimensions_sheet {
+	Name		name {}
+	condlist_simp	cond_list {}
+	layer		mask {}
+	ureal		bottom { title("Bottom distance"); default("1"); }
+	ureal		thickness { title("Conductor thickness"); default("0"); }
+	ureal		spacing { title("Minimum spacing"); }
+	Cstr		comment {}
+    }
+}
+
+section eshapes {
+    title("Edge shape list");
+    hint("Space 3D eshapes definitions");
+    pixmap("section_icons/edgeshape.xpm");
+    spreadsheet eshapes_sheet {
+	Name		name {}
+	condlist_ext	cond_list {}
+	layer		mask {}
+	real		dxb { title("dxb"); default("0"); }
+	real		dxt { title("dxt"); default("0"); }
+	Cstr		comment {}
+    }
+}
+
+section cshapes {
+    title("Contour shape list");
+    hint("Space 3D cshapes definitions");
+    pixmap("section_icons/edgeshape.xpm");
+    spreadsheet cshapes_sheet {
+	Name		name {}
+	condlist_ext	cond_list {}
+	layer		mask {}
+	real		xb1 { title("xb1"); default("0"); }
+	real		xt1 { title("xt1"); default("0"); }
+	real		xb2 { title("xb2"); default("0"); }
+	real		xt2 { title("xt2"); default("0"); }
+	Cstr		comment {}
+    }
+}
+
+section dielectrics {
+    title("Dielectric structure");
+    hint("Space 3D dielectrics definitions");
+    pixmap("section_icons/dielectrics.xpm");
+    spreadsheet dielectrics_sheet {
+	Name		name	{ title("Material"); }
+	ureal		permittivity { title("Relative Permittivity"); default("1"); }
+	ureal		bottom	{ title("Bottom at (e-6 m)"); default("0"); }
+	Cstr		comment {}
+    }
+}
+
+section sublayers {
+    title("Substrate structure");
+    hint("Space 3D substrate layers definitions");
+    pixmap("section_icons/sublayers.xpm");
+    spreadsheet sublayers_sheet {
+	Name		name	{ title("Material"); }
+	ureal		conductivity { title("Conductivity (S/m)"); default("1"); }
+	real[-1e40:0]	top	{ title("Top at (e-6 m)"); default("0"); }
+	Cstr		comment {}
+    }
+}
+
+section subcaplayers {
+    title("Substrate capacitance structure");
+    hint("Space 3D substrate capacitance layers definitions");
+    pixmap("section_icons/sublayers.xpm");
+    spreadsheet subcaplayers_sheet {
+	Name		name	{ title("Material"); }
+	ureal		permittivity { title("Relative Permittivity"); default("1"); }
+	real[-1e40:0]	top	{ title("Top at (e-6 m)"); default("0"); }
+	Cstr		comment {}
+    }
+}
+
+section selfsubres {
+    title("Selfsubres configuration");
+    hint("Space 3D substrate resistances to substrate nodes");
+    pixmap("section_icons/selfsubres.xpm");
+    spreadsheet selfsubres_sheet {
+	ureal		area	{ title("Area"); default("0"); }
+	ureal		perim	{ title("Perimeter"); default("0"); }
+	ureal		val	{ title("Resistance"); default("0"); }
+	ureal		rest	{ title("Rest"); default("0"); }
+	Cstr		comment {}
+    }
+}
+
+section coupsubres {
+    title("Coupsubres configuration");
+    hint("Space 3D substrate direct coupling resistances");
+    pixmap("section_icons/coupsubres.xpm");
+    spreadsheet coupsubres_sheet {
+	ureal		area1	{ title("Area1"); default("0"); }
+	ureal		area2	{ title("Area2"); default("0"); }
+	ureal		dist	{ title("Distance"); default("0"); }
+	ureal		val	{ title("Resistance"); default("0"); }
+	ureal		decr	{ title("Decrease"); default("0"); }
+	Cstr		comment {}
+    }
+}
+
+section maskdata_info {
+    title("Layers");
+    pixmap("section_icons/layers.xpm");
+    spreadsheet maskdata_sheet {
+	Name		name	{ title("Layer name"); }
+	def_layer_type	layertype { title("Layer type"); }
+	dalistyle	dali	{ title("Dali draw style"); default("7 1"); }
+	Xcolor		xspace	{}
+	integer[1]	ID	{ title("PGjob#"); option("unique"); default(""); }
+	Cstr		comment {}
+    }
+}
+
+section space_params_section {
+    title("Space parameters");
+    paramlist space_params {
+	uint min_art_degree {
+	    title("Minimal articulation degree");
+	    hint("The articulation degree is the number of pieces in which\n"
+		"the resistance graph would break if the node and its\n"
+		"connected resistances were removed");
+	    default("3");
+	}
+	uint min_degree {
+	    title("Minimal degree");
+	    hint("Nodes with a degree >= this value and an articulation\n"
+		"degree > 1 will also be retained in the final network.");
+	    default("4");
+	}
+	ureal min_res {
+	    title("Minimal resistance");
+	    unit("ohm");
+	    hint("This heuristic deletes small resistances from the network\n"
+		"via Gaussian elimination of one of the nodes that is\n"
+		"connected to the resistor.");
+	    default("100");
+	}
+	ureal min_sep_res {
+	    title("Minimal separation resistance");
+	    unit(ohm);
+	    hint("This heuristic deletes small resistances from the network\n"
+		"by joining the two nodes that are connected by the resistor.");
+	    default("10");
+	}
+	ureal max_par_res {
+	    title("Maximal parallel resistance ratio");
+	    hint("This heuristic prevents the occurrence of\n"
+		"high-ohmic shunt paths between two nodes.");
+	    default("25");
+	}
+	bool no_neg_res {
+	    title("No negative resistances");
+	    hint("If this heuristic is on, all negative resistances\n"
+		"will be removed from the network.");
+	}
+	ureal min_coup_cap {
+	    title("Minimal coupling capacitance ratio");
+	    hint("If, for both nodes a coupling capacitance is connected to,\n"
+		"it holds that the ratio between the absolute value of the\n"
+		"coupling capacitance and the value of the ground/substrate\n"
+		"capacitance of the same type of that node, is less than this\n"
+		"parameter, then the value of the coupling capacitance is\n"
+		"added to the ground capacitances of the two nodes and the\n"
+		"coupling capacitance is removed.");
+	    default("0.04");
+	}
+    }
+}
+section space_params_section2 {
+    title("Space additional parameters");
+    spreadsheet space_params2 {
+	Name		name	{ title("Param name"); }
+	string		value	{ title("Param value");}
+	Cstr		comment {}
+    }
+}
+section space_params_cap3d {
+    title("Space CAP3D parameters");
+    spreadsheet cap3d {
+	Name		name	{ title("Param name"); }
+	string		value	{ title("Param value");}
+	Cstr		comment {}
+    }
+}
+section space_params_sub3d {
+    title("Space SUB3D parameters");
+    spreadsheet sub3d {
+	Name		name	{ title("Param name"); }
+	string		value	{ title("Param value");}
+	Cstr		comment {}
+    }
+}
+section space_params_subcap3d {
+    title("Space SUBCAP3D parameters");
+    spreadsheet subcap3d {
+	Name		name	{ title("Param name"); }
+	string		value	{ title("Param value");}
+	Cstr		comment {}
+    }
+}
+section space_params_sne {
+    title("Space SNE parameters");
+    spreadsheet sne {
+	Name		name	{ title("Param name"); }
+	string		value	{ title("Param value");}
+	Cstr		comment {}
+    }
+}
+section space_params_moments {
+    title("Space MOMENTS parameters");
+    spreadsheet moments {
+	Name		name	{ title("Param name"); }
+	string		value	{ title("Param value");}
+	Cstr		comment {}
+    }
+}
+section space_params_display {
+    title("Space DISPLAY parameters");
+    spreadsheet disp {
+	Name		name	{ title("Param name"); }
+	string		value	{ title("Param value");}
+	Cstr		comment {}
+    }
+}
+section space_params_debug {
+    title("Space DEBUG parameters");
+    spreadsheet debug {
+	Name		name	{ title("Param name"); }
+	string		value	{ title("Param value");}
+	Cstr		comment {}
+    }
+}
+
+define dropdown term_text_align {
+    item al_00   { title("Center at"); }
+    item al_n10  { title("Left-hand at"); }
+    item al_10   { title("Right-hand at"); }
+    item al_01   { title("Centered below"); }
+    item al_0n1  { title("Centered above"); }
+}
+
+section getepslay_preamble {
+    title("General settings");
+    paramlist getepslay_pl {
+	string includefile_nelsis {
+	    title("Include file from nelsis");
+	    hint("Includes a postscript prolog file.\n"
+		"The filename given must be relative to $ICDPATH/share/lib/ \n"
+		"NOTE: only one level of inclusion is supported.");
+	    default("epslay.pro");
+	}
+	string includefile_home {
+	    title("Include file from home directory");
+	    hint("Includes a postscript prolog file.\n"
+		"The filename given must be relative to the home directory.\n"
+		"NOTE: only one level of inclusion is supported.");
+	}
+	string mask_order {
+	    title("Mask draw order");
+	    hint("Specify in which order the masks must be drawn.");
+	}
+	string plotfont {
+	    title("Font for terminal names");
+	    hint("Any available PostScript font is acceptable.");
+	    default("Helvetica-Bold");
+	}
+	uint font_min {
+	    title("Minimum text size");
+	    unit("1/72 inch");
+	    hint("Minimum size of text in printer's points.");
+	    default("6");
+	}
+	uint font_max {
+	    title("Maximum text size");
+	    unit("1/72 inch");
+	    hint("Maximum size of text in printer's points.");
+	    default("14");
+	}
+	uint font_lambda {
+	    title("Preferred size of text in lambda's");
+	    unit("lambda's");
+	    hint("Based on the scaling of the particular layout in order to\n"
+		"fill the drawing region, the text size is first computed\n"
+		"according to this value. Then, the min and max values\n"
+		"above are applied.  A value approximately equal to the\n"
+		"size of contact windows is often appropiate.");
+	}
+	ureal pattern_scale {
+	    title("Global stipple pattern magnification");
+	    unit("x");
+	    hint("Globally magnify the scale of the stipple pattern\n"
+		"by the factor given here. Integral values work best.\n"
+		"Often useful for rendering on low resolution devices.");
+	    default("1");
+	}
+	term_text_align termtxt {
+	    title("Terminal name text alignment");
+	    unit("center of terminal");
+	    hint("Specifies the alignment of the terminal names\n"
+		"text with respect to the center of the terminal.");
+	}
+    }
+}
+
+section getepslay_body {
+    title("Individual mask plotting styles");
+    spreadsheet getepslay_sheet {
+	layer_combo mask_name {}
+	string	pattern { title("Pattern"); }
+	ureal	scale	{ title("Scale"); default("1.0"); }
+	ureal	linewidth { title("Linewidth in lambda's"); }
+    }
+}
+
+tabpage layer_specs {
+    title("Layer specification");
+    scrollframe layer_frame {
+	section maskdata_info;
+	section gds2;
+    }
+}
+
+tabpage element_def_tab {
+    title("Element definition");
+    scrollframe element_def {
+	section units;
+	section newmasks;
+	section xcolors;
+	section resizes;
+	section settings;
+	section wafers;
+	section conductors;
+	section fets;
+	section bjts;
+	section connects;
+	section contacts;
+	section capacitances;
+	section vdimensions;
+	section eshapes;
+	section cshapes;
+	section dielectrics;
+	section sublayers;
+	section subcaplayers;
+	section selfsubres;
+	section coupsubres;
+    }
+}
+
+tabpage space_parameters_tab {
+    title("Space parameters");
+    scrollframe space_parameters_frame {
+	section space_params_section;
+	section space_params_section2;
+	section space_params_cap3d;
+	section space_params_sub3d;
+	section space_params_subcap3d;
+	section space_params_sne;
+	section space_params_moments;
+	section space_params_display;
+	section space_params_debug;
+    }
+}
+
+tabpage getepslay_tab {
+    title("Postscript plot settings");
+    scrollframe getepslay_frame {
+	section getepslay_preamble;
+	section getepslay_body;
+    }
+}
+
+generator maskdata_gen {
+    filename("maskdata");
+    title("Maskdata file");
+
+    map def_layer_type {
+	normal       = "0";
+	interconnect = "1";
+	symbolic     = "2";
+    }
+
+    generate {
+	"## This file was generated by SPOCK on " application[date]
+	" at " application[time] ".\n"
+	"#---------------------------------------------------------------------\n"
+	"#                M A S K D A T A   I N F O\n"
+	"#\n"
+	"#  Layer fields (2):     field  1: layer name\n"
+	"#                        field  2: layer type\n"
+	"#                                  type = 0: normal layer\n"
+	"#                                  type = 1: interconnect layer\n"
+	"#                                            (terminals/labels may be\n"
+	"#                                             defined for this layer).\n"
+	"#                                  type = 2: symbolic layer\n"
+	"#\n"
+	"#  Pattern-Generate (2): field  3: job number\n"
+	"#  (Only used by         field  4: mask type\n"
+	"#   PG-tape programs               type = 0: negative\n"
+	"#                                  type = 1: positive\n"
+	"#\n"
+	"#  CMask Terminals (2):  field  5: color number\n"
+	"#  (Obsolete)            field  6: fill style\n"
+	"#\n"
+	"#  (Sea)Dali (2):        field  7: color number\n"
+	"#                                  0=black, 1=red, 2=green,\n"
+	"#                                  3=yellow, 4=blue, 5=violet,\n"
+	"#                                  6=aqua, 7=white\n"
+	"#                        field  8: fill style\n"
+	"#                                  0=hashed, 1=solid, 2=hollow\n"
+	"#                                  3,4,5 = 12,25,50% hash+outline\n"
+	"#                                  6,7,8 = idem, no outline\n"
+	"#\n"
+	"#  Plotter (2):          field  9: pen number\n"
+	"#  (Obsolete)                      1=black, 2=red, 3=yellow,\n"
+	"#                                  4=green, 5=brown, 6=violet,\n"
+	"#                                  7=blue, 8=aqua\n"
+	"#                        field 10: fill style\n"
+	"#\n"
+	"\"" application[processname] "\" \"" application[processdesc] "\"\n"
+	"# name\ttype\tPGtape\tCMask\tDali\tPlot\tcomment\n"
+	foreach(maskdata_sheet, row) { if(name) {
+		name "\t" layertype
+		if(ID) { "\t" ID " 1\t" } else { "\t0 1\t" }
+		"0 1\t" dali[clr] " " dali[style] "\t1 0\t\"" comment "\"\n"
+	}}
+    }
+}
+
+generator gds_gen {
+    filename("bmlist.gds");
+    title("GDS2 conversion specification");
+
+    map def_gds_tm {
+	none  = "\t";
+	term  = ":term";
+	label = ":label";
+    }
+
+    generate {
+	"## This file was generated by SPOCK on " application[date]
+	" at " application[time] ".\n"
+	"#####\n"
+	"# " application[processname] " - " application[processdesc] "\n"
+	foreach(gds2_sheet, row) {
+		mask textmap "\t" gdsnr "\t" gdsdtyp "\n"
+	}
+    }
+}
+
+generator space_def_s_gen {
+    filename("space.def.s");
+    title("SPACE Element definition file");
+
+    map def_carr_type {
+	n = "n";
+	p = "p";
+	m = "m";
+    }
+    map def_trans_type {
+	ver = "ver";
+	lat = "lat";
+    }
+
+    generate {
+	"## This file was generated by SPOCK on " application[date]
+	" at " application[time] ".\n"
+	"#####\n"
+	"# " application[processname] " - " application[processdesc] "\n"
+	"#\n# Masks:\n"
+	foreach(maskdata_sheet, row) { if(name) {
+		"# " name
+		if(comment) { "\t- " comment } "\n"
+	}}
+	"#\n# See also the maskdata file.\n"
+	"#####\n\n"
+
+if(setting.spec_res == "on") { "set specific_resistance\n\n" }
+
+if(units_list.resistance){
+	"unit resistance    " units_list.resistance	"\t# ohm\n" }
+if(units_list.c_resistance){
+	"unit c_resistance  " units_list.c_resistance	"\t# ohm m^2\n" }
+if(units_list.s_resistance){
+	"unit s_resistance  " units_list.s_resistance	"\t# ohm ...\n" }
+if(units_list.capacitance){
+	"unit capacitance   " units_list.capacitance	"\t# F\n" }
+if(units_list.a_capacitance){
+	"unit a_capacitance " units_list.a_capacitance	"\t# F/m^2\n" }
+if(units_list.e_capacitance){
+	"unit e_capacitance " units_list.e_capacitance	"\t# F/m\n" }
+if(units_list.distance){
+	"unit distance      " units_list.distance	"\t# m\n" }
+if(units_list.resize){
+	"unit resize        " units_list.resize		"\t# m\n" }
+if(units_list.vdimension){
+	"unit vdimension    " units_list.vdimension	"\t# m\n" }
+if(units_list.shape){
+	"unit shape         " units_list.shape		"\t# m\n" }
+
+	"\n#maxkeys 12\n"
+
+	if(new_sheet[numrows] != "0") {
+	  "\n#\tcondition_list:name\n"
+	  foreach(new_sheet, row) {
+		"new:" cond_list ":" name
+		if(comment) { "\t\t# " comment } "\n"
+	  }
+	}
+
+	"\ncolors:\n"
+	foreach(maskdata_sheet, row) {
+		if(name) { "\t" name "\t" if(xspace == "@000000"){"glass"} else {xspace} "\n" }
+	}
+	foreach(color_sheet, row) {
+		if(name) { "\t" name "\t" if(xspace == "@000000"){"glass"} else {xspace} "\n" }
+	}
+
+	if(resize_sheet[numrows] != "0") {
+	  "\n#\tcondition_list:mask:value\n"
+	  foreach(resize_sheet, row) {
+		"resize: " cond_list ":" mask ":" grow
+		if(comment) { "\t\t# " comment } "\n"
+	  }
+	}
+
+if(setting.bem_depth) { "\nset bem_depth " setting.bem_depth "\n" }
+
+	if(wafer_sheet[numrows] != "0") {
+	  "\n# condition_list : conval thickn layers : options\n"
+	  foreach(wafer_sheet, row) {
+		"wafer: " cond_list ": " conval " " thickn " " layers " :"
+		if(viamsk) { " viamask="viamsk }
+		" subconn="subcon " restype="restyp
+		if(comment) { "\t\t# " comment } "\n"
+	  }
+	}
+
+	foreach $t (conductors_sheet, cond_type) {
+	  "\nconductors " $t ":\n"
+	  "#\tname:condition_list:mask:sheet_resistivity:carrier_type\n"
+	  foreach(conductors_sheet, row) {
+	    if(cond_type == $t) {
+		"\t" name ":" cond_list ":" mask ":" sheet_res ":" carr_type
+		if(comment) { "\t\t# " comment } "\n"
+	    }
+	  }
+	}
+
+	"\nfets:\n"
+	"#\tname:condition_list:mask_g mask_ds [dsarea] [:mask_b]\n"
+	foreach(fets_sheet, row) {
+		"\t" name ":" cond_list ":" mask_g " " mask_ds " " cond_dsarea
+		if(mask_b) { ":" mask_b }
+		if(comment) { "\t\t# " comment } "\n"
+	}
+
+	"\nbjts:\n"
+	"#\tname:condition_list:type:mask_em mask_ba mask_co [:mask_b]\n"
+	foreach(bjts_sheet, row) {
+		"\t" name ":" cond_list ":" ttype ":"
+		mask_em_type mask_em " "
+		mask_ba_type mask_ba " "
+		mask_co_type mask_co
+		if(mask_b) { ":" mask_b }
+		if(comment) { "\t\t# " comment } "\n"
+	}
+
+	"\nconnects:\n"
+	"#\tname:condition_list:type:mask1 mask2\n"
+	foreach(connects_sheet, row) {
+		"\t" name ":" cond_list ":" mask_1_type mask_1 " " mask_2_type mask_2
+		if(comment) { "\t\t# " comment } "\n"
+	}
+
+	foreach $t (contacts_sheet, cont_type) {
+	  "\ncontacts " $t ":\n"
+	  "#\tname:condition_list:type:mask1 mask2:resitivity\n"
+	  foreach(contacts_sheet, row) {
+	    if(cont_type == $t) {
+		"\t" name ":" cond_list ":" mask_1 " " mask_2 ":" resistivity
+		if(comment) { "\t\t# " comment } "\n"
+	    }
+	  }
+	}
+
+	foreach $t (cap_sheet, cap_type) {
+	foreach $s (cap_sheet, sub_type) {
+	    "\n" if($t != "default"){$t " "} "capacitances " $s ":\n"
+	    "#\tname:condition_list:type:mask1 [mask2]:capacitivity\n"
+	    foreach(cap_sheet, row) {
+	      if(cap_type == $t && sub_type == $s) {
+		"\t" name ":" cond_list ":"
+		mask_1_type mask_1 " "
+		mask_2_type mask_2 ":" capacitivity
+		if(comment) { "\t\t# " comment } "\n"
+	      }
+	    }
+	}}
+
+	"\nvdimensions:\n"
+	"#\tname:condition_list:mask:bottom thickness [spacing]\n"
+	foreach(vdimensions_sheet, row) {
+		"\t" name ":" cond_list ":" mask ":" bottom " " thickness
+		if(spacing) { " " spacing }
+		if(comment) { "\t# " comment } "\n"
+	}
+
+	"\neshapes:\n"
+	"#\tname:condition_list:mask:dxb dxt\n"
+	foreach(eshapes_sheet, row) {
+		"\t" name ":" cond_list ":" mask ":" dxb " " dxt
+		if(comment) { "\t# " comment } "\n"
+	}
+
+	"\ncshapes:\n"
+	"#\tname:condition_list:mask:xb1 xt1 xb2 xt2\n"
+	foreach(cshapes_sheet, row) {
+		"\t" name ":" cond_list ":" mask ":" xb1 " " xt1 " " xb2 " " xt2
+		if(comment) { "\t# " comment } "\n"
+	}
+
+	"\ndielectrics:\n"
+	"#\tname permittivity bottom\n"
+	foreach(dielectrics_sheet, row) {
+		"\t" name " " permittivity " " bottom
+		if(comment) { "\t# " comment } "\n"
+	}
+
+	"\nsublayers:\n"
+	"#\tname conductivity top\n"
+	foreach(sublayers_sheet, row) {
+		"\t" name " " conductivity " " top
+		if(comment) { "\t# " comment } "\n"
+	}
+
+	"\nsubcaplayers:\n"
+	"#\tname permittivity top\n"
+	foreach(subcaplayers_sheet, row) {
+		"\t" name " " permittivity " " top
+		if(comment) { "\t# " comment } "\n"
+	}
+
+	"\nselfsubres:\n"
+	"#\tarea perim value rest\n"
+	foreach(selfsubres_sheet, row) {
+		"\t" area " " perim " " val " " rest
+		if(comment) { "\t# " comment } "\n"
+	}
+
+	"\ncoupsubres:\n"
+	"#\tarea1 area2 dist. value decr.\n"
+	foreach(coupsubres_sheet, row) {
+		"\t" area1 " " area2 " " dist " " val " " decr
+		if(comment) { "\t# " comment } "\n"
+	}
+	"\n#EOF\n"
+    }
+}
+
+generator space_param_gen {
+    filename("space.def.p");
+    title("SPACE parameter file");
+
+    generate {
+	"## This file was generated by SPOCK on " application[date]
+	" at " application[time] ".\n"
+	"#####\n"
+	"# SPACE parameter file for " application[processname] " - " application[processdesc] "\n"
+	"#####################################################################\n\n"
+
+if(space_params.min_art_degree)	{ "min_art_degree\t" space_params.min_art_degree "\n" }
+if(space_params.min_degree)	{ "min_degree\t" space_params.min_degree "\n" }
+if(space_params.min_res)	{ "min_res\t" space_params.min_res "\t# ohm\n" }
+if(space_params.min_sep_res)	{ "min_sep_res\t" space_params.min_sep_res "\t# ohm\n" }
+if(space_params.max_par_res)	{ "max_par_res\t" space_params.max_par_res "\n" }
+if(space_params.no_neg_res == "on"){ "no_neg_res\ton\n" }
+if(space_params.min_coup_cap)	{ "min_coup_cap\t" space_params.min_coup_cap "\n" }
+
+foreach(space_params2, row){
+	if(name && value) { name "\t" value if(comment){ "\t# " comment } "\n" }
+}
+if(cap3d[numrows] != "0") {
+	"\nBEGIN cap3d\n"
+    foreach(cap3d, row){
+	if(name && value) { name "\t" value if(comment){ "\t# " comment } "\n" }
+    }
+	"END cap3d\n"
+}
+if(sub3d[numrows] != "0") {
+	"\nBEGIN sub3d\n"
+    foreach(sub3d, row){
+	if(name && value) { name "\t" value if(comment){ "\t# " comment } "\n" }
+    }
+	"END sub3d\n"
+}
+if(subcap3d[numrows] != "0") {
+	"\nBEGIN subcap3d\n"
+    foreach(subcap3d, row){
+	if(name && value) { name "\t" value if(comment){ "\t# " comment } "\n" }
+    }
+	"END subcap3d\n"
+}
+if(sne[numrows] != "0") {
+	"\nBEGIN sne\n"
+    foreach(sne, row){
+	if(name && value) { name "\t" value if(comment){ "\t# " comment } "\n" }
+    }
+	"END sne\n"
+}
+if(moments[numrows] != "0") {
+	"\nBEGIN moments\n"
+    foreach(moments, row){
+	if(name && value) { name "\t" value if(comment){ "\t# " comment } "\n" }
+    }
+	"END moments\n"
+}
+if(disp[numrows] != "0") {
+	"\nBEGIN disp\n"
+    foreach(disp, row){
+	if(name && value) { name "\t" value if(comment){ "\t# " comment } "\n" }
+    }
+	"END disp\n"
+}
+if(debug[numrows] != "0") {
+	"\nBEGIN debug\n"
+    foreach(debug, row){
+	if(name && value) { name "\t" value if(comment){ "\t# " comment } "\n" }
+    }
+	"END debug\n"
+}
+    }
+}
+
+generator getepslay_gen {
+    title("Getepslay PostScript settings");
+    filename("epslay.def");
+
+    map term_text_align {
+	al_00	= "0 0";
+	al_n10	= "-1 0";
+	al_10	= "1 0";
+	al_01	= "0 1";
+	al_0n1	= "0 -1";
+    }
+
+    generate {
+	"%% This file was generated by SPOCK on " application[date] " at " application[time] ".\n"
+	"%% getepslay customization for the " application[processname] " process.\n\n"
+
+	if(getepslay_pl.includefile_nelsis) {
+	    "%%Include <" getepslay_pl.includefile_nelsis ">\n"
+	}
+	if(getepslay_pl.includefile_home) {
+	    "%%Include \"" getepslay_pl.includefile_nelsis "\"\n"
+	}
+	"\n"
+	"%%Order: " getepslay_pl.mask_order "\n"
+	"[ " getepslay_pl.font_min " " getepslay_pl.font_max " " getepslay_pl.font_lambda
+	"/" getepslay_pl.plotfont " ] plotFont\n"
+	"[ " getepslay_pl.termtxt " ] termTextAlignment\n\n"
+
+	"% mask\tpattern\tscale\tlinewidth\n"
+	foreach(getepslay_sheet, row) {
+	    "[ (" mask_name ")\t" pattern "\t" scale "\t" linewidth " ] defineStyle\n"
+	}
+    }
+}

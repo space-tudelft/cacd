@@ -1,0 +1,17 @@
+#!/bin/sh
+cat $2 > $1.spc
+nspice_pp $1 $3 >> $1.spc
+spice3 < $1.spc > $2.3
+cp  $2.3   $1.ana
+rm -f $2.3
+if nspice_bs $1
+then
+    cat $1.ana > $4
+    rm -f $1.spc $1.ana
+    exit 0
+else
+    cat $1.ana > $4
+    rm -f $1.spc $1.ana
+    exit 1
+fi
+# eof

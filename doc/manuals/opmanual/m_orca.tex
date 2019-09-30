@@ -1,0 +1,58 @@
+\section{Handleiding Orca: Module Generator}
+\index{orca|bold}
+\subsection{Inleiding}
+
+Met \tool{orca}, wat staat voor Ocean Rapid Cell Assembler, kunt u automatisch modules genereren als een teller of decoder.\\
+U geeft enkele specificaties op en het programma maakt voor u een circuit- en layout-beschrijving en plaatst die in de database.\\
+Om het programma is een user-interface gemaakt, die het gebruik ervan sterk vereenvoudigt. Bij het maken van deze interface was \'e\'en van de eisen dat een handleiding eigenlijk overbodig zou moeten zijn.\\
+De software is vrij recent ontwikkeld en nog sterk in ontwikkeling. Dit houdt enerzijds in dat het programma nog niet geheel foutvrij zal zijn,, anderzijds is het op dit moment nog slechts mogelijk om decoders en (seri\"ele) tellers te genereren. Dit zal in de toekomst echter sterk uitgebreid worden. 
+
+\subsection{Het gebruik van Orca}
+
+U start het programma op door \tool{orca} in te typen. Er verschijnt dan een nieuw window op uw scherm. Het window is opgedeeld in verschillende velden. In het veld "generators" staan de cellen vermeld die u kunt laten genereren. Als u uw muis in dit veld zet (op bijvoorbeeld \button{sercounter}) komt in het EXPLAIN\_message veld te staan wat zo'n cel doet.\\
+Als u nu op \button{sercounter} klikt, verschijnen in het "views"-veld de verschillende views die u van de sercounter kunt laten maken. In het veld "parameters" staan de parameters die u daarbij moet meegeven.\\
+Als u de verschillende views en parameters hebt ingesteld, moet u nog een module\_naam opgeven. Vervolgens kunt u deze settings bewaren door op \button{save} te drukken. Dit is handig omdat u ze dan later weer op kunt vragen met \button{load}.\\
+Om de module\_generator aan te roepen, drukt u op \button{make\_cell}. De views die u hebt opgegeven, worden dan gemaakt en in de database gezet. Met \tool{seadali} kunt u vervolgens het resultaat bekijken.\\
+
+\subsection{Seri\"ele Counters}
+
+Met  \tool{orca} is het mogelijk om drie soorten seri\"ele counters te maken:
+een up-counter, en down-counter en een updown-counter. Het aantal bits
+is instelbaar van 1 tot en met 64.\\
+Een n-bit counter wordt samengesteld uit n 1-bit basiscellen. Bij het maken
+van een n-bit counter wordt niet alleen de n-bit counter zelf in de database
+gezet, maar ook z'n basiscel. De naam van de basiscel is gelijk aan de 
+naam zoals die in het veld "Module name:" opgegeven is met de letter a eraan
+toegevoegd.\\
+De basiscellen van een up-counter en een down-counter
+hebben de volgende terminals:\\
+\begin{tabbing}
+xxxxxxxxxxx\=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\=\kill
+terminal \>functie\\
+CK \> Klok\\
+R \> Reset (moet minimaal een klokpuls lang zijn)\\
+ENT \> Enable (indien laag dan in de houd-vast toestand)\\
+LD \> Load (Indien hoog dan Y0=I0)\\
+RCO \> Ripple Carry Out (indien Y0=0 dan RCO=1)\\
+I0 \> Input\\
+Y0 \> Output\\
+vdd \> Plus voeding (5 V)\\
+vss \> Min voeding (0 V)\\
+\\
+Bij een basiscel van de updown-counter is er nog een extra terminal U\_D:\\
+\\
+U\_D \> Up/Down (up = hoog, down = laag)\\
+\\
+De n-bit counters hebben dezelfde terminals maar dan zijn het aantal
+ingangen en uitgangen gelijk aan n:\\
+\\
+I0,I1,..In \> n input terminals (I0 is laagstwaardige bit)\\
+Y0,Y1,..Yn \> n output terminals (Y0 is laagstwaardige bit)\\
+\\
+De RCO terminal is nu hoog indien alle uitgangen laag zijn.\\
+\\
+\end{tabbing}
+Bij het maken van layout kan het voorkomen dat de routing niet compleet is.\\
+Verandering van de aspect ratio (b.v.\ van 1 naar 2) kan dit probleem verhelpen.
+
+\cleardoublepage

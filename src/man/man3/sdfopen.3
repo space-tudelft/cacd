@@ -1,0 +1,44 @@
+.ll 77
+.hy
+.TH SDFOPEN 3SDF "THE SEADIF PROGRAMMERS MANUAL"
+.SH NAME
+sdfopen - function to open a seadif database
+.SH SYNOPSIS
+ #include <sealib.h>
+
+ int sdfopen(void)
+
+.SH DESCRIPTION
+This function obtains the table of contents of the seadif database (see
+.I sealib (3SDF))
+and stores this information in in-core hash tables.
+Subsequent calls to other
+sealib function use these hash tables to get information about the database
+and to administrate some of their actions.
+
+The environment variable SEALIB specifies a colon-separated list of directories
+to be searched for seadif files.
+It is not an error if one or more directories do not exists.
+If SEALIB is not set in the environment then the default value
+is ".:/usr/local/lib/seadif".
+
+The variable SEALIBWRITE can be set to a colon-separated list of directories
+containing the seadif files that are allowed to be modified.
+Directories that appear in the SEALIBWRITE list and
+that do not occur in the SEALIB list are ignored.
+If SEALIBWRITE is not set, then all (writable) seadif files found
+through SEALIB can be written with the
+.I sdfwrite (3SDF)
+functions.
+
+.SH "RETURN VALUE"
+Sdfopen() returns SDF_NOERROR on success.
+If parts of the database are found to be locked SDFERROR_FILELOCK is returned.
+Other failures cause SDFERROR_SEADIF to be returned.
+
+.SH "AUTHOR"
+Paul Stravers, Delft University of Technology.
+
+.SH "SEE ALSO"
+sealib(3SDF), sdfwrite(3SDF), sdfread(3SDF), seadif(4SDF), sdfclose(3SDF),
+cs(3SDF), sdfattachlib(3SDF), sdfexists(3SDF), memman(3SDF), sdfimage(4SDF).

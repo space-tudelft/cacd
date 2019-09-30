@@ -1,0 +1,132 @@
+.if n .po 0
+.TH GETEPSLAY 1ICD "User Commands"
+.UC 4
+.SH NAME
+getepslay - make a postscript file from a mask layout
+.SH SYNOPSIS
+.B getepslay
+[-vsbtTFr] [-w width | -h height | -l lambdascale]
+.br
+\ \ \ \ \ \ \ [-o masklist | -n masklist] [-p style | -P techfile] cellname
+.de TB
+.if n .TP 10n
+.if t .TP 15n
+.ie !''\\$2' .B "\\$1 \fI\\$2\fP"
+.el          .B "\\$1"
+..
+.SH OPTIONS
+.I Getepslay
+understands the following options:
+.TP
+.B -v
+Verbose mode.
+.TP
+.B -r
+Rotate the picture so that x-axis is along the long side of the paper.
+.TP
+.B -b
+Include a bounding box around the layout.
+.TP
+.B -t
+Plot terminals with a cross and the terminal name.
+.TP
+.B -T
+Simulate transparency of the interconnect layers.
+.TP
+.B -F
+Simulate full transparency of all layers.
+Implies \fB-T\fP.
+.TP
+.B -s
+Include symbolic masks. They are excluded by default.
+.TP
+.B -o masklist
+Process only the masks in \fImasklist\fP.
+\fIMasklist\fP is a comma- or blank-separated list of masknames.
+.TP
+.B -n masklist
+Exclude the masks in \fImasklist\fP from processing.
+.TP
+.B -w width
+Specifiy width of picture in cm.
+.TP
+.B -h height
+Specifiy height of picture in cm.
+.TP
+.B -l lambdascale
+Specifiy the lambda scale, i.e. the number of lambda's per centimeter.
+.TP
+.B -p style
+Specify the file ``epslay.\fIstyle\fR'' in the appropriate
+section of the Nelsis process library as the technology file.
+The technology file defines the appearance of the plotted layout.
+The default file is ``epslay.def''.
+.TP
+.B -P techfile
+Specify another technology file.
+.TP
+.B -e
+Assume the layout is already expanded,
+do not run the makeboxl and makegln preprocessors.
+.PP
+In case more than one of the
+.B -w,
+.B -h
+and
+.B -l
+options is used, the last setting overrides.
+Similarly for
+.B -p
+and
+.B -P,
+and for
+.B -o
+and
+.B -n.
+.SH "DESCRIPTION"
+.I Getepslay
+is a program that creates a postscript file from a layout,
+whereby each mask is plotted with a particular stipple
+pattern as specified in a technology file.
+The file may then be printed on any postscript printer,
+or included in a document created with,
+for example,
+TeX or troff.
+.PP
+The output is in the file \fIcellname\fP.eps.
+.PP
+The postscript produced is well behaved, and apart from a showpage
+command, it is encapsulated postscript.
+.PP
+The default picture size is A4, minus some small margins.
+.PP
+To modify the appearance of the layout, the resulting postscript can be
+edited.
+Alternative technology files can also be specified by using
+the
+.B -P
+or
+.B -p
+option.
+.PP
+Warning:
+when using the \fB-T\fP or \fB-F\fP option,
+the resulting output file can be much larger
+than when not using one of these options.
+For large designs, the output file can nearly double in size.
+.SH "EXAMPLES"
+.nf
+exp -g flipflop
+getepslay -P epstech.c3tu -w12 flipflop
+.fi
+.AU " N.P. van der Meijs"
+.SH FILES
+.TP
+\fCICDPATH/share/lib/process/\fIprocess\fP/epslay.def\fP
+default element definition file.
+.TP
+\fCICDPATH/share/lib/epslay.pro\fP
+default postscript prolog file, common for all technologies.
+.SH SEE ALSO
+mplot (1ICD),
+getepslay (4ICD).

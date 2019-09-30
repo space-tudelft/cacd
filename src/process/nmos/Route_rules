@@ -1,0 +1,133 @@
+/*
+ * ROUTER DESIGN RULES for Delft NMOS process
+ *
+ * Patrick Groeneveld 10-1987
+ *
+ * This file describes the design rules which
+ * are (only) used by the plar-programs 'glroute', 'sequ'
+ * and 'gcr'. These programs fetch the data they need
+ * from this file. Everything they do not reqocnize
+ * will be ignored without warning. The programs
+ * start looking for this file in the project directory.
+ * If no 'Route_rules' -file was found there, the
+ * route_rules file in ~cacd/lib/process/xxxx will be
+ * used. In this way the user can set his/her own
+ * router design rules by placing this file in
+ * the project directory.
+ * See also: GCR users manual
+ */
+
+/*
+ * The following statements link the official routing
+ * layers to a database-maskname
+ * Used by: gcr, sequ
+ */
+mask[poly] = np;
+mask[diff] = nd;
+mask[metal1] = nm;
+mask[metal2] = nb;   /* Note: Metal2 is not present */
+
+/*
+ * masknames of the contact hole patterns
+ */
+contactmask[poly] = nc;
+contactmask[diff] = nc;
+contactmask[metal2] = nc;
+
+/*
+ * the following statements
+ * set the minimum spacing
+ * between layers of index 1 and 2
+ * Used by: gcr, sequ
+ */
+spacing[diff][diff] = 2;
+spacing[diff][poly] = 1;
+spacing[poly][poly] = 2;
+spacing[metal1][metal1] = 2;
+spacing[metal2][metal2] = 2;
+
+/*
+ * the minimum spacing between the bottom and top halfs
+ * of the channel
+ * used by: gcr
+ */
+minchanwidth = 0;
+
+/*
+ * Sets the minimum width of the
+ * layer
+ * Used by : gcr
+ */
+width[diff] = 2;
+width[poly] = 2;
+width[metal1] = 3;
+width[metal2] = 3;
+
+/*
+ * The minimum size of the contact cut mask
+ * between layer 1 and layer 2
+ * Used by: gcr, sequ
+ */
+contact[diff][poly] = 2;
+contact[diff][metal1] = 2;
+contact[poly][metal1] = 2;
+contact[metal2][metal] = 2;
+
+/*
+ * The amount that layer 1 must be
+ * extended over a contact cut between layer 1
+ * and layer 2
+ * Used by: gcr, sequ
+ */
+overlap[poly][metal1] = 1;
+overlap[metal1][poly] = 1;
+overlap[diff][metal1] = 1;
+overlap[metal1][diff] = 1;
+overlap[metal2][metal1] = 1;
+overlap[metal1][metal2] = 1;
+overlap[poly][diff] = 1;
+overlap[diff][poly] = 1;
+
+/*
+ * gcr: The maximum length of a layer-wire
+ * in the horizontal direction. If nothing
+ * is specified for a layer, infinity is assumed.
+ * A value <= 0 set the length to minimum, a
+ * value < 0 prevents any joining of contactholes by gcr
+ * Used only in gcr
+ */
+length[diff] = 8;
+length[poly] = 50;
+
+/*
+ * minimum length to justify conversion into metal
+ */
+minlength[diff] = 10;
+minlength[poly] = 30;
+
+/*
+ * Approximate size of the grid in Two layers
+ * Used by: glroute
+ */
+grid_2 = 6;
+
+/*
+ * Grid size fro three layer
+ * used by glroute
+ */
+grid_3 = 4;
+
+/* maximum width of power wires */
+max_power_width = 200;
+
+/*
+ * current dissipation (in mA) per unit line width
+ * Used to calculate power wire width by glroute
+ */
+current[metal1] =  w / 0.8;
+
+/*
+ * Formula to calculate the power wire width (um) gived the current (mA)
+ * Used to calculate power wire width by glroute
+ */
+power_line[metal1] = 0.8 * i;

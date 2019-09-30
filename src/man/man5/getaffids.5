@@ -1,0 +1,55 @@
+.TH GETAFFECTEDIDS 5ICD "9/6/88"
+.UC 4
+.SH NAME
+GetAffectedIds - given a set of Id's return a set of Id's affected by an erase operation
+.SH SYNOPSIS
+.nf
+\fB
+GetAffectedIds (Ids, nIds, AffectedIds, pnaffectedIds)
+int Ids[];
+int nIds;
+int AffectedIds[];
+int *pnaffectedIds;
+\fP
+.fi
+.SH PARAMETERS
+.TP 14
+.B Ids
+Id's to be erased.
+.TP 14
+.B nIds
+specifies the number of Ids.
+.TP 14
+.B AffectedIds
+array in which the affected Ids are to be returned.
+.TP 14
+.B pnaffectedIds
+a pointer to an int specifying the size of the AffectedIds array,
+upon return the int is set to the actual number of affected Ids.
+.SH DESCRIPTION
+Given a set of Id's (which must be present in the mapping table),
+a set of Id's is returned that would be affected when an erase
+operation is performed on \fBIds\fP.
+\fB*pnaffectedIds\fP specifies the size of the user supplied \fBAffectedIds\fP
+array, when the functions returns this value is set to the number of
+affected Id's.
+.SH DIAGNOSTICS
+If the call to \fBGetAffectedIds()\fP is successful \fB1\fP is returned.
+If \fBGetAffectedIds()\fP fails \fB0\fP will be returned
+and \fBcacdcmaperrno\fP will be set to one of the following values:
+.TP 20
+.B NOINIT
+the CACD colormap library was not initialized.
+.TP 20
+.B BADID
+a specified Id did not exist.
+.TP 20
+.B ARRAYTOSMALL
+the user supplied \fBAffectedIds\fP array is too small to contain all affected Id's.
+.SH SEE ALSO
+InitCacdCmap(5ICD)
+CoupleIdToColor(5ICD)
+CoupleIdToRGB(5ICD)
+SetForegroundFromId(5ICD)
+.SH NOTE
+The \fBIds\fP themselves are also returned as affected Id's.

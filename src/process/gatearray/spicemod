@@ -1,0 +1,27 @@
+
+nenh    nenh   0   0
+penh    penh   0   0
+%
+
+* parameters for n_enhacement CMOS
+.model nenh nmos
++                       vto=1.6         kp=20E-6        gamma=2.2
++                       phi=0.72        pb=0.7          lambda=0.018
++                       nsub=1.74E16    xqc=1.0
++                       tox=0.1E-6      ld=1.1E-6
++                       cj=5E-4         mj=0.35
++                       cjsw=900E-12    mjsw =0.35
+* end nenh normal case
+
+.model penh pmos
++                       vto=-1.65       kp=7.4E-6       gamma=0.7
++                       phi=0.59        pb=0.6          lambda=0.065
++                       nsub=1.76E16    xqc=1.0
++                       cj=1.1E-4       mj=0.45
++                       cjsw=300E-12    mjsw =0.45
++                       tox=0.1E-6      ld=0.7E-6
+* end penh normal case
+
+* vpbulk 1 0 5V
+* rpbulk 1 0 100meg
+

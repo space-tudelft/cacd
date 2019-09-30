@@ -1,0 +1,27 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+
+COBJS		= acan.o acaskq.o acsetp.o cktaccpt.o cktacct.o cktacdum.o \
+		  cktask.o cktaskaq.o cktasknq.o cktbindn.o cktbkdum.o \
+		  cktclrbk.o cktcrte.o cktdelt.o cktdest.o cktdisto.o \
+		  cktdlti.o cktdltm.o cktdltn.o cktdojob.o cktdump.o \
+		  cktfbran.o cktfdev.o cktfnda.o cktfndm.o cktfnode.o \
+		  cktftask.o cktgrnd.o ckti2nod.o cktic.o cktinit.o \
+		  cktlnkeq.o cktload.o cktmapn.o cktmask.o cktmcrt.o \
+		  cktmkcur.o cktmknod.o cktmkvol.o cktmpar.o cktnames.o \
+		  cktnewan.o cktneweq.o cktnewn.o cktnodn.o cktnoise.o \
+		  cktntask.o cktnum2n.o cktop.o cktparam.o cktpmnam.o \
+		  cktpname.o cktpzld.o cktpzset.o cktpzstr.o cktsetap.o \
+		  cktsetbk.o cktsetnp.o cktsetup.o cktsgen.o cktsopt.o \
+		  ckttemp.o cktterr.o ckttroub.o ckttrunc.o ckttyplk.o \
+		  daskq.o dcoaskq.o dcop.o dcosetp.o dctaskq.o dctran.o \
+		  dctrcurv.o dctsetp.o distoan.o dkerproc.o dloadfns.o \
+		  dsetparm.o naskq.o nevalsrc.o ninteg.o noisean.o nsetparm.o \
+		  pzan.o pzaskq.o pzsetp.o sensaskq.o senssetp.o \
+		  tfanal.o tfaskq.o tfsetp.o tranaskq.o traninit.o transetp.o \
+		  cktsens.o
+
+LIB_TARGET	= ../ckt.a
+INCLUDE		= -I../../include -I../dev
+

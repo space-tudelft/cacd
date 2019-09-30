@@ -1,0 +1,563 @@
+.de OP
+\fB\\$1\fP\\fI\\$2\\fP\\$3
+..
+.TH SPACE 1ICD "User Commands"
+.UC 4
+.SH NAME
+space - 2D hierarchical layout to circuit extractor
+
+.SH SYNOPSIS
+.ta 1c
+.B space
+[-cClrRzbjkGFTInuhvitx]
+[-a\fItime\fP]
+[-D\fIdepth\fP]
+.br
+	[-E\fIfile\fP | -e\fIdef\fP]
+[-P\fIfile\fP | -p\fIdef\fP]
+[-S\fIparam=value\fP]
+cell
+
+.SH OPTIONS
+The following options can be specified:
+.TP
+.B -c
+Extract only \fIcapacitances\fP to substrate (ground).
+.TP
+.B -C
+Extract edge/surface \fIcoupling\fP capacitances.
+.TP
+.B -l
+Extract also \fIlateral\fP coupling capacitances, implies \fB-C\fP.
+.TP
+.B -r
+Extract \fIresistances\fP for high-resistivity interconnect.
+.TP
+.B -R
+Extract all resistances, overrule the
+"low_contact_res"
+and
+"low_sheet_res"
+parameters (set to 0), implies \fB-r\fP.
+.TP
+.B -z
+Apply \fImesh refinement\fP for resistances, implies \fB-r\fP.
+.TP
+.B -b
+Extract also \fIsubstrate resistances\fP,
+using a simple but fast compute method (implies a \fIflat\fP extraction).
+.TP
+.B -j
+Selective resistance extraction,
+resistances are extracted for all but specified interconnects.
+.TP
+.B -k
+Selective resistance extraction,
+resistances are only extracted for specified interconnects.
+.TP
+.B -G
+Extract RC models that are accurate up to a certain frequency
+(using selective node elimination).
+.TP
+.B -F
+.I Flat
+extraction, instead of a hierarchical extraction.
+.TP
+.B -T
+Only extract the \fItop\fP cell (by \fIhierarchical\fP extraction).
+.TP
+.B -I
+Unset \fIincremental\fP mode: do not skip sub-cells for which the circuit is up-to-date
+(by \fIhierarchical\fP extraction).
+.TP
+.OP -D depth
+Selectively unset \fIincremental\fP mode for all cells at level <= \fIdepth\fP
+(default \fIdepth\fP = 1).
+.TP
+.B -n
+Do not apply the circuit reduction heuristics.
+.TP
+.B -u
+Do not automatically run the preprocessor programs \fImakeboxl(1ICD)\fP and \fImakegln(1ICD)\fP.
+.TP
+.B -h
+Print help information.
+.TP
+.B -v
+Verbose mode.
+.TP
+.B -i
+Print statistics, implies verbose mode.
+.TP
+.B -t
+Add positions of nets, net-names, devices and sub-cells to the extracted circuit.
+.TP
+.B -x
+Generate layout backannotation data, implies \fB-t\fP.
+.TP
+.OP -a time
+Make
+.I space
+report its progression every \fItime\fP seconds.
+.TP
+.OP -E file
+Use \fIfile\fP as the element definition (.t) file.
+.TP
+.OP -e def
+Use the file space.\fIdef\fP.t in the ICD process library as the element definition file.
+.TP
+.OP -P file
+Use \fIfile\fP as the parameter (.p) file.
+.TP
+.OP -p def
+Use the file space.\fIdef\fP.p in the ICD process library as the parameter file.
+.TP
+.OP -S param=value
+Set parameter \fIparam\fP to the value \fIvalue\fP,
+overrides the setting in the parameter (.p) file.
+Note that
+.OP -S param
+is equivalent to
+.OP -S param =on.
+
+.SH HIDDEN OPTIONS
+For hidden options a '%' sign needs to be specified after the first '-'.
+Show the
+.I space3d
+manual for a complete list.
+
+.SH NOTICE
+This manual page only gives a brief introduction to \fIspace\fP.
+It should in most cases be sufficient, however,
+for performing straight-forward extraction tasks.
+Other documentation is available, see below.
+
+.SH DESCRIPTION
+.I Space
+is a 2D hierarchical layout to circuit extractor for 45 degree polygonal
+geometries.
+The program is capable of accurately extracting
+MOS and bipolar integrated circuits,
+including interconnect resistances and capacitances,
+and substrate resistances.
+Generally spoken,
+.I space
+extracts the circuits for all layout cells that are specified
+in the cell argument list.
+These circuits can then be directly simulated,
+for example, with
+.I sls(1ICD)
+or
+.I spice.
+
+.SS "Hierarchical, Flat or Mixed Extraction"
+The basic extraction mode of
+.I space
+is hierarchical.
+In this mode, the hierarchical structure of the circuit produced
+is identical to that of the layout.
+In hierarchical mode,
+.I space
+traverses the hierarchy itself.
+It is thus only necessary to specify the root(s) of the tree(s)
+to be extracted on the command line.
+When the
+.B -F
+option is used, the layout is flattened before extraction.
+With hierarchical extraction, only the top cell
+is extracted and the hierarchy is not traversed when the
+.B -T
+option is used.
+Mixed hierarchical/flat extraction
+can be accomplished by assigning some cells the
+.I macro
+status, see tool
+.I xcontrol(1ICD)
+or (old) tool
+.I macro(1ICD).
+Cells with the
+.I macro
+status are always completely expanded in their parent cells.
+When all cells would have the macro status,
+the circuit produced would be the same as when the
+.B -F
+option was used.
+
+.SS "Incremental Extraction"
+In hierarchical mode,
+.I space
+works incrementally.
+That is,
+it only extracts those cells which have not yet
+been extracted or are out of date with respect to the layout.
+Incremental mode can be disabled with the
+.B -I
+option,
+in which case
+.I space
+extracts all cells in the tree.
+It can be selectively disabled for all cells at level <=
+.I depth
+with the
+.OP -D depth
+option.
+The cells named on the command line are at level 1,
+their children at level 2, etc.
+The default
+.I depth
+is 1.
+Thus,
+the cells named on the command line are extracted even if
+the circuit exists and is up-to-date with respect to the layout.
+Use
+.OP -D 0
+if this is not desirable.
+The option
+.OP -D infinity
+is equivalent to
+.OP -I "" .
+The
+.B -I
+and
+.OP -D depth
+options have no effect in flat extraction mode.
+
+.SS "Area/Perimeter based Capacitance Extraction"
+By default,
+.I space
+uses an area/perimeter method
+for capacitance extraction.
+The capacitance is assumed
+to be proportional to c1 * A + c2 * P, where c1 and c2 are constants
+depending on which masks are present at a certain spot, and A and P
+are the relevant interconnect areas and perimeters.
+When using the
+.OP -c
+option, all capacitances found,
+including the inter-wire coupling capacitances,
+are connected to ground (the substrate).
+When the
+.OP -C
+option is used, however,
+the coupling capacitances are put in the extracted circuit.
+.PP
+The formula above
+only accounts for the coupling capacitances
+caused by overlapping wires.
+To also extract
+the capacitive coupling between neighboring wires,
+the
+.OP -l
+option can be used.
+See the Space User's Manual for details.
+
+.SS "Interconnect Resistance Extraction"
+When extracting interconnect resistances,
+.I space
+applies finite element techniques to
+construct a fine resistance mesh that models
+resistive effects in detail,
+and then applies a Gaussian elimination
+(or, equivalently, a star-triangle transformation)
+node reduction technique
+to find the final network.
+In general, this network contains
+the nodes that are gate, source or drain connections,
+and nodes that are connections to instances or terminals of the cell.
+However, the topology of the network is influenced
+by the network reduction heuristics that are applied, see below.
+.PP
+When also extracting capacitances,
+the mesh will be an RC mesh.
+In this case,
+the node reduction will proceed such that
+the Elmore time constants
+between the nodes in the final network
+are unchanged with respect to their value in the fine RC mesh.
+This will guarantee
+that the electrical transfer function
+of the final network
+closely matches that of the fine RC mesh
+and, consequently,
+that of the actual circuit.
+
+.SS "Network Reduction Heuristics"
+When extracting resistances and capacitances,
+.I space
+can apply some heuristics
+to further reduce the number of elements
+(resistors, capacitors and nodes)
+in the final network
+by neglecting irrelevant detail.
+These heuristics include
+.TP 4
+1.
+Merging of nodes that are connected by small resistance.
+.TP
+2.
+Deletion of large shunt resistances.
+.TP
+3.
+Reconnecting small coupling capacitances to ground.
+.PP
+All heuristics are controlled by
+parameters from the parameter file (see below).
+
+.SS "Selective Resistance Extraction"
+Selective resistance extraction is possible by specifying
+some interconnects in a file called 'sel_con' and by using either
+the option
+.OP -k
+or
+.OP -j.
+When using the option
+.OP -k,
+resistances will only be extracted for the interconnects
+that are specified in the file 'sel_con'.
+When using the option
+.OP -j,
+resistances will be extracted for all interconnects
+except for the interconnects
+that are specified in the file 'sel_con'.
+The format of the latter file is as follows.
+On each line, an x position, an y position and a maskname is specified.
+When an interconnect has the specified mask on the
+specified layout position, that interconnect is specified in the file.
+As an alternative also a netname can be specified on each line,
+the netname must have a leading '=' character.
+The netname may begin or end with a '*' wildcard character.
+
+.SS "Selective Extraction Filters"
+You can selective extract resistances and capacitances by using filters.
+For more information consult "Using Space Resistance and Capacitance Extraction Filters",
+report EWI-ENS 14-02, Feb. 2014.
+
+.SS "Library Cell Circuit Extraction"
+When a layout description contains cells that need
+not to be extracted because a separate circuit
+or behavioral description is available for them
+(e.g. standard cells, gate arrays)
+these cells should be set to the
+.I library
+or
+.I device
+status.
+For new projects, the status is set by using tool
+.I xcontrol(1ICD).
+Note that for old projects the device status was set by tool
+.I device(1ICD).
+For the library cells a circuit view must already exist.
+For device cells, use tool
+.I putdevmod(1ICD)
+to put device descriptions in the circuit view.
+When the device/library status is defined for a layout cell,
+.I space
+will not extract this cell but it will include
+it as a network primitive in the extracted circuit.
+This will work both with hierarchical
+and flat extractions.
+
+.SS "Simulation Model Support"
+Simulation models can be specified for
+the devices that are extracted by using
+the control file of
+\fIxspice(1ICD)\fP.
+
+.SS "Element Definition File"
+.I Space
+is technology independent.
+At start up,
+it reads a tabular element definition file
+specifying
+how the different elements like conductors and transistors
+can be recognized from the different mask combinations,
+and which values should be used for for example conductor
+capacitivity and conductor resistivity.
+This tabular element file is constructed
+from an user-defined element definition file by the
+.I space
+technology compiler \fItecc\fP(1ICD).
+.PP
+The default element definition file is
+\fIspace.def.t\fP in the appropriate directory of the ICD process library.
+However,
+there can be several other element definition files for a particular
+process.
+For example,
+the file \fIspace.max.t\fP may
+contain an element description with worst-case capacitance
+and resistance values.
+This file can be read rather than the standard file by
+specifying
+.OP -e max
+at the command line.
+.PP
+You can also prepare your own element definition file
+and specify the name of that file with the
+.OP -E file
+option.
+For a description of the format of such a file,
+see the Space User's Manual.
+
+.SS "Parameter File"
+Much of the operation of
+.I space
+is also under control of parameters
+that are specified in a parameter file.
+The default parameter file is
+\fIspace.def.p\fP in the appropriate directory of the ICD process library.
+You can select another parameter file with the
+.OP -p def
+or the
+.OP -P file
+options, analogous to selecting another element definition file.
+
+.SS "Information Feedback"
+The
+.B -v
+option produces information on what files
+.I space
+is reading and what extraction steps are being taken.
+The
+.B -i
+option produces quantitative information, such as the number of nets and transistors.
+With the
+.OP -a time
+option,
+.I space
+reports its progression,
+in percentage of the layout scanned,
+every
+.I time
+seconds.
+.I Space
+also reports its progression when it receives an ALARM signal,
+such a signal can be send by the command ``kill -ALRM \fIpid\fP'',
+where \fIpid\fP is the process id.
+
+.SS "Implementation"
+.I Space
+is a scanline based extractor.
+As a scanline is swept over the layout plane,
+the different steps of the method are executed in one pass.
+While the RC mesh is being constructed from the layout,
+nodes are eliminated as soon as
+all resistances and capacitances for that node are known.
+Also, all network elements are written to the database as soon as possible.
+This results in low time and space complexities
+of O(N) and O(sqrt(N)) respectively,
+where N is the number of contour edges of the interconnection polygons.
+
+.SS "Different Versions of Space"
+Use the
+.I space3d(1ICD)
+version for 3D capacitance extraction using a boundary-element method
+and for accurate substrate resistance extraction using a boundary-element method.
+
+.SS "Space System User Interface"
+The program
+.I helios(1ICD)
+can also been used.
+It is an User Interface for tool execution, build around the Space System.
+You don't need to remember the options needed to run an extraction.
+You can easy use the Extract Option Forms and click with the mouse on the buttons.
+You can also edit a layout cell using tool
+.I dali(1ICD)
+with it.
+You can also make a netlisting or run a circuit simulation using tool
+.I simeye(1ICD)
+with it.
+
+.SH EXAMPLES
+.PP
+Produce a transistor network for the cell \fIlatch\fP:
+.PP
+% space latch
+.PP
+Include substrate (ground) capacitances:
+.PP
+% space -c latch
+.PP
+Also include coupling capacitances and resistances:
+.PP
+% space -Cr latch
+
+.SH SPECIAL CONSIDERATIONS
+Before performing the actual extraction,
+.I space
+first runs the preprocessors
+.I makeboxl(1ICD)
+and
+.I makegln(1ICD)
+to convert the original layout information
+into a set of non-vertical line segment files (gln files).
+When needed,
+also the
+.I makesize(1ICD)
+preprocessor
+is called for resizes and new gln masks.
+This is automatically done by the
+.I space
+program.
+.AU "A.J. van Genderen, N.P. van der Meijs, F. Beeftink, P.J.H. Elias, U. Geigenmuller, S. de Graaf"
+
+.SH FILES
+.TP
+\fCICDPATH/share/lib/process/\fIprocess\fP/space.def.t\fP
+default element definition file
+.TP
+\fCICDPATH/share/lib/process/\fIprocess\fP/space.def.p\fP
+default parameter file
+.TP
+\fCNELSISPROJECT/exp_dat\fP
+list of cells to be extracted
+
+.SH SPACE_TMPDIR
+.I Space
+uses a directory where it stores temporary data.
+The default directory for this is selected from the
+list of directories "/tmp" and "/usr/tmp", whichever has more space available.
+Using the environment variable \fCSPACE_TMPDIR\fP it is possible
+to specify an alternative list of directories,
+separated by the character ':' or ';'.
+For example:
+.PP
+% setenv SPACE_TMPDIR /tmp:/usr/tmp:/user/john/tmp
+
+.SH SEE ALSO
+N.P. van der Meijs, A.J. van Genderen,
+F. Beeftink and P.J.H. Elias,
+"Space User's Manual",
+Delft University of Technology,
+Delft,
+The Netherlands.
+.PP
+N.P. van der Meijs and A.J. van Genderen,
+"Space Tutorial",
+Delft University of Technology,
+Delft,
+The Netherlands.
+.PP
+S. de Graaf, N.P. van der Meijs and A.J. van Genderen,
+"Space Tutorial Helios Version",
+Delft University of Technology,
+Delft,
+The Netherlands.
+.PP
+A.J. van Genderen, N.P. van der Meijs and T. Smedes,
+"Space Substrate Resistance Extraction User's Manual",
+Delft University of Technology,
+Delft,
+The Netherlands.
+.PP
+helios(1ICD),
+makeboxl(1ICD),
+makedela(1ICD),
+makegln(1ICD),
+makemesh(1ICD),
+makesize(1ICD),
+putdevmod(1ICD),
+space(4ICD),
+space3d(1ICD),
+tecc(1ICD),
+xcontrol(1ICD).

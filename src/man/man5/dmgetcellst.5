@@ -1,0 +1,77 @@
+.TH DMGETCELLSTATUS 5ICD "DMI User's Manual"
+.SH NAME
+dmGetCellStatus - get extraction status of a cell
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+int dmGetCellStatus (DM_PROJECT *dmproject, DM_XDATA *xdata);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "DM_PROJECT *dmproject"
+a pointer to a valid \fBDM_PROJECT\fP as obtained from dmOpenProject().
+.TP
+.B "DM_XDATA *xdata"
+a pointer to a \fBDM_XDATA\fP structure.
+.SH DESCRIPTION
+Function
+.B dmGetCellStatus
+provides access to the extraction state information of a cell.
+.PP
+You must give a \fBDM_XDATA\fP structure to the function and
+assign a cell name to the \fBname\fP member into the structure.
+.PP
+It returns a filled \fBDM_XDATA\fP structure,
+containing information about the
+particular cell of the project identified by \fBdmproject\fP.
+.PP
+The \fBDM_XDATA\fP structure has the following members:
+.PP
+.nf
+.if n .ta 4 11 29
+.if t .ta 1c 2c 6c
+	char *	\fBname\fP	cell name
+	long	\fBtimestamp\fP	last modified date
+	short	\fBcelltype\fP	type of cell
+	short	\fBinterfacetype\fP	type of interface
+	char *	\fBmasks\fP	list of masks
+.SH DIAGNOSTICS
+If \fBdmGetCellStatus()\fP is successful,
+\fB0\fP will be returned.
+The \fBmasks\fP member points to a static buffer
+and can contain a list of mask identifiers (>= 0).
+.if t .PP
+If the cell cannot be found, \fB1\fP will be returned.
+A default filled \fBDM_XDATA\fP structure is given back.
+The defaults are: timestamp = 0,
+celltype = DM_CT_REGULAR,
+interfacetype = DM_IF_STRICT
+and *masks = '\\0'.
+Function dmError() is not called.
+External variable \fBdmerrno\fP will be set to reason:
+.TP 16
+.B DME_BADPR
+Bad project.
+.TP
+.B DME_FOPEN
+Cannot read xcontrol file.
+.TP
+.B DME_GET
+Premature EOF.
+.PP
+If another error condition occurs, \fB-1\fP is returned after
+dmError() has been called.
+.if t .br
+This may happen in the following cases:
+.TP 16
+.B DME_GET
+No xdata.
+Data read error.
+.TP
+.B DME_NOCELL
+No cell name specified.
+.SH SEE ALSO
+dmPutCellStatus(5ICD), xcontrol(1ICD).

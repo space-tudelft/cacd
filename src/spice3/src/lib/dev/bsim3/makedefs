@@ -1,0 +1,13 @@
+###########
+# Copyright 1999 Regents of the University of California.  All rights reserved.
+# File: makedefs
+###########
+
+COBJS		= b3acld.o b3cvtest.o b3del.o b3dest.o \
+		  b3getic.o b3ld.o b3mask.o b3mdel.o \
+		  b3mpar.o b3par.o b3pzld.o b3set.o b3temp.o b3trunc.o \
+		  b3.o b3ask.o b3noi.o b3check.o
+
+LIB_TARGET	= ../../dev.a
+INCLUDE		= -I../../../include
+

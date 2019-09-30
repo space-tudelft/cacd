@@ -1,0 +1,347 @@
+\section{De Sea-of-Gates Chip}
+\index{Sea-of-Gates|bold}
+\label{SoGchip}
+\subsection{Globale beschrijving}
+
+De chip waar de OP practicum-ontwerpen op gemaakt worden
+is van het "semi-custom" type. Dit houdt in dat de grootte
+van de chip vast staat en dat ook de grootte, ligging en
+aantal van de te gebruiken transistoren al bekend is. In feite
+is de chip al voor een groot deel vervaardigd, alleen de
+metallisatie die nodig is voor de gewenste schakeling, moet
+nog worden aangebracht. De gekozen structuur op de reeds
+gefabriceerde wafers (plakken silicium met een doorsnede
+van 4 inch) is die van de moderne gate-array: de Sea-of-Gates
+structuur. Deze structuur leent zich primair voor digitale
+schakelingen, maar analoge zijn ook mogelijk.\\
+\\
+Fabricageproces:
+
+\begin{quote}
+Een 1.6 $\mu m$~nwell-CMOS proces (het Philips C3DM proces).
+\end{quote}
+
+Grootte van de chip:
+
+\begin{itemize}
+\item
+
+10~x~10 mm, (46 exemplaren op een 4 inch plak)
+\item
+144 aansluitpinnen waarvan de functie programmeerbaar is
+door middel van metallisatiepatronen,
+\item
+200.000 transistoren (de helft is pmos, de andere helft is nmos),
+\item
+afmeting nmos transistor: 1.6~x~23.2 $\mu m$,
+\item
+afmeting pmos transistor: 1.6~x~29.6 $\mu m$.
+\end{itemize}
+
+De metallisatie van de wafers, het uitzagen en afmonteren van de
+chips gebeurt in het DIMES instituut. Voor de metallisatie zijn
+4 maskerstappen nodig: 2 metaal- en 2 kontaktgaten maskers.
+
+De grootte van de chip is zodanig gekozen dat meerdere typen 
+ontwerpen gemaakt kunnen worden. Ook is het niet bij voorbaat
+onmogelijk om een redelijk grote schakeling te realiseren. De
+belang\-rijk\-ste voorwaarde is dat DIMES in staat moet zijn de
+metallisatie aan te brengen.
+Hieronder volgt een lijst met de maskers die DIMES voor de metallisatie
+moet maken (en dus door de ontwerper gespecificeerd) en hun functie.
+Voor de volledigheid is een opsomming toegevoegd van de maskers die
+nodig waren om de sea-of-gates chip te maken.
+
+DIMES maskers:
+\index{maskers}
+\begin{itemize}
+\item
+\layer{co} (\layer{con},~\layer{cop},~\layer{cps}) : Definieert posities van kontaktgaten in het
+oxide tussen de onderste metaallaag(\layer{in}) en \layer{od} en \layer{ps}
+gebieden.
+\item
+\layer{in} : Definieert de onderste (eerste) metaallaag.
+\item
+\layer{cos} : Definieert de positie van kontaktgaten in het oxide
+tussen eerste en tweede(bovenste) metaallaag(\layer{ins}).
+\item
+\layer{ins} : Definieert de bovenste (tweede) metaallaag.
+\end{itemize}
+Overige maskers:
+\begin{itemize}
+\item
+\layer{nw} :  nwell, definieert de gebieden waarin p-transistoren kunnen
+worden gedefinieerd.
+\item
+\layer{od} : Definieert de actieve gebieden: plaats van source, gate en
+drain van beide typen transistoren.
+\item
+\layer{sn} : Definieert die delen van de actieve gebieden die van het 
+n-type zijn.
+\item
+\layer{sp} : Definieert die delen van de actieve gebieden die van het 
+p-type zijn.
+\item
+\layer{ps} : Definieert gates van transistoren.
+\end{itemize}
+\subsection{De kern van de chip,
+vanuit circuit-standpunt}
+
+De chip heeft een sea-of-gates structuur en bestaat eenvoudig 
+uit een groot aantal rijen transistoren zoals hieronder getekend.
+Er zijn evenveel rijen n- als p-type transistoren (zie figuur~\ref{pnrij})
+
+\begin{figure}[hbt]
+\centerline{\callpsfig{pnrij.eps}{width=0.9\textwidth}}
+\caption{Schematische voorstelling van een pmos- en een nmos-rij op de sea-of-gates chip
+\label{pnrij}}
+\end{figure}
+
+
+Elke rij op de chip telt ongeveer 1000 transistoren. Elk knooppunt
+in elke rij is toegankelijk vanuit de eerste metaallaag. De tweede
+metaallaag kan gebruikt worden indien kruisingen tussen metaalsporen
+nodig zijn. Naast een rij n-transistoren ligt altijd een rij 
+p-transistoren.\\
+De rijenstructuur lijkt onhandig maar is dit in de praktijk niet.
+In een schakeling zijn namelijk altijd rijen transistoren te ontdekken.\\
+Als voorbeeld een 3-input nand schakeling (zie figuur~\ref{nand3}).
+
+\begin{figure}
+  \makebox[0.98\textwidth]{
+     {\callpsfig{nand3.eps}{height=0.4\textheight}}
+     \hfill
+     {\callpsfig{nand3a.eps}{height=0.4\textheight}}
+  }
+\caption{Schema van de 3-input nand,
+de afbeelding hiervan
+op een rijenstructuur en de layout op het sea-of-gates image
+\label{nand3}}
+\end{figure}
+
+In de structuur is duidelijk dat alle transistoren keurig op een rij 
+gelegd kunnen worden en met een eenvoudig verbindingspatroon 
+(in metaal) verbonden kunnen worden tot een 3-input nand. De in de
+structuur meest rechts getekende transistoren dienen alleen als
+scheiding van de schakeling met de rest van de transistoren.
+De herhaling in de y-richting van n- en p-rijen transistoren is
+als volgt: {\tt ....nppnnppnnppn...} (zie ook figuur~\ref{fig-fishbone}).\\
+Dit heeft o.a.\ als reden dat de p-transistoren op deze manier
+meer gegroepeerd zijn voor grotere nwell gebieden.\\
+De basisrepetitie van 4 rijen ({\tt nppn}) komt op de chip 44 keer voor.\\
+In de tabellen~\ref{weerstand} en~\ref{capaciteit} staan enkele elektrische eigenschappen van het cmos proces.
+\begin{table}[hbt]
+\begin{center}
+\begin{tabular}{lc}\\
+\hline
+masker & weerstand ($\Omega/\fbox{}$)\\
+\hline\\
+$n^+$ OD & 55\\
+$p^+$ OD & 75\\
+poly-Si & 25-60\\
+\layer{in} & 0.045\\
+\layer{ins} & 0.03\\
+\hline
+\end{tabular}
+\caption{Nominale interconnectie weerstand cmos proces}
+\label{weerstand} \index{weerstand!procesgegevens}
+\end{center}
+\end{table}
+
+\begin{table}[hbt]
+\begin{center}
+\begin{tabular}{lccc}
+\hline
+& Oppervlakte capaciteit & Rand capaciteit &\\
+& (aF$/\mu m^2$) & (aF$/\mu m$) & opmerking\\
+\hline\\
+$n^+$ OD naar substraat & 190 & 310 & junctie capaciteit\\
+$p^+$ OD naar substraat & 450 & 570 & junctie capaciteit\\
+poly naar substraat & 49 & 54 \\
+metaal1 naar substraat & 25 & 45 \\
+metaal 1 naar OD & 49 & 54\\
+metaal1 naar poly & 49 & 55\\
+metaal2 naar substraat & 13 & 49\\
+metaal2 naar OD & 15 & 53\\
+metaal2 naar poly & 22 & 62\\
+metaal1 naar metaal2 & 43 & 81\\
+\hline
+\end{tabular}
+\caption{Nominale interconnectie capaciteiten cmos proces} \index{capaciteit!procesgegevens}
+\label{capaciteit}
+\end{center}
+\end{table}
+
+
+\subsection{De kern van de chip,
+vanuit een layout-standpunt}
+
+In figuur~\ref{fig-fishbone} is een stukje layout gegeven van de basisstructuur.
+Duidelijk zijn de rijen transistoren zichtbaar. De p-transistor
+is breder dan de n-transistor. Het verschil in breedte is gelijk
+aan de ruimte die nodig is voor een extra metaalspoor en kontaktgat  
+op de actieve gebieden van de p-transistoren. Tussen de twee rijen 
+p-transistoren is plaats voor het voedingsspoor met daaronder een
+\layer{od} gebied om de nwell te kunnen verbinden met de hoogste spanning
+in de schakeling (de voedingsspanning). Onder het aardspoor ligt
+een \layer{od} gebied om het p-substraat aan aarde te kunnen leggen.
+
+\begin{figure}
+\centerline{\callpsfig{fishbone2.ps}{height=0.8\textheight}}
+\caption{Layout van het fishbone sea-of-gates image. \index{image}
+\label{fig-fishbone}}
+\end{figure}
+
+Ook valt nog op dat alle afmetingen rechthoekig zijn, behalve
+de gate-aansluitingen waarin 45-graden lijnen zijn gebruikt.
+Dit is gedaan uit efficiency overwegingen.\\
+Wat de layout betreft:
+
+\begin{quote}
+De steek in de x-richting is 8.0~$\mu m$.\\
+De steek in de y-richting is 197.6~$\mu m$.\\
+De layout-eenheid is 1 lambda (1 lambda = 0.2 $\mu m$).
+\end{quote}
+
+\subsection{Eisen en afspraken met betrekking tot de metallisatie}
+\label{eisen_metal}
+\begin{itemize}
+\item
+Horizontaal lopend over het actieve gebied van een rij
+n-transistoren is plaats voor maximaal 4 metaalsporen.\\
+Horizontaal lopend over het actieve gebied van een rij
+p-transistoren is plaats voor maximaal 5 metaalsporen.
+\item
+Source- en drain gebieden en ook gate-aansluitingen) kunnen
+alleen maar verbonden worden met metaal1 (\layer{in}). 
+Verbinding van source, drain en gate 
+met metaal2 (\layer{ins}) kunnen alleen maar lopen via metaal1.
+\item
+Kontakten van metaal1 met source, drain of gate wordt gemaakt 
+middels kontaktgaten.
+Deze kontaktgaten mogen alleen gedefinieerd worden op de grid-punten
+(zie figuur~\ref{fig-fishbone}).
+Kontakt van metaal1 (\layer{in}) en pmos source en 
+draingebied wordt gemaakt met \layer{cop}, kontakt van metaal1 (\layer{in}) 
+en nmos source en draingebied wordt gemaakt met \layer{con} en 
+kontakt van metaal1 (\layer{in}) met de gates (poly-silicium) 
+wordt gemaakt met \layer{cps}.\\
+Overigens mogen deze drie kontaktlagen (\layer{con, cop en cps}) bij het maken 
+van de layout door elkaar worden gebruikt omdat bij het maken van het masker
+voor deze gaten ook geen onderscheid wordt gemaakt.
+\item
+Kontakten tussen metaal1 (\layer{in}) en metaal2 (\layer{ins}) worden 
+gemaakt met \layer{cos}.
+\item
+Een \layer{con}- of \layer{cop}- of \layer{cps}-kontakt en een \layer{cos}
+kontakt mogen niet boven elkaar worden gedefinieerd.
+\item
+Op de plaats van een gate kontaktaansluiting mag geen \layer{cos} kontakt
+worden gedefinieerd.
+\item
+Metaal1 (\layer{in}) loopt overwegend horizontaal, metaal2 (\layer{ins}) loopt
+overwegend verticaal.
+\end{itemize}
+
+\subsection{Meetgegevens van de Sea-of-Gates chip}
+
+\paragraph{Karakteristieken van de nmos en pmos transistoren}
+
+In figuur \ref{npmosidvd} is de gemeten drainstroom $I_d$ uitgezet 
+tegen de drain-sourcespanning $V_{ds}$ met de gate-sourcespanning $V_{gs}$ als parameter.\\
+In figuur \ref{npmosidvg} is de gemeten drainstroom $I_d$ uitgezet tegen de gatespanning $V_{gs}$ met de drain-sourcespanning $V_{ds}$ als parameter.\\
+De maximale stroom voor een enkele nmos transistor ($V_{gs}$ = $V_{ds}$ = 5 V) is ca.~5.5 mA. Voor een enkele pmos transistor is de maximale stroom ($V_{gs}$ = $V_{ds}$= -5 V) gelijk aan ca.~2.7 mA. 
+\paragraph{Kleinsignaalmodel van de mos transistor}
+
+In figuur \ref{ks-model}~ is een eenvoudig kleinsignaalmodel gegeven van de
+mos transistor. De waarde van de verschillende capaciteiten zijn nog
+niet gemeten.\\
+Voor de drainstroom in verzadiging geldt ($V_{ds} > V_{gs} > V_t$, zie ook \cite{GS}):\\
+\\
+\centerline{$I_d = \frac{\beta}{2}(V_{gs}-V_t)^2(1+\lambda V_{ds}$)}\\
+\\
+De gemeten waarde van de verschillende parameters zijn te vinden in tabel \ref{mostabel}.
+
+\begin{figure}[hbt]
+\centerline{\callpsfig{mostm.ps}{width=0.8\textwidth}}
+\caption{\label{ks-model} Een eenvoudig kleinsignaalmodel van de mos transistor}
+\end{figure}
+
+\begin{table}[hbt]
+\begin{center}
+\begin{tabular}{ccc}
+\hline
+Parameter & nmos & pmos\\
+\hline\\
+$V_t$ & 0.7 V & -1.2 V\\
+$\beta$ & 0.65 mA/$V^2$ & 0.13  mA/$V^2$\\
+$\lambda$ & 0.027 $V^{-1}$ & 0.096  $V^{-1}$\\
+$r_d$ & 7.5 k$\Omega$ & 10  k$\Omega$\\
+\hline
+\end{tabular}
+\caption{\label{mostabel} Enkele gemeten parameters van de nmos en pmos transistoren}
+\end{center}
+\end{table}
+\paragraph{Weerstandswaarden} In tabel \ref{weerstandwaarden} zijn de gemeten waarden te vinden van een aantal weerstanden en vergeleken met de berekende waarden uit gegevens van het cmos-proces.
+
+\begin{table}[hbt]
+\begin{center}
+\begin{tabular}{ccc}
+\hline
+Grootheid & Berekende waarde & Gemeten waarde\\
+\hline\\
+Contactgateweerstand\\
+{\bf in-ins (cos)} & max. 0.2~$\Omega$ & 0.13~$\Omega$\\
+{\bf in-ps (cps)} & max. 50~$\Omega$ & 22~$\Omega$\\
+Metaalweerstand\\
+metaal1 ({\bf in}) & 45 m$\Omega/\fbox{}$ & 56 m$\Omega/\fbox{}$\\
+metaal2 ({\bf ins})& 30 m$\Omega/\fbox{}$ & 26 m$\Omega/\fbox{}$\\
+Polysiliciumgateweerstand\\
+nmos gate & 690 $\Omega$ & 700 $\Omega$\\
+pmos gate & 790 $\Omega$ & 950 $\Omega$\\
+\hline
+\end{tabular}
+\caption{\label{weerstandwaarden} Enkele weerstandwaarden van de sea-of-gates chip} \index{weerstand!gemeten waarde}
+\end{center}
+\end{table}
+
+\subsection{Structuur in de rand van de chip}
+
+Er zijn in de rand 144 aansluitposities, verdeeld in 8 groepen van elk 18.
+Elke groep van 18 aansluitingen heeft een voedingspositie en een aardpositie.
+De andere 16 zijn 
+programmeerbaar d.m.v.\ metallisatiepatronen tot een aantal
+bufferfuncties, b.v.: digitaal in, digitaal uit, analoog in, analoog uit.
+Alle 8 aardposities in de rand zijn met elkaar verbonden (via de 
+chiprand).
+Voor de programmering van de rand van een chip wordt verwezen
+naar een afzonderlijke handleiding. Voor de liefhebbers liggen
+er in de ruimten tussen de buffers in de rand nog polyweerstanden.
+In elke tussenruimte liggen er 8 van elk 2.5 k$\Omega$ (= 100 vierkanten).
+Tenslotte ligt
+in de rand linksonder een grote poly-rechthoek die nuttig kan zijn
+voor een capaciteit. Deze weerstanden en capaciteiten zijn echter niet 
+te gebruiken in het ontwerppracticum omdat ze vanwege de kwarten-indeling
+van de chip niet zijn aan te sluiten.\\
+\\
+\\
+
+\begin{figure}[hbt]
+  \makebox[1\textwidth]{
+     {\callpsfig{NMOS1-idvd.ps}{width=0.38\textwidth}}
+     \hfill
+     {\callpsfig{PMOS1-idvd.ps}{width=0.38\textwidth}}
+  }
+\caption{\label{npmosidvd} De gemeten drainstroom van een nmos en pmos transistor uitgezet tegen de drain-sourcespanning met de gate-sourcespanning als parameter}
+\end{figure}
+
+\begin{figure}[hbt]
+  \makebox[1\textwidth]{
+     {\callpsfig{NMOS1-idvg.ps}{width=0.38\textwidth}}
+     \hfill
+     {\callpsfig{PMOS1-idvg.ps}{width=0.38\textwidth}}
+  }
+\caption{\label{npmosidvg} De gemeten drainstroom van een nmos en pmos transistor uitgezet tegen de gate-sourcespanning met de drain-sourcespanning als parameter}
+\end{figure}
+
+\cleardoublepage

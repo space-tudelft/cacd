@@ -1,0 +1,62 @@
+/* process : scmos_n
+/* author  : A.J. van Genderen, Delft
+/* date    : 14 Dec. 1994
+*/
+
+vh=5
+vminh=3
+vmaxl=2
+krise=0.924
+kfall=1.028
+
+nenh
+    loffset=0u
+    woffset=0u
+    w=4u l=2u : rstat=2.47k rsatu=8.71k cgstat=10.99f cgrise=11.53f
+		cgfall=10.45f cestat=1.21f cerise=1.22f cefall=1.20f
+    w=12u l=2u : rstat=0.83k rsatu=2.90k cgstat=32.46f cgrise=32.09f
+		 cgfall=32.84f cestat=3.26f cerise=3.17f cefall=3.34f
+    pullup
+        /* derived from pulldown */
+        w=4u l=2u : rdyn=5.74k cch=3.04f
+        w=12u l=2u : rdyn=2.08k cch=11.04f
+    end
+    pulldown
+        w=4u l=2u : rdyn=5.74k cch=3.04f
+        w=12u l=2u : rdyn=2.08k cch=11.04f
+    end
+    passup
+        w=4u l=2u : rdyn=7.24k cch=4.65f
+        w=12u l=2u : rdyn=2.78k cch=12.68f
+    end
+    passdown
+        w=4u l=2u : rdyn=2.36k cch=3.61f
+        w=12u l=2u : rdyn=0.91k cch=10.87f
+    end
+end
+
+penh
+    loffset=0u
+    woffset=0u
+    w=4u l=2u : rstat=8.19k rsatu=34.18k cgstat=11.23f cgrise=11.43f
+		cgfall=11.02f cestat=1.22f cerise=1.25f cefall=1.19f
+    w=12u l=2u : rstat=2.73k rsatu=11.39k cgstat=32.97f cgrise=34.58f
+		 cgfall=31.36f cestat=1.21f cerise=3.30f cefall=3.47f
+    pullup
+        w=4u l=2u : rdyn=29.98k cch=1.90f
+        w=12u l=2u : rdyn=6.08k cch=7.66f
+    end
+    pulldown
+        /* derived from pullup */
+        w=4u l=2u : rdyn=29.98k cch=1.90f
+        w=12u l=2u : rdyn=6.08k cch=7.66f
+    end
+    passup
+        w=4u l=2u : rdyn=3.06k cch=1.47f
+        w=12u l=2u : rdyn=1.88k cch=5.43f
+    end
+    passdown
+        w=4u l=2u : rdyn=3.14k cch=3.83f
+        w=12u l=2u : rdyn=1.76k cch=11.95f
+    end
+end

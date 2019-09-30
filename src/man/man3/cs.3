@@ -1,0 +1,63 @@
+.ll 77
+.hy
+.TH CS 3SDF "THE SEADIF PROGRAMMERS MANUAL"
+.SH NAME
+cs, canonicstring, fs, forgetstring - functions to efficiently store strings in a static heap
+.SH SYNOPSIS
+ #include <sealib.h>
+
+ STRING cs(char *somestring)
+
+ STRING canonicstring(char *somestring)
+
+ int fs(STRING canonstring)
+
+ int forgetstring(STRING canonstring)
+
+.SH DESCRIPTION
+Cs() maintains a private heap containing copies of all the strings currently
+known to cs(). On every call, cs() inspects this heap to see if the argument
+somestring is already in the heap. If so, cs() returns a pointer to the copy in
+the heap. If not, cs() copies the new string to the heap and then
+returns a pointer to this copy.
+
+Cs() internally associates a reference count with each string in the heap. When
+a string is copied to the heap this reference count is initialized to 1. Any
+subsequent request for storage of the same string causes cs() to increment the
+reference count of this string.
+
+Canonicstring() performs exactly the same operation as cs(); it calls cs(), so
+the latter is a little bit faster, though somewhat more cryptic.
+
+Strings no longer worth to remember can be removed from the heap by calling
+fs() or forgetstring() using the canonic string to be removed as an argument.
+Fs() operates by first decrementing the reference count associated with the
+string to forget. Only if the count becomes zero the string is removed from
+the heap.
+
+If a program immediately stores its strings thru cs() as the strings enter the
+program's environment, no subsequent calls to strcmp() are needed to test
+whether two canonicized strings are equal because cs() guarantees equality if
+the STRING pointers are equal. The
+.I sealib (3SDF)
+functions use this feature to speed up their search thru the database
+administration.
+.SH "RETURN VALUE"
+Cs() and canonicstring() return a character pointer (type STRING).
+Fs() and forgetstring() return NIL if the string is not in the heap, i.e. not
+canonic. Otherwise they return TRUE.
+.SH "LIMITATION"
+Although cs() accepts strings of any length, it does not store more than 257
+chars (including terminating NULL). Consequently, two strings are considered
+equal if they do not differ in any of the first 256 chars.
+.SH "EXAMPLE"
+This piece of code first canonicizes the string "blablah" and then immediately
+forgets about it:
+
+      if ( fs(cs("blablah")) == NIL )
+         error("this can never happen...");
+
+.SH "AUTHOR"
+Paul Stravers, Delft University of Technology.
+.SH "SEE ALSO"
+sealib(3SDF).

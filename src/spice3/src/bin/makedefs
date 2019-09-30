@@ -1,0 +1,77 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+
+COBJS =	conf.o nconf.o tune.o spice3.o nutmeg.o \
+	conf.c nconf.c tune.c spice3 nutmeg \
+	sconvert.o proc2mod.o makeidx.o multidec.o \
+	sconvert proc2mod makeidx multidec
+
+MISC_TARGETS	= sconvert proc2mod makeidx multidec
+
+BIN_TARGETS	= spice3 nutmeg $(MISC_TARGETS)
+
+INCLUDE		= -I../include -I../lib/dev
+
+###########
+# makeops
+###########
+
+conf.c: config.c
+	@echo 'Creating "$@":'; rm -f $@
+	./mkvers.sh "$(DEVICES)" "$(ANALYSES)" "$(VERSION_REV)" "$(NOTICE)" > $@
+	cat config.c >> $@
+
+nconf.c: nconfig.c
+	@echo 'Creating "$@":'; rm -f $@
+	./mkvers.sh "" "" "$(VERSION_REV)" "$(NOTICE)" > $@
+	cat nconfig.c >> $@
+
+tune.c:
+	@echo 'Creating "$@":'; rm -f $@
+	echo 'char *Spice_Exec_Dir = "$(SPICE_EXEC_DIR)";'	> $@
+	echo 'char *Spice_Lib_Dir  = "$(SPICE_LIB_DIR)";'	>> $@
+	echo 'char *Def_Editor   = "$(SPICE_EDITOR)";'	>> $@
+	echo 'char *AsciiRawFile = "$(SPICE_ASCIIRAWFILE)";'	>> $@
+	echo 'char *Bug_Addr     = "$(SPICE_BUGADDR)";'	>> $@
+	echo 'char *Spice_Host   = "$(SPICE_HOST)";'	>> $@
+
+LIB	= ../lib
+
+LIBS	= $(LIB)/fte.a $(LIB)/dev.a $(LIB)/ckt.a $(LIB)/cp.a $(LIB)/hlp.a \
+	$(LIB)/inp.a $(LIB)/ni.a $(LIB)/sparse.a $(LIB)/misc.a
+spice3: spice3.o $(LIBS) conf.o tune.o
+	@rm -f $@
+	$(CC) -o $@ spice3.o conf.o tune.o $(LIBS) $(LDFLAGSX)
+
+LIBN	= $(LIB)/inp/sperror.o $(LIB)/fte.a $(LIB)/cp.a $(LIB)/hlp.a $(LIB)/misc.a
+nutmeg:	nutmeg.o $(LIBN) nconf.o tune.o
+	@rm -f $@
+	$(CC) -o $@ nutmeg.o nconf.o tune.o $(LIBN) $(LDFLAGSX)
+
+# old LIBSC= $(LIB)/fte.a $(LIB)/cp.a $(LIB)/fte.a $(LIB)/inp.a $(LIB)/misc.a
+LIBSC	= $(LIB)/misc.a
+SCFILES	= $(LIB)/inp/sperror.o $(LIB)/fte/rawfile.o $(LIB)/fte/types.o $(LIB)/fte/error.o \
+	  $(LIB)/cp/numparse.o $(LIB)/cp/quote.o	\
+	  $(LIB)/cp/wlist.o $(LIB)/cp/input.o $(LIB)/cp/lexical.o	\
+	  $(LIB)/cp/variable.o $(LIB)/cp/var2.o $(LIB)/cp/output.o $(LIB)/fte/dimens.o
+sconvert: sconvert.o $(SCFILES) $(LIBSC)
+	@rm -f $@
+	$(CC) -o $@ sconvert.o $(SCFILES) $(LIBSC) $(LDFLAGS)
+
+LIBP2M	= $(LIB)/cp.a $(LIB)/inp.a $(LIB)/misc.a
+proc2mod: proc2mod.o $(LIBP2M)
+	@rm -f $@
+	$(CC) -o $@ proc2mod.o $(LIBP2M) $(LDFLAGS)
+
+LIBM	= $(LIB)/misc.a
+makeidx: makeidx.o $(LIBM)
+	@rm -f $@
+	$(CC) -o $@ makeidx.o $(LIBM)
+
+LIBMD	= $(LIB)/sparse.a $(LIBM)
+multidec: multidec.o $(LIBMD)
+	@rm -f $@
+	$(CC) -o $@ multidec.o $(LIBMD) $(LDFLAGS)
+
+#EOF

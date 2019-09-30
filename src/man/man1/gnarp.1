@@ -1,0 +1,87 @@
+.TH GNARP 1ICD "User Commands"
+.UC 4
+.SH NAME
+gnarp - perform an operation on the seadif database
+.SH SYNOPSIS
+.B gnarp
+[...options...] <operation>
+.SH OPTIONS
+.TP
+.B <operation>
+The operation to be done.
+.TP
+.B -l <layoutname>
+For seadif layout name or regexp.
+.TP
+.B -c <circuitname>
+For seadif circuit name or regexp (default: <layoutname>).
+.TP
+.B -f <functionname>
+For seadif function name or regexp (default: <circuitname>).
+.TP
+.B -b <libraryname>
+For seadif library name or regexp (default: current working directory name).
+.TP
+.B -L
+For all seadif layout names (-l .*).
+.TP
+.B -C
+For all seadif circuit names (-c .*).
+.TP
+.B -F
+For all seadif function names (-f .*).
+.TP
+.B -B
+For all seadif library names (-b .*).
+.TP
+.B -h
+Print
+.I help
+screen and exit.
+.TP
+.B -p
+Print seadif objects in parenthesized format.
+.TP
+.B -s
+Silent mode, do not print results to stdout.
+.TP
+.B -w
+Do not embed each regexp within ^ and $.
+
+.SH DESCRIPTION
+.ta 8c
+.I Gnarp
+manipulate layouts, circuits or functions in the Seadif database.
+Is used by ICELLS(1ICD).
+.PP
+The recognized <operation> on layouts is:
+.TP
+.I addCirports
+For each Layport that has no equivalent Cirport create such an equivalent Cirport.
+.PP
+The recognized <operation>s on circuits are:
+.TP
+.I mkLibprim
+Add the keyword "libprim" to the Status.
+.TP
+.I rmLibprim
+Remove the keyword "libprim" from the Status.
+.TP
+.I showLibprim
+Show the "libprim" status of the circuit.
+
+.SH EXAMPLE
+To perform operation "mkLibprim" to all circuits and functions of library "digilib8_93" use:
+
+% gnarp -CFb digilib8_93 mkLibprim
+
+.SH AUTHORS
+P. Groeneveld,
+P. Stravers
+
+.SH FILES
+.ta 8c
+\fIlibrary\fP/seadif/sealib.sdf	(database file)
+
+.SH "SEE ALSO"
+ICELLS(1ICD)

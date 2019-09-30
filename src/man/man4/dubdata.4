@@ -1,0 +1,166 @@
+.TH DUBDATA 4ICD "File Formats"
+.UC 4
+.SH NAME
+dubdata - technology description for the program dubcheck
+.SH DESCRIPTION
+For the description of the design rules that are checked
+by the program
+.I dubcheck
+the technology file
+.I dubcheckdata
+is used.
+For each technology used a file
+.I dubcheckdata
+must be present in the corresponding process directory.
+The format of this file is illustrated by the following example.
+.SH EXAMPLE
+.PP
+.L{
+.nf
+bool_0  nw_vln   NOFILE   0 20  0  0  0  OD\&.3\&.1
+bool_2  nw_vln   NOFILE   0 20  0  0  0  OD\&.3\&.2
+bool_1  nw_vln   NOFILE  10  0  0  0  0  OD\&.4\&.1\&.1
+bool_3  ps_vln   od_vln   5  0  0  0  2  PS\&.3\&.1
+od_vln  ps_vln   NOFILE   0  3  0  0  0  PS\&.4\&.1
+bool_3  od_vln   ps_vln   6  0  0  0  2  PS\&.5\&.1
+bool_1  bool_4   NOFILE   6  0  0  0  0  SP\&.3\&.1
+bool_5  sp_vln   NOFILE   6  0  0  0  1  SP\&.3\&.2
+bool_8  bool_7   od_vln   0  0  0  0  4  SP\&.3\&.3+SN\&.4\&.3
+bool_8  bool_7   od_vln   0  0  0  0  5  SP\&.3\&.3+SN\&.4\&.3
+bool_8  bool_6   NOFILE  12  0  0  0  3  SP\&.3\&.3+SN\&.4\&.3
+od_vln  sp_vln   NOFILE   0  6  0  0  1  SP\&.4\&.1
+sp_vln  bool_5   NOFILE   0  6  0  0  0  SP\&.4\&.2
+bool_0  bool_4   NOFILE   6  0  0  0  0  SN\&.3\&.1
+bool_9  sn_vln   NOFILE   6  0  0  0  0  SN\&.3\&.2
+bool_2  bool_7   od_vln   0  0  0  0  4  SN\&.3\&.3+SP\&.4\&.3
+bool_2  bool_7   od_vln   0  0  0  0  5  SN\&.3\&.3+SP\&.4\&.3
+bool_2  bool_6   NOFILE  12  0  0  0  3  SN\&.3\&.3+SP\&.4\&.3
+od_vln  sn_vln   NOFILE   0  6  0  0  1  SN\&.4\&.1
+od_vln  bool_9   NOFILE   0  6  0  0  0  SN\&.4\&.2
+bool_12 od_vln   NOFILE   5  0  0  0  0  CON\&.3\&.1
+bool_12 ps_vln   NOFILE   0  5  0  0  0  CON\&.3\&.2
+bool_13 sn_vln   NOFILE   3  0  0  0  0  CON\&.3\&.3
+sp_vln  bool_13  NOFILE   0  3  0  0  0  CON\&.3\&.4
+bool_14 od_vln   NOFILE   5  0  0  0  0  COP\&.3\&.1
+bool_14 ps_vln   NOFILE   0  5  0  0  0  COP\&.3\&.2
+bool_15 sp_vln   NOFILE   3  0  0  0  0  COP\&.3\&.3
+sn_vln  bool_15  NOFILE   0  3  0  0  0  COP\&.3\&.4
+bool_17 ps_vln   NOFILE   4  0  0  0  0  CPS\&.4\&.2
+bool_17 od_vln   NOFILE   0  5  0  0  0  CPS\&.4\&.3
+bool_19 in_vln   NOFILE   3  0  0  0  0  IN\&.3\&.2
+bool_20 in_vln   NOFILE  10  0  0  0  0  CB\&.1\&.1
+.fi
+.L}
+.PP
+Each line of this file must contain the following items in the order given:
+.if n .in +4
+.if t .in +0.3i
+.br
+
+The first file involved with the operation.
+In case of an overlap check this is the file of which
+the elements have to be overlapped.
+.br
+
+The second file involved with the operation.
+In case of an overlap check this is the file of which the elements have
+to overlap the elements of the first file.
+.br
+
+A helpfile involved in the operation.
+This file is used for checks with a certain kind.
+If not needed, 'NOFILE" is coded.
+.br
+
+The overlap the second file must have over the first file.
+If it is zero, no overlap check will be carried out.
+.br
+
+The minimal gap between non overlapping elements of the
+first and second file.
+If it is zero no check will be carried out.
+.br
+
+The minimal gap that must be maintained if the length of
+the gap is only small.
+.br
+
+The maximum gaplength for which the reduced gap value may be
+applied.
+.br
+
+The value of the variable kind.
+.br
+For gap checks the value of kind means:
+.if n .in +4
+.if t .in +0.3i
+.br
+
+0: do not suppress gap errors of overlapping items.
+.br
+
+1: suppress gap errors of overlapping items.
+.if n .in -4
+.if t .in -0.3i
+.br
+
+For overlap checks the value of kind means:
+.if n .in +4
+.if t .in +0.3i
+.br
+
+0: check for a total overlap.
+.br
+
+1: check for overlap over two opposite sides.
+.br
+
+2: only check the overlap for places where the helplay has
+no overlap with the layer that has to be overlapped.
+.br
+
+3: check only at the sides indicated by the conn_dir array.
+This array will be filled using checks with kind = 4 and kind = 5.
+.br
+
+4: sets the conn_dir array to 'check bottom and top overlap' if
+in the same polygon of the helplayer
+there is one area of the second layer present  to the left
+and one to the right of an area of the first layer.
+.br
+
+5: sets the conn_dir array to 'check left and right overlap' if
+in the same polygon of the helplayer
+there is one area of the second layer present  to the bottom
+and one to the top of an area of the first layer.
+.br
+
+6: only check the overlap for places where the helplay has
+no overlap with the layer that has to be overlapped, and
+the edges of this layer and the edges of the helplay
+do not coincide.
+.if n .in -4
+.if t .in -0.3i
+.br
+
+A string indicating which design rules are involved.
+.br
+
+Optionally a comment_string may be added to each line.
+.if n .in -4
+.if t .in -0.3i
+.br
+
+.AU "J. Liedorp"
+.SH FILES
+.TP
+\fCICDPATH/share/lib/process/\fIprocess_name\fR/dubcheckdata\fP
+.SH SEE ALSO
+.br
+T.G.R. van Leuken, J. Liedorp "An Hierarchical
+and Technology Independent Design Rule Checker", Delft University
+of Technology,
+.br
+autocheck(1ICD), dimcheck(1ICD),
+booldata(4ICD)
+

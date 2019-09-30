@@ -1,0 +1,9 @@
+device mul8x8
+begin spicemod
+* terminals in[2,8] out[16]
+.subckt mul8x8 i00 i01 i02 i03 i04 i05 i06 i07
++              i10 i11 i12 i13 i14 i15 i16 i17
++              o00 o01 o02 o03 o04 o05 o06 o07
++              o08 o09 o10 o11 o12 o13 o14 o15
+.ends mul8x8
+end

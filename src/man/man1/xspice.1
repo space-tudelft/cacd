@@ -1,0 +1,567 @@
+.TH XSPICE 1ICD "User Commands"
+.UC 4
+.SH NAME
+xspice - extract SPICE network description out the database
+.SH SYNOPSIS
+.ta 2c
+.B xspice
+[-EHLNPRTadfghikonptuvxy -w width -z name -O name
+.br
+	-C file -D name -F outfile -S stimfile -X lib] cell
+.SH OPTIONS
+.TP
+.B -E
+Extract an ESPICE circuit description.
+.TP
+.B -H
+Extract an HSPICE circuit description.
+.TP
+.B -L
+Extract an ELDO SPICE circuit description.
+.TP
+.B -P
+Extract a PSPICE circuit description.
+.TP
+.B -R
+Extract a SPECTRE SPICE circuit description.
+.TP
+.B -N
+Do not extract the sub-cell(s), but add a line \fB.include\fP "\fIcell\fP.spc"
+.if t .br
+for each sub-cell to the output file
+(when option \fB-h\fP is used).
+.TP
+.B -T
+Tanner output, comments on same line.
+.TP
+.B -a
+Instead of only numbers,
+use \fInames\fP for node and terminal references.
+.TP
+.B -d
+Use original database names for instance names.
+.TP
+.B -f
+Send output to a file \fIcell\fP.spc (\fIcell\fP.esp for ESPICE output)
+instead of \fIstdout\fP.
+.TP
+.B -g
+Connect a large grounded resistor to each node of the two nodes
+.if t .br
+that are connected by a net statement.
+.TP
+.B -h
+Also extract hierarchy (used local sub-cells).
+.TP
+.B -i
+Also extract imported sub-cells (when option \fB-h\fP is used).
+.TP
+.B -k
+Output all cells as sub-circuits and do not print a title card.
+.TP
+.B -o
+Omit model definitions for devices in the output file.
+.TP
+.B -n
+Always add "nbulk" terminals for n-bulk connections.
+.TP
+.B -p
+Always add "pbulk" terminals for p-bulk connections.
+.TP
+.B -t
+Do not output unconnected instances.
+.TP
+.B -u
+Do not automatically add terminals for bulk connections.
+.TP
+.B -v
+Enable verbose mode.
+.TP
+.B -w
+Use \fIwidth\fP for the output listing.
+If zero, infinite width.
+.TP
+.B -x
+Use node number = 0 for nodes whose name start with "gnd" or "GND".
+.TP
+.B -y
+Use node number = 0 for nodes whose name start with "vss" or "VSS".
+.TP
+\fB-z\fP \fIprefix\fP
+Use node number = 0 for nodes whose name start with \fIprefix\fP.
+.TP
+\fB-O\fP \fIname\fP
+Use node number = 0 for the node that has this name.
+.TP
+\fB-C\fP \fIfile\fP
+Use the specified \fIfile\fP as the control file.
+.TP
+\fB-D\fP \fIname\fP
+Define a label \fIname\fP for conditional reading of the control file
+(always converted to uppercase).
+.TP
+\fB-F\fP \fIoutfile\fP
+Send output to the specified \fIfile\fP instead of \fIstdout\fP.
+.TP
+\fB-S\fP \fIstimfile\fP
+Append the file \fIstimfile\fP to the output file. The \fIstimfile\fP
+can contain input stimuli and simulation control statement
+(such as print and plot commands and the .tran statement).
+This file is just copied, no checking or interpretation of its contents is done.
+.TP
+\fB-X\fP \fIlib\fP
+Exclude specific certain library cells from the listing
+(when options \fB-hi\fP are used).
+This is very useful if you have a design with your own imported libraries.
+This option may be given several times.
+There are two exclude possibilities:
+(1) all lib's starting with absolute path (for example "-X /usr/ocean");
+(2) the lib with basename (for example "-X primitives").
+.SH DESCRIPTION
+.I Xspice
+is a program to extract a SPICE circuit description out of the database.
+Default, only a circuit description of the cell itself is extracted and
+no sub-cells are extracted.
+When using the
+.B -h
+option the program will also extract all (local) sub-cells
+that are not a function (see "SLS: Switch-Level Simulator User's Manual")
+or a device.
+.PP
+Whether or not a cell is a device is determined by
+(1) the contents of the control file,
+(2) the use of the program
+.I xcontrol(1ICD) for new projects
+or
+.I device(1ICD) for old projects
+and/or
+.I putdevmod(1ICD)
+(see the manual pages of these programs),
+or by (3) a set of built-in device names:
+"res" for resistors,
+"cap" for capacitors,
+"d" for diodes,
+"nenh" for n-enhancement transistors,
+"penh" for p-enhancement transistors,
+"ndep" for n-depletion transistors,
+"npn" and "pnp" for bipolar transistors.
+.PP
+When extracting SPICE circuit descriptions, the program
+.I xspice
+will automatically determine if "nbulk" and/or "pbulk"
+terminals should be added.
+This is determined from the bulk voltages that are required for
+the different devices that are part of the circuit.
+Under normal circumstances, this means that for circuits
+containing n-enhancement and depletion transistors
+n-bulk connections are added, and that for circuits
+containing p-enhancement transistors (also)
+p-bulk connections are added.
+For each bulk terminal, the program will automatically
+generate an appropriate voltage source, unless the
+.B -u
+option is used.
+.PP
+Default,
+.I xspice
+will automatically add model descriptions to the network
+for the devices that are part of the network.
+These model descriptions are searched at the following places.
+First, model descriptions are searched in the library files that are specified
+in the control file.
+And second,
+the program will search for model descriptions
+that have been added to the database using the program
+.I putdevmod.
+Note that the device status must be set by
+.I xcontrol
+for new projects.
+For all devices that occur in the network and that have a model
+description available, these model descriptions will be
+added to the end of the network.
+The automatic inclusion of model descriptions can
+be omitted by using the
+.B -o
+option.
+.PP
+Note, when extracting HSPICE circuit descriptions,
+.I xspice
+will output area values as "m=area".
+And the program uses
+.I names
+for node and terminal references (the
+.B -a
+option).
+.SH "THE CONTROL FILE"
+For
+.I xspice
+a control file may be used.
+This control file specifies the models
+that should be used for the devices, the location of the library files
+that contain the descriptions of these models,
+and the bulk voltages for the devices.
+The default name of the control file is "xspicerc".
+First,
+the program tries to read this file from the current working directory.
+Next,
+it tries to open the control file in the process directory.
+Note, the control file may also be used for other programs.
+.PP
+The format of a specification of a library file in the control file
+is as follows:
+.nf
+
+    include_library \fIfile_name\fP
+
+.fi
+where \fIfile_name\fP is the name of the library file.
+First,
+the program tries to read the library file from the current working directory.
+Otherwise,
+the program tries to open the library file in the process directory.
+.PP
+The format of a specification of a model for a device is as follows:
+.nf
+
+    model \fIname\fP \fIorig_name\fP \fItype_name\fP [( \fIrange_specs\fP )]
+
+.fi
+The \fIorig_name\fP has to be equal to the extracted device name, which is
+equal to the name specified in the element definition file.
+The \fItype_name\fP has to be
+equal to one of the SPICE standard device-model names, such as \fInpn\fP,
+\fIpnp\fP, \fInmos\fP, \fIpmos\fP,
+c (= cap),
+d (= diode),
+r (= res),
+or \fIl\fP (= inductor).
+Optional, \fIrange_specs\fP can be specified for device geometries
+for which the model is valid (initial implemented for bipolar models,
+for a description,
+see the Space User's Manual).
+If the \fIrange_specs\fP are left out, then the model is always valid.
+Only the following geometrical parameters can be specified in the \fIrange_specs\fP:
+\fIw\fP, \fIl\fP, \fIv\fP, \fIae\fP, \fIpe\fP and \fIwb\fP.
+.PP
+The format of a specification of a prefix for a device-model is as follows:
+.nf
+
+   prefix \fIname\fP \fIprefix\fP
+
+.fi
+The \fIname\fP can be the \fIorig_name\fP or the \fItype_name\fP.
+A new prefix overrides a previous specified prefix.
+For SPICE, the first letter of the prefix must be a legal standard device-model letter.
+For SPICE normally only one prefix letter is used.
+To use more prefix letters (max. 7) specify the following keyword:
+.nf
+
+   long_prefix
+
+.fi
+The format of a specification of a bulk voltage for a device is as follows:
+.nf
+
+   bulk \fIname\fP \fIvalue\fP
+
+.fi
+where \fIname\fP can be the \fIorig_name\fP or the \fItype_name\fP (npn, pnp, nmos, pmos)
+and where \fIvalue\fP is the bulk voltage for the device.
+Up to a maximum of 2 different bulk voltages
+may be specified in the control file.
+Node name "nbulk" is used for the lowest voltage
+and "pbulk" for the highest voltage.
+.PP
+When no bulk terminal must be added for a device, specify:
+.nf
+
+   no_bulk [\fIname\fP ...]
+
+.fi
+where \fIname\fP can be a device \fIorig_name\fP or model \fItype_name\fP.
+.PP
+When no \fIzero\fP resistors may be outputted (but voltage sources instead) specify:
+.nf
+
+   no_zero_res
+
+.fi
+.PP
+For a device, instance parameters may be specified as follows:
+.nf
+
+   params \fIname\fP [\fImodel_name\fP] { \fIparam_spec1\fP \fIparam_spec2\fP ... }
+
+.fi
+The \fIname\fP can be the \fIorig_name\fP or the \fItype_name\fP and can
+optional be followed by the \fImodel_name\fP.
+A new params-statement overrides a previous specified params-statement.
+With the params-statement the printing order of parameter values (with or
+without parameter name) can be changed.
+Normally invisible parameters can be made visible or used.
+Standard visible parameters can be left out or changed.
+The parameter specifications \fIparam_spec1\fP, \fIparam_spec2\fP etc.
+each must have one of the following forms:
+.nf
+
+   \fIparameter\fP=\fIvalue\fP
+   \fIvalue\fP
+   \fIparameter\fP=\fI$intern_par\fP[<operator><value>]
+   \fI$intern_par\fP[<operator><value>]
+
+.fi
+with \fI$intern_par\fP denoting the actual value of a parameter that is
+internally (in the database) called 'intern_par' (for example $w, $l, $v,
+$area and $perim refer to respectively the width and length of a MOS
+transistor, the value of a resistor or capacitor and the area and
+perimeter of a junction capacitance).
+If the \fI$intern_par\fP  does not exist in the instance attribute-list,
+the parameter specification is left out!
+If the \fI$intern_par\fP is a standard visible parameter, it is not more
+printed on the standard way.
+If the "\fI$intern_par\fP"-forms have a leading '!' sign, they are not printed.
+This is the way to skip a standard visible parameter.
+If the "\fI$intern_par\fP"-forms have two leading '!' signs,
+they are printed in the comment-part.
+The "\fI$intern_par\fP"-forms can optional be followed by an <operator> and a <value>.
+This <value> may also be another internal parameter.
+The operation is only done, if this internal parameter exists and is not zero.
+This <operator> can be a '+', '-', '*' and '/'.
+At last, you can additional use the '@' <operator> with a <string>.
+Denoting that the <string> must be printed after the value.
+.PP
+Other program build-in internal parameters are:
+.TP 8
+\fImname\fP
+the used model name
+.TP
+\fImdl\fP
+the model 'l' subtract value (default 0)
+.TP
+\fImdw\fP
+the model 'w' subtract value (default 0)
+.TP
+\fImsf\fP
+the scale factor for scalable models (default 1)
+.PP
+Note that by ESPICE
+the following parameters are automatically scaled:
+.PP
+.TP 8
+\fIw,l\fP
+with factor 1e6
+.TP
+\fIps,pd\fP
+with factor 1e6
+.TP
+\fIperi\fP
+with factor 1e6 (parameter starting with...)
+.TP
+\fIas,ad\fP
+with factor 1e12
+.TP
+\fIarea\fP
+with factor 1e12 (parameter starting with...)
+.PP
+As an example, the parameters of a junction diode \fBndif\fP that was extracted
+using
+.I space(1ICD),
+and that will be simulated with SPICE,
+may be specified as follows:
+.nf
+
+   params \fBndif\fP { area=$area pj=$perim }
+
+.fi
+Further, if the control file contains the keyword:
+.nf
+
+   no_title
+
+.fi
+a title card will not be printed at the top of the file, and if
+the control file contains the keyword:
+.nf
+
+   as_subckt
+
+.fi
+all cells will be listed as sub-circuit (see option \fB-k\fP).
+.PP
+The keyword
+.I name_ground
+may be used to define the ground node name
+(is equivalent to using option \fB-O\fP):
+.nf
+
+   name_ground  \fIstring\fP
+
+.fi
+The following specification is useful with the
+.B -i
+option:
+.nf
+
+   exclude_project  \fIpath_name\fP
+
+.fi
+to exclude specific certain imported projects from the net-listing (see the
+.B -X
+option).
+.PP
+The keyword
+.I rename
+may be used to change the model simulation type name
+and/or to add some (optional) string:
+.nf
+
+   rename  \fImodeltype\fP  \fInewname\fP  [\fIadd_string\fP]
+
+.fi
+.PP
+The keyword
+.I use_width
+may be used to change the default \fIwidth\fP (80) for the output listing (see option \fB-w\fP):
+.nf
+
+   use_width  \fIwidth\fP
+
+.fi
+.SH "CONTROL FILE CONDITIONALS"
+It is possible to use "#if", "#else" and "#endif" statements,
+to make the reading of the control file depended of the invoking program.
+To be seen, the '#' character must be the first character on a line.
+This conditional statements may not be nested like the C-preprocessor.
+Normally, from the top of the file reading is set to true.
+A "#else" statement changes the state from true to false or false to true.
+A "#endif" statement changes the state always to true.
+A "#if" statement changes only the state to true if one of the specified
+conditions is true for the invoking program (else to false).
+Note that you can also define one condition on the command line with the
+.B -D
+option.
+The following conditions can be specified and are true for:
+.TP 15
+#if PSTAR
+(for xpstar)
+.TP
+#if ESPICE
+(for xspice -E)
+.TP
+#if HSPICE
+(for xspice -H)
+.TP
+#if ELDO
+(for xspice -L)
+.TP
+#if SPECTRE
+(for xspice -R)
+.TP
+#if SPICE
+(for xspice without -H|-E|-L)
+
+.SH "CONTROL FILE EXAMPLE"
+The following example demonstrates use of above keywords:
+.nf
+
+#if SPICE HSPICE
+    include_library spice3x.lib
+#endif
+model dp pdiode d
+model dw wdiode d
+model dn ndiode d
+model resp resp r
+
+#if SPICE HSPICE
+    params d { area=$area1 !!$perim1 !!$perim2 }
+    rename d d level=2
+#if PSTAR
+    params d { area=$area1*1e12 pj=$perim1+$perim2 !$perim2 }
+#if PSPICE
+    params d { $area1 !$perim1 !$perim2 }
+
+.SH "TANNER OUTPUT"
+When using
+.I xspice
+you can force instance line comments on the same line with the
+.B -T
+option.
+Such inline comments start with a '$' sign surrounded by space.
+An inline comment continuation starts with '+ $'.
+With inline comments it is maybe useful to set very long line width.
+With option
+.B "-w 0"
+you can set infinite line width (no wrapping).
+.br
+When using the
+.B -T
+option twice, you get node(net) coordinates in the inline comment for back-annotation.
+
+.SH "THE LIBRARY FILE"
+The library file contains one or more simulation models according to the
+following format:
+.PP
+   model \fIname\fP \fItype_name\fP ( \fIpar_list\fP )
+.PP
+where \fIpar_list\fP contains the model parameters.
+For a more extended description and examples,
+see the Space User's Manual and the Space Tutorial.
+
+.SH "THE SPICEMOD FILE"
+When option
+.B -o
+is not used,
+the
+.I xspice
+program tries to read the
+.I spicemod
+file from the process directory.
+The contained SPICE models are added to the extracted circuit description.
+This file can also contain some control statements
+that should be used for the extracted devices.
+For more detail see the spicemod(4ICD) manual page.
+Note that a device control statement only works and a model is only added,
+when there is no "library model" or "devmod".
+.br
+Specify the keyword
+.I no_spicemod
+in the control file, when no "spicemod" file may be used.
+
+.SH EXAMPLE
+.nf
+% xspice -fhx invert
+.AU "A.J. van Genderen"
+.SH MODIFIED BY
+.nf
+.ta 12
+S. de Graaf	(xspice additions / updates)
+F. Beeftink	(SPICE bipolar models)
+.SH FILES
+.TP 12
+\fC\fIcell\fP.spc\fP
+(output file, when option \fB-f\fP is used)
+.TP
+\fC\fIcell\fP.esp\fP
+(output file, when options \fB-Ef\fP are used)
+.TP
+\fCxspicerc\fP
+(default control file for xspice/xpstar/...)
+.TP
+\fCspicemod\fP
+(models file for xspice/xpstar/...)
+.SH SEE ALSO
+csls(1ICD),
+cspice(1ICD),
+putdevmod(1ICD),
+space(1ICD),
+spicemod(4ICD),
+xcontrol(1ICD),
+xpstar(1ICD),
+xspectre(1ICD),
+xsls(1ICD),
+xspf(1ICD),
+SPICE User's Guide.
+.br
+HSPICE is a trademark of Meta-Software, Inc.
+PSpice and
+Spectre are trademarks of Cadence Design Systems, Inc.

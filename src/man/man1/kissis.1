@@ -1,0 +1,137 @@
+.TH KISSIS 1SDF "THE SEADIF PROGRAMMERS MANUAL"
+.UC 4
+.SH NAME
+kissis - front end to SIS with an interface to Nelsis
+.SH SYNOPSIS
+.B kissis
+[options] filename
+.SH OPTIONS
+.TP
+.B -h
+Display help info.
+.TP
+.B -c
+Run combinatorial synthesis (PLA or BLIF input formats).
+.TP
+.B -k
+Run sequential synthesis (kiss2 input format).
+.TP
+.B -b
+Run sequential synthesis (BLIF input format).
+.TP
+.B -r
+Run retiming (default not)
+.TP
+.B -S <filename>
+Read the names of special terminals from file (see blif2sls(1SDF) \fB-c\fP option).
+.TP
+.B -x
+Generate external terminals connected to outputs of all latches.
+It can be usefull when debugging circuit with
+.I simeye
+(see simeye(1ICD)) after layout extraction.
+.TP
+.B filename
+Input filename.
+.PP
+If none of these options is specified then kind of input
+is determined based on filename extension (default kiss2).
+If  options are specified than extension does not matter.
+Default extension is .kiss2.
+.SH DESCRIPTION
+SIS,
+the Berkeley Logic Synthesis System,
+is an interactive tool for synthesis and optimization of sequential circuits.
+Given a state transition table, a logic level description of a
+sequential circuit or PLA (programmable logic array) decription, it produces an
+optimized net-list in the target technology while preserving the sequential
+input-output behavior.
+.PP
+.I Kissis
+is a front-end to SIS which allows automatic generation of a circuit for
+given STG (state transition graph) or PLA.
+For this purpose it runs SIS in batch mode.
+Resulting circuit is automatically placed in Nelsis database.
+.PP
+The following design steps are performed:
+.TP 3
+-
+State minimization using program called stamina (STG input only).
+.TP
+-
+State assignment using program called nova (STG input only).
+.TP
+-
+Combinatorial optimization.
+.TP
+-
+Technology mapping.
+.TP
+-
+Retiming (STG input only and when \fB-r\fP specified)
+.TP
+-
+Conversion from BLIF output format to SLS (Switch Level Simulator) using
+.I blif2sls
+program,
+see manual page blif2sls(1SDF).
+.TP
+-
+Conversion from SLS format to the Nelsis database using
+.I csls
+program,
+see manual page csls(1ICD).
+
+.SH FILES
+To run properly the command requires that the following
+files are present in your current directory:
+.TP
+proto_file
+- a file with SLS prototypes (see blif2sls(1SDF)).
+.TP
+<cellname>.<kiss2|pla|blif>
+- input file with STG (PLA) description.
+.PP
+Other files:
+.TP
+$OCEAN/celllibs/$OCEANPROCESS/<lib_name>.genlib
+- a file with a library description (to be used during technology mapping).
+.TP
+<cell_name>_out.blif
+- intermediate file (output in BLIF format).
+.TP
+<cell_name>.sls
+- intermediate file (output in SLS format).
+.TP
+<cell_name>.sta
+- output from
+.I blif2sls
+used by
+.I simeye.
+.TP
+sis_logfile
+- output from
+.I sis
+program
+(look here if something goes wrong).
+.SH "EXTERNAL_INFLUENCES"
+Environment Variables:
+.TP 14
+OCEAN
+- Root directory of Ocean tree.
+.TP
+OCEANPROCESS
+- Ocean process name.
+
+.SH AUTHOR
+Ireneusz Karkowski, Delft University of Technology.
+.SH "SEE ALSO"
+blif2sls(1SDF), csls(1ICD), simeye(1ICD).
+.PP
+For more information about SIS and its input formats look into:
+.PP
+"SIS: A System for Sequential Circuit Synthesis" Ellen M. Santovich, Kanwar Jit
+Singh, Luciano Lavagno, Cho Moon, Rajeev Murgai, Alexander Saldanha, Hamid
+Savoj,  Paul R. Stephan, Robert K. Brayton, Alberto Sangiovanni-Vincentelli.
+Department of Electrical Engineering and Computer Science,
+University of California, Berkeley, CA 94720. (1992)

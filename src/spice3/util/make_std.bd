@@ -1,0 +1,32 @@
+###########
+# Copyright 1990 Regents of the University of California.  All rights reserved.
+###########
+
+include makedefs
+
+%.o: %.c
+	$(CC) $(CFLAGS) $(INCLUDE) -c $<
+
+recursive: recurse all
+
+recurse:
+	-@for xx in $(SUBDIRS); do			\
+		cd $$xx;				\
+		$(MAKE) -f $(FILES_L) -k recursive;	\
+		cd ..;					\
+	done
+
+all: $(LIB_TARGET) $(BIN_TARGETS)
+
+$(LIB_TARGET): $(COBJS)
+	$(AR) crs $@ $?
+
+cleanit:
+	rm -f $(COBJS)
+	-@for xx in $(SUBDIRS); do			\
+		cd $$xx;				\
+		$(MAKE) -f $(FILES_L) -k cleanit;	\
+		cd ..;					\
+	done
+
+#EOF

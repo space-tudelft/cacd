@@ -1,0 +1,71 @@
+#
+# dimcheckdata2 of DIMES03 process, V0.1 (DTS) 14/01/1999
+#
+# General information:
+# This file assumes a lambda of 0.1 micron/gridspace
+#
+# File History.
+#
+#   --- 30/10/1995 --  Creation by C.A. Schot
+#
+#   --- 13/11/1995 --  Change by C.A. Schot
+# Addition of tests for CO.3.0, WN.0.2 and WN.0.3
+#   --- 14/01/1999 --  Change by C.A. Schot
+# Addition of tests for LBL and NWP
+#
+#
+bn_vln  NOFILE   20  50   0  0  3  BN.1.1+BN.2.1
+dp_vln  NOFILE   20  40   0  0  3  DP.1.1+DP.2.1
+dn_vln  NOFILE   20  30   0  0  3  DN.1.1+DN.2.1
+# Not the real one
+bool_10 NOFILE   10   0   0  0  0  DN.3.1
+# Test allows minimum 1x1 in stead of 1x2
+lp_vln  NOFILE   10  30   0  0  3  LP.1.1+LP.2.1
+# Test allows minimum 1x1 in stead of 1x2
+# Not the real one
+bool_20 NOFILE   10   0   0  0  0  LP.3.2
+# Test allows minimum 1x1 in stead of 1x2
+lb_vln  NOFILE   10  30   0  0  3  LB.1.1+LB.2.1
+# Test allows minimum 1x1 in stead of 1x2
+lbl_vln  NOFILE  10  30   0  0  3  LBL.1.1+LBL.2.1
+# Test allows minimum 1x1 in stead of 1x2
+# Not the real one
+bool_30 NOFILE   10   0   0  0  0  LB.5.1
+# Test allows minimum 1x1 in stead of 1x2
+bool_29 NOFILE   10   0   0  0  0  LBL.5.1
+# Test allows minimum 1x1 in stead of 1x2
+co_vln  NOFILE   10  10   0  0  3  CO.1.1+CO.2.1
+bool_23 NOFILE   -1   0   0  0  0  CO.3.0-DP/CO_and_no_LP
+# Test allows minimum 1x1 in stead of 1x2
+bool_25 NOFILE   10   0   0  0  0  CO.4.1-exten_CO_in_DN
+# Test allows minimum .5x.5 in stead of .5x2
+bool_32 NOFILE    5   0   0  0  0  CO.5.1-exten_LP_in_CO
+# Test allows minimum .5x.5 in stead of .5x2
+bool_39 NOFILE    5   0   0  0  0  CO.6.1-exten_LB_in_CO
+# Test allows minimum .5x.5 in stead of .5x2
+bool_40 NOFILE    5   0   0  0  0  CO.6.1-exten_LB_in_CO
+# Rule WN.0.1 cannot be checked
+bool_26 NOFILE   -1   0   0  0  0  WN.0.2-DN/CO_and_no_WN
+# Rule WN.0.3 cannot be checked totally
+bool_15 NOFILE   -1   0   0  0  0  WN.0.3-Epi/CO_and_WN
+# Rule NWP.0.1 cannot be checked
+# Rule NWP.3.0 cannot be checked
+cap_vln NOFILE    0  10   0  0  3  CAP.2.1
+# Test allows minimum 1x1 in stead of 1x2
+ic_vln  NOFILE   10  10   0  0  3  IC.1.1+IC.2.1
+bool_46 NOFILE   -1   0   0  0  0  IC.3.0-CO_and_no_IC
+bool_50 NOFILE   -1   0   0  0  0  IC.4.0-CAP_and_no_IC
+# Test allows minimum 1x1 in stead of 1x2
+ct_vln  NOFILE   10  20   0  0  3  CT.1.1+CT.2.1
+bool_55 NOFILE   -1   0   0  0  0  CT.3.0-CT_and_no_IC
+in_vln  NOFILE   20  10   0  0  3  IN.1.1+IN.2.1
+bool_53 NOFILE   -1   0   0  0  0  IN.3.0-CAP_and_no_IN
+bool_60 NOFILE   -1   0   0  0  0  IN.4.0-CT_and_no_IN
+cb_vln  NOFILE 1000 800   0  0  3  CB.1.1+CB.2.1
+# Use this rule for HF applications
+# cb_vln  NOFILE  500 800   0  0  3  CB.1.1+CB.2.1
+# Rule CB.3.0 cannot be checked
+bool_57 NOFILE   -1   0   0  0  0  CB.5.0-CB_and_no_IC
+#Following check + IN.4.1 covers also CB.6.0
+bool_62 NOFILE   -1   0   0  0  0  CB.7.0
+

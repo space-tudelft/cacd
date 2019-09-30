@@ -1,0 +1,10 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+
+COBJS		= spalloc.o spbuild.o spfactor.o \
+		  spoutput.o spsmp.o spsolve.o sputils.o spextra.o
+
+LIB_TARGET	= ../sparse.a
+INCLUDE		= -I../../include
+

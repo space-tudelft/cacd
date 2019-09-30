@@ -1,0 +1,31 @@
+#!/bin/sh
+# the next line restarts using wish \
+exec tclsh "$0" "$@"
+
+set nm_inldm [lindex $argv 0]
+set fp_inldm [open $nm_inldm "r"]
+
+while { [gets $fp_inldm line] >= 0 } {
+	set key  [lindex $line 0]
+	set mask [lindex $line 1]
+	set name [lindex $line 6]
+	if {($key eq "box" || $key eq "term") && $mask eq "ins"} {
+		set xl [lindex $line 2]
+		set xr [lindex $line 3]
+		set yb [lindex $line 4]
+		set yt [lindex $line 5]
+		while {$xr - $xl < 20} {
+			set xl [expr $xl - 1]
+			set xr [expr $xr + 1]
+		}
+		while {$yt - $yb < 20} {
+			set yb [expr $yb - 1] 
+			set yt [expr $yt + 1] 
+		}
+		puts "$key $mask $xl $xr $yb $yt $name"
+	} else {
+		puts $line
+	}
+}
+
+close $fp_inldm

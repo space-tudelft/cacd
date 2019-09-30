@@ -1,0 +1,46 @@
+# directory: demo/sub3term
+
+Demonstration of substrate resistance extraction using the option -B.
+From the section "Examples" in the "Space Substrate Resistance
+Extraction User's Manual".
+
+STEPS
+=====
+
+1.  Make project, use "scmos_n" technology and lambda = 0.1 (micron)
+    % mkpr -p scmos_n -l 0.1 projectname
+
+Rest assumes that you and your files are in the project directory.
+
+2.  Use cgi to put "sub3term" layout into the database.
+    % cgi sub3term.gds
+
+3.  Use e.g. the layout editor dali to inspect the layout.
+    % dali sub3term
+    (Click on "-quit-" in the menu to exit the program.)
+
+4.  Compile the element definition file.
+    % tecc elem.s
+
+5.  Perform an extraction of cell sub3term in batch mode.
+    Extract substrate resistances using option -B.
+    % space3d -v -E elem.t -P param.p -B sub3term
+    Or perform an interactive extraction of cell sub3term.
+    % Xspace -E elem.t -P param.p
+    (Click button "sub3term" in the menu "Database", click button 
+    "3D sub. res." in the menu "Options", click button "DrawBEMesh" 
+    and "DrawGreen" in the menu "Display", and click "extract" in 
+    the menu "Extract".  Click "quit" in menu "Extract" or hotkey 'q'
+    to exit the Xspace program.)
+
+    Optionally, use Xspace in special prepass mode (after space3d)
+    to view the substrate boundary element mesh and the Green functions
+    calculated between the points in the mesh (not doing an extraction).
+    % Xspace -%1 -E elem.t -P param.p sub3term
+    (Click button "3D sub. res." in the menu "Options", click button
+    "DrawBEMesh" and "DrawGreen" in the menu "Display", and click "extract"
+    in the menu "Extract" or hotkey 'e'.)
+
+6.  Inspect the spice description of the extracted circuit.
+    % xspice -a sub3term
+

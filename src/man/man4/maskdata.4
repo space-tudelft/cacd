@@ -1,0 +1,111 @@
+.TH MASKDATA 4ICD "File Formats"
+.UC 4
+.SH NAME
+maskdata - mask definition file for a process
+.SH DESCRIPTION
+The mask data file "\fBmaskdata\fP" contains the
+layer information of a process.
+A considerable number of tools consult this file,
+e.g. the layout-editor \fIdali\fP(1ICD),
+the design rule checkers \fIautocheck\fP(1ICD) and \fIdimcheck\fP(1ICD),
+and the layout to circuit extractor \fIspace\fP(1ICD).
+.PP
+On the first line that is not a comment line,
+between quotes,
+the process name (or type) and second
+a short description (comment) of the process.
+Note that the process name (and its identification number) is also specified
+in the "processlist" file.
+.PP
+All other lines (which are not comment lines) contain a mask specification
+for the process.
+Each line contains exact 11 columns.
+The first column contains a mask name (Layer),
+and column 2 contains the mask type (normal=0, interconnect=1 or symbolic=2).
+.PP
+The columns 3/4 are used for PG-tape (Pattern Generator) generation.
+They specify a PG-tape job number and PG-tape mask type
+(negative=0 or positive=1).
+.PP
+Columns 5 through 10 specify colors and fill styles on various
+types of graphics hardware.
+Devices that are supported in the "maskdata" file are
+ColorMask(CMask) terminals (obsolete),
+Xwindow(Dali) devices,
+and
+plotters(Plot).
+The most important entries are those for graphical programs that use
+the standard color table such as \fIdali\fP (columns 7/8),
+and the \fIpreplot\fP programs (columns 9/10).
+The columns 5/6 are reserved for ColorMask devices.
+.PP
+The columns 7/8 are used for the \fIdali\fP layout editor.
+The following color numbers may be used for the Dali color
+column (the 7th column):
+0=black, 1=red, 2=green, 3=yellow, 4=blue, 5=magenta, 6=cyan, 7=white, 15=grey.
+Note that for the \fIdali\fP program color numbers 0 and 15 are used for
+the contact hole layers (which are displayed in dominant mode).
+The following fill style numbers may be used for the Dali fill-style column
+(the 8th column):
+0=hashed(12.5%), 1=solid, 2=hollow, 3-5=hashed+outline(12.5,25,50%),
+6-8=hashed(12.5,25,50%).
+.PP
+The columns 9/10 are used for the plotter program.
+For the Plot color column (the 9th column)
+the color numbers are the plotter pen numbers 1 to 8.
+.SH EXAMPLE
+As an example,
+we show the "maskdata" file for the "c5th" CMOS process:
+.PP
+.L{
+.nf
+"c5th" "TUD single metal cmos process derived from Philips C500"
+#--------+--------+-------+-------+-------+---------------------
+# Layer  | PG-Tape| CMask | Dali  | Plot  | Comment
+#--------+--------+-------+-------+-------+---------------------
+# name   | job    | color | color | pen   |
+# | type | |  type| | fill| | fill| | fill|
+# |  |   | |  |   | |  |  | |  |  | |  |  |
+# 1  2   | 3  4   | 5  6  | 7  8  | 9  10 | 11
+#-v--v---+-v--v---+-v--v--+-v--v--+-v--v--+---------------------
+ps   1     1  1     1  1    1  1    1  0  "polysilicon"
+od   1     2  1     2  1    2  1    2  0  "active area"
+in   1     3  1     3  1    4  1    4  0  "metal"
+nw   0     4  1     4  1    5  0    5  0  "n-well"
+sn   0     5  1     5  1    6  0    6  0  "shallow n implant"
+sp   0     6  1     6  1    3  0    3  0  "shallow p implant"
+con  0     7  1     7  1   15  1    8  0  "contact metal/n+area"
+cop  0     8  1     7  1   15  1    8  0  "contact metal/p+area"
+cps  0     9  1     7  1   15  1    8  0  "contact metal/poly"
+cb   0    10  1     7  1   15  1    8  0  "contact to bondpads"
+cx   0     0  1     7  1   15  1    8  0  ""
+bb   2     0  1     0  0    7  0    8  0  "bounding box"
+.fi
+.L}
+.AU "A.A.J. de Lange, S. de Graaf"
+.SH FILES
+.TP
+\fCICDPATH/share/lib/process/processlist\fP
+.TP
+\fCICDPATH/share/lib/process/\fIname\fP/maskdata\fP
+.SH LIMITATIONS
+To share the process technology information with other users,
+a new process directory must be added to the technology
+database by the system manager.
+And the new "maskdata" file must be placed there.
+There after \fImkpr\fP(1ICD) can use it to create new projects.
+.PP
+The appropriate "maskdata" file for the process in use is automatically
+selected when a tool is invoked.
+For this to happen,
+the "maskdata" file must be present in the techno-logy directory
+"ICDPATH/share/lib/process/\fIname\fP" and
+the name of the process (e.g. \fIname\fP=c5th) must be present in the
+processlist file "ICDPATH/share/lib/process/processlist".
+.SH SEE ALSO
+A.A.J. de Lange, "Process Mask Data File: User's Manual", Nelsis Documentation,
+Delft University of Technology.
+.br
+dali(1ICD),
+getproc(1ICD),
+spock(1ICD).

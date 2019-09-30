@@ -1,0 +1,54 @@
+.TH MAKEVLN 1ICD "User Commands"
+.UC 4
+.SH NAME
+makevln - create a set of "_vln" data files
+.SH SYNOPSIS
+.B makevln
+[-v] [cell ...]
+.SH OPTIONS
+.TP
+.B -v
+verbose mode.
+.SH DESCRIPTION
+.I Makevln
+creates out of the "_bxx" files the vertical line segment "_vln" files.
+These files are put in the layout view of the cell directory.
+These files can be used as input for a plot program,
+a hierarchical design rule checker,
+a hierarchical extractor or a pattern generator program.
+The current working directory must be the project directory.
+.sp
+If no cell name argument is given
+.I makevln
+reads a file named "exp_dat",
+which contains a list of cells to be processed.
+For each layer within a cell a "_vln" file is created.
+.AU "J. Fokkema, T.G.R. van Leuken"
+.SH FILES
+.TP
+\fCNELSISPROJECT/.dmrc\fP
+(input file)
+.TP
+\fCNELSISPROJECT/exp_dat\fP
+((opt.) input file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/info\fP
+(in/output file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/LC_bxx\fP
+(input files) LC=LayerCode
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/LC_vln\fP
+(output files)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/teq\fP
+(output file)
+.TP
+\fC/tmp/mkv.vlnXXXXX\fP
+((temp.) output file)
+.TP
+\fC/tmp/mkv.teqXXXXX\fP
+((temp.) output file)
+.SH SEE ALSO
+exp(1ICD),
+preplot(1ICD).

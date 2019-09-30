@@ -1,0 +1,17 @@
+# dalirc of dimes03 process
+# created by Arjan van Genderen, Feb 11, 2002
+# snap_grid_values 1 5 10 20 50 100 200 500 600 700 1000 5000 10000
+# snap_grid_offset 0 0
+# snap_grid_width 10
+display_grid_values 1 5 10 20 50 100 200 500 600 700 1000 5000 10000
+grid on
+tracker on
+# wire width 2u for ic
+# wire width 2.4u for in
+wire_width_values 20 24
+# wire_width 20
+# wire_extension on
+# disabled_layers
+drawing_order ct2 in2 ct in co ic wn1 wn2 wn3 wp lb1 lb2 lb3 lp nwp dp dn bn
+dominant on
+# flat_expansion on

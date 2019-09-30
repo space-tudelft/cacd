@@ -1,0 +1,299 @@
+.TH NSPICE 1ICD "User Commands"
+.UC 4
+.SH NAME
+nspice, nspice_pp, nspice_bs - encapsulated spice simulator
+.SH SYNOPSIS
+.B nspice
+cell commandfile
+.PP
+.B nspice_pp
+cell commandfile
+.PP
+.B nspice_bs
+cell
+.SH DESCRIPTION
+.I Nspice
+is the encapsulated spice simulator that performs a \fIspice\fP\|(1ICD)
+analysis for a circuit cell that is present in the database,
+using a commandfile with \fIspice\fP and/or \fIsls\fP\|(1ICD) commands.
+.I Nspice
+consists of a unix shell-script
+that extracts a circuit cell from the database using \fIxspice\fP\|(1ICD),
+converts a commandfile with \fIspice\fP and/or \fIsls\fP commands
+to a spice commandfile using \fInspice_pp\fP,
+runs \fIspice\fP,
+and finally executes
+.I nspice_bs
+to back-substitute node numbers in the output file by their
+corresponding names as specified in the database.
+The output of
+.I nspice
+is found in a file called "\fIcell\fP.ana".
+.PP
+.B nspice_pp:
+The program
+.I nspice_pp
+converts, for a particular cell (first program argument),
+a commandfile with \fIspice\fP and/or \fIsls\fP commands (second program argument)
+to a spice commandfile.
+In the inputfile nodes may be referred to by their names as specified in the database.
+The output of the program is sent to \fIstdout\fP.
+The conversion is executed
+by using information from a spice network description
+that is present in the file "\fIcell\fP.spc".
+This file is typically extracted from the database using
+.I xspice
+with the options \fB-hilmf\fP.
+This will generate a file "\fIcell\fP.spc" with a full (hierarchical)
+description of the cell, including the appropriate transistor models,
+terminals for n-bulk and/or p-bulk connections, and a name translation
+table that translates node numbers into node names as used
+in the database.
+To reduce the number of nodes in the spice network description
+the use of the options \fB-xy\fP [ \fB-z\fP name ] is further recommended
+(see manual page of \fIxspice\fP).
+.ie t .sp 0.5
+.el .sp 1
+All
+.I sls
+commands that are allowed with the
+.I sls
+simulator (see "SLS: Switch-Level Simulator User's Manual")
+may be used in the commandfile of \fInspice_pp\fP.
+However the ones that are translated into spice commands are the following:
+The "\fBset\fP" commands in the commandfile are translated
+into piecewise linear voltage sources that are connected
+to the relevant input nodes of the network.
+If ``\fBoption level=3\fP'' is specified,
+sls "\fBplot\fP" commands are translated
+into ``\fB.print tran\fP \fInode1\fP \fInode2\fP ...'' cards,
+and a transient analysis card will be placed in the outputfile
+that specifies a simulation from t=0 till t=t_end,
+where t_end is given by ``simperiod * sigunit'' or otherwise - if simperiod
+is not specified - by the time of the last input signal transition.
+The value of tstep
+in the ``\fB.tran\fP'' card should explicitly be defined with the keyword
+.B tstep
+in the commandfile (see below).
+.ie t .sp 0.5
+.el .sp 1
+The other information that is allowed in the commandfile should be specified
+in the following way:
+.nf
+.in +0.5c
+.ft C
+
+*%
+
+\&... (1) translation information ...
+
+*%
+
+\&... (2) direct spice commands ...
+
+*%
+
+.ft
+.in
+.fi
+The separators '*%' should be placed at the beginning of each line.
+The first part consists of translation information that is used
+to translate sls commands (if any) into spice commands.
+It may consist of zero or more of the following lines:
+.nf
+.in +0.5c
+.ft C
+
+tstep   <real>
+tstart  <real>
+uic
+trise   <real>
+tfall   <real>
+vhigh   <real>
+vlow    <real>
+
+.ft
+.in
+.fi
+The field <real> denotes a specification of a real value.
+It may optionally have a scale factor 'G' (1e9), 'M' (1e6), 'k'
+(1e3), 'm' (1e-3), 'u' (1e-6), 'n' (1e-9), 'p' (1e-12) or 'f' (1e-15).
+The variable
+.B tstep
+specifies the value of tstep as used for transient analysis.
+This value should be specified when ``\fBoption level=3\fP'' is used with the
+sls commands (see above).
+The variable
+.B tstart
+optionally specifies
+the start time for the transient analysis card.
+If the keyword
+.B uic
+is used, this keyword will be added to the ``\fB.tran\fP'' card.
+The variables
+.B trise
+and
+.B tfall
+respectively specify the rise and fall time of the input signals
+(default: trise = tfall = tstep).
+The variables
+.B vhigh
+and
+.B vlow
+respectively specify the voltages that correspond to the high-state and the
+low-state of the input signals (default: vhigh = 5 and vlow = 0).
+For the x-state a voltage of ``(vhigh + vlow) / 2'' is used.
+.ie t .sp 0.5
+.el .sp 1
+In the second part of the spice information,
+direct spice commands may be specified.
+These commands are directly copied to the output, however with
+node names that are specified between quotes translated
+to their corresponding node numbers.
+E.g. ``\fB.ic v("out")=5v\fP'' might be translated into ``\fB.ic v(12)=5v\fP''.
+If no sls commands are used, this part of the commandfile
+- beside the information that is extracted with
+.I xspice
+- will contain all the information
+that is necessary for the spice simulation.
+.ie t .sp 0.5
+.el .sp 1
+An example of a commandfile with only
+.I spice
+commands is given below:
+.br
+.nf
+.in +0.5c
+.ft C
+
+*%
+*%
+vphi1 "phi1" 0 pulse (5v 0v 29.4ns 0.6ns 0.6ns 29.4ns 60ns)
+vphi2 "phi2" 0 pulse (0v 5v 29.4ns 0.6ns 0.6ns 29.4ns 60ns)
+vvdd "vdd" 0 5v
+vin "in" 0 pulse (5v 0v 29.4ns 0.6ns)
+\&.tran 0.2n 120n
+\&.print tran v("phi1") v("phi2") v("1") v("2") v("3")
+\&.print tran v("4") v("in") v("out") v("out_inv")
+\&.options nomod
+\&.options limpts=601
+\&.options cptime=100
+\&.ic v("3")=0 v("out")=5
+*%
+
+.ft
+.in
+.fi
+.ie t .sp 0.5
+.el .sp 1
+An example of a commandfile with mixed
+.I sls
+and
+.I spice
+commands is as follows:
+.br
+.nf
+.in +0.5c
+.ft C
+
+set phi1 = (h*30 l*30)*~
+set phi2 = (l*30 h*30)*~
+set vdd  = h
+set vss  = l
+set in   = h*30 l
+option level = 3
+option simperiod = 120
+option sigunit = 1n
+option outacc  = 10p
+plot phi1 phi2 1 2 3 4 in out out_inv
+
+/*
+
+*%
+tstep 0.2n
+trise 0.6n
+tfall 0.6n
+*%
+\&.options nomod
+\&.options limpts=601
+\&.options cptime=100
+\&.ic v("3")=0 v("out")=5
+*%
+
+*/
+
+.ft
+.in
+.fi
+(Note that the spice information is placed between sls comment signs
+("/*" and "*/") so as to allow to use the same inputfile for
+an sls simulation.)
+.PP
+.B nspice_bs:
+The program
+.I nspice_bs
+back-substitutes node numbers by node names
+in a spice output file for a cell (specified as argument).
+This is  done according to a name translation table that should
+be present in the "\fIcell\fP.spc" file.
+The name of the output file must be "\fIcell\fP.ana".
+.I Nspice_bs
+will only back-substitute node numbers that are in the header of
+a transient analysis table.
+.PP
+The
+.I nspice
+unix-shell script has the following form:
+.PP
+.nf
+.in +0.5c
+.ft C
+# xspice: always use options -hilf;
+#       the use of options -xy [ -z name ] is recommended
+xspice -hilf -xy $1
+nspice_pp $1 $2 >> $1.spc
+spice $1.spc > $1.ana
+if nspice_bs $1
+then
+    exit 0
+else
+    exit 1
+fi
+# eof
+.ft
+.in
+.fi
+.SH EXAMPLE
+.ft C
+$ nspice latch latch.cmd
+.ft
+.AU "A.J. van Genderen, S. de Graaf"
+.SH FILES
+.TP 15
+\fCcommandfile\fP
+input file
+.TP
+\fC\fIcell\fP.spc\fP
+generated input file for spice
+.TP
+\fC\fIcell\fP.axa\fP
+temporary file
+.TP
+\fC\fIcell\fP.ana\fP
+output file
+.SH SEE ALSO
+sls(1ICD),
+xspice(1ICD),
+spice(1ICD),
+simeye(1ICD),
+.br
+User's Guide for SPICE, Univ. of California at Berkeley,
+.br
+SLS: Switch-Level Simulator User's Manual.
+.SH DIAGNOSTICS
+.I Nspice_pp
+and
+.I nspice_bs
+send their diagnostics to
+.I stderr.
+Spice diagnostics are found in the output file "\fIcell\fP.ana".

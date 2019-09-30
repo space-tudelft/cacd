@@ -1,0 +1,67 @@
+.TH COUPLEIDTORGB 5ICD "9/6/88"
+.UC 4
+.SH NAME
+CoupleIdToRGB - couple a user specified Id to a color from the CACD colormap
+.SH SYNOPSIS
+.nf
+\fB
+CoupleIdToRGB (Id, R, G, B)
+int Id;
+float R, G, B;
+
+CoupleIdsToRGBs (Ids, Rs, Gs, Bs, n)
+int Ids[];
+float Rs[], Gs[], Bs[];
+int n;
+\fP
+.fi
+.SH PARAMETERS
+.TP 14
+.B Id(s)
+a user specified Id of something he wishes to couple a color to.
+.TP 14
+.B R(s),G(s),B(s)
+specifies the color.
+.TP 14
+.B n
+specifies the number of Ids and RGBs to couple.
+.SH DESCRIPTION
+These functions create a mapping table from user supplied Id's to colors.
+R, G and B specify a color intensity in the range from \fB0\fP to \fB1\fP.
+These values are used to
+find the best matching color in the CACD colormap.
+The obtained pixel value is coupled to the specified Id in an internal
+table.
+When the same Id is specified several times the last color is stored.
+
+The best matching color is found by minimizing the sum of the square
+of the difference between a color and a specified RGB value.
+When several colors of the CACD colormap match equally well, the pixel
+value with the minimal number of 'one' bits is selected,
+in order to minimize the dependencies between Id's.
+When colors match equally well and have the same (minimal) number
+of one bits then the color which is used least is selected.
+.SH DIAGNOSTICS
+If the call to \fBCoupleIdToRGB()\fP is successful \fB1\fP is returned.
+If \fBCoupleIdToRGB()\fP fails \fB0\fP will be returned
+and \fBcacdcmaperrno\fP will be set to one of the following values:
+.TP 14
+.B NOINIT
+the CACD colormap library was not initialized.
+.TP 14
+.B NOCORE
+not enough core can be allocated.
+.TP 14
+.B BADID
+a specified Id was smaller than zero.
+.TP 14
+.B BADCOLOR
+a specified color intensity was not in the range from \fB0\fP to \fB1\fP.
+.SH SEE ALSO
+InitCacdCmap(5ICD)
+CoupleIdToColor(5ICD)
+DecoupleId(5ICD)
+GetAffectedIds(5ICD)
+.SH NOTE
+For optimal memory usage in the internal table,
+a set of Id's should be a consecutive set of integers starting at zero.

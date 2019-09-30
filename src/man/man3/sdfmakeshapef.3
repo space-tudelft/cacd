@@ -1,0 +1,37 @@
+.ll 77
+.hy
+.TH SDFMAKESHAPEF 3SDF "THE SEADIF PROGRAMMERS MANUAL"
+.SH NAME
+sdfmakeshapef - seadif call to install the shape function in a CIRCUIT structure
+.SH SYNOPSIS
+ #include <sealib.h>
+
+ int sdfmakeshapef(CIRCUITPTR circuit);
+
+.SH DESCRIPTION
+This function reads the bounding boxes of all layouts associated with a circuit
+and then computes the shape function for that circuit.
+The result is a linear
+list of structures of type SHAPEF (defined in libstruct.h).
+The bbx fields in
+the list consist of strictly monotonously increasing bbx[HOR] values and
+strictly monotonously decreasing bbx[VER] values.
+
+A successful call to sdfmakeshapef returns the shape function in circuit->shapef.
+It also leaves the list of layouts in the field circuit->layout.
+Sdfmakeshapef only reads the layout bounding boxes (the bbx
+field in the LAYOUT structure), so only this minimal amount of information will
+be present in the list of layouts --unless you read more layout information
+yourself.
+
+.SH "RETURN VALUE"
+A successful call to sdfmakeshapef returns TRUE.
+On failure it returns NIL.
+If no layout information is available for the circuit it still returns TRUE, but
+the circuit->shapef field is left untouched.
+
+.SH AUTHOR
+Paul Stravers, Delft University of Technology.
+
+.SH "SEE ALSO"
+sdfread(3SDF), sdflist(3SDF).

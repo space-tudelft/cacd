@@ -1,0 +1,33 @@
+# directory: demo/poly5
+
+Demonstration of 3D capacitance extraction for 5 parallel conductors.
+From the section "Examples" in the Space 3D Capacitance Extraction User's 
+Manual.
+
+STEPS
+=====
+
+1.  Make project, use scmos_n technology and lambda = 0.05 (micron)
+    % mkpr -p scmos_n -l 0.05 projectname
+
+Rest assumes that you and your files are in the project directory.
+
+2.  Use cgi to put the poly5 layout into the database.
+    % cgi poly5.gds
+
+3.  Compile element definition file.
+    % tecc tech.s
+
+4.  Perform an extraction of cell poly5 in batch mode
+    % space3d -C3 -E tech.t -P param.p poly5
+    or interactively
+    % Xspace -E tech.t -P param.p 
+    (Click button "poly5" in the menu "Database",
+    click button "coupling cap" and "3D capacitance" in the menu "Options",
+    click button "DrawBEMesh", "DrawGreen" and "3 dimensional" in the
+    menu "Display", and click button "extract" in the menu "Extract".
+    Click on button "quit" in menu "Extract" to exit the Xspace program.)
+
+5.  Inspect the extracted circuit.
+    % xspice -a poly5
+

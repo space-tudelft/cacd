@@ -1,0 +1,77 @@
+\documentstyle[11pt,a4]{article}
+\newcommand{\smc}[1]{{\sc #1}}
+\newcommand{\ii}{\"{\i}}
+% vertalen naar ps-file met dvips -t legal filenaam
+\input{psfig.sty}
+
+% path to the directory of this manual
+\newcommand{\topdir}{.}
+
+% Leave some vertical space between paragraphs; No paragraph indent:
+\setlength{\parskip}{0.6\baselineskip} \setlength{\parindent}{0cm}
+
+% this is how the computer displays command lines:
+\newcommand{\type}[1]{\begin{quote}%
+                         {\tt [op5/op5u9] ~ #1}%
+                      \end{quote}}
+% ...and this is how the computer displays two command lines:
+\newcommand{\typeb}[2]{\begin{quote}%
+                         {\tt [op5/op5u9] ~ #1%
+                              \newline%
+                              [op5/op5u9] ~ #2}%
+                       \end{quote}}
+
+% this is how to print mask names:
+\newcommand{\layer}[1]{{\sf #1}}
+\newcommand{\mask}[1]{{\sf #1}}
+% this is how to print names of nelsis tools:
+\newcommand{\tool}[1]{{\sl #1\/}}
+% this is how to print name of a button in an X window:
+\newcommand{\button}[1]{{\fbox{\small\rule[-0.5ex]{0mm}{2ex}$\!\!\!\!$\sf ~ #1}}}
+% this is how to print file names and cell names:
+\newcommand{\fname}[1]{{\tt #1}}
+% this is for reading figures from directory pictures
+\newcommand{\callpsfig}[2]{\psfig{figure=\topdir/plaatjes/#1,#2}}
+%voorbeeld:\centerline{\callpsfig{display.ps}{width=1.0\textwidth}}
+% To print an attention message:
+% macro for unimplemented figure
+%\newcommand{\futurecallpsfig}[2]{\centerline{\psfig{figure=futurepic.eps,#2}}}
+\newcommand{\attention}[2]{\begin{description}\item[{\bf #1}] #2 \end{description}}
+% to print a warning
+\newcommand{\warning}[1]{\begin{description}\item[{\bf Warning}:] #1 \end{description}}
+\sloppy
+\begin{document}
+
+\title{The 'fishbone' cell library}
+\author{Anton Bakker, Emile Hendriks, Peter van de Reest,\\
+Patrick Groeneveld and Paul Stravers\vspace*{1cm}\\
+Delft University of Technology\\
+faculty of Electrical Engineering\\
+Delft, the Netherlands\\
+e-mail: space-support-ewi@tudelft.nl}
+\date{january 1993}
+\maketitle
+
+\input \topdir/intro.tex
+\input \topdir/iv110.tex
+\input \topdir/no210.tex
+\input \topdir/no310.tex
+\input \topdir/na210.tex
+\input \topdir/na310.tex
+\input \topdir/ex210.tex
+\input \topdir/buf20.tex
+\input \topdir/mu111.tex
+\input \topdir/mu210.tex
+\input \topdir/de211.tex
+\input \topdir/dfn10.tex
+\input \topdir/dfr11.tex
+\input \topdir/anabib.tex
+\input \topdir/osc10.tex
+
+\newpage
+\noindent\makebox[\textwidth]{\hrulefill}
+\tableofcontents
+\vspace*{3ex}
+\noindent\makebox[\textwidth]{\hrulefill}
+\newpage
+\end{document}

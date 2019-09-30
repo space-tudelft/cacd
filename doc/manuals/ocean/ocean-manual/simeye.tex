@@ -1,0 +1,394 @@
+% -*- latex -*-
+
+\chapter{Simulating circuits with 'simeye'}
+\label{s-simeye}
+\index{simeye@\tool{simeye}|(bold}
+\index{simulation!interactive|see{\tool{simeye}}}
+\tool{Simeye} provides a graphical interface to the circuit simulators.
+It supports three levels of circuit simulation: logic, switch-level and spice.
+This section discusses the \tool{simeye} command line options and its user
+interface.
+\section{Description}
+{\it Simeye}
+is an X-window based simulation user interface for the
+{\it sls(1ICD)}
+simulator and the
+{\it spice(1ICD)}
+simulator.
+The program
+can be used to inspect the graphical representation of the
+output signals of both simulators and
+it can be used to edit input signals that
+are described in the sls command file format 
+(see "sls: switch-level simulator user's manual").
+Moreover, from 
+{\it simeye}
+simulations can be run
+\index{simulation!on three levels}
+by starting either the
+{\it sls} 
+\index{sls@\tool{sls}}
+\index{simulation!switch-level}
+simulator or the 
+{\it spice}
+\index{simulation!spice-level}
+\index{spice@\tool{spice}}
+simulator
+(The latter is done via the script %
+\it nspice(1ICD)\rm%
+).
+\par
+The following program argument may be specified:
+\begin{description}
+\item[{\it cell : }]
+This name specifies the name of the cell for
+which simulation signals are displayed and/or edited.
+\end{description}
+The corresponding file from which the signals are read or to which
+the signals are written has a name
+that is equal to the cell name, with an extension ".res"
+for sls logical and timing (output) signals,
+an extension ".plt"
+for sls waveform (output) signals,
+an extension ".ana"
+for spice (output) signals,
+and an extension ".cmd"
+for command file (input) signals.
+The spice output file should contain the spice signals
+in tabular format.
+When running the program 
+{\it spice}
+directly this is achieved by
+using the card .print tran ... in the spice input file.
+When running 
+{\it nspice,}
+this is achieved by using
+sls plot commands in the command file.
+\section{Commands of simeye}
+Commands that can interactively be given are:
+\begin{description}
+\item[{\it CELL : }]
+This field
+specifies the name of the cell to which the signals belong.
+The cell name is given by the program argument (see above)
+or it is specified by the
+user while running the program.
+To edit it, use the left arrow, right arrow
+and backspace and/or delete keys of the keyboard.
+To load the signals of the specified cell, click the read button.
+\item[{\it SLS-LOGIC\ \ SLS-TIMING \ \ SPICE : }]
+These buttons define the type of simulation.
+When clicking the run button,
+an sls simulation at level 1 or 2 is performed when SLS-LOGIC
+is active,
+an sls simulation at level 3 is performed when SLS-TIMING
+is active,
+and a spice simulation is performed when SPICE
+is active.
+When clicking the read button,
+These buttons define the type of simulation.
+When clicking the run button,
+an sls simulation at level 1 or 2 is performed when SLS-LOGIC
+is active,
+an sls simulation at level 3 is performed when SLS-TIMING
+is active,
+and a spice simulation is performed when SPICE
+is active.
+When clicking the read button,
+sls signals are read when SLS-LOGIC or SLS-TIMING is active,
+and spice signals are read when SPICE is active.
+\item[{\it READ : }]
+Load a new signal file.
+Normally, current signals are cleared from the program.
+However, if the shift key is held down while pressing the
+read button the new signals will be appended to the current signals.
+\item[{\it RUN : }]
+Perform a simulation by using either the
+{\it sls}
+simulator or the
+{\it spice}
+simulator.
+For both simulators
+{\it simeye}
+uses the command file %
+\it cell\rm%
+.cmd.
+The spice simulator is run by calling the program 
+{\it nspice.} 
+If any error message occurs it will be displayed by 
+{\it simeye.}
+If the simulation succeeds, the simulation output 
+will automatically be displayed by
+{\it simeye.}
+\item[{\it FULL : }]
+Draw all present signals from the beginning of the simulation
+time till the end of the simulation time.
+\item[{\it REDRAW : }]
+Redraw the current window.
+\item[{\it IN : }]
+Zoom in on the current window. You'll have to indicate the rectangle that you
+want to zoom in. First click one corner, then the other corner of the zoom-in
+area.
+\item[{\it OUT : }]
+Zoom out on the current window. After clicking \button{OUT} you'll have to
+indicate a rectangle on the screen (with two mouse clicks). This is the
+rectangle that will contain the {\sl current} window {\sl after} the zoom-out
+has been performed. Consequently, for a large zoom-out you indicate a small
+window and for a marginal zoom-out you indicate a big window.
+\item[{\it LEFT, RIGHT, UP AND DOWN ARROW : }]
+Move the current window leftwards, rightwards, upwards or downwards
+respectively.
+\item[{\it S : }]
+Save the current window settings (i.e. start-time,
+stop-time and the names of the signals that are
+displayed) in a file (The name of this file is specified
+in the configuration file).
+\item[{\it L : }]
+Load the current window settings (i.e. start-time,
+stop-time and the names of the signals that are
+displayed) from a file (The name of this file is specified
+in the configuration file).
+
+\item[{\it MOVE : }]
+With this command the order of the signals can be changed
+or one signal can be placed over another signal
+in order to compare them.
+First the signal that is moved or that is placed over another signal
+is selected,
+and then the new position of the signal is selected.
+To place the selected signal over another signal one should hold
+the shift key down while selecting the new position.
+To remove a signal that is placed over another signal,
+initially select the signal with the shift key held down.
+\item[{\it VALUE : }]
+Move a vertical scanline over the display window,
+according to the position of the pointer,
+and show the value of the corresponding x position (and y position).
+When clicking the middle (or right) button of the mouse, one
+may toggle between displaying
+in the right margin (if the number of signals is not too large)
+the y values of the signals at the selected x position.
+To store the value of a particular position, click the left 
+button of the mouse.
+This position will then be subtracted from
+the next positions of the scanline,
+so as to measure delay times and/or voltage differences.
+\item[{\it PRINT : }]
+Generate a hardcopy of the current screen.
+\item[{\it SPACE : }]
+Run the layout-to-circuit extraction program. A
+layout-to-circuit extraction may be aborted by typing Ctrl-C.
+\item[{\it QUIT : }]
+Quit the program
+\item[{\it INPUT : }]
+Read the command file %
+\it cell\rm%
+.cmd and
+enable the edit menu. 
+If the command file %
+\it cell\rm%
+.cmd does no exist,
+{\it simeye}
+will try to read a default command called "simeye.def.d".
+First, it tries to read this file from the current directory
+and second it tries to read this file from the process directory.
+\end{description}
+
+The following commands are part of the edit menu:
+\begin{description}
+\item[{\it GRID : }]
+Specify the smallest unit for the x-axis (= time axis).
+\item[{\it NEW : }]
+Create a new signal. The user has to enter the name of the new
+signal, and the signal will be placed at the bottom of
+the window.
+\item[{\it DELETE : }]
+Delete one or more signals by selecting them with the cursor.
+\item[{\it CLEAR : }]
+Delete all signals.
+\item[{\it COPY : }]
+Copy the signal description from one signal to another signal.
+\item[{\it EDIT : }]
+Edit a particular signal by inserting a new logical level
+for a particular time interval (t1, t2).
+The signal description may eventually already be defined for this interval.
+The insertion of the new logical level is done in two steps:
+During the first click of the mouse
+the signal, the new logical level and t1 are selected.
+During the second click t2 is selected and the new signal
+description is drawn.
+To insert an interval that has a free state 
+one should hold the shift key pressed down
+while making the first selection.
+\item[{\it YANK : }]
+Store a (part of a) signal description in the buffer.
+\item[{\it PUT : }]
+Insert a copy of the signal description that is in the buffer onto
+a particular position.
+The user has to select the signal to which the contents
+of the buffer is added and the time from which on the
+new signal description is valid.
+The new signal description may (partly) override the existing
+signal description for the selected signal.
+Furthermore,
+the user is asked to type the number of repetitions for the signal
+description that is added.
+\item [ {\it SPEED : }]
+Speed up the signals by some factor.  The value of
+          'sigunit' in the command file will be divided by the
+          value that is specified with this command.  If a value
+         $<$ 1 is specified, the signals will be slowed down.
+
+\item[{\it T\_END : }]
+Update the end time of the input signals (= end time of simulation).
+\item[{\it READY : }]
+Disable the edit menu and
+update the command file %
+\it cell\rm%
+\end{description}
+\section{Command file for sls}
+\index{sls!command file|bold}
+In order to simulate a circuit,
+{\it simeye}
+uses a command file called %
+\it cell\rm%
+.cmd.
+This file should contain a description
+of the input signals, values for the simulation control variables,
+and a listing of the terminals for which output should be generated.
+This is explained in more detail in the user manuals of
+the sls simulator and the spice simulator.
+\par
+The "set" commands in the command file
+may be edited by enabling the edit menu of
+{\it simeye.}
+The new signal descriptions will then be written back
+to the command file when updating
+the command file.
+However, when a set command is followed by the keyword "no\_edit",
+between comment signs,
+this set command will not be changed.
+This is for example useful to define supply signals and
+periodical signals like clock signals.
+\par
+When the command file contains on separate line,
+between comment signs, the keyword "auto\_print"
+("auto\_plot"),
+{\it simeye}
+will automatically add a print (plot) statement to the
+command file for each terminal of the cell that is simulated, 
+prior to simulation.
+The new print (plot) commands will have a keyword "auto" between
+comment signs following the keyword print (plot) to indicate
+that the print (plot) command will be replaced each time
+when a new simulation is started.
+\par
+An example of a default command file that can be used for
+both sls and spice simulations is:
+\par
+% \nofill
+/$\ast$ auto\_set $\ast$/\\
+set /$\ast$ no\_edit $\ast$/ vdd = h$\ast$\~\\
+set /$\ast$ no\_edit $\ast$/ vss = l$\ast$\~\\
+set /$\ast$ no\_edit $\ast$/ phi1 = (l$\ast$110 h$\ast$80 l$\ast$10)$\ast$\~\\
+set /$\ast$ no\_edit $\ast$/ phi2 = (l$\ast$10 h$\ast$80 l$\ast$110)$\ast$\~\\
+option sigunit = 1n\\
+option outacc = 10p\\
+option simperiod = 4000\\
+option level = 3\\
+/$\ast$\\
+$\ast$\%\\
+tstep 0.1n\\
+trise 0.5n\\
+tfall 0.5n\\
+$\ast$\%\\
+$\ast$\%\\
+$\ast$/\\
+/$\ast$ auto\_print $\ast$/\\
+/$\ast$ auto\_plot $\ast$/\\
+% \fill
+\section{Startup file for simeye}
+\index{simeyerc@\fname{.simeyerc} file}
+At start-up of the program,
+{\it simeye}
+will read some information from a file called ".simeyerc".
+First, it tries to find this file in the current directory.
+Second, it tries to open this file in the process directory.
+The start-up file may contain the following keywords, followed
+by a specification on the same line if the keyword ends with ':'.
+\begin{description}
+\item[SLS:]
+Specifies the command for running the
+{\it sls}
+simulator.
+\item[SLS\_LOGIC\_LEVEL:]
+Specifies the level of simulation when "sls-logic" is selected
+(use 1 or 2).
+\item[SLS\_LOGIC\_SIGNAL:]
+Specifies the default signal representation for sls-logic simulations
+(use A or D).
+\item[SLS\_TIMING\_SIGNAL:]
+Specifies the default signal representation for sls-timing simulations
+(use A or D).
+\item[SPICE:]
+Specifies the command for running the
+{\it spice}
+simulator (use
+{\it nspice}
+or a derivative of it).
+\item[XDUMP\_FILE:]
+Specifies the name of the X Window dump file that is generated
+when the print button is clicked.
+\item[PRINT:]
+Specifies the command that is executed when the print button is clicked
+in order to process the X Window dump file (e.g. to convert the window dump to
+PostScript and to send the output to a laser-printer).
+\item[PRINT\_LABEL:]
+Specifies an optional label that is placed in upper
+left corner of the display window when an X Window dump
+is generated.
+\item[SETTINGS\_FILE:]
+Specifies the name of the file in (from) which the window
+settings are stored (loaded) when using the "S"
+button ("L" button or -L option).
+\item[DETAIL\_ZOOM\_IN]
+          if this keyword is specified in the configuration file,
+          the zoom-in function is also defined for the y-axis of
+          a (single analog) signal.  In this case it is not
+          necessary to hold the shift key down (see command IN).
+\item[DETAIL\_ZOOM\_ON]
+If this keyword is specified in the configuration file,
+the zoom-in function is also defined for the
+y-axis of a (single analog) signal.
+In this case it is not necessary to hold the shift key down
+\item[TRY\_NON\_CAPITAL\_ON]
+If this keyword is specified in the configuration file
+and simeye fails to open a command file that starts with a capital letter,
+the program will try to open the same command file but now starting
+with a non-capital letter.
+If this succeeds and
+when performing a simulation, simeye will first run the program
+on a copy of the command file
+to expand one dimensional array node names into single node names
+(e.g. a[1..3] is converted into a\_1\_ a\_2\_ a\_3\_).
+\end{description}
+\par
+In the above specifications, the string '\$cell' may be used
+to refer to the current cell name, '\$date' may be used to
+refer to the current date, and '\$time' may be used to refer
+to the current time.
+\par
+Example of a start-up file (default values are shown):
+\par
+% \nofill
+SLS: sls \$cell \$cell.cmd\\
+SLS\_LOGIC\_LEVEL: 2\\
+SPICE: nspice  nspice \$cell \$cell.cmd\
+XDUMP\_FILE: simeye.wd\\   
+PRINT: xtops -white 1 -in simeye.wd -out \$cell.ps; pspr \$cell.ps; rm simeye.wd\\
+PRINT\_LABEL: \$cell  \$date  \$time
+SETTINGS\_FILE: simeye.set
+% \fill
+
+\index{simeye@\tool{simeye}|)}
+

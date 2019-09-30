@@ -1,0 +1,164 @@
+.TH MAKEBOXL 1ICD "User Commands"
+.UC 4
+.SH NAME
+makeboxl - expand a cell linearly to boxes
+.SH SYNOPSIS
+.B makeboxl
+[-Hh] [-L] [-cL] [-d[N]] [-v] [-wXl,Xr,Yb,Yt] [-Ii] cell
+.SH OPTIONS
+.TP 8
+.B -H
+Perform a mixed linear/hierarchical expansion, i.e.
+expand only the sub-cells that are macros.
+.TP
+.B -h
+Pseudo hierarchical mode, all cell calls are preserved in the netlist.
+.TP
+.B -L
+Expand only Local cells.
+.TP
+\fB-c\fPL
+Select check level 'L' (positive integer value).
+The check level specifies the level of the lowest
+cell which is included in the expansion
+(default: all cells are included (maximum level)).
+.br
+Level 0 means, only the bounding box and terminals of the top cell.
+Level 1 means, the primitives of the top cell and only
+the bounding boxes and terminals of the called cells.
+.TP
+\fB-d\fP[N]
+Discretization, 'N' samples per lambda (default: 8).
+.TP
+.B -v
+Verbose mode.
+.TP
+\fB-w\fPXl,Xr,Yb,Yt
+Select a partial expansion window.
+The window coordinates (integer values) must be
+specified as one argument (no blanks are allowed).
+Xl,Xr,Yb,Yt are respectively the left and right X-coordinates,
+and bottom and top Y-coordinates
+(default: the expansion window is the cell bounding box).
+.TP
+.B -I
+Skip all fishbone images for Sea-of-Gates.
+.TP
+.B -i
+No automatic image mode for Sea-of-Gates.
+.SH DESCRIPTION
+.I Makeboxl
+takes the internal database description of the cell and converts it to boxes.
+.sp
+Unless the option -H is used,
+.I makeboxl
+expands the cell \fIlinearly\fP,
+i.e. the cell and all lower cells
+up to an user controlled limit to boxes.
+If an expansion window is specified,
+only the boxes in that window are expanded.
+.sp
+The cell argument is the cell name and must be the last argument.
+The current working directory must be the project directory.
+.I Makeboxl
+creates a special file "exp_dat",
+which contains the name of the cell which is expanded.
+.sp
+In the pseudo hierarchical mode (option -h)
+the layout is expanded but also cell calls are preserved in the netlist.
+.sp
+The circuit extractor space uses some new streams for back-annotation.
+Use option -b to discard the generation of the streams: tidpos, tidnam and anno_exp.
+.sp
+.I Makeboxl
+automatically detects the usage of Sea-of-Gates images.
+Be sure that the directory "seadif" exists.
+In this mode, makeboxl shall only use the highest level image(s) and
+skip all lower level images.
+Use option -I to skip all images.
+It works with the reserved instance name "IMAGE".
+This instance name may only be used for calls to image subcells and
+must be used for all this calls.
+If the image is on the first level,
+makeboxl shall try to merge the boxes of the image to reduce its output.
+Use option -i to put off the image detection.
+In that case the images are expanded as all other subcells.
+.sp
+.I Makeboxl
+reads the file "is_macro" for macro status detection in hier_mode (-H).
+In this mode the subcells are not expanded, except the macro status is set.
+.I Makeboxl
+uses this file also for the list of allowed masks.
+Default, makeboxl shall expand all masks for all cells, except for devices
+which are not expanded (existence of file "devmod").
+If a cell contains an "is_macro" file, and this file contains a list
+of masknames between '+' signs (i.e. "+in+ins+"), only these masks are expanded.
+.br
+Note that new projects with xcontrol are not more using the files "is_macro"
+and "devmod".
+In that case,
+the cell status is controlled by the program \fIxcontrol\fP.
+.AU "J. Annevelink, S. de Graaf"
+.SH FILES
+.TP
+\fCNELSISPROJECT/.dmrc\fP
+(input file)
+.TP
+\fCNELSISPROJECT/seadif/\fP
+(input directory, image mode detection)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/annotations\fP
+(input file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/box\fP
+(input file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/mc\fP
+(input file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/nor\fP
+(input file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/term\fP
+(input file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/info\fP
+(in/output file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/spec\fP
+(output file, flat_mode)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/pseudo_hier\fP
+(output file, -h)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/tid\fP
+(output file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/tidpos\fP
+(output file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/tidnam\fP
+(output file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/anno_exp\fP
+(output file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/LC_bxx\fP
+(output files) LC=LayerCode
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/t_LC_bxx\fP
+(output files)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/LC_nxx\fP
+(output files, no discr.)
+.TP
+\fCNELSISPROJECT/exp_dat\fP
+(output file)
+.SH SEE ALSO
+device(1ICD),
+exp(1ICD),
+macro(1ICD),
+makegln(1ICD),
+makevln(1ICD),
+space(1ICD),
+xcontrol(1ICD).

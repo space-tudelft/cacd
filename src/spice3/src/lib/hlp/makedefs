@@ -1,0 +1,10 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+
+COBJS		= help.o provide.o readhelp.o textdisp.o x11disp.o xdisplay.o
+
+LIB_TARGET	= ../hlp.a
+INCLUDE		= -I../../include $(INCX)
+CFLAGS		= $(CC_OPT) $(SYS_CFLAGS) $(INTERFACE_OPTS)
+

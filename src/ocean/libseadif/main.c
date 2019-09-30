@@ -1,0 +1,92 @@
+/*
+ * ISC License
+ *
+ * Copyright (C) 1990-2018 by
+ *	Paul Stravers
+ *	Ireneusz Karkowski
+ *	Patrick Groeneveld
+ * Delft University of Technology
+ *
+ * Permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "src/ocean/libseadif/sea_decl.h"
+#include "src/ocean/libseadif/sdferrors.h"
+#include <string.h>
+
+static char *argv0 = "testsdf";
+
+extern SEADIF  sdfroot;
+extern FILEPTR dbstderr;
+
+extern char *optarg;
+extern int sdfcopytheinput;
+extern int sdfverbose;
+
+int main (int argc, char *argv[])
+{
+    STRING laynam, cnam, fnam, bnam;
+    int i, optind;
+
+    dbstderr = stderr;
+    setbuf (dbstderr, NULL);
+    sdfverbose = 9; /* be chatty... */
+
+#if 0
+    /* Parse options */
+    while ((i = getopt (argc , argv, "h")) != EOF) {
+	switch (i) {
+	case 'h' :
+	    printf ("------ seaparse -------\n");
+	    printf ("\nUsage: %s layname cirname funname libname\n", argv[0]);
+	    sdfexit (0);
+	    break;
+	case '?':
+	default :
+	    break;
+	}
+    }
+#endif
+
+    optind = 1;
+
+    if (optind < argc)
+	laynam = canonicstring (argv[optind++]);
+    else
+	sdfreport (Fatal, "missing layname, cirname, funname and libname");
+
+    if (optind < argc)
+	cnam = canonicstring (argv[optind++]);
+    else
+	sdfreport (Fatal, "missing cirname, funname and libname");
+
+    if (optind < argc)
+	fnam = canonicstring (argv[optind++]);
+    else
+	sdfreport (Fatal, "missing funname and libname");
+
+    if (optind < argc)
+	bnam = canonicstring (argv[optind++]);
+    else
+	sdfreport (Fatal, "missing libname");
+
+    sdfroot.filename = canonicstring ("....seadif i/o test....");
+    if (sdfopen() != SDF_NOERROR) sdfexit (6);
+    if (!sdfreadcir (SDFCIRALL, cs("hotelLogic"), cs("hotelLogic"), cs("hotel"))) sdfexit (5);
+    if (!sdfreadcir (SDFCIRALL, cs("hotel"), cs("hotel"), cs("hotel"))) sdfexit (4);
+    sdfclose();
+    sdfexit (0);
+    return 0;
+}

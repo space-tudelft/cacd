@@ -1,0 +1,29 @@
+SWPATH=/data/public/common/software
+
+dir=$SWPATH/modeltech/10.5b
+if [ -d $dir ]; then source $dir/sourceme.bash; fi
+dir=$SWPATH/nelsis/20161101_32
+if [ -d $dir ]; then source $dir/sourceme.bash; fi
+dir=$SWPATH/synopsys/L-2016.03-SP2
+if [ -d $dir ]; then source $dir/sourceme.bash; fi
+dir=$SWPATH/altera/13.0sp1
+if [ -d $dir ]; then source $dir/sourceme.bash; fi
+dir=$SWPATH/cacd/5.4.9
+if [ -d $dir ]; then source $dir/sourceme.bash
+elif [ -n "$ICDPATH" ]; then source $ICDPATH/sourceme.bash
+fi
+
+# Hack for running dali, simeye, etc. on other host
+host=`echo $DISPLAY | sed -e "s/:.*//"`
+if [ "$host" = "localhost" ]; then
+host=`echo $DISPLAY | sed -e "s/.*://"`
+DISPLAY=127.0.0.1:$host
+fi
+
+export PATH=$OPPROGPATH/bin:$PATH
+if [ -d $SWPATH/gv ]; then export PATH=$PATH:$SWPATH/gv/bin; fi
+export NO_SEADIF_LOCK=1
+export PS1='\h:\w \$ '
+
+alias pspr=lpr
+alias pspq=lpq

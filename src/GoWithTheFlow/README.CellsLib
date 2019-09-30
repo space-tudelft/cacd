@@ -1,0 +1,11 @@
+Take care that when something changes with the cell library (in this tree),
+files in sim_libs and synth_libs have to be updated and the
+scripts
+    sim_libs/mk_CellsLib,
+    synth_libs/mk_CellsLib and
+    synth_libs/mk_db
+have to be executed (first set the correct paths for the
+simulator and/or synthesiser).
+
+If OPPROGPATH is not "/data/public/common/software/opprog" then
+also a new install must be done (see README.install)

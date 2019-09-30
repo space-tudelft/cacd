@@ -1,0 +1,46 @@
+
+# ISC License
+# Copyright (C) 1994 by
+#     Frederik Beeftink
+# Delft University of Technology
+
+# In this file, the models are described for the different bipolar
+# devices of the DIMES-01 process. It is allowed to create models
+# for which the parameters are defined by a substitution equation.
+
+unity Q_electron	1.602e-19
+unity N_intrinsic	1.045e+20
+unity Gummel_base	7.500e+06
+unity C0s_wn_bw		1.900e-03
+unity C0e_wn_bw		2.800e-09
+unity C0s_bw_epi	0.290e-03
+unity C0s_bn_sub	0.151e-03
+
+model bw10x	NPN(Is=($Q_electron*$N_intrinsic/$Gummel_base)*$AE Nf=1
+		Ikf=3.00e+07*$AE+6.00e+01*$PE Bf=117 Br=4 Vaf=55 Var=4
+		Ikr=5.00e+07*$AE+1.00e+02*$PE Xtb=1.5 Eg=1.17 Xti=2.5
+		Cje=$C0s_wn_bw*$AE+$C0e_wn_bw*$PE Vje=0.78 Mje=0.28 Tf=20p
+		Xtf=(4.70e-02*$AE+1.90e-02*$PE)^2 Tr=100p Mjc=0.32 Vjc=0.67
+		Cjc=$C0s_bw_epi*$AE Cjs=$C0s_bn_sub*$AE Vjs=0.45 Mjs=0.26)
+
+model bw101a	NPN(Is=0.018f Bf=117 Nf=1 Vaf=55 Ikf=4.1m Br=4 Nr=1 Var=4
+		Ikr=45u Rb=600 Irb=0.15m Rbm=30 Re=14 Rc=200 Xtb=1.5
+		Eg=1.17 Xti=2.5 Cje=50f Vje=0.78 Mje=0.28 Tf=20p Cjc=75f
+		Vjc=0.67 Mjc=0.32 Xcjc=1 Tr=100p Cjs=0.24p Vjs=0.45 Mjs=0.26)
+
+model bs101a	NPN(Is=0.050f Bf=100 Nf=1 Vaf=40 Ikf=5m Ise=1f Ne=2 Br=0.5
+		Nr=1 Var=5 Ikr=5m Isc=10f Nc=1.2 Rb=350 Irb=1m Rbm=50 Re=25
+		Rc=150 Eg=1.17 Xti=3 Cje=95f Vje=0.8 Mje=0.26 Tf=30p Cjc=100f
+		Vjc=0.75 Mjc=0.33 Xcjc=1 Tr=100p Cjs=0.25p Vjs=0.45 Mjs=0.26)
+
+model bi101a	NPN(Is=0.018f Bf=120 Nf=1 Vaf=58 Ikf=4.2m Br=4 Nr=1 Var=5.8
+		Ikr=45u Rb=600 Irb=0.15m Rbm=30 Re=14 Rc=200 Xtb=1.5 Eg=1.20
+		Xti=2.5 Cje=40f Vje=0.77 Mje=0.24 Tf=30p Cjc=75f Vjc=0.65
+		Mjc=0.32 Xcjc=1 Tr=100p Cjs=0.24p Vjs=0.45 Mjs=0.26)
+
+model wp102c	PNP(Is=0.183f Bf=89 Nf=1 Vaf=13 Ikf=0.5m Ise=0.37f Ne=2 BR=17
+		Nr=1 Var=10 Ikr=0.4m Isc=1.4f Nc=2 Rb=80 Irb=10 Rbm=0 RE=25
+		Rc=150 Xtb=1.5 Eg=1.20 Xti=2.5 Cje=95f Vje=0.67 Mje=0.34
+		Tf=90p Cjc=387f Vjc=0.70 Mjc=0.40 Xcjc=0.3 Tr=1n Cjs=0.60p
+		Vjs=0.52 Mjs=0.31)
+

@@ -1,0 +1,228 @@
+.TH DALI 1ICD "User Commands"
+.UC 4
+.SH NAME
+dali - an interactive layout editor
+.SH SYNOPSIS
+.B dali
+[\fB-A\fP|\fB-C\fP] [\fB-f\fP] [\fB-o\fP]
+[\fB-h\fP host:d#[.s#]] [=geo] [cell_name]
+.SH OPTIONS
+.TP
+.B -A
+Set alternative plane mask for Text Graphics Context.
+.TP
+.B -C
+Don't use standard ICD colormap (\fIsetcmap\fP program).
+.TP
+.B -f
+Use file "dali_drc" from current working directory.
+.TP
+.B -o
+Output "dalirc" messages to "animate" file.
+.TP
+.B -h
+The display to be used by \fIdali\fP.
+The display must be identified by a hostname together with a display number,
+and optionally a screen number.
+.br
+If this option is not used the environment variable DISPLAY is used
+to identify the display.
+.TP
+.B =geo
+To specify the window geometry <width>x<height>{+-}<xoffs>{+-}<yoffset>.
+For example, =+0 to get a default window at xoffset 0,
+or =1000x800+0 to get a rather big window in the upper left corner.
+.TP
+.B cell_name
+Name of the cell that is to be read at start-up.
+.SH DESCRIPTION
+.I Dali
+(the Delft Advanced Layout Interface)
+is an X Windows program for layout editing of integrated circuits.
+It can be used for the creation / manipulation of hierarchical
+layouts containing orthogonal and 45 degrees mask geometries.
+.PP
+.I Dali
+interacts with the ICD / NELSIS database for storage and retrieval
+of the layout descriptions.
+To use the program the project directory must be chosen
+as the current working directory.
+.PP
+.I Dali
+uses a cursor (pointer) to select a point or an area on the screen.
+To select a point a cross is used, which is moved around with the
+aid of the mouse.
+Upon pressing a mouse button
+the point is selected.
+.if t .br
+When rectangular areas, polygons or centre-lines of wires have to
+be entered, \fIdali\fP switches to rubber-box / rubber-line cursors after the
+first point has been fixed.
+.PP
+.I Dali
+is menu driven, with the commands to be used
+appearing on the left side of the screen.
+The commands are selected by moving the cursor into the
+command area on the screen and pressing a mouse button.
+On occasions where \fIdali\fP expects the user to specify a point
+in the design area it is often allowed to select a command instead,
+thereby cancelling or interrupting the command in progress.
+.PP
+.I Dali
+has a hierarchical menu structure.
+Upon starting the main menu is shown on the screen from which
+one may choose one of the command clusters.
+Upon doing so the set of commands belonging to the
+cluster are shown, and one may choose one of them.
+.PP
+The clusters and their commands are:
+.TP 12
+.B settings
+This cluster contains commands for setting \fIdali\fP working modes.
+For instance, commands to control the display grid and snap grid.
+.TP
+.B info_menu
+Contains commands to ask for information.
+.TP
+.B annotate
+Contains commands to add / delete comments and labels.
+.TP
+.B DRC_menu
+Contains the commands to do design-rule checking
+and to show the results on the screen.
+.I Dali
+contacts the \fIdimcheck\fP(1ICD) package to perform the actual check.
+.TP
+.B inst_menu
+Commands to manipulate instances (calls from the edited cell to
+son-cells), including the manipulation of arrays of instances
+and the possibility to add instances of cells that have
+previously been imported from other projects.
+.TP
+.B term_menu
+Commands to manipulate the terminals, including the manipulation
+of a terminal-buffer as well as the possibility to "lift" terminals
+of instances.
+.TP
+.B box_menu
+Commands to manipulate the primitive
+mask geometries of the cell being edited.
+This includes the manipulation of polygons containing 45 degrees edges,
+buffer operations, wire editing and a fast integrated design-rule
+checker performing single-layer checks.
+.TP
+.B DB_menu
+Commands to interact with the data manager (database).
+Also commands to expand (on the screen) the instance(s)
+are given here, as well as commands to clear the data patterns.
+.TP
+.B visible
+In this cluster one may set layers/names visible/not_visible on the screen.
+.SH
+Various commands (e.g. append, wire) operate only on the mask layers
+that have been selected by the designer.
+(De)activation of these mask layers can be done by toggling the
+corresponding areas at the bottom of the screen.
+
+Some commands can be activated with keyboard keys.
+The following key commands are defined for \fIdali\fP:
+
+.nf
+.ta 2c 2.5c 4c
+	Key:		Function:
+
+	+	(=)	zoom in  (current window)
+	-		zoom out (current window)
+	0		expand cell with maximum level
+	1...9		expand cell with this level
+	e		expand cell with default level
+	E		individual expansion
+	N		new edit session (erase window)
+	R		read (edit) another cell
+	U		reread (update) the current cell
+	W		write (save) the current cell
+
+	b		bounding box window
+	c		center window at cursor position
+	d		hashed drawing style on/off
+	D		dominant drawing style on/off
+	g		grid(s) on/off
+
+	h	(H)	pan left
+	j	(J)	pan down
+	k	(K)	pan up
+	l	(L)	pan right
+
+	i		zoom in at cursor position
+	o		zoom out at cursor position
+	p		previous window
+	q		quit (exit) the program
+	r	(^L)	redraw screen
+	s		visible sub-terminals on/off
+	t		tracker (cursor position display) on/off
+	v		visible setup menu
+	x		enter coordinate to center window
+	y		yes confirmation to question
+	n		no confirmation to question
+	Esc		escape from current menu or enter string
+.fi
+
+Messages from the program to the user will be displayed
+in a window at the top of the screen.
+.AU "S. de Graaf, J. Liedorp, P. van der Wolf"
+.SH FILES
+.TP
+NELSISPROJECT/.dmrc
+(input file)
+.TP
+ICDPATH/share/lib/process/TECHN/maskdata
+(input file)
+.TP
+ICDPATH/share/lib/process/TECHN/dalirc
+(input file)
+.TP
+NELSISPROJECT/.dalirc
+(input file, 1st try)
+.TP
+HOME_dir/.dalirc
+(input file, 2nd try)
+.TP
+ICDPATH/share/lib/process/TECHN/dali_drc
+(input file, 3rd try)
+.TP
+NELSISPROJECT/dali_drc
+(input file, -f option)
+.TP
+NELSISPROJECT/layout/\fIcell\fP/box
+(in/output file)
+.TP
+NELSISPROJECT/layout/\fIcell\fP/info
+(in/output file)
+.TP
+NELSISPROJECT/layout/\fIcell\fP/mc
+(in/output file)
+.TP
+NELSISPROJECT/layout/\fIcell\fP/term
+(in/output file)
+.TP
+NELSISPROJECT/layout/\fIcell\fP/nor
+(in/output file)
+.TP
+NELSISPROJECT/layout/\fIcell\fP/annotations
+(in/output file)
+.TP
+NELSISPROJECT/animate.PID
+(output file, -o option)
+.SH LIMITATIONS
+The editor will only fit for cells with Manhattan and 45 degrees shapes.
+.SH SEE ALSO
+P. van der Wolf, J. Liedorp and S. de Graaf,
+"Dali User's Manual", Circuits & Systems,
+Delft University of Technology.
+.br
+dimcheck(1ICD),
+mkpr(1ICD),
+getproc(1ICD),
+setcmap(1ICD),
+dali_drc(4ICD),
+maskdata(4ICD).

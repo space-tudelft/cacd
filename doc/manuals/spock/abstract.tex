@@ -1,0 +1,34 @@
+% abstract.tex
+
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+The current version of the layout-to-circuit extractor SPACE does not have a
+user friendly interface to add new process descriptions or change existing
+descriptions. This is currently a specialized job.
+
+\bigskip \noindent
+This report describes the design and implementation of a user-friendly tool
+that can be used to add and manage the technology files that describe a
+process.
+
+\bigskip \noindent
+Flexibility is an important requirement. It must be possible to easily add new
+technology files to the interface. Another important requirement is platform
+independence. It must be possible to use the platform on many different flavors
+of Unix.
+
+\bigskip \noindent
+To meet the demand of flexibility the application uses a configuration file in
+which the user interface and the format of the technology files is specified.
+The developed application uses the information in the configuration file to
+create a user interface and to generate the required technology files.
+
+A parser has been created that can read the configuration file and build a
+graphical user interface from the information it encounters. The values entered
+by the user into this user interface are then used by the generators specified
+in the configuration file to generate the requested technology files.
+
+\bigskip \noindent
+The Qt toolkit from TrollTech ensures platform independence of the graphical
+user interface. This popular toolkit is available for many types of Unix,
+Linux, Windows and even for embedded environments.

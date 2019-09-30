@@ -1,0 +1,503 @@
+#!/bin/csh -f
+#
+# KISSIS
+# This is a front end to the sis (Berkeley Logic Synthesis System)
+# which allows us to automatically  generate a sls input file for given FSM
+# machine in file kiss2 format or combinatorial circuit in pla format.
+#
+######################## these things you may want to change ##############
+
+# if OCEAN or OCEANPROCESS is not set: set it to default
+if ( ! ${?OCEAN} ) then
+if ( ! ${?ICDPATH} ) then
+	echo "ICDPATH not set"; exit 1
+endif
+set  OCEAN = $ICDPATH/share/lib
+endif
+
+if ( ! ${?OCEANPROCESS} ) setenv OCEANPROCESS fishbone
+
+set  sis_prog = sis              # sis program name
+
+set  sis_logfile = sis_logfile   # sis log file
+
+set  proto_file  = sls_prototypes/oplib.ext # a file with library prototypes
+
+set  genlib_file = $OCEAN/celllibs/$OCEANPROCESS/oplib8_93.genlib
+                                 # a file with oplib library description in
+                                 # genlib format
+
+######################## end of configuration area #######################
+
+set model  = "unknown"           # basename of the input file
+set network = "unknown"          # network name as declared by .model statement
+
+	  	    	      	 # first let's determine type of input
+set type = "Unknown"		 # type of input
+set input_file  = "Unknown"      # input file name
+set doRetiming = 0		 # do or not do retiming (default don't)
+set doCreateSta = 1		 # create sta file for simeye
+set doLatchOutExt = 0		 # connect outputs of latches with extra
+				 # external terminals (helps in debugging
+				 # after  extraction
+
+set blif2sls_specials      = " " # File with special terminals' names
+				 # parse command line
+
+				 # First find out which version of SIS
+				 # we have.
+set  sis_version = "1.2"
+set  where_sred = `which sred | sed  -e "s/^no .*//g"`
+if ( ! ${?where_sred} || "$where_sred" == "" ) then
+   set sis_version="1.1"
+endif
+
+if ( $#argv < 1 ) then
+	goto help
+endif
+
+set two_part_option = 0
+set previous_option = ""
+foreach ii ($argv)
+
+  if ( $two_part_option == 0) then
+    switch ($ii)
+    case '-h':
+       		goto help
+       		breaksw
+    case '-c':
+       		set type = "pla"
+       		breaksw
+    case '-k':
+       		set type = "kiss"
+       		breaksw
+    case '-b':
+       		set type = "blif"
+       		breaksw
+    case '-r':
+       		set doRetiming = 1
+       		breaksw
+    case '-S':
+       		set two_part_option = 1
+		set previous_option = $ii
+       		breaksw
+    case '-g':
+       		set two_part_option = 1
+		set previous_option = $ii
+       		breaksw
+    case '-i':
+       		set two_part_option = 1
+		set previous_option = $ii
+       		breaksw
+    case '-x':
+       		set doLatchOutExt = 1
+       		breaksw
+    default:
+			# this must the input filename
+		set input_file = $ii
+		breaksw
+    endsw
+ else
+    set two_part_option = 0
+    switch ($previous_option)
+    case '-S':
+       		set blif2sls_specials = " -c $ii "
+       		breaksw
+    case '-g':
+       		set genlib_file = $ii
+       		breaksw
+    case '-i':
+       		set proto_file = $ii
+       		breaksw
+    endsw
+ endif
+end
+
+if ( $input_file ==  "Unknown" || !( -e $input_file || ( $type == "Unknown" && -e ${input_file}.kiss2 ))) then
+	goto help
+endif
+
+set extension = `echo $input_file | sed -n -e "s/.*\.\([a-z]\)/.\1/p" `
+
+if ($type == "Unknown" && $extension == "") then
+   set extension = ".kiss2"
+   set input_file = ${input_file}.kiss2
+endif
+
+set model = `basename $input_file $extension`
+
+
+if($type == "Unknown" )then
+                                 # we have to use extension to find out
+  switch ($extension)
+  case ".blif":
+    set type = "blif"
+    breaksw
+  case ".pla":
+    set type = "pla"
+    breaksw
+  case ".kiss2":
+    set type = "kiss"
+    breaksw
+  default:
+    set type = "kiss"
+    breaksw
+  endsw
+endif
+				# if it's pla then the whole sta stuff doesn't
+				# make sense
+if ($type == "pla") then
+   set doLatchOutExt = 0
+   set doCreateSta = 0;
+endif
+
+set  output_file = tmp$$File.out   #  just temporary files
+set  tmpInput    = tmp$$File.in    #
+set  script_file = tmp$$Script
+
+onintr cleanup
+
+set blif_file = ${model}_out.blif   # output file from sis in blif format (this _o is
+				    # to avoid overwriting inputs file
+
+
+set  sls_file = $model.sls       # output file in sls format
+
+				 # name of network to be generated
+
+set  model_decl = `cat $input_file | sed -n -e "/^\.model.*/p" | sed -e "s/,//g"`
+if ($#model_decl < 2) then
+  set network = $model
+else
+  set  network = $model_decl[2]
+endif
+
+
+				 # find out if reset state name specified
+
+set  reset_state = `cat $input_file | sed -n -e "/^\.r.*/p" | sed -e "s/.r\([^#]*\).*/\1/g"`
+
+
+
+
+#echo Input $input_file
+# echo Blif $blif_file
+# echo Model $model
+# echo Network $network
+# echo DoRetiming $doRetiming
+# echo Type $type
+# exit 1
+
+######################## creating script for SIS #########################
+
+rm -f $script_file
+
+echo "echo Reading.." >> $script_file
+
+# The following was added by Arjan van Genderen because in general
+# sis will not be able to read .misrc and .sisrc from $SIS/sis_lib/.misrc
+# and $SIS/sis_lib/.sisrc, where $SIS was defined at compile time.
+set misrcfile = $OCEAN/celllibs/$OCEANPROCESS/src/template/.misrc
+set sisrcfile = $OCEAN/celllibs/$OCEANPROCESS/src/template/.sisrc
+if ( -f $misrcfile ) then
+   echo "source $misrcfile" >> $script_file
+endif
+if ( -f $sisrcfile ) then
+   echo "source $sisrcfile" >> $script_file
+endif
+
+if ( $type != "pla") then
+	# we run always stamina because new sred changes always stae names
+	#
+   echo "state_minimize stamina " >> $script_file
+
+   if ( $reset_state == "") then
+      echo "state_assign nova" >> $script_file
+   else
+      echo "state_assign nova -z the_RS" >> $script_file
+   endif
+endif
+
+echo "full_simplify" >> $script_file
+echo "extract_seq_dc" >> $script_file
+
+echo "sweep; eliminate -1" >> $script_file
+echo "simplify -m nocomp" >> $script_file
+echo "eliminate -1" >> $script_file
+
+echo "sweep; eliminate 5" >> $script_file
+echo "simplify -m nocomp" >> $script_file
+echo "resub -a" >> $script_file
+
+echo "fx" >> $script_file
+echo "resub -a; sweep" >> $script_file
+
+echo "eliminate -1; sweep" >> $script_file
+echo "full_simplify -m nocomp" >> $script_file
+
+
+echo "rlib sis.genlib" >> $script_file
+echo "map -s -m 0.3" >> $script_file
+
+if ($doRetiming == 1 && $type != "pla") then
+   echo "retime -m -c 20000" >> $script_file
+endif
+
+echo "write_blif -n $output_file" >> $script_file
+
+
+######################## checkin' if all files are present ###############
+
+echo "----- kissis: run SIS logic synthesis -----"
+if( ! -f ".dmrc") then
+   echo "Hey! you are not in a project directory."
+   echo "kissis: program aborted"
+   exit 1
+endif
+
+if (-e $input_file) then
+#  echo "Taking input from " $input_file
+else
+  echo "Could not open input file - " $input_file " is missing.."
+  goto help
+endif
+
+if (-e $genlib_file) then
+#  echo "Taking library description from " $genlib_file
+else
+  echo "Could not find library description file - " $genlib_file " is missing.."
+  echo "Did you set environment variables OCEANPROCESS and OCEAN properly?"
+  goto help
+endif
+
+rm -f sis.genlib
+ln -s $genlib_file sis.genlib
+
+if (-e $proto_file) then
+#  echo "Taking sls prototypes from " $proto_file
+else
+  echo "Could not find sls prototypes file - " $proto_file " is missing.."
+  goto help
+endif
+
+if (-e $script_file) then
+#  echo "Taking sis script from " $script_file
+else
+  echo "Could not find sis script file - " $script_file " is missing.."
+  echo "Did you set environment variables OCEANPROCESS and OCEAN properly?"
+  goto help
+endif
+
+if( -d "layout/$network") then
+   echo "I will be overwriting the existing circuit" \"$network\"
+   echo "If you don't like this, hit control-C now to prevent this."
+endif
+
+################ ok ... let's start doing sm'thg #########################
+
+rm -f $output_file
+rm -f $tmpInput
+
+echo "----- Running SIS Logic Synthesis (output goes to file $sis_logfile) -----"
+
+if ($type != "pla") then
+   cp $input_file $tmpInput
+else
+   # let's replace input statements from .inputs and .outputs
+   # to pla format statements .ilb and .ob
+
+   # Maybe it is in Blif format? Yes - don't do this.
+
+   if ( $extension != ".blif" ) then
+      cat $input_file | sed -e "s/\.inputs/\.ilb/g" | sed -e "s/\.outputs/\.ob/g" > $tmpInput
+   else
+      cp $input_file $tmpInput
+   endif
+endif
+
+				 # if the reset state specified let's rename
+				 # it to the_RS - to avoid problems
+				 # when state
+				 # minimization is successful - in this way
+				 # reset state is always called the_RS
+if ($reset_state != "") then
+   cat $tmpInput | sed -e "s/${reset_state}/the_RS/g" > $output_file
+   mv $output_file $tmpInput
+endif
+
+set sis_inp_type=$type
+
+    				 # Combinatorial synthesis can accept
+				 # blif and pla formats.
+
+if ( $type == "pla" && $extension == ".blif" ) then
+   set sis_inp_type="blif"
+endif
+
+$sis_prog -f $script_file -t $sis_inp_type -T none $tmpInput >& $sis_logfile
+
+if(! -f $output_file) then
+     echo "SIS didn't create any output. See file $sis_logfile to find out"
+     echo "what went wrong..."
+     exit 1
+endif
+
+rm -f $blif_file
+rm -f $tmpInput
+rm -f $script_file
+
+mv $output_file $blif_file
+
+echo "----- Converting $blif_file into SLS-file $sls_file -----"
+
+if ($doCreateSta == 1) then
+   set createStaOption = "-a"
+else
+   set createStaOption = " "
+endif
+
+if ($doLatchOutExt == 1)then
+   set latchOutOption = "-x"
+else
+   set latchOutOption = " "
+endif
+
+blif2sls $createStaOption $latchOutOption -i $proto_file -b $blif_file -s ${model}.sls $blif2sls_specials >>& $sis_logfile
+if($status)then
+	echo "Something went wrong. See file $sis_logfile to find out."
+	goto cleanup
+endif
+
+
+	       # because SIS when used with kiss input format gives default
+               # names to the circuit terminals
+	       # we have to do this ourselfs...
+
+				 # get array of input names
+if ($type == "kiss") then
+
+  set inputs = `cat $input_file | sed -n -e "/^\.inputs.*/p" | sed -e "s/,/ /g"`
+
+  set cnt = -1
+
+  foreach token ($inputs)
+	if( $token == "R" || $token == "vss" || $token == "vdd" || $token == "CK") then
+	  echo Warning: Name of input terminal \"$token\" is a reserved name !
+	  echo "         Using default terminal name instead."
+	else
+		if( $cnt != -1 ) then
+		 rm -f $output_file
+		 cat $sls_file | sed -e "s/IN_${cnt}\([,)}]\)/${token}\1/g" > $output_file
+
+		 mv $output_file $sls_file
+		endif
+	endif
+	@ cnt++;
+  end
+    			# now outputs...
+
+  set outputs = `cat $input_file | sed -n -e "/^\.outputs.*/p" | sed -e "s/,/ /g"`
+
+
+  set cnt = -1
+
+  foreach token ($outputs)
+	if( $token == "R" || $token == "vss" || $token == "vdd" || $token == "CK") then
+	  echo Warning: Name of output terminal \"$token\" is a reserved name !
+	  echo "         Using default terminal name instead."
+	else
+		if( $cnt != -1 ) then
+		  rm -f $output_file
+		  cat $sls_file | sed -e "s/OUT_${cnt}\([(,}]\)/${token}\1/g" > $output_file
+		  mv $output_file $sls_file
+		endif
+	endif
+	@ cnt++;
+  end
+endif
+                                   # and the same story for model name
+if ($type != "blif") then
+    rm -f $output_file
+    cat $sls_file | sed -e "s/tmp$$File_in/$network/g" > $output_file
+    mv $output_file $sls_file
+    if($doCreateSta == 1) then
+      mv tmp$$File_in.sta ${network}.sta  # this is for simeye
+				   # we have to reverse S0 to the reset state
+				   # name if state minimization was
+				   # unsuccessful - see comments above
+      if ( $reset_state != "") then
+	 grep S1 ${network}.sta > /dev/null
+	 if ( $status == 1) then   # minimization was unsuccessful
+	    cat ${network}.sta | sed -e "s/S0/${reset_state}/g" > $output_file
+	    mv $output_file  ${network}.sta
+	    cat $sls_file | sed -e "s/S0/${reset_state}/g" > $output_file
+	    mv $output_file  $sls_file
+	 endif
+      endif
+    endif
+endif
+
+
+rm -f $output_file                 # done - clean up ...
+rm -f tmp$$File_in.sta
+
+echo "----- Converting SLS-file $sls_file into Nelsis database -----"
+
+csls $sls_file >>& $sis_logfile
+if($status)then
+	echo "Something went wrong. See file $sis_logfile to find out."
+	goto cleanup
+endif
+
+echo "----- Ready: enjoy your circuit cell" \"$network\" "-----"
+
+rm -f sis.genlib
+
+exit 0
+
+help:
+	echo ""
+	echo "Usage: kissis [options] <filename>"
+	echo ""
+	echo "Options: "
+	echo "       -h   - display help info (what you see now)"
+	echo "       -c   - run combinatorial synthesis  "
+	echo "              (blif or pla input format)."
+	echo "       -k   - run sequential synthesis (kiss2 input format)."
+	echo "       -b   - run sequential synthesis (blif input format)."
+	echo "       -r   - do retiming (seq. synthesis only)."
+	echo "       -x   - generate external terminals connected to all "
+	echo "              latches' outputs"
+	echo "       -g <filename>   - use other genlib file."
+	echo "              (default $genlib_file)"
+	echo "       -i <filename>   - use other sls prototypes file."
+	echo "              (default $proto_file)"
+	echo "       -S <specials>   - pass -c <specials> option to blif2sls."
+	echo "If none of these options is specified then the kind of input "
+	echo "is determined based on filename extension (default kiss2)."
+	echo "If  options are specified than extension does not matter"
+	echo "(default extension is .kiss2)."
+	echo
+	echo "To run properly the command requires that the following"
+	echo "files are present in your current directory:"
+	echo
+	echo "  $proto_file    - a file with sls library network prototypes"
+	echo "  <cellname>.<kiss2|pla|blif> - input file with FSM (PLA) description."
+	echo
+	echo "Results will be written into Nelsis circuit cell <cell_name>"
+        echo "The intermediate files <cell_name>_out.blif and <cell_name>.sls"
+	echo "will be created."
+exit 1
+
+cleanup:
+# remove temporary file
+
+rm -f $blif_file
+rm -f $tmpInput
+rm -f $output_file
+rm -f $script_file
+rm -f sis.genlib
+rm -f tmp$$File_in.sta
+
+exit 1
+

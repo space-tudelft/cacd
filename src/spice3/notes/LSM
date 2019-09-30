@@ -1,0 +1,14 @@
+Begin3
+Title:          Berkeley Spice Linux Patches
+Version:        1.1
+Entered-date:   06Dec97
+Description:    Patches to sunsite's spice3f4.tar.gz archive for a new port,
+		3f5 patches, GNU Lib C support, GNU Readline support, and 
+                then some.
+Keywords:       spice, circuit, simulator
+Maintained-by:  Andrew Veliath <veliaa@rpi.edu>
+Primary-site:   sunsite.unc.edu/pub/Linux/apps/circuits
+                spice3f4-patches-1.1.tar.gz
+Platforms:      C
+Copying-policy: Free for people friendly to the U.S.A.
+End

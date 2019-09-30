@@ -1,0 +1,36 @@
+\subsection{bond\_leer}
+
+Function: Bonding cell for small SoG circuits
+
+Terminals: (vss, bf1, bf2, bf3, vdd, bf4, bf5, bf6)
+
+Equivalent chip area: 800
+
+Maximum size of embedded circuit: 350
+
+Pins:
+\begin{itemize}
+\item
+2 power pins (vss, vdd), which are already pre-connected to 
+the internal power rails.
+\item
+6 user-configurable unbuffered pins.
+\end{itemize}
+
+Protection:\\ This bonding pattern is intended for use with a simple
+8-pin fixed-probe card. The pins are {\em not} buffered and {\em not}
+protected. Therefore the needles of the fixed-probe card should be
+protected by diodes, otherwise the circuit blows up. With proper
+diode protection, static charge is no problem. The output drive of
+any arbitrary gate in the library turned out to be sufficient to
+drive the input of the tester via a 1 meter cable. 
+
+%figuur bond_leer.lay.eps
+\begin{figure}[bth]
+Layout:\\
+
+\callpsfig{bond_leer.lay.eps}{width=1\textwidth}
+\end{figure}
+
+\clearpage
+

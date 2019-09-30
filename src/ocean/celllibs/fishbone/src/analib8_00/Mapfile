@@ -1,0 +1,27 @@
+# This is a maptable for nelsis <--> seadif conversion,
+# generated manually for library generation
+# Patrick Groeneveld 18-7-1993
+# Each line contains the name of a nelsis cell and its corresponding seadif cell
+# The status field may contain the following values:
+#    'written'       the cell was succesfully written into seadif resp. nelsis
+#    'primitive'     the cell is a primitive which should not be read or converted
+#    [anything else] the cell will be written if necessary
+#
+#    N E L S I S     |                   S E A D I F                     | nelsis->sdf sdf->nelsis
+# view    cellname   | library      function     circuit      layout     |   status      status
+#--------------------+---------------------------------------------------+------------------------
+ layout   osc10        analib8_00    osc10        osc10        osc10
+ layout   mir_pout     analib8_00    mir_pout     mir_pout     mir_pout
+ layout   mir_pin      analib8_00    mir_pin      mir_pin      mir_pin
+ layout   mir_nout     analib8_00    mir_nout     mir_nout     mir_nout
+ layout   mir_nin      analib8_00    mir_nin      mir_nin      mir_nin
+ layout   lp3x3        analib8_00    lp3x3        lp3x3        lp3x3
+ layout   ln3x3        analib8_00    ln3x3        ln3x3        ln3x3
+ circuit  Osc10        analib8_00    osc10        osc10        $dummy
+ circuit  mir_pout     analib8_00    mir_pout     mir_pout     $dummy
+ circuit  mir_pin      analib8_00    mir_pin      mir_pin      $dummy
+ circuit  mir_nout     analib8_00    mir_nout     mir_nout     $dummy
+ circuit  mir_nin      analib8_00    mir_nin      mir_nin      $dummy
+ circuit  lp3x3        analib8_00    lp3x3        lp3x3        $dummy
+ circuit  ln3x3        analib8_00    ln3x3        ln3x3        $dummy
+

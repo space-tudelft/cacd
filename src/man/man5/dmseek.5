@@ -1,0 +1,53 @@
+.TH DMSEEK 5ICD "DMI User's Manual"
+.SH NAME
+dmSeek - reposition database stream pointer
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+int dmSeek (DM_STREAM *streamkey, long offset, long ptrname);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "DM_STREAM *streamkey"
+is a pointer to a valid \fBDM_STREAM\fP as obtained from
+function dmOpenStream().
+.TP
+.B "long offset"
+is the offset from the beginning of the stream.
+.TP
+.B "long ptrname"
+is the relative position in the stream.
+.SH DESCRIPTION
+Function
+.B dmSeek
+sets the position of the next input or output
+operation on the \fBstreamkey\fP.
+The new position is at the signed distance
+.B offset
+bytes from either the beginning of the stream,
+or the current position, or from the end of the stream,
+according to the value of
+.B ptrname:
+0, 1, or 2 (the
+.I whence
+argument of function
+.BR fseek ,
+see the manual page).
+.SH DIAGNOSTICS
+If properly executed,
+.B dmSeek
+will return \fB0\fP.
+If
+.B dmSeek
+fails \fB-1\fP will be returned.
+The external variable
+.B dmerrno
+will be set to
+.B DME_SYS
+and a call to function dmError() will be done.
+.SH SEE ALSO
+fseek(3S),
+dmOpenStream(5ICD).

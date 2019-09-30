@@ -1,0 +1,114 @@
+.TH DIMCHECK2 1ICD "User Commands"
+.UC 4
+.SH NAME
+dimcheck2 - do a complete design_rule check
+.SH SYNOPSIS
+.B dimcheck2
+[\fB-c|-n\fP] [\fB-f\fP] [\fB-g\fP] [\fB-t\fP] [-v] [cell_name]
+.SH OPTIONS
+.TP
+.B -c
+Perform hierarchy checks on the cell: i.e.
+check if connections between sub_cells are made via terminals and
+check if no elements are formed from primitives
+from different sub_cells (\fInbool\fP default).
+.TP
+.B -n
+Do not perform hierarchy checks (\fInbool\fP option).
+.TP
+.B -f
+Use files 'booldata', 'dimcheckdata2' and 'dubcheckdata'
+if present in the current working directory
+instead of the standard ones from the library.
+.TP
+.B -g
+Report gap errors between elements of the same group.
+.TP
+.B -t
+Debugging option,
+do not filter or merge error messages
+for a non orthogonal layout.
+.TP
+.B -v
+Verbose mode.
+.SH DESCRIPTION
+.I Dimcheck2
+checks the layers of a cell definition for all design rule errors.
+Width, gap and overlap checks are performed
+and eventually an hierarchy_check.
+Gap errors between edges of the same group are
+usually suppressed; use the -g option if this is not desired.
+.PP
+The program
+.I dimcheck2
+can be used after
+.I exp.
+.PP
+Checking is carried out in three steps performed
+by three subprograms,
+which are called automatically.
+First the subprogram
+.I nbool
+is called to produce the "bool_BN" files
+and to perform an hierarchy_check.
+The latter is only significant if the cell to check
+has been expanded hierarchically.
+After that the subprograms
+.I dimcheck
+and
+.I dubcheck
+are called which use these files, together with the
+"LC_vln" files to do the actual checking for
+width, gap and overlap errors.
+The errors are reported on standard output.
+.PP
+If no cell_name is specified the names of the cells to be
+checked will be read from the file "exp_dat".
+.PP
+The current working directory must be the project directory.
+.AU "T.G.R. van Leuken, J. Fokkema, J. Liedorp"
+.SH FILES
+.TP
+\fCICDPATH/bin/nbool\fP
+executable
+.TP
+\fCICDPATH/bin/dimcheck\fP
+executable
+.TP
+\fCICDPATH/bin/dubcheck\fP
+executable
+.TP
+\fCICDPATH/share/lib/process/TECHN/booldata\fP
+(TECHN=technology directory)
+.TP
+\fCICDPATH/share/lib/process/TECHN/dimcheckdata2\fP
+.TP
+\fCICDPATH/share/lib/process/TECHN/dubcheckdata\fP
+.TP
+\fCNELSISPROJECT/exp_dat\fP
+names of cells to be checked
+.TP
+\fCNELSISPROJECT/layout/cell/LC_vln\fP
+input files, LC=LayerCode
+.TP
+\fCNELSISPROJECT/layout/cell/bool_BN\fP
+input files, BN=BooleanNr
+.SH SEE ALSO
+T.G.R. van Leuken, J. Liedorp "An Hierarchical and Technology Independent
+Design Rule Checker", Delft University of Technology,
+.br
+autocheck(1ICD),
+booldata(4ICD),
+dimdata(4ICD),
+dubdata(4ICD),
+exp(1ICD),
+nbool(1ICD)
+.SH BUGS
+It is understood that the design rules are consistent.
+Error reporting is rather poor;
+the kind of error (width, gap or overlap) is
+reported together with the coordinates
+of the two points between which the error occurred.
+In case of non orthogonal layouts the errors reported
+may be shifted a little from the place where they
+occurred due to rounding errors.

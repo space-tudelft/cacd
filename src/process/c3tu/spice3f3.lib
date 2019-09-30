@@ -1,0 +1,19 @@
+# process c3tu
+
+model nenh_0 nmos   (level=2
+                     ld=0.325u       tox=250e-10     nsub=2e16
+                     vto=0.7         uo=510          uexp=0.22
+                     ucrit=24.3k     delta=0.4       xj=0.4u
+                     vmax=54k        neff=4.0        rsh=55
+                     nfs=0e11        js=2u           cj=130u
+                     cjsw=620p       mj=0.53         mjsw=0.53
+                     pb=0.68         cgdo=320p       cgso=320p)
+
+model penh_0 pmos   (level=2
+                     ld=0.3u         tox=250e-10     nsub=5e16
+                     vto=-1.1        uo=210          uexp=0.33
+                     ucrit=51k       delta=0.4       xj=0.5u
+                     vmax=47k        neff=0.88       rsh=75
+                     nfs=0e11        js=10u          cj=490u
+                     cjsw=590p       mj=0.46         mjsw=0.46
+                     pb=0.78         cgdo=320p       cgso=320p)

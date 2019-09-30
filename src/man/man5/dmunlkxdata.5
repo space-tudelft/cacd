@@ -1,0 +1,34 @@
+.TH DMUNLINKXDATA 5ICD "DMI User's Manual"
+.SH NAME
+dmUnlinkXData - unlink the xcontrol file
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+int dmUnlinkXData (DM_PROJECT *dmproject);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "DM_PROJECT *dmproject"
+a pointer to a valid \fBDM_PROJECT\fP as obtained from dmOpenProject().
+.SH DESCRIPTION
+Function
+.B dmUnlinkXData
+unlinks the xcontrol file of the specified project database.
+This xcontrol file
+contains the extraction state information of the database cells.
+An empty xcontrol file must be added again to the project database
+with dmOpenXData(5ICD), else the database is corrupted.
+It makes the secondary extraction data of all cells obsolete.
+.SH DIAGNOSTICS
+If \fBdmUnlinkXData()\fP is successful,
+\fB0\fP will be returned.
+The xcontrol file did exist and is removed.
+If \fBdmUnlinkXData()\fP fails,
+\fB-1\fP will be returned.
+.SH SEE ALSO
+dmOpenXData(5ICD),
+dmStatXData(5ICD),
+xcontrol(1ICD).

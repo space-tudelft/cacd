@@ -1,0 +1,39 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then echo "usage: exptree <cell>"; exit 1; fi
+
+if [ ! -d test ]; then echo exptree: directory \"test\" not found; exit 1; fi
+if [ ! -f test/.dmrc ]; then echo exptree: directory \"test\" not a project; exit 1; fi
+
+if [ -f $1.sls ]; then echo exptree: file \"$1.sls\" exists; exit 1; fi
+if [ -f $1.ldm ]; then echo exptree: file \"$1.ldm\" exists; exit 1; fi
+
+cd test
+# echo "#include \"$ICDPATH/share/lib/celllibs/fishbone/g_digilib5_99/g_digilib5_99.ext\"" > ../$1.sls
+xsls -h $1 > ../$1.sls
+xldm -f "" $1 > ../$1.ldm
+cd ..
+
+grep "^ms " $1.ldm | cut -d" " -f2 > exptree_cell_list
+tar cf $1.lt.tar $1.sls $1.ldm 
+
+while read -r line
+do
+    cell=$line
+    if [ -r ".$cell.term" ]
+    then
+      tar rf $1.lt.tar .$cell.term
+    fi
+    if [ -r "ADB/$cell.ddc" ]
+    then
+      tar rf $1.lt.tar ADB/$cell.ddc 
+    fi
+    if [ -r "components/$cell.cmp" ]
+    then
+      tar rf $1.lt.tar components/$cell.cmp 
+    fi
+done < exptree_cell_list
+
+rm -f $1.sls $1.ldm 
+echo created exptree_cell_list
+echo created $1.lt.tar

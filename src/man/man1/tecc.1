@@ -1,0 +1,750 @@
+.TH TECC 1ICD "User Commands"
+.UC 4
+.SH NAME
+tecc - technology compiler for space / space3d
+.SH SYNOPSIS
+.B tecc
+[\fB-censtvV\fP] [\fB-m\fP \fImaskdatafile\fP] [\fB-p\fP \fIprocess\fP]
+file
+.SH OPTIONS
+The following options can be specified:
+.TP
+.B -c
+Write non coded.
+Default, the key lists are coded to get a smaller output file.
+.TP
+.B -e
+Print expanded condition list for each new mask and element.
+.TP
+.B -n
+Do not compress table-format element-definition file.
+This option is useful during element-definition file development.
+It makes
+.I tecc
+run faster, and
+.I space
+somewhat slower.
+.TP
+.B "-m \fImaskdatafile\fP"
+Specifies the maskdatafile.
+Default, the maskdatafile is obtained from the process directory.
+.TP
+.B "-p \fIprocess\fP"
+Specifies the process.
+The default process is determined by the current project
+directory or, if it is defined, the environment variable ICDPROCESS.
+\fIprocess\fP can be a process name, a process number or a process
+directory.
+.TP
+.B -s
+Silent mode.
+.TP
+.B -t
+Table-format output file goes to stdout.
+.TP
+.B "-T \fItclfile\fP"
+Generate
+.I tclfile
+for
+.I tabs(1ICD)
+in place of compiled technology files.
+.TP
+.B -v
+Increases verbosity.
+.TP
+.B -V
+Special verbatim option to get a more readable output file.
+.SH DESCRIPTION
+The program
+.I tecc
+acts as a pre-processor for technology descriptions
+for the circuit extraction program \fIspace\fP.
+From a user-defined element-definition file,
+.I tecc
+produces a table-format element-definition file
+that can be used as input for \fIspace\fP.
+.PP
+The user-defined input file should
+have the extension '.s', while the table-format output file
+will be called to the input file with '.t' substituted for '.s'.
+.SH THE ELEMENT DEFINITION FILE
+In the user-defined element-definition file the elements are
+listed that can be recognized from the layout description.
+Here, we only describe some basics of the element definition file.
+For a full description, see the different Space User Manuals.
+.PP
+For each of the elements, at least a name and a condition list
+has to be specified.
+.PP
+The name of an element is used to identify the element when
+error messages are generated or, for transistor elements,
+to identify the element in the circuit that is extracted.
+It is not allowed to use the same name in more than one element
+definition.
+.PP
+A condition list specifies
+how the presence of a particular element depends on the
+presence or absence of the different masks.
+The condition list is a boolean expression where
+the masks are used as the variables of the expression.
+In the expression, the AND operation is performed using
+simple concatenation, the OR operation is performed using
+the '|' character (AND has precedence over OR)
+and the INVERT operation is performed
+using the '!' character.
+Parentheses may be used to nest the expression.
+.PP
+References to masks in adjacent areas can be made by preceding
+the mask names with a '-' character, or a '=' character.
+The following (cross-section) gives an example.
+
+.L{
+.nf
+.ne 13
+   ------------+                +-------------
+       =in     |                |    -in
+   ------------+                +-------------
+
+               +------------------------------
+               |        ps           -ps
+               +------------------------------
+
+    ------------------------------------------
+                     substrate
+.fi
+.L}
+
+When preceding the mask name with a '-' character,
+a reference is made to a mask that is in an adjacent area.
+When preceding the mask name with a '=' character,
+a reference is made to a mask that is in an area
+that is opposite to the area that contains the masks preceded
+with the '-' sign.
+The above can be used to define the elements that
+are present on the boundary between two regions of
+different mask combinations
+(e.g. edge capacitances)
+or elements that are present between the boundaries
+themselves (e.g. lateral capacitances between
+parallel wires).
+.PP
+In the following, the syntax and semantics of the
+element-definition file is described.
+The element-definition file may contain specifications
+for, among other things, the units, the key list,
+the resize list, the new list, the conductor elements,
+the transistor elements,
+the contact elements and the capacitance elements.
+Each of these specifications is optional but their order is fixed.
+.SS Unit specification
+.PP
+.if n .nf
+\fBunit\fP \fIvariable\fP \fIvalue\fP
+  .
+  .
+.if n .fi
+.PP
+With one of the above commands, the unit of a variable in the conductor
+list, the contact list or the capacitance list is specified.
+The string \fIvariable\fP can be either
+\fBresistance\fP to specify the unit for sheet resistance,
+\fBc_resistance\fP to specify the unit for contact resistance,
+\fBa_capacitance\fP to specify the unit for area capacitance,
+\fBe_capacitance\fP to specify the unit for edge capacitance
+(or - if the capacitance is specified by means of
+distance, capacitivity pairs - for lateral capacitance),
+\fBcapacitance\fP to specify the unit for capacitance,
+\fBdistance\fP to specify the unit for distance
+in distance, capacitivity pairs, or
+\fBresize\fP to specify the unit for resizing masks.
+The unit of each variable is specified by \fIvalue\fP, expressed
+in S.I. units.
+.SS The key list
+.PP
+\fBkeys:\fP \fImask1 mask2 ... maskN\fP
+.PP
+In the key list the masks are enumerated that
+should be used as key masks during element recognition.
+Based on the key masks
+.I tecc
+produces a hash table that allows
+.I space
+to find circuit elements
+without separately checking the element conditions
+that refer to the presence or absence of the key masks.
+Adjacent masks (that are specified by preceding them with a '-'
+or '=' character)
+might also be used as a key mask.
+By carefully choosing the key masks, the speed
+of element recognition will be optimal, while the hash table
+will be not too large (the size of the hash table will
+be equal to 2 ^ N, where N is the number of key masks).
+.PP
+When no key list is specified, but
+.PP
+\fBmaxkeys\fP \fIN\fP
+.PP
+is specified instead,
+.I tecc
+will select the key masks itself.
+Up to a maximum of N,
+.I tecc
+will select the masks that are most frequently used
+for specifying the element conditions.
+.PP
+When neither a key list nor a maximum number of keys
+is specified,
+.I tecc
+will assume that maxkeys is equal to 12.
+.SS New mask specification
+.PP
+\fBnew\fP: \fIcondition-list : name\fP
+  .
+  .
+.PP
+This command allows to create a new mask from the combination
+of other masks.
+The new mask, given by \fIname\fP, is defined everywhere where
+the combination of masks satisfies the condition list of the specification.
+The characters '-' and '=' may not be used in the condition list for a
+new mask.
+Apart from the fact that the new command may be used to develop
+more compact element definition files, it can also be used
+to define one or more substrate layers.
+.SS Color definition list
+.PP
+\fBcolors\fP :
+   \fImask color-name\fP
+     .
+     .
+.PP
+The above color list is only used by the \fIXspace\fP tool.
+The "color-name" must be in the X11 color database,
+or be a hexa-decimal RGB value with a leading '@'-sign.
+The color of the substrate can also be specified by using mask "@sub".
+.SS Resize mask specification
+.PP
+\fBresize\fP: \fIcondition-list : mask : value\fP
+  .
+  .
+.PP
+This command allows to grow masks with a certain value
+(when a positive value is specified)
+or shrink masks with a certain value
+(when a negative value is specified).
+The "mask" that is specified must be
+in the condition list that is specified, or it must be a newly created mask name.
+In the last case, the new mask becomes a real mask.
+For one mask, more than one resize statement may be specified.
+.SS The conductor list
+.PP
+.if n .ta 41
+\fBconductors\fP [ \fItype\fP ] :
+.ie n \{\
+.br
+   \fIname : condition-list : mask : sheet-resistivity
+	[ : carrier-type]\fP \}
+.el \{\
+.br
+   \fIname : condition-list : mask : sheet-resistivity [ : carrier-type]\fP \}
+     .
+     .
+.PP
+The conductor list contains the definitions for the conducting
+layers in the circuit.
+For each conductor specification, a specification of the
+actual conductor mask and a specification of the
+sheet-resistivity (in ohms) is required.
+For bipolar devices in particular, it is also necessary to
+specify the \fIcarrier-type\fP of the conductor.
+The type can be 'n' for n-doped and 'p' for p-doped
+diffusion conductors and 'm' for metal otherwise (the default case).
+.PP
+Default, when extracting resistances, linear resistances
+will be extracted for a conductor.
+However, when a conductor type is specified with a conductor list,
+the extracted resistances for all conductors in that list will be of the
+specified type.
+An element definition file may contain more than one conductor list.
+.SS The field-effect-transistor list
+.PP
+.if t .ta 2.4i
+.if n .ta 6
+\fBfets\fP:
+.ie n \{\
+.br
+   \fIname : condition-list : mask-g mask-ds [ / mask-s ]
+.br
+	[( condition-list ) [( cond-list-s )]] [ : connect-b ]\fP \}
+.el \{\
+.br
+   \fIname : condition-list : mask-g mask-ds [ / mask-s ] [ ( condition-list ) [( cond-list-s )] ] [ : connect-b ]\fP \}
+     .
+     .
+.PP
+For a field-effect transistor (e.g. MOS or junction FET),
+the name and the condition list are followed by a specification of
+the gate mask \fImask-g\fP and the drain/source mask \fImask-ds\fP.
+Optionally, after a slash, an asymmetric source mask may be defined.
+The gate mask and the drain/source mask must be masks
+that are defined as a conductor in the conductor list.
+Optionally, in parentheses, a condition list
+for the drain/source region can be specified.
+For asymmetric source, in parentheses, another condition list
+for the source region can be specified.
+Further, optionally, at the end of the specification after a colon,
+a bulk connection \fIconnect-b\fP can be specified for the transistor.
+This connection may consist of
+(1) a mask that is specified as a conductor in
+the conductor list, (2) the string "@sub" to denote
+the substrate area below the transistor gate, or (3)
+the notation "%(\fIcondition-list\fP)" to denote a substrate
+area described by the condition list.
+.if t .bp
+.SS The bipolar transistor list
+.PP
+.if n .ta 41
+\fBbjts\fP :
+.ie n \{\
+.br
+   \fIname : condition-list : type : mask-e mask-b mask-c
+	[ : connect-s ]\fP \}
+.el \{\
+.br
+   \fIname : condition-list : type : mask-e mask-b mask-c [ : connect-s ]\fP \}
+     .
+     .
+.PP
+For a bipolar junction transistor, the name, the condition list and
+the transistor-type ("ver" for vertical or "lat" for lateral)
+are followed by a specification of the emitter mask \fImask-e\fP,
+the base mask \fImask-b\fP and the collector mask \fImask-c\fP.
+These masks must be defined as a conductor in the conductor list.
+Optionally, after a colon, a substrate connection \fIconnect-s\fP
+may be specified for the transistor.
+This connection may consist of
+(1) a mask that is specified as a conductor in
+the conductor list, or (2)
+the notation "%(\fIcondition-list\fP)" to denote a substrate
+area described by the condition list.
+.SS The connect list
+.PP
+\fBconnects\fP :
+   \fIname : condition-list : mask1 mask2\fP
+     .
+     .
+.PP
+The connect elements connect different semiconductor regions of
+the same carrier-type.
+They define the connectivity relation between
+the different conductors.
+\fIMask1\fP and \fImask2\fP are
+the conductor masks that are connected.
+Note: the connection of conductor layers via a contact or via
+should be specified in the contact list (see below).
+.SS The contact list
+.PP
+\fBcontacts\fP [ \fItype\fP ] :
+   \fIname : condition-list : mask1 mask2 : contact-resistance\fP
+     .
+     .
+.PP
+The contact elements connect different conductors that are
+on top of each other.
+\fIMask1\fP and \fImask2\fP are
+the conductor masks that are connected by the contact.
+For \fImask1\fP or \fImask2\fP also the string "@sub" or
+the "%(\fIcondition-list\fP)" notation may be used.
+The parameter at the end of the specification specifies
+the contact resistance in ohm for a (hypothetical) contact of 1 meter * 1 meter.
+Default, when extracting resistances, linear resistances
+will be extracted for a contact.
+However, when a contact type is specified with the contact list,
+the extracted resistances
+for all contacts in that list will be of the specified type.
+An element definition file may contain more than one contact list.
+.SS The capacitance list
+.PP
+[ \fBjunction\fP ] \fBcapacitances\fP [ \fItype\fP ] :
+   \fIname : condition-list : mask1 [ mask2 ] : capacitivity\fP
+     .
+     .
+.PP
+In the capacitance list, both ground and coupling capacitances
+can be defined.
+Ground capacitances are defined by using the string
+"@gnd", the string "@sub" or the notation
+"%(\fIcondition-list\fP)" for either \fImask1\fP or \fImask2\fP.
+The difference between the use of the string
+"@gnd" and the two other cases is that (1) in the first case
+the ground capacitance will be connected to a node called "GND"
+while in the other two cases the ground capacitance will be connected to
+a node called "SUBSTR", and (2)
+- in case of substrate resistance extraction
+(see the Space Substrate Resistance Extraction User's Manual) -
+"@gnd" represents ideal ground while
+"@sub" and "%(\fIcondition-list\fP)" represent substrate areas
+between substrate resistances are computed.
+Omitting \fImask2\fP is equivalent to using the string "@gnd"
+for \fImask2\fP.
+.PP
+Furthermore, capacitances are distinguished between
+surface capacitances, edge capacitances and lateral capacitances.
+To define edge capacitance, masks preceded
+with a '-' character are used in
+the condition list, and either \fImask1\fP
+or \fImask2\fP has to be preceded with
+a '-' character to denote an edge of an interconnection.
+To define lateral capacitances, masks preceded
+with a '-' character and mask preceded with a '=' character
+are used in the condition list, and either \fImask1\fP
+or \fImask2\fP is preceded with a '-' character to denote
+one edge of an interconnection and the other mask is preceded
+with a '=' character to denote another (opposite)
+edge of an interconnection.
+.PP
+For surface capacitances, \fIcapacitivity\fP is
+the capacitance per square meter.
+For edge capacitances, \fIcapacitivity\fP is
+the capacitance per meter edge length.
+For lateral capacitances, the capacitance can be specified in two
+different ways.
+.P
+If only one value is specified, as in the above, \fIcapacitivity\fP is the
+capacitance for a configuration where the spacing between two
+parallel wires is equal to length of the two wires.
+In that case, it is assumed that the lateral coupling capacitance
+is proportional to
+the distance between the two wires and inverse proportional
+to their spacing.
+.PP
+Lateral coupling capacitances can also be defined as follows.
+.PP
+.nf
+   \fIname : condition-list : mask1 mask2 : distance1 capacitivity1\fP
+	\fIdistance2 capacitivity2\fP
+	              .
+	              .
+.fi
+.PP
+In this case, the distance, capacitivity pairs specify the capacitance between
+two parallel wires of a length of 1 meter for different values of the
+distance between them.
+The lateral coupling capacitance for other configurations is then found
+from an interpolation between two distance, capacitivity pairs.
+For the interpolation,
+functions of type y = a/(x^p)
+and type y = a/x + b are used.
+If the actual distance is larger or smaller than any specified distance,
+an extrapolation is done using the above functions.
+.PP
+Default, when extracting capacitances, linear capacitances will be extracted.
+However, when a capacitance type is specified with the capacitance list,
+the extracted capacitances for all capacitance definitions in that list
+will be of the specified type.
+An element definition file may contain more than one capacitance list.
+.PP
+Normally, the positive node and the negative node of the extracted
+capacitance will be arbitrarily connected to the layers that are
+specified with \fImask1\fP and \fImask2\fP.
+However, if the keyword "junction" is used before the keyword "capacitance"
+of the capacitance list, for all elements in that list,
+\fImask1\fP specifies the positive node of the element
+and \fImask2\fP specifies the negative node of the element.
+.PP
+Default, junction capacitances will be extracted as linear capacitances.
+However, using the parameter
+.B jun_caps
+junction capacitances can be extracted in different ways.
+This is explained in more detail in the Space User's Manual.
+.SS The vertical dimension list
+.PP
+\fBvdimensions\fP:
+   \fIname : condition-list : mask : value1 value2 [value3]\fP
+     .
+     .
+  [\fBomit_cap3d\fP : \fIname1 name2\fP [: \fIcapacitivity\fP]]
+  [\fBkeep_cap2d\fP : \fIcap2d-name\fP]
+.PP
+When using 3d capacitance extraction (by specifying the \fB-3\fP option to \fIspace3d\fP),
+it is necessary to specify the above list.
+The "name" specifies an unique name for the vdimension.
+The "condition-list" specifies the conductor mask surface condition.
+The "mask" field specifies the conductor mask.
+The 1-st value (> 0) specifies the distance between the substrate and the bottom of the conductor, and
+the 2-nd value (>= 0) specifies the thickness of the conductor.
+The 3-rd value (> 0) specifies the minimum spacing of the conductor for
+.I tabs
+usage (default: thickness / 2).
+Note that the unit for the values is default in meters.
+Another unit can be specified with the \fBvdimension\fP unit specification.
+See the cap3d manual when you want also use conductor (edge) shape definitions.
+.PP
+You can add the
+.B omit_cap3d
+option to specify that between 2 vdimensions
+no 3d surface capacitances must be extracted, but that the 2d capacitance method must be used.
+.I Tecc
+calculates a suitable 2d capacitivity value bases on the given dielectrics,
+but optional you may give a 2d surface capacitivity value.
+If you specify a zero value, then no surface capacitances are extracted.
+.PP
+You can add the
+.B keep_cap2d
+option to specify that some 2d capacitances must still be extracted during the 3d method.
+.SS The edge shape list
+.PP
+\fBeshapes\fP:
+   \fIname : condition-list : mask : value1 value2\fP
+     .
+     .
+.PP
+Edge extensions for the vdimension conductor masks can be specified with this list.
+Value1 specifies the extension of the bottom and value2 the extension of the top edge.
+Note that the unit for both values is default in meters.
+Another unit can be specified with the \fBshape\fP unit specification.
+.SS The cross-over shape list
+.PP
+\fBcshapes\fP:
+   \fIname : condition-list : mask : val1 val2 val3 val4\fP
+     .
+     .
+.PP
+Cross-over extensions for the vdimension conductor masks can be specified with this list.
+Value1 and value3 specify the extension of the bottom left and right side.
+Value2 and value4 specify the extension of the top left and right side.
+Note that the unit for the values is default in meters.
+Another unit can be specified with the \fBshape\fP unit.
+.SS The dielectric layers
+.PP
+\fBdielectrics\fP:
+   \fIname permittivity bottom\fP
+     .
+     .
+.PP
+When using 3d capacitance extraction (by specifying the \fB-3\fP option to \fIspace3d\fP),
+it is not necessary to specify the \fIcapacitance\fP section in the technology file.
+Instead, you should specify the permittivities of the dielectric layers above
+the substrate, in the \fIdielectrics\fP section. In the above template, \fIname\fP is the name of the dielectric
+layer (which you may choose freely, except that it should be unique), \fIpermittivity\fP is
+the relative permittivity of the material, and \fIbottom\fP is the starting z-coordinate
+of the layer, \fBin microns\fP. The \fIbottom\fP field of the first layer should always be 0.
+
+You cannot use more than 3 dielectric interfaces in this public version.
+
+For more information about 3d capacitance extraction
+please see the Space 3D Capacitance Extraction User's Manual.
+.SS The substrate layers
+.PP
+\fBsublayers\fP:
+   \fIname conductivity top\fP
+     .
+     .
+  [\fBneumann_simulation_ratio\fP : \fIvalue\fP]
+.PP
+When using 3d substrate resistance extraction (by specifying the \fB-B\fP option to \fIspace3d\fP),
+you should specify the conductivity profile of the substrate. This is done by entering different
+values of the conductivity, for different layers. In the above template, \fIname\fP is the
+name of the layer (which may be chosen freely, except that it should be unique), \fIconductivity\fP
+is the conductivity of the layer (in S/m), and \fItop\fP is the z-coordinate of the top of
+the layer. The first layer should have \fItop\fP equal to 0, and subsequent layers should have
+a negative value for \fItop\fP. The \fItop\fP value is specified \fBin microns\fP.
+
+If the name of last layer is
+.B metalization
+, then a metal backplate is assumed, and the
+conductivity of the layer is ignored (since perfect conductivity will be assumed for the backplate).
+The conductivity value for the medium above the substrate is derived from the first conductivity
+value and is default divided by 100.
+Optional, you can specify the
+.B neumann_simulation_ratio
+to use another value.
+
+You cannot use more than 2 substrate interfaces (or 3 when using a metalization layer).
+
+For more information about substrate resistance extraction,
+please see the Space Substrate Resistance Extraction User's Manual.
+.SS The substrate capacitance layers
+.PP
+\fBsubcaplayers\fP:
+   \fIname permittivity top\fP
+     .
+     .
+.PP
+When using 3d substrate resistance extraction (by specifying the \fB-B\fP option to \fIspace3d\fP),
+you can additional calculate 3d substrate capacitances.
+For this method you should specify the capacitance profile of the substrate. This is done by entering different
+values of the permittivity, for different layers. In the above template, \fIname\fP is the
+name of the dielectric layer (which may be chosen freely, except that it should be unique), \fIpermittivity\fP
+is the relative permittivity of the substrate material, and \fItop\fP is the z-coordinate of the top of the layer.
+The first layer should have \fItop\fP equal to 0, and subsequent layers should have
+a negative value for \fItop\fP. The \fItop\fP value is specified \fBin microns\fP.
+.SS The self-substrate resistance list
+.PP
+\fBselfsubres\fP:
+   \fIvalue1 value2 value3 value4\fP
+     .
+     .
+.PP
+When using simple substrate resistance extraction (by specifying the \fB-b\fP option to \fIspace\fP),
+you should specify the above list of typical interpolation values for different substrate contact dimensions.
+The 1-st value specifies the area (in square microns),
+the 2-nd value specifies the perimeter (in microns),
+the 3-rd value specifies the resistance (in ohms) to the substrate node, and
+the 4-th value specifies a ratio factor (for which the conductance must be decreased because of direct coupling).
+Tool
+.I subresgen
+may be used to generate automatically these values (also the coupsubres list).
+.SS The couple-substrate resistance list
+.PP
+\fBcoupsubres\fP:
+   \fIvalue1 value2 value3 value4 value5\fP
+     .
+     .
+.PP
+When using simple substrate resistance extraction (by specifying the \fB-b\fP option to \fIspace\fP),
+you should specify the above list of typical interpolation values for different substrate contact coupling situations.
+The 1-st and the 2-nd value specifies two substrate contact area's (in square microns),
+the 3-rd value specifies the minimum distance (in microns) between two contacts,
+the 4-th value specifies the direct coupling resistance (in ohms), and
+the last value specifies a ratio for which the conductance must be decreased.
+.SS Comments
+.PP
+Comments can be included in the element-definition file by
+preceding them with a '#' character.
+All text following the '#' character, until the end of the line,
+will be skipped as comment.
+.SH EXAMPLE
+The following gives an example of a complete element-definition
+file for a cmos process.
+.L{
+.nf
+
+\fC# process : c5th
+# author  : A.J. van Genderen, TU-Delft
+
+unit resistance    1     # ohm
+unit c_resistance  1e-12 # ohm per meter ^ 2
+unit a_capacitance 1e-3  # farad per meter ^ 2
+unit e_capacitance 1e-9  # farad per meter
+unit capacitance   1e-18 # farad
+
+conductors :
+  # name   : condition      : mask : resistivity : type
+    condM  : in             : in   : 0.040
+    condP1 : ps sp          : ps   : 33
+    condP2 : ps sn          : ps   : 30
+    condP3 : ps !sn !sp     : ps   : 20
+    condD1 : od !ps sp      : od   : 45 : p    # p+
+    condD2 : od !ps sn      : od   : 30 : n    # n+
+    condD3 : od !ps !sn !sp : od   : 38    # terminal
+
+fets :
+  # name : condition                     : gate d/s : bulk
+    nenh : ps od sn !sp !nw !cop !con !cps : ps od
+    penh : ps od !sn sp  nw !cop !con !cps : ps od
+
+contacts :
+  # name   : condition     : lay1 lay2 : resistivity
+    contP  : cps in ps !od :  in   ps  :  90
+    contD1 : con in !ps od :  in   od  : 270
+    contD2 : cop in !ps od :  in   od  :  90
+
+capacitances :
+  # name   : condition     : lay1 lay2 : capacitivity
+
+  # ground capacitances
+
+    capM   : in !ps !od      : in  @gnd : 0.036
+    capMe  : !in -in !ps !od : -in @gnd : 0.080
+
+    capP   : ps !od          : ps  @gnd : 0.069
+    capPe  : !ps -ps !od     : -ps @gnd : 0.051
+
+    # diff - substr:
+    capD1  : od !ps sn        : od  @gnd : 0.041
+    capD1e : !od !-ps -od -sn : -od @gnd : 0.21
+
+    # diff - well:
+    capD2  : od !ps sp        : od  @gnd : 0.12
+    capD2e : !od !-ps -od -sp : -od @gnd : 0.80
+
+  # coupling capacitances
+
+    capMP  : in      ps : in ps  : 0.075
+    capMPe : !in -in ps : -in ps : 0.090
+
+    capMD1  : in      !ps od sn :  in od : 0.065
+    capMD1e : !in -in !ps od sn : -in od : 0.090
+    capMD2  : in      !ps od sp :  in od : 0.066
+    capMD2e : !in -in !ps od sp : -in od : 0.090
+
+  # lateral coupling capacitances
+
+    capMeMe : -in !in =in     : -in =in : 2.4
+    capPePe : -ps !ps =ps     : -ps =ps : 1.8
+    capMePe : -in !in !ps =ps : -in =ps : 1.2\fP
+
+.fi
+.L}
+.AU "A.J. van Genderen, N. van der Meijs, S. de Graaf, K.J. van der Kolk, E. Matthijssen"
+.SH FILES
+.TP 20
+\fCfile.s\fP
+input file
+.TP 20
+\fCfile.t\fP
+output file
+.if t .bp
+.SH SEE ALSO
+N.P. van der Meijs, A.J. van Genderen,
+F. Beeftink and P.J.H. Elias,
+\&``Space User's Manual,''
+Delft University of Technology,
+Delft,
+The Netherlands.
+.PP
+N.P. van der Meijs and A.J. van Genderen,
+\&``Space Tutorial,''
+Delft University of Technology,
+Delft,
+The Netherlands.
+.PP
+A.J. van Genderen and N.P. van der Meijs,
+\&``Space 3D Capacitance Extraction User's Manual,''
+Delft University of Technology,
+Delft,
+The Netherlands.
+.PP
+A.J. van Genderen, N.P. van der Meijs and T. Smedes,
+\&``Space Substrate Resistance Extraction User's Manual,''
+Delft University of Technology,
+Delft,
+The Netherlands.
+.PP
+A.J. van Genderen and N.P. van der Meijs,
+\&``Xspace User's Manual,''
+Delft University of Technology,
+The Netherlands.
+.PP
+space(1ICD),
+space3d(1ICD),
+subresgen(1ICD),
+tabs(1ICD),
+Xspace(1ICD).
+.SH DIAGNOSTICS
+When no silent mode is specified,
+.I tecc
+will print information about the hash table that is being constructed
+for element recognition.
+This information can be used to tune
+the specification of the key masks.
+.PP
+Furthermore,
+.I tecc
+will check if legal mask names are used and if conductor masks
+are used with transistor, contact and capacitance definitions.
+During extraction itself it will be checked if appropriate conductor
+elements are present;
+for transistor elements and capacitance elements this is required,
+for contact elements this is not required.

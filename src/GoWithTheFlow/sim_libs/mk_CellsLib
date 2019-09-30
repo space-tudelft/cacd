@@ -1,0 +1,10 @@
+#!/bin/bash
+idir=`pwd`
+vlib $idir/CellsLib
+for file in `echo ../vhdl/*.vhd`
+do 
+  vcom -work $idir/CellsLib $file
+done
+sed -e s^\.\./vhdl^/data/public/common/software/opprog/vhdl^g CellsLib/_info > infoTMP
+cp CellsLib/_info infoBAK
+mv infoTMP CellsLib/_info

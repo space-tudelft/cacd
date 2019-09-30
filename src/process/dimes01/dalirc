@@ -1,0 +1,13 @@
+# process dimes01
+snap_grid_values 5 10 20 50 100 200 500 600 700 1000 5000 10000
+snap_grid_offset 0 0
+snap_grid_width 10
+display_grid_values 1 5 10 20 50 100 200 500 600 700 1000 5000 10000
+wire_width_values 60 120
+wire_width 60
+wire_extension on
+disabled_layers cw
+drawing_order  ct in co wn sn ic sp wp bs bi bw ci dp dn cw bn
+dominant off
+flat_expansion on
+

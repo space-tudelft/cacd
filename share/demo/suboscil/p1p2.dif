@@ -1,0 +1,24 @@
+2a3,10
+> sep_sub_term on
+> 
+> low_sheet_res 0 # to make all conductors > 0 high-ohmic
+> sub_term_distr_caa
+> sub_term_distr_cpg
+> sub_term_distr_cmf
+> sub_term_distr_cms
+> 
+3a12
+> be_shape         4
+5,6c14,15
+< max_be_area      1     # micron^2
+< edge_be_ratio    0.01
+---
+> max_be_area      10
+> #edge_be_ratio    0.01
+8c17
+< be_window        10    # micron
+---
+> be_window        4  # micron
+21a31,32
+> disp.draw_sub_term on
+> disp.draw_be_mesh  on

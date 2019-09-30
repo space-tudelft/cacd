@@ -1,0 +1,94 @@
+.TH DMERROR 5ICD "DMI User's Manual"
+.SH NAME
+dmError, dmPerror - error message functions
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+void dmError (char *s);
+void dmPerror (char *s);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "char *s"
+specifies the name of the program that generated the error,
+or the argument of a DMI function to which the error message applies.
+.SH DESCRIPTION
+Function
+.B dmPerror
+produces a short error message on
+.I stderr
+output describing the last error encountered
+during a call to a DMI function from an application program.
+First the argument string
+.B s
+is printed, then a colon, then the message and a newline.
+The error number is taken from the external variable
+.BR dmerrno ,
+which is set when errors occur but not cleared when
+non-erroneous calls are made.
+.PP
+To simplify variant formatting of messages,
+the vector of message strings
+.B dmerrlist
+is provided;
+External variable
+.B dmerrno
+can be used as an index in this table to get the corresponding
+message string without the newline.
+Variable
+.B dmerrno
+may not be greater than or equal to
+.BR dmnerr ,
+which is set to the number of messages provided for in the table.
+The external variable
+.B dmnerr
+should be checked.
+.PP
+When the DMI functions detect an error they call
+.B dmError
+by default.
+The function
+.B dmError
+will then call
+.B dmPerror
+by default,
+to produce the corresponding message automatically on
+.I stderr
+output.
+This is to simplify the error handling of the application program.
+In case the application wants to provide the error messages itself,
+for example, to display the errors
+in a special window on a graphics device,
+the application programmer must provide
+his own (possibly dummy-)
+.B dmError
+function.
+This can be done at compile-time, by providing a function called
+.BR dmError .
+.if n .sp 4
+.PP
+To show how the error messages are handled,
+here follows the source code listings:
+.nf
+
+#include "dmincl.h"
+
+void dmError (char *s)
+{
+    dmPerror (s);
+}
+
+void dmPerror (char *s)
+{
+    if (s && *s) fprintf (stderr, "%s: ", s);
+
+    if (dmerrno > 0 && dmerrno <= dmnerr)
+	fprintf (stderr, "%s\en", dmerrlist[dmerrno]);
+    else
+	fprintf (stderr, "DMI error number: %d\en", dmerrno);
+}
+.SH SEE ALSO
+dmintro(5ICD).

@@ -1,0 +1,3 @@
+read_lib g_analib8_00.lib
+report_lib g_analib8_00
+write_lib g_analib8_00

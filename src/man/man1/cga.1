@@ -1,0 +1,65 @@
+.TH CGA 1ICD "User Commands"
+.UC 4
+.SH NAME
+cga - convert GDS II to ASCII
+.SH SYNOPSIS
+.ie n .ta 3i
+.el .ta 0
+.B cga
+[\fB-bNAME\fP]
+[\fB-l\fP]
+[\fB-n\fP]
+[\fB-o\fPRT[,C]]
+[\fB-p\fPRN[,R2]]
+[\fB-s\fP]
+[\fB-t\fP]
+	[\fB-u\fP[F]]
+[\fB-w\fP]
+[\fB-x\fP]
+GDS-file
+.SH OPTIONS
+.TP
+.B -b
+Print only structure with specified NAME.
+.TP
+.B -l
+List structures (cells) and give element statistics.
+.TP
+.B -n
+Print record number before record.
+.TP
+.B -o
+Print only specified record type code (see option -t)
+and optional count records after specified type.
+.TP
+.B -p
+Print only the specified record number
+and optional all records to the second record number.
+.TP
+.B -s
+Output in 'short' record header format (see option -t).
+.TP
+.B -t
+Print only all GDS record types (no GDS file need to be specified).
+.TP
+.B -u
+Output in user units (in stead of database units).
+Optional output values are scaled with factor.
+.TP
+.B -w
+Don't wrap, output each element on one line.
+.TP
+.B -x
+Output one XY-pair on a line (to avoid too long records).
+.SH DESCRIPTION
+.I Cga
+reads a GDS formatted file
+and converts the GDS records into ASCII representation.
+.I Cga
+uses the standard output.
+Normally all GDS record type codes are translated.
+.AU "R. Paulussen, S. de Graaf."
+.SH SEE ALSO
+cga2gds(1ICD),
+cgi(1ICD),
+cig(1ICD).

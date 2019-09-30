@@ -1,0 +1,151 @@
+.TH NET2NET 1ICD "User Commands"
+.UC 4
+.SH NAME
+net2net - convert database circuit view streams
+.SH SYNOPSIS
+.ta 6c
+.B net2net
+[-cilntv] cell
+.SH OPTIONS
+.TP
+.B -c
+Do not add
+.I coordinates
+attribute.
+.TP
+.B -i
+Do not change
+.I instance
+names.
+.TP
+.B -l
+Do not add the
+.I lay
+attribute.
+.TP
+.B -n
+Enable
+.I number
+cd messages.
+.TP
+.B -t
+Enable
+.I times
+found RC messages.
+.TP
+.B -v
+Enable
+.I verbose
+messages.
+
+.SH DESCRIPTION
+The
+.I net2net
+program can be used to convert
+the circuit description made by the
+.I space2(1ICD)
+layout to circuit extractor into the general format used by the netlist tools.
+.PP
+To use the converted streams, you must change the stream names into the circuit view.
+For example, move "netsub" into "netsub_" and "mc" into "mc_" (to keep them).
+And then move "mc2" into "mc" and "net2" into "net".
+.PP
+Stream "netcd" contains on line 1 the highest cd number used
+and on line 2 the node count (inclusive nodes SUB and GND).
+Stream "netcd" can also contain a list of cd numbers of node groups which must be merged.
+
+.SH NOTES
+Some netlist tools can read also the new database circuit description.
+For example
+.I xsls
+and
+.I xspice
+can netlist, but can not sort out duplicate RC entries.
+The
+.I xspf
+and
+.I xspef
+programs can also completely use the new format.
+Note that the new circuit description format is more compact.
+Note that the new "mc2" stream is more compact, because it use shorter instance names
+and it has no duplicate RC entries.
+
+.SH EXAMPLES
+.nf
+% space2 -rCv switchbox4
+    ...
+extraction statistics for layout switchbox4:
+    capacitances       : 21984
+    resistances        : 638
+    nodes              : 470
+    mos transistors    : 144
+    substrate nodes    : 15
+    ...
+space2: --- Finished ---
+
+% net2net -v switchbox4
+net2net: converting nethead/netsub/mc into net2/mc2
+net2net: reading nethead and netsub
+net2net: reading mc
+net2net: writing mc2
+net2net: writing net2
+net2net: cap: 21984 instances found, 7989 written
+net2net: res: 638 instances found, 638 written
+net2net: 7224 capacitors
+net2net: 336 capacitors to net SUB
+net2net: 428 capacitors to net GND
+net2net: 623 resistors
+net2net: 15 resistors to net SUB
+net2net: 144 gates found
+net2net: 470 nodes found, 470 written
+net2net: ready
+
+% ls -l circuit/switchbox4
+total 1052
+-rw-r--r-- 1 simon space      0 Jul 15 14:40 flat
+-rw-r--r-- 1 simon space 605063 Jul 15 14:40 mc
+-rw-r--r-- 1 simon space 223813 Jul 15 14:41 mc2
+-rw-r--r-- 1 simon space 205082 Jul 15 14:41 net2
+-rw-r--r-- 1 simon space     25 Jul 15 14:40 netcd
+-rw-r--r-- 1 simon space   5961 Jul 15 14:40 nethead
+-rw-r--r-- 1 simon space   6086 Jul 15 14:40 netsub
+-rw-r--r-- 1 simon space    167 Jul 15 14:40 term
+
+% space2 -r I8051_ALL
+% net2net -cl I8051_ALL
+net2net: warning: net GND not found
+net2net: cap: 0 instances found, 0 written
+net2net: res: 2316207 instances found, 2316207 written
+net2net: 2309887 resistors
+net2net: 6320 resistors to net SUB
+net2net: 123809 gates found
+net2net: 788420 nodes found, 788420 written
+
+% ls -l circuit/I8051_ALL
+total 232172
+-rw-r--r-- 1 simon space        0 Jul 15 14:51 flat
+-rw-r--r-- 1 simon space 75118509 Jul 15 15:01 mc
+-rw-r--r-- 1 simon space 58077006 Jul 15 15:03 mc2
+-rw-r--r-- 1 simon space 82626016 Jul 15 15:03 net2
+-rw-r--r-- 1 simon space       25 Jul 15 15:01 netcd
+-rw-r--r-- 1 simon space 15111663 Jul 15 15:01 nethead
+-rw-r--r-- 1 simon space  6536438 Jul 15 15:01 netsub
+-rw-r--r-- 1 simon space     1084 Jul 15 14:51 term
+
+.AU "S. de Graaf"
+.SH FILES
+.nf
+input:
+    circuit/\fIcell\fP/netcd
+    circuit/\fIcell\fP/nethead
+    circuit/\fIcell\fP/netsub
+    circuit/\fIcell\fP/mc
+output:
+    circuit/\fIcell\fP/net2
+    circuit/\fIcell\fP/mc2
+
+.SH SEE ALSO
+space2(1ICD),
+xsls(1ICD),
+xspf(1ICD),
+xspef(1ICD).

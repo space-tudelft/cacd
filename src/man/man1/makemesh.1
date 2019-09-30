@@ -1,0 +1,55 @@
+.TH MAKEMESH 1ICD "User Commands"
+.UC 4
+.SH NAME
+makemesh - auxiliary program for resistance mesh refinement
+.SH SYNOPSIS
+.B makemesh
+[-Dcv] [-m maxmem] cell [...]
+.SH OPTIONS
+.TP
+.B -D
+delete the input file "mesh_aln" from the database when ready.
+.TP
+.B -c
+do not compress the temporary files (less cpu time, more disk space).
+.TP
+.BI -m maxmem
+use
+.I maxmem
+(default 1) MByte of main memory for sorting of edges.
+.TP
+.B -v
+verbose mode.
+.SH DESCRIPTION
+.I Makemesh
+is an auxiliary program for
+.I space (1ICD)
+that is used for resistance mesh refinement.
+.br
+.I Makemesh
+takes as input line segments from a stream "mesh_aln"
+(produced by
+.I space
+during a first pass)
+and produces as output line segments in a stream "mesh_gln"
+(read by
+.I space
+during a second pass).
+.br
+.I Makemesh
+is automatically invoked by
+.I space (1ICD)
+when using the option for resistance mesh refinement.
+.PP
+In order to sort the output,
+.I makemesh
+uses a directory where it stores temporary data.
+The default directory for this is selected from the
+list of directories /tmp and /usr/tmp, whichever has more space available.
+Using the environment variable SPACE_TMPDIR it is possible
+to specify an alternative list of directories,
+separated by the character ':' (e.g. /tmp:/usr/tmp:/user/john/tmp).
+.PP
+.AU "A.J. van Genderen"
+.SH SEE ALSO
+space (1ICD).

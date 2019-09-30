@@ -1,0 +1,36 @@
+/* process FreePDK45 */
+
+/*					    */
+/*      Standard primitive element file     */
+/*					    */
+/*          The normal permutabilities      */
+/*          for the primitive network       */
+/*          are defined here.               */
+/*					    */
+
+
+primitive network nenh (terminal g, d, s)
+{
+	perm { (g) (d, s) };
+}
+
+primitive network penh (terminal g, d, s)
+{
+	perm { (g) (d, s) };
+}
+
+primitive network ndep (terminal g, d, s)
+{
+	perm { (g) (d, s) };
+}
+
+primitive network res (terminal p, n)
+{
+	perm { (p, n) };
+}
+
+primitive network cap (terminal p, n)
+{
+	perm { (p, n) };
+}
+

@@ -1,0 +1,2 @@
+export OPPROGPATH=/data/public/common/software/opprog
+source $OPPROGPATH/sourceme

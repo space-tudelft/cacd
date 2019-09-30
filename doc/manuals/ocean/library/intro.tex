@@ -1,0 +1,129 @@
+% this is latex
+
+\section{About this document}
+
+
+This document describes the images and libraries supplied with the {\sc ocean}
+system. The 'image' is the basic pattern on a semi-custom chip. We distribute
+three types of images:
+\begin{itemize}
+\item[{\em fishbone}]
+A gate-isolation image in a $1.6 \mu$ process with two layers of metal. 
+\item[{\em octagon}]
+A remarkable octagonal image in an imaginary $0.8 \mu$ process with three layers
+of metal interconnect. 
+\item[{\em gatearray}]
+An old fashioned gate-array in a single metal layer process.
+\end{itemize}
+At Delft university we can only process the fishbone image.  Therefore most of
+this document and the other manuals deal with this image. The other images are
+supplied mainly to demonstrate the features of the placer and the router in the
+{\sc ocean} system.  Therefore they have a small cell library and the SPICE and
+SLS simulations will not give realistic results. 
+
+In any case. the librar The library is quite small, since it doesn't contain
+the intricate combinatorial logic cells. This was done deliberately to keep
+it simple for the users. Moreover, on our sea-of-gates style complex
+combinatorial cells can be constructed quite efficiently, so there is not
+really a need for such cells in the library.
+
+
+of the libary
+This document describes the 'fishbone' Sea-of-Gates library which is used at
+Delft university of technology, in the release of january 1993. The cells
+are in the library called 'oplib1\_93'. The library contains 12 digital cells
+and 5 analog cells.  The library is quite small, since it doesn't contain
+the intricate combinatorial logic cells. This was done deliberately to keep
+it simple for the users. Moreover, on our sea-of-gates style complex
+combinatorial cells can be constructed quite efficiently, so there is not
+really a need for such cells in the library.
+
+\section{Additional information and related documents}
+This is a library description. To get information about the design tools which
+use these library cells, we refer to the following documents:
+\begin{itemize}
+\item
+{\em The Seafood Menu for Layout: Seadali, Trout, Madonna and more}\\
+This is the reference manual of the {\sc ocean} layout tools for Sea-of-Gates.
+It is available in the ocean distribution or from the authors. 
+\item
+{\em A tutorial introduction to the {\sc ocean} tools}\\
+Contains a short guided tour along the tools of the design system. We
+think that this is the best way to get started with the system.
+Available in the ocean distribution or from the authors.
+\item
+{\em The NELSIS IC design system manuals}\\ 
+Especially interesting are the manuals on \tool{simeye}, \tool{sls} 
+and \tool{space}. Available via the authors.
+\item 
+On-line documentation: icdman\\ 
+Just type 'icdman simeye' to get the tool
+description of \tool{simeye}.  This works similarly for any other nelsis tool.
+To get on-line help on the ocean tools, type 'trout -h' (or 'madonna -h' to
+get brief information.
+\item
+{\em Studentenhandleiding Ontwerppracticum}\\ 
+This is the elaborate student's
+manual (250 pages) for the second year chip design course at Delft universty of
+technology.  Unifortunately its in Dutch. It contains all information the
+students need. Available from the Diktatenverkoop electrical engineering, or
+via the authors.
+\end{itemize}
+
+Finally a special word to you nasty American lawyers which might read this
+(healthy people: skip this paragraph): We, some humble employees of Delft
+University of Technology, and Delft University of Technology do not give
+warranties of any kind, either express or
+implied, as to any matter whatsoever, including but not limited to implied
+warranties of merchantability or fitness for any particular purpose or that
+the use of this library will not infringe any patent or copyright.
+
+\section{Information of each library cell}
+
+The names of the digital cells were chosen using the convention which was
+used by Philips for its gate-array packages. The first three
+characters describe the function of the cell. Sometimes the number of inputs
+is included in the names: 'na210' is a 2-input nand, while 'na310' is a
+3-input nand. The last 2 digits describe the fan-out of the output. But
+sometimes I don't understand this convention myself.
+
+The description of each cell consists of:
+\begin{itemize}
+\item
+Function 
+\item
+Terminal connections
+\item
+IEC symbol
+\item
+Truth table
+\item
+Parameters to determine the delay
+\item
+Equivalent chip area
+\end{itemize}
+
+The parameters for the circuit delay consist of three parts:
+\begin{tabbing}
+xxxxxxxxxxxxxxxxxx\=\kill
+$T_{PLH}$ en $T_{PHL}$\> the fixed delay times of the cell.\\
+\\
+${\Delta}T_{PLH}$ en ${\Delta}T_{PHL}$\> The delay coefficients with a
+capacitative load.\\
+\\
+$C_{in}$\> The input capacitance.\\
+\end{tabbing}
+
+The delay times and delay coefficients are specified for the rising (LH) as
+well as the falling (HL) edge of the output signal. The total delay can be 
+calculated using the formula:
+\begin{description}
+\item
+$T_{\it P_{tot}} = T_{\it P} + \Delta T_{\it P}.C_{\it load}$
+\end{description}
+in which $C_{load}$ is the load capacitance. This load capacitance is the sum
+of the input capacitances of the cells which are driven plus the capacity of
+the interconnection wires.
+The unit of chip area is defined as the smallest piece of the fishbone image,
+which consists of one nmos and one pmos transistor.
+\clearpage

@@ -1,0 +1,81 @@
+.TH DMCLOSEPROJECT 5ICD "DMI User's Manual"
+.SH NAME
+dmCloseProject - terminate a project transaction
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+int dmCloseProject (DM_PROJECT *projkey, int mode);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "DM_PROJECT *projkey"
+is a pointer to a valid \fBDM_PROJECT\fP as obtained from dmOpenProject().
+.TP
+.B "int mode"
+is an integer selecting a specific behavior of dmCloseProject().
+Valid modes as pre-defined in "dmincl.h" are:
+.sp
+\fBCOMPLETE\fP -
+'in +3
+The project transaction \fBcommits\fP.
+.br
+The \fBprojkey\fP is destroyed.
+.in -3
+\fBQUIT\fP -
+'in +3
+The project transaction is \fBaborted\fP.
+.br
+The \fBprojkey\fP is destroyed.
+.in -3
+\fBCONTINUE\fP -
+'in +3
+The project transaction \fBcontinues\fP.
+.br
+The \fBprojkey\fP is \fBnot\fP destroyed.
+.in -3
+.SH DESCRIPTION
+Function
+.B dmCloseProject
+terminates the project transaction and
+invalidates the access key
+.BR projkey .
+This is only done for modes
+.B COMPLETE
+and
+.BR QUIT .
+For the mode
+.B CONTINUE
+the access key
+.B projkey
+remains valid.
+.SH NOTE
+Function
+.B dmCloseProject
+does not checks-in the cells that have been checked-out with
+.B projkey
+and have not yet been checked-in.
+Use
+.B dmCheckIn
+for this purpose.
+.SH DIAGNOSTICS
+If properly executed, dmCloseProject() will return \fB0\fP.
+If dmCloseProject() fails \fB-1\fP will be returned.
+The external variable
+.B dmerrno
+will be set to indicate the error,
+and a call to function dmError() will be done.
+.PP
+This may happen in the following cases:
+.TP 14
+.B DME_BADARG
+Bad mode argument specified.
+.TP
+.B DME_BADKEY
+Bad project key specified.
+.SH SEE ALSO
+dmCheckIn(5ICD),
+dmCkinAll(5ICD),
+dmOpenProject(5ICD).

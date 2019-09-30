@@ -1,0 +1,532 @@
+% -*- latex -*-
+
+\chapter{The sea-of-gates libraries}
+\label{s-oplib}
+\index{fishbone library|(}
+\section{Introduction}
+This chapter describes the images and libraries supplied with the
+{\smc ocean} system. The 'image' is the basic pattern on a
+semi-custom chip. We distribute three types of images:
+\begin{itemize}
+\item[{\em fishbone}]
+\index{image!fishbone}
+\index{fishbone image}
+A gate-isolation image in a $1.6 \mu$ process with two layers of metal. 
+\item[{\em octagon}]
+\index{image!octagon}
+\index{octagon image}
+A remarkable octagonal image in an imaginary $0.8 \mu$ process with three
+layers of metal interconnect.
+\item[{\em gatearray}]
+\index{image!gate array}
+\index{gate array image}
+An old fashioned gate-array in a single metal layer process.
+\end{itemize}
+See section~\ref{s-fishstruct} for examples of designs in these
+images.  At Delft university we can only process the fishbone
+image.  Therefore most of this chapter deals with this image. The
+other images are supplied mainly to demonstrate the features of
+the placer and the router in the {\sc ocean} system.  They have
+only a small cell library which is a subset of the fishbone
+library. Also SPICE and SLS simulations will not give realistic
+results for {\sl octagon} and {\sl gatearray}.
+
+In the remainder of this chapter we describe the 'fishbone'
+Sea-of-Gates library which is used at Delft university of
+technology, in the release of august 1993.  The library we supply
+is quite small, since it doesn't contain the intricate
+combinatorial logic cells. This was done deliberately to keep it
+simple for the users. Moreover, in our sea-of-gates style complex
+combinational cells can be constructed quite efficiently, so there
+is not really a need for such cells in the library.  We split the
+libraries according to their function:
+\begin{itemize}
+\item[primitives:]
+Library with the basic description of the Sea-of-Gates image.\\
+It contains fishbonec3tu2, Via\_on\_in, Via\_op\_in,
+Via\_in\_ins and Error\_Marker
+\item[digilib8\_93:]
+Library with elementary digital cells.\\
+It contains: buf40, de211, de310, dfn10, dfr11, ex210, iv110, mu111
+mu210, na210, na310, no210 and no310
+\item[analib8\_93:]  
+Library with analog cells. It contains: ln3x3, lp3x3, mir\_nin,
+mir\_nout, mir\_pin, mir\_pout and osc10.
+\item[bonding8\_93:]
+Library with elementary bonding patterns, containing bond\_leer,
+bond\_bar and bondflap\_8.
+\item[exlib8\_93:]
+The 'expert' or 'extended' library, containing a few more cells
+which are not (yet) intended for practicum users. This library
+also contains the old cells which were kicked out of the oplib.
+The cells dfr112, dfn102 are the old (and smaller) flipflops.
+Contains currently: buf20, buf100, dfr112, dfn102, add10, itb20
+\end{itemize}
+
+If you use \tool{mkopr}, 
+\index{mkopr@\tool{mkopr}}
+the following libraries are imported into the
+new project: 'primitives', 'digilib8\_93', 'analib8\_93' and
+'bonding8\_93'.
+
+For each library there is a file with the 'external' sls
+descriptions. they are useful to help you with inserting the
+proper terminal order in your sls circuit files. The fiels with
+the external definitions are in the directory 'sls\_prototypes'
+\index{slsprototypes@\fname{sls\_prototypes}}
+of your project directory.
+
+If you use the command \tool{mkepr} 
+\index{mkepr@\tool{mkepr}}
+(notice the 'e'), also the
+extended library will be imported into the new project. \tool{mkepr}
+Imports the following libraries: 'primitives', 'digilib8\_93',
+'analib8\_93', 'bonding8\_93' and 'exlib8\_93'.
+
+At the end of this chapter we include some information about the
+image description file 'image.seadif' which is required by all
+\smc{ocean} programs.
+
+\section{Information of each library cell}
+
+The names of the digital cells were chosen using the convention
+which was used by Philips for its gate-array packages. The first
+three characters describe the function of the cell. Sometimes the
+number of inputs is included in the names: 'na210' is a 2-input
+nand, while 'na310' is a 3-input nand. The last 2 digits describe
+the fan-out of the output. But sometimes I don't understand this
+convention myself.
+
+The description of each cell consists of:
+\begin{itemize}
+\item
+Function 
+\item
+Terminal connections
+\item
+IEC symbol
+\item
+Truth table
+\item
+Parameters to determine the delay
+\item
+Equivalent chip area
+\item
+Fanout
+\end{itemize}
+
+The parameters for the circuit delay consist of four parts:
+\begin{tabbing}
+xxxxxxxxxxxxxxxxxx\=\kill
+$T_{PLH}$ en $T_{PHL}$\> the fixed delay times of the cell under
+unit load (0.12pF).\\
+\\
+${\Delta}T_{PLH}$ en ${\Delta}T_{PHL}$\> The delay coefficients with a
+capacitative load.\\
+\\
+$C_{in}$\> The input capacitance.\\
+\\
+$T_{su}$ en $T_{hold}$\> Setup- and hold-times of the flipflops.
+\end{tabbing}
+
+The delay times and delay coefficients are specified for the
+rising (LH) as well as the falling (HL) edge of the output signal.
+The total delay can be calculated using the formula:
+\begin{description}
+\item
+$T_{\it P_{tot}} = T_{\it P} + \Delta T_{\it P}(C_{\it load}-C_{\it unit})$
+\end{description}
+in which $C_{load}$ is the load capacitance and $C_{\it unit}$ the
+unit load. This load capacitance
+is the sum of the input capacitances of the cells which are driven
+plus the capacity of the interconnection wires.  The unit of chip
+area is defined as the smallest piece of the fishbone image, which
+consists of one nmos and one pmos transistor.
+\clearpage
+
+\section{digilib8\_93: the basic digital library}
+\input celllib/iv110.tex
+\input celllib/no210.tex
+\input celllib/no310.tex
+\input celllib/na210.tex
+\input celllib/na310.tex
+\input celllib/ex210.tex
+\input celllib/buf40.tex
+\input celllib/mu111.tex
+\input celllib/mu210.tex
+\input celllib/de211.tex
+\input celllib/dfn10.tex
+\input celllib/dfr11.tex
+\section{analib8\_93: the analog library}
+\input celllib/anabib.tex
+\input celllib/osc10.tex
+\section{bonding8\_93: the bonding patterns}
+\input celllib/bond_leer.tex
+\input celllib/bond_bar.tex
+\section{exlib8\_93: the extended library}
+\input celllib/buf20.tex
+\input celllib/dfn102.tex
+\input celllib/dfr112.tex
+
+\index{fishbone library|)}
+\newpage
+\pagestyle{plain}
+\section{The file 'image.seadif'}
+\index{image.seadif@\fname{image.seadif} file|bold}
+Process information is stored in the \smc{nelsis} system in the
+directory '\$ICDPATH/lib/process'.  The \smc{ocean} tools read the
+information about the image from a file called 'image.seadif',
+which is present in '\$OCEANPATH/celllibs/\$OCEANPROCESS'. In some
+cases you might want to modify this file to change the behaviour
+of the tools. If you copy an 'image.seadif' in your project
+directory, it will automatically be read by all tools.
+
+The syntax of the image description file 'image.seadif' is
+lisp-like and easy to interpret. Below we include the
+'image.seadif' file of the {\sl fishbone} image.
+
+{\small
+\begin{verbatim}
+/* 
+ *
+ * This is the file 'image.seadif'
+ * Contents: Image description for the the 'fishbone' image. The fishbone
+ *           image was developed at Delft University of Technology by
+ *           Patrick Groeneveld and Paul Stravers. It requires the
+ *           c3tu process, which is a derivative of the 1.6 micron C3DM
+ *           process from Philips.
+ * Purpose:  All OCEAN tools read this file to get process and image 
+ *           specific information. This file is read by fish, sea nelsea, 
+ *           ghoti, madonna, trout and seadali. You may edit this file to 
+ *           change the behaviour of (for instance) the router. In that 
+ *           case you can copy a version of this file into your process 
+ *           directory. All OCEAN tools will read your local image 
+ *           description file in that case.
+ * Created:  by Patrick Groeneveld and Paul Stravers
+ *           march 1993
+ *
+ * (c) The OCEAN/NELSIS Sea-of-Gates design system 
+ * Delft University of Technology
+ *
+ */
+
+(Seadif "Image description file for fishbone image"
+
+   /*
+    * Set the size of an empty image if you press 'fish'
+    * for fishbone 25 times 1 is nice
+    */
+   (ChipDescription chip
+      (ChipSize 25 1)
+   )
+ 
+   (ImageDescription "fishbone"     /* name is important */
+      (Technology "fishbone"        /* nelsis technology name */
+         (DesignRules
+            /* 
+             * Specify data about routing layers. First metal layer
+             * (which is closest to the solicon) has index 0:
+             *    -1  <- polysilicon/diffusion
+             *     0  <- metal 1
+             *     1  <- metal 2
+             *     2  <- metal 3
+             *    etc.
+             * Take as many layers as you want or have.
+             * Layer -1 contains all feautues of the iamge which cannot 
+             * be edited by the user
+             */
+            (NumberOfLayers 2)
+            /* set wire width of the layer in lambda */
+            (WireWidth 0 12)
+            (WireWidth 1 12)
+            /* specify which mask corresponds to each layer */
+            /* every layer MUST have one unique mask assigned */
+            (WireMaskName 0 "in")       /* layer0 name = in */
+            (WireMaskName 1 "ins")      /* layer1 name = ins */
+            /* dummy layer for markers */
+            (DummyMaskName "bb")        /* bb mask as no-op */
+            /* set style of the layers for trout, must be alternating */
+            (WireOrient 0 horizontal) 
+            (WireOrient 1 vertical)
+
+            /* 
+             * Declare the vias. For each via there must be an
+             * instance containing the mask pattern. Between the
+             * metal layers there is one via per adjacent pair of
+             * layers. Between metal 1 and the silicon (poly,
+             * diffusion, etc) there may be more than one type of via.
+             */
+            (ViaCellName  0 1 "Via_in_ins")  /* between metal1 and metal 2 */
+            (ViaCellName -1 0 "Via_ps_in")   /* polysilicon and metal 1 */
+            (ViaCellName -1 0 "Via_on_in")   /* n-diffusion and metal 1 */
+            (ViaCellName -1 0 "Via_op_in")   /* p-diffusion and metal 1 */
+
+            /*
+             * specify the mask name associated with each via. In this way
+             * fish can map a mask pattern to the proper via. Any
+             * of the contacts from metal1 down to the image is
+             * translated to the proper mask pattern, using the feed
+             * statements in the GridConnectList
+             */
+            (ViaMaskName  0 1 "cos")         /* between metal1 and metal 2 */
+            (ViaMaskName -1 0 "cps")         /* polysilicon and metal 1 */
+            (ViaMaskName -1 0 "con")         /* n-diffusion and metal 1 */
+            (ViaMaskName -1 0 "cop")         /* p-diffusion and metal 1 */
+         )
+
+         /*
+          * set the spice parameters, which allow ghoti to collapse
+          * parallel transistors into one transistor. (not so relevant)
+          */
+         (SpiceParameters
+            (Model "nenh"
+               (Parameter "ld"  "0.325e-6") /* ghoti -r needs this parameter */
+               (Parameter "vto" "0.7"))
+            (Model "penh"
+               (Parameter "ld" "0.300e-6")
+               (Parameter "vto" "-1.1")))
+      )
+
+      /*
+       * The next block describes how the grid of a single core cell
+       * looks like
+       */
+      (GridImage
+
+         /*
+          * declaration of the image grid. 
+          * this image is a rectangular grid which is repeated 
+          *
+          * Set the size of a single grid cell in grid points 
+          * in fishbone this is 1 (x) by 28 (y), which means that
+          * the gridpositions range from 0,0 to 0,2
+          */
+         (GridSize  1 28
+            /*
+             * Specify how the gridpoints map to the layout coordinates
+             * In this case, for instance, the grid point (0, 1) will 
+             * map to point (26, 64) lambda in the actual image. In this 
+             * way it is possible to specify a non-regular grid.
+             */ 
+            (GridMapping horizontal    /* 1 point */
+                44) 
+            (GridMapping vertical      /* contains 28 points */
+                17  56  96 128 160 192 232 264 304 336 368 400 432 472
+               511 550 590 622 654 686 718 758 790 830 862 894 926 966)
+
+            /*
+             * tearlines of the image (currently disabled, not so relevant)
+             *
+            (TearLine vertical 2
+               0 13)
+            (TearLine horizontal 1
+               0)
+             */
+
+            /* 
+             * Specify the implicit power lines which are present in
+             * the image. This is used by the router.
+             * format: 
+             * (PowerLine <orient> <ident> <layer_no> <row/column number>) */
+            (PowerLine horizontal vss 0 0 ) 
+            (PowerLine horizontal vdd 0 14) 
+
+            /* overlap of the repeated image in x and y direction: */
+            (ImageOverlap 0 1)
+         )
+
+         (Axis
+            /* 
+             * Mirror axis information for the detailed placer. Format is
+             * (MirrorAxis x1 x2 y1 y2) where (x1,y1) and (x2,y2) are two
+             * coordinates thru which the mirror axis runs. NOTE: because
+             * a mirror axis can run just IN BETWEEN two gridpoints, the
+             * arguments of MirrorAxis specify HALF GRIDPOINT UNITS. E.g.
+             * a mirror axis running thru the gridpoints (1,1) and (5,5)
+             * would be specified as (MirrorAxis 2 10 2 10).
+             * used by madonna.
+             */
+            (MirrorAxis 0 1 28 28)              /* mirror around vdd */
+            (MirrorAxis 0 1 0 0 )               /* mirror around vss */
+         )
+
+ 
+         /*
+          * The next block specifies the connections/feeds 
+          * between grid points.
+          */
+         (GridConnectList
+            /*
+             * Default vias are allowed at EACH grid point between metal
+             * layers (layer no >= 0) and at NO gridpoint to the core (from
+             * layer 0 to -1).  Using the 'block' statement it is possible to
+             * remove edges from the graph and therefore also possible vias.
+             * In the image of the example no 'cos' vias are allowed at 
+             * some positions.
+             */
+            /* means: no connection between pos (0,1,0) and (0,1,1) 
+             *  = no via allowed there */
+            (Block 0 1 0 0 1 1) 
+            (Block 0 6 0 0 6 1) (Block 0 7 0 0 7 1)
+            (Block 0 13 0 0 13 1)
+            (Block 0 15 0 0 15 1)
+            (Block 0 21 0 0 21 1) (Block 0 22 0 0 22 1)
+            (Block 0 27 0 0 27 1)
+               
+            /*
+             * Declare the internal feeds of the image (e.g. feeds
+             * through a poly wire).  This declaration also implies
+             * that it is possible to make a via at a certain grid
+             * position. Therefore the cell name of the required via
+             * must be given at each feed position.  The via cell name
+             * must be declared previously in the technology block
+             * using the 'ViaMaskName' statement.  We recoqnize two
+             * types of feeds: UniversalFeed and RestrictedFeed.  For
+             * fish there is no difference, but for the router there
+             * is.  The router can use universal feeds for arbitrary
+             * wire segments.  Restricted feeds have a limited use:
+             * they can only indicate that a set of gridpoints (in the
+             * image = layer -1) are electrically equivalent.  In the
+             * example image the the poly gates can serve as universal
+             * feeds, while the diffusion source and drain cannot.  A
+             * feed position can also point to a position outside the
+             * size of the image cell.  Fish does not use the feed
+             * information, but it needs a via cell name for each
+             * position where a connection to layer -1 can be made.
+             * It is allowed to add dummy feeds: e.g.
+             *    (UniversalFeed (Feed "Via_ps_in" 0   1))
+             * indicates that at 0,1 a via to core can be placed, with
+             * name Via_ps_in.  ExternalFeed - if this exists then
+             * this feed has an extension to the neighbor cluster in
+             * this direction ("hor" or "ver")
+             * BusFeed - power or ground net
+             *
+             */
+            /* e.g. points (0,1) and (0,6) are equivalent */
+            (UniversalFeed (Feed "Via_ps_in" 0   1) (Feed "Via_ps_in" 0   6))
+            (UniversalFeed (Feed "Via_ps_in" 0   7) (Feed "Via_ps_in" 0  13))
+            (UniversalFeed (Feed "Via_ps_in" 0  15) (Feed "Via_ps_in" 0  21))
+            (UniversalFeed (Feed "Via_ps_in" 0  22) (Feed "Via_ps_in" 0  27))
+
+            (RestrictedFeed (Feed "Via_on_in" 0   2) (Feed "Via_on_in" 0   3)
+               (Feed "Via_on_in" 0   4) (Feed "Via_on_in" 0   5))
+            (RestrictedFeed (Feed "Via_op_in" 0   8) (Feed "Via_op_in" 0   9)
+               (Feed "Via_op_in" 0  10) (Feed "Via_op_in" 0  11) 
+               (Feed "Via_op_in" 0  12))
+            (RestrictedFeed (Feed "Via_op_in" 0  16) (Feed "Via_op_in" 0  17)
+               (Feed "Via_op_in" 0  18) (Feed "Via_op_in" 0  19) 
+               (Feed "Via_op_in" 0  20))
+            (RestrictedFeed (Feed "Via_on_in" 0  23) (Feed "Via_on_in" 0  24)
+               (Feed "Via_on_in" 0  25) (Feed "Via_on_in" 0  26))
+
+            (RestrictedFeed (Feed "Via_op_in" 0 0) (ExternalFeed "hor"))
+            (RestrictedFeed (Feed "Via_on_in" 0 14) (ExternalFeed "hor"))
+
+            (BusFeed (Feed "Via_op_in" 0 0) (ExternalFeed "hor"))
+            (BusFeed (Feed "Via_on_in" 0 14) (ExternalFeed "hor"))
+         )
+
+         /*
+          * The cost parameters to steer the router.
+          */
+         (GridCostList
+            /* 
+             * The format is:
+             *     <cost> <vector> <startpoint_range> <endpoint_range>
+             *
+             * GridCost specifies the cost of a metal wire or a via
+             * The offset <vector> must be in the unity coordinate system:
+             *    1 0 0  = horizontal metal wire to the right
+             *   -1 0 0  = horizontal metal wire to the left
+             *    0 0 1  = a via to the layer above this layer
+             * example:
+             *     (GridCost 1   1 0 0  0 0 0  0 27 0) 
+             * gives offset vector (1 0 0) = L cost 1 over range 
+             * (0 0 0) to (0 27 0) = entire layer 0
+             *
+             * FeedCost has the same syntax format, but it specified the
+             * cost of a feed through the image (a non-metal layer) PLUS
+             * the cost of the two vias associated with that feed.
+             * The range is implicitly over the image layer (-1).
+             * 
+             * Tuning the costs may take some experimenting, some 
+             * thinking and just some common sense. If you need any help, 
+             * contact us at space-support-ewi@tudelft.nl
+             */
+            /* horizontal cost in layer 0 */
+            (GridCost 1   1 0 0  0 0 0  0 27 0)
+            (GridCost 1  -1 0 0  0 0 0  0 27 0)
+ 
+            /* horizontal cost over vias in layer 0 
+             * (higher cost over poly vias) */
+            (GridCost 3  1 0 0  0  0 0  0  1 0)
+            (GridCost 3  -1 0 0  0  0 0  0  1 0) 
+            (GridCost 3  1 0 0  0  6 0  0  7 0)
+            (GridCost 3  -1 0 0  0  6 0  0  7 0)
+            (GridCost 3  1 0 0  0 13 0  0 15 0)
+            (GridCost 3  -1 0 0  0 13 0  0 15 0)
+            (GridCost 3  1 0 0  0 21 0  0 22 0) 
+            (GridCost 3  -1 0 0  0 21 0  0 22 0)
+            (GridCost 3  1 0 0  0 27 0  0 27 0)
+            (GridCost 3  -1 0 0  0 27 0  0 27 0)
+
+            /* vertical cost in layer 0 */
+            (GridCost 5  0 1 0  0 0 0  0 27 0) 
+            (GridCost 5  0 -1 0  0 0 0  0 27 0)  
+            /* vertical cost over vias in layer 0 */
+            (GridCost 3  0 1 0  0  0 0  0  1 0) 
+            (GridCost 3  0 -1 0  0  0 0  0  2 0)
+            (GridCost 3  0 1 0  0  5 0  0  7 0) 
+            (GridCost 3  0 -1 0  0  6 0  0  8 0)
+            (GridCost 3  0 1 0  0 12 0  0 15 0) 
+            (GridCost 3  0 -1 0  0 13 0  0 16 0)
+            (GridCost 3  0 1 0  0 20 0  0 22 0)
+            (GridCost 3  0 -1 0  0 21 0  0 23 0)
+            (GridCost 3  0 1 0  0 26 0  0 27 0)
+            (GridCost 3  0 -1 0  0 27 0  0 27 0)
+            /* horizontal cost in layer 1 */
+            (GridCost 10  1 0 0  0 0 1  0 27 1) 
+            (GridCost 10  -1  0 0  0 0 1  0 27 1) 
+            /* vertical cost in layer 1 */
+            (GridCost 1  0 1 0  0 0 1  0 27 1)  
+            (GridCost 1   0 -1 0  0 0 1  0 27 1)
+            /* cost of a via between layer 0 and layer 1 */
+            (GridCost 5  0 0 1  0 0 0  0 27 0) 
+            (GridCost 5  0 0 -1  0 0 1  0 27 1)
+
+            /* cost of a tunnel in poly */
+            (FeedCost 1000  0 5 0  0 0 0  0 27 0) 
+            (FeedCost 1000  0 -5 0  0 0 0  0 27 0)
+            (FeedCost 1000  0 6 0  0 0 0  0 27 0) 
+            (FeedCost 1000  0 -6 0  0 0 0  0 27 0)
+            /* diff tunnels */
+            (FeedCost 80 0 1 0  0 0 0  0 27 0) 
+            (FeedCost 80  0 -1 0  0 0 0  0 27 0)
+            (FeedCost 3  0 2 0  0 0 0  0 27 0) 
+            (FeedCost 3  0 -2 0  0 0 0  0 27 0)
+            (FeedCost 3  0 3 0  0 0 0  0 27 0) 
+            (FeedCost 3  0 -3 0  0 0 0  0 27 0)
+            (FeedCost 3  0 4 0  0 0 0  0 27 0) 
+            (FeedCost 3  0 -4 0  0 0 0  0 27 0)
+         )
+      )
+
+      /*
+       * describe the actual layout of the image cell
+       */
+      (LayoutImage      
+         /*
+          * The cell is just imported as a model-call.
+          */
+         (LayoutModelCall "fishbonec3tu2")
+         /* 
+          * the repetition distance in x is 40 lambda,
+          * the repetition distance in y is 988 lambda.
+          */
+         (LayoutImageRepetition 40 988)
+      )
+   )
+)
+
+\end{verbatim}
+}

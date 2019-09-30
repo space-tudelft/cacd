@@ -1,0 +1,184 @@
+
+
+cat header
+cat offsets $* \
+| awk '
+
+$1 == "nenh_loffset" {
+    nelo = $2
+}
+
+$1 == "nenh_woffset" {
+    newo = $2
+}
+
+$1 == "penh_loffset" {
+    pelo = $2
+}
+
+$1 == "penh_woffset" {
+    pewo = $2
+}
+
+substr ($1, 1, 5) == "krise" {
+    krstr = $1;
+}
+
+substr ($1, 1, 5) == "kfall" {
+    kfstr = $1;
+}
+
+$1 == "nenh" && $2 == "general" {
+    ng_cnt++;
+    for (f = 3; f <= NF; f++) {
+	ng[ ng_cnt ] = ng[ ng_cnt ] " " $f
+    }
+}
+
+$1 == "nenh" && $2 == "pulldown" {
+    nud_cnt++;
+    for (f = 3; f <= NF; f++) {
+	nud[ nud_cnt ] = nud[ nud_cnt ] " " $f
+    }
+}
+
+$1 == "nenh" && $2 == "passup" {
+    nau_cnt++;
+    for (f = 3; f <= NF; f++) {
+	nau[ nau_cnt ] = nau[ nau_cnt ] " " $f
+    }
+}
+
+$1 == "nenh" && $2 == "passdown" {
+    nad_cnt++;
+    for (f = 3; f <= NF; f++) {
+	nad[ nad_cnt ] = nad[ nad_cnt ] " " $f
+    }
+}
+
+$1 == "penh" && $2 == "general" {
+    pg_cnt++;
+    for (f = 3; f <= NF; f++) {
+	pg[ pg_cnt ] = pg[ pg_cnt ] " " $f
+    }
+}
+
+$1 == "penh" && $2 == "pullup" {
+    puu_cnt++;
+    for (f = 3; f <= NF; f++) {
+	puu[ puu_cnt ] = puu[ puu_cnt ] " " $f
+    }
+}
+
+$1 == "penh" && $2 == "passup" {
+    pau_cnt++;
+    for (f = 3; f <= NF; f++) {
+	pau[ pau_cnt ] = pau[ pau_cnt ] " " $f
+    }
+}
+
+$1 == "penh" && $2 == "passdown" {
+    pad_cnt++;
+    for (f = 3; f <= NF; f++) {
+	pad[ pad_cnt ] = pad[ pad_cnt ] " " $f
+    }
+}
+
+END {
+    print krstr
+    print kfstr
+
+    print ""
+
+    print "nenh"
+
+    print "    loffset=" nelo
+    print "    woffset=" newo
+
+    for (i = 1; i <= ng_cnt; i++) {
+        print "   " ng[ i ]
+    }
+
+    print "    pullup"
+
+    print "        /* derived from pulldown */"
+
+    for (i = 1; i <= nud_cnt; i++) {
+        print "       " nud[ i ]
+    }
+
+    print "    end"
+
+    print "    pulldown"
+
+    for (i = 1; i <= nud_cnt; i++) {
+        print "       " nud[ i ]
+    }
+
+    print "    end"
+
+    print "    passup"
+
+    for (i = 1; i <= nau_cnt; i++) {
+        print "       " nau[ i ]
+    }
+
+    print "    end"
+
+    print "    passdown"
+
+    for (i = 1; i <= nad_cnt; i++) {
+        print "       " nad[ i ]
+    }
+
+    print "    end"
+
+    print "end"
+
+    print ""
+
+    print "penh"
+
+    print "    loffset=" pelo
+    print "    woffset=" pewo
+
+    for (i = 1; i <= pg_cnt; i++) {
+        print "   " pg[ i ]
+    }
+
+    print "    pullup"
+
+    for (i = 1; i <= puu_cnt; i++) {
+        print "       " puu[ i ]
+    }
+
+    print "    end"
+
+    print "    pulldown"
+
+    print "        /* derived from pullup */"
+
+    for (i = 1; i <= puu_cnt; i++) {
+        print "       " puu[ i ]
+    }
+
+    print "    end"
+
+    print "    passup"
+
+    for (i = 1; i <= pau_cnt; i++) {
+        print "       " pau[ i ]
+    }
+
+    print "    end"
+
+    print "    passdown"
+
+    for (i = 1; i <= pad_cnt; i++) {
+        print "       " pad[ i ]
+    }
+
+    print "    end"
+
+    print "end"
+}

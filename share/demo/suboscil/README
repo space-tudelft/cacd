@@ -1,0 +1,102 @@
+# directory: demo/suboscil
+
+Demonstration of substrate resistance extraction using the option -b.
+From the section "Examples" in the Space Substrate Resistance
+Extraction User's Manual.
+
+STEPS
+=====
+
+1.  Make project, use scmos_n technology and lambda = 0.1 (micron)
+    % mkpr -p scmos_n -l 0.1 projectname
+
+Rest assumes that you and your files are in the project directory.
+
+2.  Use cgi to put oscil layout into the database.
+    % cgi oscil.gds
+
+3.  Use e.g. the layout editor dali to inspect the layout.
+    % dali oscil
+    (Click on "DB_menu", then on "all_exp", then on "maximum".
+     Click on "-return-" and "-quit-" to exit the program.)
+
+4.  Perform an extraction of cell oscil in batch mode.
+    Extract substrate resistances and coupling capacitances.
+    % space3d -vF -P param.p -bC oscil
+    Or perform an interactive extraction of cell oscil.
+    % Xspace -P param.p
+    (Click button "oscil" in the menu "Database", click button
+    "inter. sub. res." and "coupling cap." in the menu "Options",
+    click button "DrawSubTerm" and "DrawSubResistor" in the menu
+    "Display", and click "extract" in the menu "Extract".
+    Click button "quit" in menu "Extract" to exit the program.)
+
+5.  Inspect the spice description of the extracted circuit.
+    % xspice -a oscil
+
+6.  If you have spice available, perform a spice simulation using simeye
+    (check the shell script nspice in $ICDPATH/share/bin to see if spice
+     is called correctly).
+    % simeye
+    (Click on the "Simulate" menu and choice item "Prepare".
+     Select in the "Circuit:" field cell name "oscil" and
+     in the "Stimuli:" field file name "oscil.cmd".
+     Choice simulation "Type: spice" and click on button "Run".
+     To leave the program, choice item "Exit" in the "File" menu.)
+
+7.  Perform an extraction of cell oscil in batch mode.
+    Extract now substrate resistances using BEM method.
+    % space3d -vF -P param.p -BC oscil
+    or
+    % tecc tech.s
+    % space3d -vF -P param.p -E tech.t -BC oscil
+    (both circuit extractions must be equal)
+    Perform also an interactive extraction:
+    % Xspace -P param.p -E tech.t -BC oscil
+    (Click button "DrawBEMesh", "DrawSubTerm" and "DrawSubResistor" in
+    the menu "Display", and use hotkey "e" to "extract".
+    Use hotkey "i" to zoom-in on cursor position and the arrow-keys to
+    pan around. Use hotkey "o" to zoom-out and "b" to set bounding-box
+    view again. Use hotkey "q" to exit the program.)
+    You see 19 substrate contact terminals, but each has a very
+    fine boundary element mesh (BE-mesh).
+
+8.  We do step 7 again, but now using another technology file.
+    % diff tech.s tech2.s
+    We have changed @gnd into @sub. Each @sub generates substrate
+    contact terminal areas. Compile this technology file.
+    % tecc tech2.s
+    We use also another parameter file "param2.p".
+    We have set parameter "sep_sub_term" to "on", because we want
+    separate substrate terminals for the poly and metal areas (else
+    everything is merged). Because we are now using a very large
+    substrate area, we must reduce the number of BE elements (else
+    the calculation costs too much time). Thus, we use a default
+    "edge_be_ratio" and a "max_be_area" of "10" micron^2.
+    We are also using a smaller "be_window" size of "4" micron.
+    Perform an extraction of cell oscil in batch mode:
+    % space3d -vF -P param2.p -E tech2.t -BC oscil
+    Perform also an interactive extraction:
+    % Xspace -P param2.p -E tech2.t -BC oscil
+    (Use directly "e" to "extract", the parameter file contains
+    the other needed settings to get a nice picture.)
+    Note that a "-b" extraction does not work, because at this moment
+    the program makedela cannot handle these substrate areas laying
+    against each other.
+    Note that you can also make the substrate terminals distributed.
+    Then you get more separate substrate terminal areas. But this
+    works only for -B in combination with interconnect res extraction.
+    And the causing conductors must have a high-ohmic sheet res value.
+    Set parameter "low_sheet_res" to "0" ohm to make all conductors
+    high-ohmic (note that conductor "cwn" cannot be set high-ohmic,
+    because it has a zero sheet res value).
+    Perform the extraction with distributed interconnect res:
+    % space3d -vF -P param2.p -E tech2.t -BCr oscil
+    You see that there are a lot more substrate terminals.
+    Perform also an interactive extraction:
+    % Xspace -P param2.p -E tech2.t -BCr oscil
+    (After you have done "e" to "extract", put button "DrawBEMesh"
+    off to see only the substrate terminals with there borders.
+    You don't need to extract again. Use hotkey "a" to view the
+    display output file again, but with-out the mesh. %-)
+

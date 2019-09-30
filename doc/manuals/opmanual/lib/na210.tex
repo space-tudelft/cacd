@@ -1,0 +1,73 @@
+\subsubsection{na210}
+
+Functie: 2-input nand
+
+Terminals: (A, B, Y, vss, vdd)
+
+
+IEC-symbool:
+%figuur na210.iec.eps
+\begin{figure}[bth]
+\callpsfig{na210.iec.eps}{width=.31\textwidth}
+\end{figure}
+
+\begin{minipage}[t]{0.3\textwidth}
+Waarheidstabel:\\
+
+\begin{tabular}{|c|c||c|}
+\hline
+A	&B	&Y\\
+\hline
+-	&L	&H\\
+L	&-	&H\\
+H	&H	&L\\
+\hline
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.6\textwidth}
+Timing parameters:\\
+
+\begin{tabular}{|c|cc|ccc|c|}
+\hline
+Parameter               &From            &To	&Min   	&Typ	&Max	&Unit\\
+\hline
+T$_{PLH}$               &A     		&Y      &0.08	&0.33	&0.50    &ns\\
+T$_{PHL}$               &A    		&Y      &0.19	&0.29	&0.52    &ns\\
+T$_{PLH}$               &B     		&Y      &0.08	&0.20	&0.36    &ns\\
+T$_{PHL}$               &B    		&Y      &0.20	&0.30	&0.52    &ns\\
+\hline
+$\Delta$T$_{PLH}$       &any          	&Y      &-	&-	&1.0    &ns/pF\\
+$\Delta$T$_{PHL}$       &any           	&Y      &-	&-	&1.1    &ns/pF\\
+\hline
+C$_{in}$                &any	    	&vss    &-	&0.12	&0.18   &pF\\
+\hline
+\end{tabular}
+\end{minipage}
+\\
+
+Equivalent chip oppervlak: 3
+
+Fanout: 2.9 pF
+
+\makebox[0.98\textwidth]{
+%figuur na210.cir.eps
+\begin{minipage}[t]{0.5\textwidth}{
+Circuit:\\
+\\
+
+{\callpsfig{na210.cir.eps}{height=3in}}
+}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\textwidth}{
+Layout:\\
+\\
+
+%figuur na210.lay.eps
+{\callpsfig{na210.lay.eps}{height=3in}}
+}
+\end{minipage}
+}
+
+\clearpage

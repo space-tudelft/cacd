@@ -1,0 +1,18 @@
+# source this file (not for csh)
+if [ -f $HOME/Desktop/GoWithTheFlow.desktop ]; then
+	echo op_init already done
+else
+	export OPPROGPATH=/data/public/common/software/opprog
+	if [ -f $HOME/.bashrc ]; then
+	    mv $HOME/.bashrc $HOME/.bashrc_old
+	    sed /OPPROGPATH/d $HOME/.bashrc_old > $HOME/.bashrc
+	else
+	    touch $HOME/.bashrc
+	fi
+	cat $OPPROGPATH/ref_files/bashrc_ref >> $HOME/.bashrc
+	mkdir -p $HOME/Desktop
+	rm -f $HOME/Desktop/GoWithTheFlow.desktop
+	ln -s $OPPROGPATH/bin/GoWithTheFlow.desktop $HOME/Desktop
+	source $HOME/.bashrc
+	echo op_init done
+fi

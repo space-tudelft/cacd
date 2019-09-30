@@ -1,0 +1,99 @@
+#!/bin/sh -
+
+if test $# -eq 0; then
+	echo "Usage: build [-d] [-n] [-D] <target>"
+	echo "       build -help"
+	exit 1
+fi
+
+CONF_DIR="./conf"
+if test ! -d "$CONF_DIR"; then
+	echo "build: Can't locate directory: \"$CONF_DIR\"" >&2
+	exit 1
+fi
+
+FILES_T="./util/make_std.bd"
+if test ! -r "$FILES_T"; then
+	echo "build: Can't read file: \"$FILES_T\"" >&2
+	exit 1
+fi
+
+if test "x$1" = "x-help"; then
+	echo "options (flags):"
+	echo "	-help	This message"
+	echo "	-d	Dump synthesized makefile to a temp file"
+	echo "	-n	Pass '-n' to make (show commands executed)"
+	echo "	-D	Show shell commands executed by build (do set -v)"
+	echo Targets:
+	ls "$CONF_DIR" | sed '/defaults/d' | sed 's/^/	/'
+	exit 0
+fi
+
+FLAGS=
+while test $# -gt 0; do
+	case "$1" in
+	-n)
+		FLAGS="MAKEFLAGS = -n"
+		;;
+	-D)
+		set -v
+		;;
+	-d)
+		DEBUG=true
+		;;
+	-*)
+		echo "build: Unknown option \"$1\" given" >&2
+		BAD=true
+		;;
+	*)
+		if test -z "$SYSNAME"; then
+		    SYSNAME="$1"
+		else
+		    echo "build: Too many arguments" >&2
+		    BAD=true
+		fi
+		;;
+	esac
+	shift
+done
+
+if test -z "$SYSNAME"; then
+	echo "build: Too less arguments" >&2
+	BAD=true
+elif test ! -r "$CONF_DIR/$SYSNAME"; then
+	echo "build: Can't read info for \"$SYSNAME\" in conf directory" >&2
+	BAD=true
+fi
+
+if test ! -z "$BAD"; then
+	echo "Build not run!" >&2
+	exit 1
+fi
+
+FILES_L=`mktemp /tmp/build.XXXXX`
+trap 'rm -f $FILES_L; exit 1' 1 2 3 4 6 7 8 9 10 12 13 14 15
+
+echo "$FLAGS" >> $FILES_L
+echo "TARGET  = $SYSNAME" >> $FILES_L
+echo "FILES_L = $FILES_L" >> $FILES_L
+
+sed /^#/d "$CONF_DIR/defaults" >> $FILES_L
+if  test $SYSNAME != defaults; then
+sed /^#/d "$CONF_DIR/$SYSNAME" >> $FILES_L
+fi
+cat "$FILES_T" >> $FILES_L
+
+if test -z "$DEBUG"; then
+    if test $SYSNAME = clean; then
+	echo "Begin clean on `hostname` at" `date`
+	(cd src; make -f $FILES_L cleanit)
+	echo "Done with clean at" `date`
+    else
+	echo "Begin build on `hostname` for \"$SYSNAME\" at" `date`
+	(cd src; make -f $FILES_L -k recursive)
+	echo "Done with build at" `date`
+    fi
+	rm -f $FILES_L
+else
+	echo "Output is in $FILES_L"
+fi

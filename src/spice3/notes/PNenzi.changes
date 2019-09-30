@@ -1,0 +1,59 @@
+This is a list of my changes to the original spice code. 
+
+17-Jul-1999
+
+I have applied the tempsweep.patch by Serban Popescu on the lib/ckt/dctrcurv.c with some minor moficatiosn. Now SPICE should do temp sweeps with
+the line directive 
+                       .dc temp <start> <stop> <Increment>
+
+*** WARNING: This feature has to be considered highly alpha code and must
+             pass some tests before considered useful.
+
+Thanks to Serban Mihai Popescu (the author of the original) code for his
+contribution.
+
+09-Jul-1999
+
+I have discovered a newer (than the available one on the Sunsite) spice3f5 
+distribution in the CIDER package and merged the two sources, trying not 
+to introduce new bugs. The code in this distribution is mostly the code of
+the CIDER version of spice3f5, with the patches of M. Widlok applied when 
+necessary.
+
+I have applied the necessary patches (by hand)  to the sources of 
+spice3f5sfix by Micheal Widlok and then modfied the code for the 
+bsim3v3.2.2 to be compatible with the interface that CIDER uses for 
+it's parallel processing capabilities. 
+
+04-Jul-1999
+
+Changes to the configuration code to avoid compilation errors on the
+Debian/GNU Linux 2.1 (Slik) distribution. I added a new target "debian"
+in which the "-ltermcap" library had been substituted with "-lncurses".
+Debian dropped the termcap support.
+
+    File: linux_debian
+    
+
+--
+
+Changes to the parser code to allow for a larger number of device level.
+I need this to include additional device for MOSFETS. The original code
+did allow only for device levels up to9. While this is sufficient for most 
+devices, the MOSFET models neeed more number. It is normal, if you think that
+nearly the 85% of today microelectronics is made in MOS technology (CMOS, SOI).
+
+Pathches to the input parsing routines (src/lib/inp/):
+   
+   File:       inpfindl.c
+   C Function: INPfindLev
+   Patch File: inpfindl.c.patch
+   Diff Options: -up
+   Comment: added some code to parse device levels up to 99 to allow for
+            the new mos devices: SOI, Cider, etc. This ptch do not fixes
+	    any bug and is needed only to allow mos level up to 99.
+               
+              
+Paolo Nenzi
+p.nenzi@ieee.org
+04-Jul-1999

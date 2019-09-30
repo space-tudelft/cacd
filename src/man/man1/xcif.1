@@ -1,0 +1,54 @@
+.TH XCIF 1ICD "User Commands"
+.UC 4
+.SH NAME
+xcif - extract CIF from the layout database
+.SH SYNOPSIS
+.B xcif
+[\fB-hirvx\fP]
+[\fB-f\fP ofile]
+cell
+.SH OPTIONS
+.TP
+.B -h
+To get help about program usage.
+.TP
+.B -f
+To specify an alternate output file name
+(the output file name must be next argument).
+.TP
+.B -i
+Extract also the imported cells.
+.TP
+.B -r
+Only the root of the cell.
+.TP
+.B -v
+Enable verbose mode.
+.TP
+.B -x
+Cell origin mode CIF.
+.SH DESCRIPTION
+.I Xcif
+is a program that extracts the complete CIF layout description
+from an ICD layout database.
+A cell is known as a symbol in CIF.
+The current working directory must be the project directory.
+.PP
+The unit of the parameters in the generated CIF file are in centi microns.
+.PP
+With the origin mode (option -x, the default is no-origin mode)
+the lower-left corner of the bounding box of a sub-cell is used
+as the translation vector reference point.
+Note that, if the bounding box information of sub-cells in the
+database is incorrect, the sub-cell data can be incorrectly placed.
+.PP
+Terminals are written with: "\fC95 name w h x y layer\fP".
+.PP
+Labels are written with: "\fC94 name x y layer\fP".
+.AU "S. de Graaf, T.G.R. van Leuken."
+.SH FILES
+.TP
+\fC\&./\fIcell\fP.cif\fP
+(default: output file)
+.SH SEE ALSO
+ccif(1ICD).

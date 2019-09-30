@@ -1,0 +1,102 @@
+\chapter{multiplier Example of Functional/Switch-Level Simulation}
+\section{Introduction}
+\label{PEintro}
+This example demonstrates how you can do a combined functional and switch-level simulation.
+Read also the following documents: "SLS: Switch-Level Simulator User's Manual"
+and "Functional Simulation User's Manual".
+\\[1 ex]
+In this example a network 'total' is simulated that has a ram and a
+multiplier that are described at the functional level.
+Pass transistors are used to demultiplex the output
+signals of the ram and to multiply two subsequent
+words that come out of the ram.
+The circuit looks as follows:
+
+\begin{figure}[h]
+\centerline{\epsfig{figure=multiplier/total.eps, width=12cm}}
+\end{figure}
+
+\section{Files}
+This tutorial is located in the directory \CACDTOP{demo/multiplier}.
+Initially, it contains the following files:
+\begin{filelist}
+\item[README] A file containing information about the demo.
+\item[mul8x8.fun] Functional description of the mul8x8 block.
+\item[ram.fun] Functional description of the ram block.
+\item[total.cmd] Command file for the circuit simulation.
+\item[total.sls] SLS description of the total network.
+\item[script.sh] Batch file for running all commands of the demo in sequence.
+\end{filelist}
+
+\section{Compiling the Descriptions}
+To compile the descriptions and to simulate, we need to work in a project directory.
+First, we change the current working directory '.' into a project directory:
+\small
+\begin{Verbatim}
+% mkpr -p scmos_n .
+\end{Verbatim}
+\normalsize
+We use the "scmos\_n" technology and a default lambda value.
+\\[1 ex]
+To compile the function blocks, we use the \io{cfun} program.
+To add the functional descriptions to the project database, type the following commands:
+\small
+\begin{Verbatim}
+% cfun ram.fun
+% cfun mul8x8.fun
+\end{Verbatim}
+\normalsize
+To compile the SLS network description, we use the \io{csls} program.
+Type the following command to add network \io{total} to the database:
+\small
+\begin{Verbatim}
+% csls total.sls
+\end{Verbatim}
+\normalsize
+To get a hierarchical cell listing (of the circuit tree) of the project database,
+use the \io{dblist} command:
+\small
+\begin{Verbatim}
+% dblist -h
+\end{Verbatim}
+\normalsize
+\small \begin{Verbatim}[frame=single]
+
+circuit:
+1 - total           (18)
+    2 - ram               1 (function)
+    2 - mul8x8            1 (function)
+
+\end{Verbatim}
+\normalsize
+You see 2 hierarchical levels.
+The top cell "total" has 2 sub cells (function blocks).
+
+\section{Running the Switch-Level Simulation}
+For this simulation you are using the switch-level simulator \io{sls}.
+See the "SLS: Switch-Level Simulator User's Manual" and for the manual page \manualpage{sls}.
+This simulator is started from the simulation GUI \io{simeye} and
+the results are shown in the output window (see \manualpage{simeye}).
+\\[1 ex]
+First, start the simulation GUI \io{simeye}.
+\small
+\begin{Verbatim}
+% simeye
+\end{Verbatim}
+\normalsize
+Second, prepare the simulation:
+Click on the "Simulate" menu and choice the "Prepare" item.
+Select in the "Circuit:" field cell name "total" and
+in the "Stimuli:" field file name "total.cmd" (click on it).
+\\[1 ex]
+Third, start the switch-level simulation:
+Click on the "Run" button and wait for the simulation results.
+\\[1 ex]
+After that, watch the results:
+Zoom-in onto the lowest 3 signals, choice the "ZoomIn" item of the "View" menu.
+Click in the results window and move the mouse to specify a zooming area and click again.
+Now, choice "Measure" from the "View" menu, and click on the right
+mouse button to watch the integer values of the multiplied signals.
+\\[1 ex]
+At last, to exit \io{simeye} program,
+go to the "File" menu and click on "Exit" and "Yes".

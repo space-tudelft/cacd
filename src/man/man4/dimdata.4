@@ -1,0 +1,138 @@
+.TH DIMDATA 4ICD "File Formats"
+.UC 4
+.SH NAME
+dimdata - technology description for the program dimcheck
+.SH DESCRIPTION
+For the description of the design rules that are checked
+by the program
+.I dimcheck
+the technology files
+.I dimcheckdata1
+and
+.I dimcheckdata2
+are used.
+If dimcheck is used in the check program
+.I autocheck
+(1ICD)
+it uses the file
+.I dimcheckdata1;
+if it is used in the check program
+.I dimcheck
+(1ICD),
+it uses
+.I dimcheckdata2.
+.PP
+The format of the files is illustrated by the following example.
+.SH EXAMPLE
+.PP
+.L{
+.nf
+nw_vln  NOFILE  12 15   0  0  0  NW.1.1+NW.2.1
+od_vln  NOFILE   6  9   0  0  2  OD.1.1+OD.1.2
+ps_vln  NOFILE   6  6   0  0  2  PS.1+PS.2.1
+sp_vln  NOFILE  12 12   0  0  0  SP.1.1+SP.2.1
+sn_vln  NOFILE  12 12   0  0  0  SN.1.1+SN.2.1
+con_vln NOFILE   6  6  -1  6  2  CON.1.1+CON.2.1
+cop_vln NOFILE   6  6  -1  6  2  COP.1.1+COP.2.1
+cps_vln NOFILE   6  6  -1  6  2  CPS.1.1+CPS.2.1
+in_vln  NOFILE   7  7   0  0  2  IN.1.1+IN.2.1
+cb_vln  NOFILE 300 160  0  0  2  CB.3.1+CB.4.1
+.fi
+.L}
+.PP
+Each line of one of these files must contain
+the following items in the order given:
+.if n .in +4
+.if t .in +0.3i
+.br
+
+The name of the file to be checked.
+.br
+
+Optionally the name of an help_layer; if not needed 'NOFILE'
+is coded here.
+If a layer is specified  gap errors will only be reported
+in places where this layer is not present,
+and width errors will only be reported where this
+layer is present.
+.br
+
+The minimum width of elements on the file.
+If it is zero no check will be carried out.
+If a value of -1 is given here, an error will
+be reported, when an item in the layer
+given is found.
+.br
+
+The minimum gap between two elements on the file.
+If it is zero no check will be carried out.
+.br
+
+The minimum gap between elements on the file for short
+lengths of the gap.
+.br
+If a negative value is given here the program dimcheck
+will interpret it as an maximum width check,
+with the maximum value for the width given in the
+next item.
+.br
+
+The maximum length of the gap for which the reduced
+gap may be applied,
+or if the previous item is negative the maximum value
+of the width permitted.
+.br
+
+The value for kind. This variable may have one of the
+following values:
+.if n .in +4
+.if t .in +0.3i
+.br
+
+0: gap_errors between edges of the same polygon
+and errors stemming from touching corners will not be
+reported.
+.br
+
+1: errors stemming from touching corners will not be
+reported, but gap_errors between edges of the same polygon
+will be reported.
+.br
+
+2: gap_errors between edges of the same polygon will not be
+reported, but errors stemming from touching corners will be.
+.br
+
+3: gap_errors between edges of the same polygon will be
+reported as well as errors stemming from touching corners.
+.br
+
+.if n .in -4
+.if t .in -0.3i
+A string indicating the design rule(s) involved.
+.br
+
+Optionally a comment string may be added to each line.
+.if n .in -4
+.if t .in -0.3i
+.br
+
+In this example only primary vln files are used.
+However one may also use vln files made by nbool,
+so files bool_nn.
+.br
+.AU "J. Liedorp"
+.SH FILES
+.TP
+\fCICDPATH/share/lib/process/\fIprocess_name\fR/dimcheckdata1\fP
+.TP
+\fCICDPATH/share/lib/process/\fIprocess_name\fR/dimcheckdata2\fP
+.SH SEE ALSO
+.br
+T.G.R. van Leuken, J. Liedorp "An Hierarchical
+and Technology Independent Design Rule Checker", Delft University
+of Technology,
+.br
+autocheck(1ICD), dimcheck(1ICD),
+booldata(4ICD)
+

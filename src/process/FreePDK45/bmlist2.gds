@@ -1,0 +1,20 @@
+#####
+# FreePDK45 - FreePDK 45nm
+# cadabra - import
+nwell		1
+pwell		2
+active		5
+active:term	5
+active:term	6
+nimplant	7
+pimplant	8
+poly		15
+poly:term	15
+contact		16
+metal1		21
+metal1:term	21
+via1		22
+metal2		23
+metal2:term	23
+via2		24
+bb		63

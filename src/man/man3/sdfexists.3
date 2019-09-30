@@ -1,0 +1,45 @@
+.ll 77
+.hy
+.TH SDFEXISTS 3SDF "THE SEADIF PROGRAMMERS MANUAL"
+.SH NAME
+sdfexistslib, sdfexistsfun, sdfexistscir, sdfexistslay - functions to test
+whether a seadif cell exists and to provide an entry in the internal hash
+tables of the sealib functions
+.SH SYNOPSIS
+ #include <sealib.h>
+
+ extern LIBTABPTR thislibtab;   /* set by existslib */
+ extern FUNTABPTR thisfuntab;   /* set by existsfun */
+ extern CIRTABPTR thiscirtab;   /* set by existscir */
+ extern LAYTABPTR thislaytab;   /* set by existslay */
+
+ public int sdfexistslib(STRING libname)
+
+ public int sdfexistsfun(STRING funname, STRING libname)
+
+ public int sdfexistscir(STRING cirname, STRING funname, STRING libname)
+
+ public int sdfexistslay(STRING layname, STRING cirname,
+                         STRING funname, STRING libname)
+
+.SH DESCRIPTION
+These functions return TRUE if the named object exists in the database,
+otherwise they return NIL. In addition, if the function returns TRUE, the
+corresponding global pointer
+.I thislibtab ,
+.I thisfuntab ,
+.I thiscirtab
+or
+.I thislaytab
+points to an entry in the hash tables that contains information about the object.
+To see what kind of information is currently available from the hash tables,
+please inspect the data structures defined in the file <libio.h>.
+.SH WARNING
+As usual, the argument strings of these functions must be canonic, see
+.I cs (3SDF).
+.SH "AUTHOR"
+Paul Stravers, Delft University of Technology.
+.SH "SEE ALSO"
+sealib(3SDF), sdfread(3SDF), sdfwrite(3SDF), sdfremove(3SDF), sdfopen(3SDF),
+sdfclose(3SDF), sdfattachlib(3SDF), cs(3SDF), memman(3SDF), seadif(4SDF),
+sdfimage(4SDF).

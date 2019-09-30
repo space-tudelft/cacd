@@ -1,0 +1,43 @@
+Note: To quell some confusion regarding licensing, it was made known
+to me that Richard Stallman, founder of GNU, convinced Berkeley to
+place Spice version 3 under a free license.
+
+Patch order:
+
+patch -p1 -E < spice3f4.defaults.patch
+patch -p1 < spice3f4.3f5.patch
+patch -p1 < spice3f4.fixes.patch
+patch -p1 < spice3f4.newlnx.patch
+patch -p1 < spice3f4.xlibs.patch
+patch -p1 < spice3f4.glibc.patch      <-- if you have GNU Lib C (libc >= 6.0)
+patch -p1 < spice3f4.dirs.patch
+patch -p1 < spice3f4.rdln.patch
+
+To remove .orig files:
+
+rm -f `find -name "*.orig"`
+
+Patch descriptions:
+
+defaults        - reverts many things to original Spice 3f4 defaults
+3f5             - 3f4 to 3f5 patches from Berkeley (integrated)
+fixes           - some fixes I've made
+newlnx		- the new Linux port files
+xlibs           - adds -lSM -lICE for systems which need it
+glibc           - modifies newlnx for use with GNU Lib C 2 or greater
+dirs            - changes spice prefix to /usr
+rdln            - adds GNU Readline support 
+
+The last patch is optional (should there be some problem), and gives
+you GNU Readline command-line editing and history file support for
+both spice3 and nutmeg).  It requires that you have the GNU
+Readline library and header files installed on your system.
+
+Read the post-patch spice3f4/readme.Linux file for more information.
+
+--
+Regards,
+Andrew Veliath
+veliaa@frontiernet.net, veliaa@rpi.edu
+
+12/7/97

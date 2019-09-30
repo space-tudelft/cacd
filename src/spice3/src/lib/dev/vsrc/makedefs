@@ -1,0 +1,11 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+
+COBJS		= vsrc.o vsrcacct.o vsrcacld.o vsrcask.o vsrcdel.o vsrcdest.o \
+		  vsrcfbr.o vsrcload.o vsrcmdel.o vsrcpar.o vsrcpzld.o \
+		  vsrcpzs.o vsrcset.o vsrctemp.o
+
+LIB_TARGET	= ../../dev.a
+INCLUDE		= -I../../../include
+

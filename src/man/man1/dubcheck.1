@@ -1,0 +1,50 @@
+.TH DUBCHECK 1ICD "User Commands"
+.UC 4
+.SH NAME
+dubcheck - do design_rule dub-check
+.SH SYNOPSIS
+.B dubcheck
+[\fB-f\fP] [\fB-t\fP] [cell_name]
+.SH OPTIONS
+.TP
+.B -f
+Use file 'dubcheckdata' if present in the current working directory
+instead of the standard one from the library.
+.TP
+.B -t
+Debugging option,
+do not filter or merge error messages
+for a non orthogonal layout.
+.SH DESCRIPTION
+.I Dubcheck
+is a subprogram.
+.PP
+.I Dubcheck
+is called by
+.I dimcheck2
+(see manual page).
+.PP
+If no cell_name is specified the names of the cells to be
+checked will be read from the file "exp_dat".
+.PP
+The current working directory must be the project directory.
+.AU "T.G.R. van Leuken, J. Fokkema, J. Liedorp"
+.SH FILES
+.TP
+\fCICDPATH/share/lib/process/TECHN/dubcheckdata\fP
+.TP
+\fCNELSISPROJECT/exp_dat\fP
+names of cells to be checked
+.TP
+\fCNELSISPROJECT/layout/cell/LC_vln\fP
+input files, LC=LayerCode
+.TP
+\fCNELSISPROJECT/layout/cell/bool_BN\fP
+input files, BN=BooleanNr
+.SH SEE ALSO
+T.G.R. van Leuken, J. Liedorp "An Hierarchical and Technology Independent
+Design Rule Checker", Delft University of Technology,
+.br
+autocheck(1ICD),
+dimcheck2(1ICD),
+dubdata(4ICD)

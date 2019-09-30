@@ -1,0 +1,50 @@
+\subsubsection{osc10}
+
+Functie: Crystal oscillator with enable
+
+Terminals: (E, F, XI, XO, vss, vdd)
+
+
+IEC-symbool:
+%figuur osc10.iec.eps
+\begin{figure}[bth]
+\callpsfig{osc10.iec.eps}{width=.4\textwidth}
+\end{figure}
+
+Frequentie bereik: 1 MHz t/m 20 MHz
+
+Equivalent chip oppervlak: 16
+
+
+
+Beschrijving:
+
+XI en XO zijn de aansluitingen voor het kristal. XI moet gebufferd worden met een inputbuffer, XO dient niet gebufferd te worden.\\
+Als E (enable) hoog is, is de oscillator aktief. Als E laag is, is de uitgang F hoog.\\
+\\
+\\
+
+\makebox[0.98\textwidth]{
+%figuur osc10.cir.eps
+\begin{minipage}[t]{0.45\textwidth}{
+Circuit:\\
+\\
+
+{\callpsfig{osc10.cir.eps}{width=0.9\textwidth}}
+}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.55\textwidth}{
+%figuur osc10.lay.eps
+Layout:\\
+\\
+
+{\callpsfig{osc10.lay.eps}{width=1\textwidth}}
+}
+\end{minipage}
+}
+\clearpage
+
+
+
+

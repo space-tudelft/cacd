@@ -1,0 +1,145 @@
+.TH EXP 1ICD "User Commands"
+.UC 4
+.SH NAME
+exp - expand the layout of a cell
+.SH SYNOPSIS
+.B exp
+[-B|-V|-G] [-DHLhvg] [-cL] [-dN] [-oN] [-wXl,Xr,Yb,Yt] [cell ...]
+.SH OPTIONS
+.TP 8
+.B -B
+Do only execute makeboxl or makeboxh.
+.TP
+.B -V
+Do only execute makevln.
+.TP
+.B -G
+Do only execute makegln.
+.TP
+.B -g
+Execute makegln instead of makevln.
+.TP
+.B -D
+Do not delete the "_bxx" files (makevln or makegln option).
+.TP
+.B -H
+Select mixed linear/hierarchical expansion
+(using makeboxl -H)
+(default: linear expansion).
+.TP
+\fB-c\fPL
+Select check level 'L' (positive integer value).
+.TP
+.B ""
+A. When the cell is linearly expanded (default):
+The check level specifies the level of the lowest
+cell which is included in the expansion
+(default: all cells are included (maximum level)).
+.br
+The minimum possible level is 0 (which is a special case
+(read the manual page of makeboxl)).
+.TP
+.B ""
+B. When the cell is hierarchically expanded:
+The check level specifies the level of the lowest
+cells in the cell hierarchy which are expanded.
+These are separate cell expansions, which contains
+all overlaps of the underlaying cell levels
+(default: only the cell on top of the hierarchy
+is expanded (minimum level = 1)).
+.TP
+.B -L
+Expand only Local cells.
+.TP
+\fB-d\fP[N]
+Discretization, 'N' samples per lambda (default: 8).
+.TP
+.B -h
+Select hierarchical expansion
+(default: linear epansion).
+.TP
+\fB-o\fPN
+Set the size of the active region during hierarchical
+expansion to 'N' (default: 6 micron).
+.TP
+.B -v
+Verbose mode.
+.TP
+\fB-w\fPXl,Xr,Yb,Yt
+Select a partial expansion window.
+The window coordinates (integer values) must be
+specified as one argument (no blanks are allowed).
+Xl,Xr,Yb,Yt are respectively the left and right X-coordinates,
+and bottom and top Y-coordinates
+(default: the expansion window is the cell bounding box).
+.SH DESCRIPTION
+.I Exp
+is a front-end program which,
+depending on the selected options,
+executes other programs.
+Default it executes \fImakeboxl\fP and \fImakevln\fP.
+.sp
+The cell name argument must always be specified (except when
+using option -V).
+More than one cell argument can be specified,
+in which case
+\fIexp\fP does his work for every cell.
+.sp
+If you are using option -V,
+you can only specify options -D and -v,
+which are the only makevln options.
+If you specify cell arguments in this case,
+makevln is executed with these cell arguments
+and is not using the "exp_dat" file.
+.PP
+The current working directory must be the project directory.
+.AU "S. de Graaf"
+.SH FILES
+.TP
+\fCNELSISPROJECT/.dmrc\fP
+(input file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/box\fP
+(input file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/mc\fP
+(input file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/nor\fP
+(input file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/term\fP
+(input file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/info\fP
+(in/output file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/spec\fP
+(output file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/tid\fP
+(output file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/LC_bxx\fP
+(output files) LC=LayCode
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/LC_nxx\fP
+(output files)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/LC_vln\fP
+(output files)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/teq\fP
+(output file)
+.TP
+\fCNELSISPROJECT/exp_dat\fP
+(output file)
+.SH SEE ALSO
+T.G.R. van Leuken, J. Liedorp,
+"An Hierarchial and Technology Independent Design Rule Checker",
+in "The Integrated Circuit Design Book".
+.br
+makeboxh(1ICD),
+makeboxl(1ICD),
+makevln(1ICD),
+makegln(1ICD).

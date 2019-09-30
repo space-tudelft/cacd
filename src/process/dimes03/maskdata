@@ -1,0 +1,73 @@
+# Created by Arjan van Genderen, 8 feb. 2002
+#-----------------------------------------------------------------------------
+#
+#                       M A S K D A T A   I N F O
+#
+#       Layer fields (2):       field  1: layer name
+#                               field  2: layer type
+#                                         type = 0: normal layer
+#                                         type = 1: interconnect layer
+#                                                   (terminals/labels may be
+#                                                    defined for this layer).
+#                                         type = 2: symbolic layer
+#
+#       Pattern-Generate (2):   field  3: job number
+#       (Only used by           field  4: mask type
+#        PG-tape programs)                type = 0: negative
+#                                         type = 1: positive
+#
+#       CMask Terminals (2):    field  5: color number
+#       (Obsolete)              field  6: fill style
+#
+#       (Sea)Dali (2):          field  7: color number
+#                                         0=black, 1=red, 2=green,
+#                                         3=yellow, 4=blue, 5=violet,
+#                                         6=aqua, 7=white
+#                               field  8: fill style
+#                                         0=hashed, 1=solid, 2=hollow
+#                                         3,4,5 = 12,25,50% hash+outline
+#                                         6,7,8 = idem, no outline
+#
+#       Plotter (2):            field  9: pen number
+#       (Obsolete)                        1=black, 2=red, 3=yellow,
+#                                         4=green, 5=brown, 6=violet,
+#                                         7=blue, 8=aqua
+#                               field 10: fill style
+#
+"dimes03" "bipolar process dimes03 from DIMES"
+#---------------------------------------------+---------------------
+# Layer     | PG-Tape | CMask | Dali  | Plot  | Comment
+#-----------+---------+-------+-------+-------+---------------------
+# name      | job     | color | color | pen   |
+# |    type | |  type | | fill| | fill| | fill|
+# |     |   | |   |   | |  |  | |  |  | |  |  |
+# 1     2   | 3   4   | 5  6  | 7  8  | 9  10 |
+#-v-----v---+-v---v---+-v--v--+-v--v--+-v--v--+---------------------
+bn      0     0   1     5  0    2  7    5  0    "buried n-layer"
+dp      0     0   1     2  1    6  7    2  1    "p+ isolation"
+dn      0     0   1     5  2    5  7    5  0    "deep n-layer"
+wp      0     0   1     5  2    3  2    5  0    "p-layer"
+nwp     0     0   1     0  1    3  7    0  1    "mask intrinsic base implant"
+cb      0     0   1     6  1    5  2    6  0    "contact to bondpads"
+co      0     0   1     7  1    7  5    7  0    "first contact window"
+ic      1     0   1     4  1    4  4    4  0    "first interconnect"
+ct      0     0   1     7  2    7  2    7  0    "second contact window"
+in      1     0   1     1  1    3  4    8  0    "second interconnect "
+ct2     0     0   1     7  2    7  1    7  0    "contact window"
+in2     1     0   1     1  1    5  4    8  0    "interconnect "
+lp      0     0   1     3  0    2  5    3  0    "base-link implantation"
+lb1     0     0   1     6  0    1  3    6  0    "low ohmic extrinsic base impl 1"
+lb2     0     0   1     6  0    1  4    6  0    "low ohmic extrinsic base impl 2"
+lb3     0     0   1     6  0    1  5    6  0    "low ohmic extrinsic base impl 3"
+pc      0     0   1     6  0    5  6    6  0    "pedestal collector"
+wn1     0     0   1     1  2    5  3    1  0    "emitter and coll-plug contact 1"
+wn2     0     0   1     1  2    5  4    1  0    "emitter and coll-plug contact 2"
+wn3     0     0   1     1  2    5  5    1  0    "emitter and coll-plug contact 3"
+cap     0     0   1     1  0    5  2    8  0    "Al2O3 capacitors"
+st      0     0   1     1  0    3  2    8  0    "shallow trench"
+scp     0     0   1     1  0    7  3    8  0    "scratch protection "
+dt      0     0   1     1  0    2  3    8  0    "deep trench"
+kh1     0     0   1     1  0    3  7    8  0    " "
+kh2     0     0   1     1  0    3  8    8  0    " "
+ze      0     0   1     0  0    7  2    8  0    "bounding box"
+bb      2     0   1     0  0    7  4    8  0    "bounding box"

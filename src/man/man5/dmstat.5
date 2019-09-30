@@ -1,0 +1,63 @@
+.TH DMSTAT 5ICD "DMI User's Manual"
+.SH NAME
+dmStat - get database stream status
+.SH SYNOPSIS
+.nf
+\fB
+#include <sys/types.h>
+#include <sys/stat.h>
+#include "dmincl.h"
+
+int dmStat (DM_CELL *cellkey, char *stream, struct stat *buf);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "DM_CELL *cellkey"
+is a pointer to a valid \fBDM_CELL\fP as obtained from
+function dmCheckOut().
+.TP
+.B "char *stream"
+names the stream for which the status must be determined.
+.TP
+.B "struct stat *buf"
+is the address of the buffer into which
+the status information is placed.
+.SH DESCRIPTION
+Function
+.B dmStat
+can be used to obtain status information of the named
+\fBstream\fP of the cell with the given access \fBcellkey\fP.
+.PP
+If the stream has already been written successfully
+in the course of the cell transaction,
+statting is performed on the newly written stream.
+.PP
+If an unlink has been performed previously in the course of the
+cell transaction, absence will be signalled.
+.SH DIAGNOSTICS
+If properly executed,
+.B dmStat
+will return \fB0\fP
+and status information is available.
+If
+.B dmStat
+fails \fB-1\fP will be returned.
+The external variable
+.B dmerrno
+will be set to indicate the error.
+.PP
+This may happen in the following cases:
+.TP 14
+.B DME_BADKEY
+The cellkey is not valid.
+A call to function dmError() will be done.
+.TP
+.B DME_SYS
+Cannot stat() the stream.
+The stream of the cell does not exist.
+Note that function dmError() is not called.
+.SH SEE ALSO
+stat(2),
+dmCheckOut(5ICD),
+dmOpenStream(5ICD).

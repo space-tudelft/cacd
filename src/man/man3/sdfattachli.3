@@ -1,0 +1,33 @@
+.ll 77
+.hy
+.TH SDFATTACHLIB 3SDF "SEADIF PROGRAMMERS MANUAL"
+.SH NAME
+sdfattachlib - bind a seadif library to a specific file
+.SH SYNOPSIS
+ #include <sealib.h>
+
+ int sdfattachlib(LIBRARYPTR lib, char *filename)
+
+.SH DESCRIPTION
+During normal sealib operation, calling this function should never be necessary.
+However, it is provided to give the sophisticated user (i.e. hackers
+and the like) enhanced control over the seadif database.
+Sdfattachlib() moves the named library from the file it is currently in to the
+named file. However, the move only takes effect when the database is closed with
+.I sdfclose (3SDF).
+
+If filename does not start with a '/' or with './' sdfattachlib prepends the
+value of the environment variable NEWSEADIR to filename.
+If NEWSEADIR is not set nothing is prepended.
+
+For this time only, the filename parameter can be an ordinary character string
+and is not required to be canonic.
+.SH WARNING
+If you attach a library to a seadif file that was not opened with
+.I sdfopen (3SDF)
+sdfattachlib currently refuses to overwrite the file.
+.SH "AUTHOR"
+Paul Stravers, Delft University of Technology.
+.SH "SEE ALSO"
+sealib(3SDF), sdfwrite(3SDF), sdfopen(3SDF), sdfclose(3SDF), cs(3SDF),
+seadif(4SDF).

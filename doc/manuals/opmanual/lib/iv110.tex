@@ -1,0 +1,70 @@
+\subsubsection{iv110}
+
+Functie: Inverter
+
+Terminals: (A, Y, vss, vdd)
+
+
+IEC-symbool:
+%figuur iv110.iec.eps
+\begin{figure}[bth]
+\callpsfig{iv110.iec.eps}{width=.31\textwidth}
+\end{figure}
+
+\begin{minipage}[t]{0.3\textwidth}
+Waarheidstabel:\\
+
+\begin{tabular}{|c||c|}
+\hline
+A	&Y\\
+\hline
+L	&H\\
+H	&L\\
+\hline
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.6\textwidth}
+Timing parameters:\\
+
+\begin{tabular}{|c|cc|ccc|c|}
+\hline
+Parameter		&From	&To	&Min	&Typ	&Max	&Unit\\
+\hline
+T$_{PLH}$               &A	&Y	&0.13	&0.19	&0.35	&ns\\
+T$_{PHL}$               &A	&Y	&0.15	&0.23	&0.40	&ns\\
+\hline
+$\Delta$T$_{PLH}$       &A	&Y	&-	&-	&1.1	&ns/pF\\
+$\Delta$T$_{PHL}$       &A	&Y	&-	&-	&0.8	&ns/pF\\
+\hline
+C$_{in}$                &A	&vss	&-	&0.12	&0.18	&pF\\
+\hline
+\end{tabular}
+\end{minipage}
+\\
+
+Equivalent chip oppervlak: 2
+
+Fanout: 3.0 pF
+
+\makebox[0.98\textwidth]{
+%figuur iv110.cir.eps
+\begin{minipage}[t]{0.5\textwidth}{
+Circuit:\\
+\\
+
+{\callpsfig{iv110.cir.eps}{height=2in}}
+}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\textwidth}{
+Layout:\\
+\\
+
+%figuur iv110.lay.eps
+{\callpsfig{iv110.lay.eps}{height=3in}}
+}
+\end{minipage}
+}
+
+\clearpage

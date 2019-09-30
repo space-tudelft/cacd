@@ -1,0 +1,188 @@
+.TH DMGETMETA 5ICD "DMI User's Manual"
+.SH NAME
+dmGetMetaDesignData - get meta design data
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+char *dmGetMetaDesignData (int reqid, DM_PROJECT *projkey, ...);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "int reqid"
+the request to be executed.
+.TP
+.B "DM_PROJECT *projkey"
+is a pointer to a valid \fBDM_PROJECT\fP as obtained from dmOpenProject().
+.SH DESCRIPTION
+Function
+.B dmGetMetaDesignData
+provides access to the meta design data of a project.
+A number of pre-defined requests are available.
+.PP
+The requests available for \fBdmGetMetaDesignData\fP are:
+.TP 4
+.B PROCESS
+This request
+can be used to retrieve the design process information (maskdata)
+that corresponds to the project identified by \fBprojkey\fP.
+The data will be attached to this project key.
+If the maskdata has been obtained before with the same process_id
+(e.g. for another project), \fBdmGetMetaDesignData\fP will not
+retrieve it from disk again, but use this information instead.
+.br
+Arguments (reqid, projkey).
+.br
+Returns: (DM_PROCDATA *), error = 0, success > 0.
+.TP
+.B CELLLIST
+This request
+returns a pointer to an array of character-pointers pointing to
+the names of cells that are present in the specified
+.B view
+type of the specified project.
+This is a list of unique names of cells.
+To mark the end of the array the last pointer contains NULL.
+The array is attached to the project key that is passed as an argument.
+If it is already present \fBdmGetMetaDesignData\fP
+assumes the information has to be refreshed; it frees the old
+list before obtaining the new one.
+.br
+Arguments (reqid, projkey, view).
+.br
+Returns: (char **), error = 0, success > 0.
+.TP
+.B IMPORTEDCELLLIST
+This request
+returns a pointer to an array of pointers to structures.
+The structures contain information about imported cells
+that are present in the specified
+.B view
+type of the specified project.
+Each structure contains the name of a cell that has been imported from
+another project, an alias (unique local name)
+and a project identification.
+To mark the end of the array the last pointer contains NULL.
+The array is attached to the project key that is passed as an argument.
+If it is already present \fBdmGetMetaDesignData\fP
+assumes the information has to be refreshed; it frees the old
+list before obtaining the new one.
+.br
+Arguments (reqid, projkey, view).
+.br
+Returns: (IMPCELL **), error = 0, success > 0.
+.TP
+.B PROJECTLIST
+This request
+returns a pointer to an array of character-pointers pointing
+to the names of the projects that are used in the project \fBprojkey\fP.
+To mark the end of the array the last pointer contains NULL.
+.br
+Arguments (reqid, projkey).
+.br
+Returns: (char **), error = 0, success > 0.
+.TP
+.B CELLEQUIVALENCE
+This request returns a NULL-terminated list of names of cells of the specified
+.B range_view
+which are equivalent with the specified domain
+.B cell
+of specified
+.BR view .
+.br
+Currently, this request returns always an empty list.
+.br
+Arguments (reqid, projkey, cell, view, range_view).
+.br
+Returns: (char **), error = 0, success > 0.
+.TP
+.B PROCPATH
+This request must be used to obtain the complete path to a process file
+for the process that corresponds to the project identified by \fBprojkey\fP.
+.br
+Arguments (reqid, projkey, filename).
+.br
+Returns: (char *), error = 0, success > 0.
+.TP
+.B CELLISROOT
+This request checks if the
+.B cell
+of the specified
+.B view
+is a root cell.
+A root cell is defined as a cell that is not called by any other cell.
+.br
+Arguments (reqid, projkey, cell, view).
+.br
+Returns: (int), error = -1, root = 1, not a root = 0.
+.TP
+.B FATHERCELL
+This request returns the cell name of the father
+of the
+.B cell
+of the specified
+.B view
+type in the project identified by \fBprojkey\fP.
+.br
+Arguments (reqid, projkey, cell, view).
+.br
+Returns: (char *), error = 0, success > 0.
+.SH DIAGNOSTICS
+If an error condition occurs,
+.B dmerrno
+will be set,
+and a call to dmError() will be done.
+This may happen in the following cases:
+.TP 14
+.B DME_BADARG
+Bad argument to function.
+.TP
+.B DME_BADKEY
+Bad project key.
+.TP
+.B DME_BADNAME
+Bad name.
+.TP
+.B DME_BADVIEW
+Bad view type.
+.TP
+.B DME_CORE
+Not enough core.
+.TP
+.B DME_EXIST
+Cell exists.
+.TP
+.B DME_FOPEN
+Cannot fopen.
+.TP
+.B DME_NOCELL
+Cell does not exist.
+.TP
+.B DME_NOCELLL
+Cannot access celllist.
+.TP
+.B DME_NOFATH
+No father cell.
+.TP
+.B DME_NOIMPCL
+Cannot access impcelllist.
+.TP
+.B DME_NOPRJL
+Cannot access projlist.
+.TP
+.B DME_NOVIEW
+View does not exist.
+.TP
+.B DME_PRDATA
+Cannot access process data.
+.TP
+.B DME_PRID
+Unknown process id.
+.TP
+.B DME_PRREAD
+Process data read error.
+.SH SEE ALSO
+dmOpenProject(5ICD),
+dmPutMetaDesignData(5ICD).

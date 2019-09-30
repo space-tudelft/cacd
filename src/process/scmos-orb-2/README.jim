@@ -1,0 +1,12 @@
+7/7/98
+   Downloaded specs from mosis site (n83r.prm) and updated maskdata,
+space.def.s, epslay. Compiled with
+
+   tecc -m maskdata -p scmos-orb-2.0nwell space.def.s
+
+7/7/98
+   Changed the space.def.s file again - correcting the contact
+resistances. MOSIS specs gives resistance per minimum size contact
+while space wants resistance per 1 um^2. Multipled the values
+given by MOSIS by 16.
+

@@ -1,0 +1,43 @@
+.TH DECOUPLEID 5ICD "9/6/88"
+.UC 4
+.SH NAME
+DecoupleId - decouple a user specified Id from a color from the CACD colormap
+.SH SYNOPSIS
+.nf
+\fB
+DecoupleId (Id)
+int Id;
+
+DecoupleIds (Ids, n)
+int Ids[];
+int n;
+\fP
+.fi
+.SH PARAMETERS
+.TP 14
+.B Id(s)
+a user specified Id of something that is coupled to a color.
+.TP 14
+.B n
+specifies the number of Ids.
+.SH DESCRIPTION
+These functions delete the specified Id's from the internal table.
+The Id's should no longer be referenced.
+.SH DIAGNOSTICS
+If the call to \fBDecoupleId()\fP is successful \fB1\fP is returned.
+If \fBDecoupleId()\fP fails \fB0\fP will be returned
+and \fBcacdcmaperrno\fP will be set to one of the following values:
+.TP 14
+.B NOINIT
+the CACD colormap library was not initialized.
+.TP 14
+.B BADID
+a specified Id did not exist.
+.SH SEE ALSO
+InitCacdCmap(5ICD)
+CoupleIdToColor(5ICD)
+CoupleIdToRGB(5ICD)
+GetAffectedIds(5ICD)
+.SH NOTE
+For optimal memory usage in the internal table,
+a set of Id's should be a consecutive set of integers starting at zero.

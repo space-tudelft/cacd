@@ -1,0 +1,352 @@
+\selectlanguage{dutch}
+\title{Handleiding Schentry}
+\maketitle
+\index{schentry|bold}
+\label{app_schentry}
+
+\section{Inleiding}
+In deze handleiding zal een beschrijving worden gegeven van de schematic-entry tool \tool{schentry},
+waarvan bij het ontwerppracticum gebruik kan worden gemaakt.
+De tool kan ook worden opgestart door een knop in de \tool{GoWithTheFflow} interface.
+De \tool{schentry} tool kan bijvoorbeeld een hulpmiddel zijn bij het opdelen van de totale schakeling
+in subschakelingen. De verbindingen tussen de blokken kunnen dan al worden
+gemaakt, zodat kan worden voorkomen, dat de ene groep een signaal
+veronderstelt, dat een andere groep niet levert. De architecturen van de
+entities kunnen dan later worden toegevoegd.
+De tool is in staat om \smc{vhdl}-code weg te schrijven naar de VHDL-directory.
+Tevens kan men met de tool PostScript-files genereren voor documentatie doeleinden.
+
+\section{Beschrijving van de interface}
+De interface van de schematic-editor ziet er uit als getoond in figuur \ref{schen-window}
+en bestaat uit 5 delen:
+\begin{figure}[htb]
+  \centerline{\callpsfig{schen_wdw.ps}{width=12cm}}
+  \caption{De schematic-entry interface.}
+  \label{schen-window}
+\end{figure}
+\begin{itemize}
+\item Een menu-balk met de menu's '{\bf File}' en '{\bf Show}'.
+In het '{\bf File}' menu bevinden zich commando's die eventueel ook direct met
+een zogenaamde hotkey kunnen worden uitgevoerd.\\
+Het '{\bf File}' menu bevat de volgende commando's:
+   \begin{itemize}
+   \item {\bf New}: Voor het maken van een nieuw circuit. Hierbij moet de naam
+               van het nieuwe circuit worden opgegeven, waarna een leeg
+               circuit wordt getoond in de edit-area van de interface.
+   \item {\bf Read}: Voor het invoeren van een reeds eerder gemaakt circuit.
+               Hierbij wordt een lijst getoond van reeds gemaakte circuits
+               waaruit een keuze moet worden gemaakt door hierop te klikken.
+   \item {\bf Save}: Voor het wegschrijven van het gemaakte circuit. De naam
+                van de file, waarin het circuit wordt geschreven is de
+                circuit-name met de extensie .cir. Dus een circuit
+                met de naam 'adder' wordt in de circuit-directory geplaatst
+                onder de naam 'adder.cir'.
+   \item {\bf SaveAs}: Voor het wegschrijven van het circuit onder een andere naam.
+   \item {\bf Quit}: Voor het beeindigen van het schematic-entry programma.
+   \end{itemize}
+In het '{\bf Show}' menu bevinden zich commando's die meer voor debugging zijn.
+Daarmee kan men in de vorm van een lijst informatie verkrijgen over onderdelen van het circuit.
+\item Een commando-balk waarop zich aan de linkerzijde een aantal knoppen
+bevinden, waarvan er maar \'e\'en kan worden gekozen,
+die bepaalt wat voor commando er kan worden uitgevoerd.
+Deze commando's zijn:
+\begin{itemize}
+\item {\bf addCOMP}: Voor het toevoegen van een component aan de schakeling.
+\item {\bf addPORT}: Voor het toevoegen van een terminal aan de schakeling.
+\item {\bf addSPLIT}: Voor het toevoegen van een 'splitter' aan de schakeling.
+\item {\bf addLABEL}: Voor het toevoegen van een label aan de schakeling.
+\item {\bf cpyLABEL}: Voor het copieren van een label in de schakeling.
+\item {\bf Connect}: Voor het maken van een verbinding in de schakeling.
+\item {\bf Move}: Voor het verplaatsen van een item in de schakeling.
+\item {\bf Delete}: Voor het verwijderen van een item in de schakeling.
+\item {\bf Rename}: Voor het herbenoemen van een onderdeel van de schakeling.
+\item {\bf Resize}: Voor het veranderen van de totale grootte van de schakeling.
+\item {\bf addVDD}: Voor het toevoegen van een 'vdd' label aan de schakeling.
+\item {\bf addVSS}: Voor het toevoegen van een 'vss' label aan de schakeling.
+\end{itemize}
+Deze commando's zullen nog nader worden uitgelegd in volgende paragrafen.\\
+Aan de rechterzijde bevinden zich ook commando's van voornamelijk maak-knoppen.\\
+Deze commando's zijn:
+\begin{itemize}
+\item {\bf zoomOUT}: Voor het uitzoomen van de schakeling.
+\item {\bf zoomIN}: Voor het inzoomen op de schakeling.
+\item {\bf makeCOMP}: Voor het genereren van een component van de gemaakte schakeling.
+\item {\bf makeSLS}: Voor het genereren en parsen van een \smc{sls}-file van de gemaakte schakeling.
+\item {\bf makeVHDL}: Voor het genereren en compileren van een \smc{vhdl}-file van de gemaakte schakeling.
+\item {\bf makePS}: Voor het genereren van een PostScript-file van de gemaakte schakeling.
+\item {\bf unRoute}: Voor het tekenen van de verbindingen in zijn oorspronkelijke vorm.
+\item {\bf Route}: Voor het routen van de schakeling, d.w.z. het op een nettere manier tekenen van de verbindingen.
+\end{itemize}
+\item Een list-box aan de rechterzijde van de interface, waarin de componenten
+      staan vermeld die bij het samenstellen van het circuit kunnen worden gebruikt.
+\item Een info-window aan de onderzijde van de interface, waarin het
+      programma mededelingen omtrend het verloop van het maken van het
+      circuit kan schrijven.
+\item Het midden-gedeelte wat wordt gebruikt om de tekening van het
+      gemaakte circuit te tonen.
+\end{itemize}
+
+\section{Het initieren van een nieuw circuit}
+Om een nieuw circuit te kunnen maken moeten de volgende stappen
+worden uitgevoerd:
+\begin{itemize}
+\item Kies uit het '{\bf File}' menu de entry '{\bf New}'. Er verschijnt een window
+      waarin de naam van het te maken circuit moet worden ingevuld.
+\item Klik op \button{OK}. In het middengedeelte van \tool{schentry} verschijnt nu
+      een gebied, waarin het circuit kan worden samengesteld.
+\end{itemize}
+
+\section{Het inlezen van een reeds bestaand circuit}
+Om een reeds bestaand circuit in de editor in te lezen moet het volgende
+worden gedaan:
+\begin{itemize}
+\item Kies uit het '{\bf File}' menu de entry '{\bf Read}'. Er verschijnt nu een lijst
+      met reeds gemaakte circuits die in de directory 'circuits' zijn opgeslagen.
+\item Klik op het circuit dat moet worden ingevoerd en op \button{OK} (of \button{Enter}).
+    (Dubbel klikken kan ook.)
+    Het circuit zal nu in het middengedeelte van de editor verschijnen.
+\end{itemize}
+
+\section{Het toevoegen van een component aan een circuit}
+Om een component aan een te maken circuit toe te voegen moet het volgende
+worden gedaan:
+\begin{itemize}
+\item Kies het commando \button{addCOMP}, door hierop te klikken.
+\item Kies de gewenste component die moet worden toegevoegd uit de lijst
+      met componenten aan de rechterzijde van \tool{schentry}, door hierop met de
+      linker muisknop te klikken.
+\item Druk nu de linker-muisknop in ergens binnen het circuit. Er verschijnt
+      nu een omhullende van de toe te voegen component.
+\item Beweeg deze omhullende naar de plaats waar de component moet worden
+      geplaatst door het bewegen van de muis {\it met ingedrukte linker-muisknop}.
+\item Laat de linker-muisknop los wanneer de omhullende op de juiste plaats staat.
+	De component zal dan op deze plaats in de schakeling worden aangebracht.
+\item Door opnieuw de linker-muisknop in te drukken wordt de component
+      nogmaals toegevoegd, totdat een andere component of een ander
+      commando wordt gekozen.
+\end{itemize}
+
+\section{Het toevoegen van een terminal aan een circuit}
+Om een terminal (port) aan een te maken circuit toe te voegen moet het volgende
+worden gedaan:
+\begin{itemize}
+\item Kies het commando \button{addPORT}, door hierop te klikken.
+\item Klik de linker-muisknop binnen het circuit op de plaats waar de terminal
+      moet komen. Wordt geklikt in de buurt van de linker-grens van het circuit,
+      dan wordt de terminal een input-terminal en zal op de linker-grens
+      worden geplaatst. Wordt geklikt in de buurt van de rechter-grens van het
+      circuit, dan wordt de terminal een output-terminal en zal op de
+      rechter-grens worden geplaatst.
+      Zolang de muisknop ingedrukt wordt gehouden kan men de ligging nog bepalen.
+\item Na het loslaten van de muisknop verschijnt een window waarin de volgende gegevens moeten worden
+      opgegeven:
+      \begin{itemize}
+      \item De naam van de terminal.
+      \item Het aantal bits dat de terminal breed is (default: 1).
+      \item Het bidirectioneel zijn van de terminal, d.w.z. dat hij zowel als
+            ingang als als uitgang kan worden gebruikt (default: niet bidirectioneel).
+            Bidirectionele terminals mogen in het ontwerppracticum alleen
+            worden gebruikt voor 'analoge'-signalen.
+      \end{itemize}
+\item Door nu op \button{OK} te klikken wordt de terminal geplaatst.
+\end{itemize}
+
+\section{Het toevoegen van een splitter aan een circuit}
+Een splitter moet worden toegepast om een aantal bits uit een grotere
+vector te selecteren.
+Om een splitter aan een te maken circuit toe te voegen moet het volgende
+worden gedaan:
+\begin{itemize}
+\item Kies het commando \button{addSPLIT}, door hierop te klikken.
+\item Druk nu de linker-muisknop in ergens binnen het circuit. Er verschijnt
+      nu een omhullende van de toe te voegen splitter.
+\item Beweeg deze omhullende naar de plaats waar de splitter moet worden
+      geplaatst door het bewegen van de muis {\it met ingedrukte linker-muisknop}.
+\item Laat de linker-muisknop los wanneer de omhullende op de juiste plaats staat.
+      Er verschijnt nu een window, waarin de volgende gegevens moeten
+      worden gespecificeerd.
+      \begin{itemize}
+      \item De hoogste index uit de vector, die moet worden afgescheiden.
+      \item De laagste index uit de vector, die moet worden afgescheiden.
+      \item Het type: split op de ingang, d.w.z. dat de geselecteerde bits
+            dienen als input voor de splitter of split op de uitgang, d.w.z.
+            dat de geselecteerde bits de uitgang van de splitter vormen.
+      \end{itemize}
+\item Door nu op \button{OK} te klikken wordt de splitter in de schakeling
+      aangebracht op de aangegeven plaats.
+\end{itemize}
+
+\section{Het toevoegen van een label aan een circuit}
+Labels in het circuit zijn een alternatieve manier om verbindingen
+te maken. Alle terminals in een circuit, die zijn voorzien van een label
+met dezelfde naam worden beschouwd als aan elkaar verbonden.
+Dit is bijvoorbeeld handig voor signalen die op vele plaatsen worden gebruikt
+zoals kloksignalen.\\
+Er zijn 3 speciale labels:
+\begin{itemize}
+\item Labels met de naam 'vdd' worden beschouwd als te zijn verbonden met een '1'.
+\item Labels met de naam 'vss' worden beschouwd als te zijn verbonden met een '0'.
+\item Labels met de naam 'gnd' worden beschouwd als te zijn verbonden met een '0'.
+\end{itemize}
+Om een label aan een te maken circuit toe te voegen moet het volgende
+worden gedaan:
+\begin{itemize}
+\item Kies het commando \button{addLABEL}, door hierop te klikken.
+\item Klik nu op een terminal van het circuit of op een terminal van een
+      component. Er verschijnt nu een window waarin de naam van de label
+      moet worden opgegeven.
+\item Door nu op \button{OK} te klikken wordt de label aan de gekozen terminal
+      aangebracht.
+\end{itemize}
+Met de knoppen \button{addVDD} en \button{addVSS} kan men snel speciale labels toevoegen.
+
+\section{Het copieren van een label in een circuit}
+Om een label in een te maken circuit te copieren moet het volgende
+worden gedaan:
+\begin{itemize}
+\item Kies het commando \button{cpyLABEL}, door hierop te klikken.
+\item Druk de linker-muisknop in boven de label die moet worden gecopieerd.
+      Er verschijnt nu een omhullende van de label.
+\item Verplaats deze omhullende door de muis te bewegen {\it met ingedrukte
+      linker-muisknop} tot de cursor boven de terminal staat waarnaar de
+      label moet worden gecopieerd.
+\item Laat nu de linker-muisknop los. De label zal nu worden gecopieerd.
+\end{itemize}
+
+\section{Het maken van een verbinding in een circuit}
+Om een verbinding te maken in een circuit moet het volgende
+worden gedaan:
+\begin{itemize}
+\item Kies het commando \button{Connect}, door hierop te klikken.
+\item Druk de linker-muisknop in boven de terminal die moet worden verbonden.
+\item Beweeg de muis {\it met ingedrukte linker-muisknop}. Er verschijnt nu een
+      lijn, waarvan het uiteinde met de muis meebeweegt.
+\item Laat de linker-muisknop los boven de terminal waar de verbinding naar toe moet.
+	De verbin\-ding zal nu worden gemaakt.
+\end{itemize}
+
+Voor het succesvol maken van een verbinding moet aan de volgende regels
+worden voldaan:
+\begin{itemize}
+\item De te verbinden terminals moeten hetzelfde aantal bits hebben.
+\item De verbinding moet beginnen bij een signaalbron (bijvoorbeeld input-terminal
+      of output-terminal van een component) en mag niet op een bron eindigen.
+      Voor inout terminals geldt, dat als ze eenmaal als bron zijn gebruikt
+      ze verder als bron zullen worden behandeld. Zijn ze eenmaal als
+      niet-bron gebruikt, dan kunnen ze niet meer als bron worden gebruikt.
+	Bidirectionele terminals mogen alleen met bidirectionele terminals worden verbonden.
+\end{itemize}
+
+\section{Het verplaatsen van onderdelen in een circuit}
+Om onderdelen in een circuit te verplaatsen moet het volgende
+worden gedaan:
+\begin{itemize}
+\item Kies het commando \button{Move}, door hierop te klikken.
+\item Druk de linker-muisknop in boven het onderdeel dat moet worden verplaatst.
+      Er verschijnt nu een omhullende van het onderdeel dat zal worden
+      verplaatst.
+\item Beweeg de muis {\it met ingedrukte linker-muisknop} tot de omhullende de
+      gewenste plaats heeft bereikt.
+\item Laat de linker-muisknop los. Het onderdeel zal nu op de gekozen plaats
+      worden neergezet.
+\end{itemize}
+Wordt de linker-muisknop ingedrukt buiten een circuit onderdeel, dan zal het
+gehele circuit worden gekozen om verplaatst te worden.
+
+\section{Het verwijderen van onderdelen uit een circuit}
+Om onderdelen uit een circuit te verwijderen moet het volgende
+worden gedaan:
+\begin{itemize}
+\item Kies het commando \button{Delete}, door hierop te klikken.
+\item Klik met de linker-muisknop op het onderdeel dat moet worden verwijderd.
+      Zolang de muisknop ingedrukt wordt gehouden kan men nog kiezen.
+      Een geselecteerd onderdeel licht op in blauw.
+      Dit onderdeel zal uit de schakeling verdwijnen, wanneer de knop wordt losgelaten.
+      Hierbij gelden de volgende opmerkingen:
+      \begin{itemize}
+      \item Verbindingen kunnen zo alleen worden verwijderd, in niet geroute
+            vorm. Dus geroute circuits moeten eerst ge-unrouted worden voor
+            een verbinding kan worden verwijderd.
+      \item  Onderdelen die niet zonder het te verwijderen onderdeel kunnen,
+             zoals verbindingen naar een component of labels aan een terminal
+             worden eveneens verwijderd.
+      \end{itemize}
+\end{itemize}
+
+\section{Het veranderen van de afmetingen van een circuit}
+Om de afmetingen van een circuit te veranderen moet het volgende
+worden gedaan:
+\begin{itemize}
+\item Kies het commando \button{Resize}, door hierop te klikken.
+\item Druk de linker-muisknop in er verschijnt nu en nieuwe omhullende van het
+      totale circuit.
+\item Beweeg de muis {\it met ingedrukte linker-muisknop}. De omhullende van
+      het circuit beweegt mee met de muis.
+\item Laat de linker-muisknop los wanneer het circuit de juiste afmetingen
+      heeft verkregen. Dit zal dan de nieuwe afmeting van het circuit worden.\\
+      Opmerkingen:
+      \begin{itemize}
+      \item Met de \button{zoomOUT} en de \button{zoomIN} knoppen kan de schaal nog worden
+            veranderd voor het veranderen van de circuit-afmetingen.
+      \item De afmetingen kunnen niet zodanig worden gemaakt, dat er onderdelen
+            buiten het circuit vallen.
+      \item De terminals aan de rechterzijde van det circuit worden meeverplaatst.
+      \item Het verdient aanbeveling het circuit niet onnodig groot te maken,
+            daar de tijd die het kost om het circuit te routen sterk
+            afhankelijk is van de afmetingen hiervan.
+      \end{itemize}
+\end{itemize}
+De afmeting van een component kan ook veranderd worden,
+maar dit werkt door in het gebruik van dit component op alle plaatsen en alle circuits.
+
+\section{Het routen van een circuit}
+Om de verbindingen van een circuit wat beter en overzichtelijker te tekenen
+kan het circuit gerouted worden. \\
+Dit gebeurt door op de route-knop \button{Route} te klikken.
+De verbindingen worden dan opnieuw gete\-kend, maar nu op een orthogonale manier.
+Kan een bepaalde verbinding op deze manier niet worden getekend,
+dan zal de oorspronkelijke verbinding worden getekend.
+Soms kan dit worden verholpen door onderdelen te verplaatsen.\\
+Overigens maakt het voor de werking van het circuit, of de vertaling naar
+\smc{vhdl} niet uit of het circuit al dan niet goed gerouted is.
+
+\section{Het un-routen van een circuit}
+Om de verbindingen van een gerouted circuit weer op de oorspronkelijk ingevoerde
+wijze te tekenen, om bijvoorbeeld een verbinding te verwijderen, kan het circuit weer
+ge-unrouted worden.\\
+Klik hiertoe op het \button{unRoute} commando.
+
+\section{Het maken van een PostScript file van het circuit}
+Door op het commando \button{makePS} te klikken wordt een PostScript-beschrijving van het
+circuit gemaakt. De naam van de gemaakte file is 'circuit-naam'.ps.
+Heet het circuit dus 'adder' dan zal een file 'adder.ps' worden gemaakt.
+
+\section{Het maken van een component van het circuit}
+Door op het commando \button{makeCOMP} te klikken wordt een component beschrijving toegevoegd
+in component-directory. Hierdoor kan het circuit weer als component worden
+gebruikt voor een grotere schakeling.
+
+\section{Het maken van een \smc{sls}-beschrijving van het circuit}
+Door op het commando \button{makeSLS} te klikken wordt een \smc{sls}-beschrijving van het circuit
+gemaakt.\\
+Deze wordt geplaatst in de directory SLS onder de naam gelijk aan de naam van
+het circuit, met extensie .sls. Dus heet het circuit bijvoorbeeld 'adder' dan zal in
+de subdirectory SLS een file met de naam 'adder.sls' worden geplaatst.\\
+Opmerking: Bij het practicum zal de \smc{sls}-file meestal via de synthese van de
+\smc{vhdl}-beschrijving worden gemaakt.
+
+\section{Het maken van een \smc{vhdl}-beschrijving van het circuit}
+Door op het commando \button{makeVHDL} te klikken wordt een \smc{vhdl}-beschrijving van het circuit
+gemaakt.\\
+Er verschijnt een window, waarin de naam voor een architecture moet worden
+opgegeven (default is circuit).\\
+Door hierna op \button{OK} te klikken worden twee \smc{vhdl}-files in de VHDL-directory
+geschreven:\\
+Een file, waarin de {\bf entity} staat beschreven, met een
+file-naam gelijk aan de circuit-name, met de extensie .vhd
+en een file, waarin de {\bf architecture} staat beschreven met de
+naam 'circuit-naam'-'architecture-naam'.vhd.
+Dus heet bijvoorbeeld het circuit 'adder' en is voor de architecture
+de naam 'struct' gekozen, dan worden de file-namen dus:
+'adder.vhd' en 'adder-struct.vhd'.
+\cleardoublepage

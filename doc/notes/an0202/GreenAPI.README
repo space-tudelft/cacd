@@ -1,0 +1,37 @@
+=====================
+Xspace Make Procedure
+=====================
+
+To make Xspace (= space3d) the following steps need to be done:
+
+    1) make of Xspace.o (object file)
+    2) make of green.a (green module)
+    3) make (load) of Xspace (executable)
+
+Step 1)
+Note that this step is already done!
+Object module Xspace.o contains everything except the green module.
+Note that this module is delivered to parties how want to make a new green API.
+The object module Xspace.o can be found in directory "src/space/space".
+
+Step 2)
+The green API can be compiled in directory "src/space/green" by typing the "make" command.
+If you want to save the delivered original "green.a" library, you must
+first move it to another name (cq. place).
+Note that a new "green.a" library is also automatically made by the Xspace "make" command.
+
+Step 3)
+The executable Xspace must be made in directory "src/space/space".
+Type "make" without any arguments to make Xspace with an existing Xspace.o object.
+If "green.a" is out of date, it is also automatically updated (cq made).
+The following load command (on HPUX) can be done for Xspace:
+
+    c++ $LDFLAGS Xspace.o ../green/green.a ../auxil/auxil.a -ldld -o Xspace
+
+The loading phase must be done with the c++ compiler,
+because green.a contains at this moment a c++ object.
+Note that the auxil.a library must be specified, because the
+green module must load (maybe) some parts from the auxil.a library.
+On HPUX also the shared management functions (-ldld) must still be loaded.
+
+Note that all "auxil.a" sources are also distributed.

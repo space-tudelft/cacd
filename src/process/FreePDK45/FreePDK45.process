@@ -1,0 +1,724 @@
+1 1
+FreePDK45
+FreePDK 45nm
+maskdata_sheet.name 34
+nwell
+pwell
+nimplant
+pimplant
+active
+poly
+contact
+metal1
+via1
+metal2
+via2
+metal3
+via3
+metal4
+via4
+metal5
+via5
+metal6
+via6
+metal7
+via7
+metal8
+via8
+metal9
+via9
+metal10
+sblock
+thkox
+vthl
+vthg
+vthh
+nodrc
+bb
+bb2
+maskdata_sheet.layertype 34
+normal
+normal
+normal
+normal
+interconnect
+interconnect
+normal
+interconnect
+normal
+interconnect
+normal
+interconnect
+normal
+interconnect
+normal
+interconnect
+normal
+interconnect
+normal
+interconnect
+normal
+interconnect
+normal
+interconnect
+normal
+interconnect
+normal
+normal
+normal
+normal
+normal
+symbolic
+symbolic
+symbolic
+maskdata_sheet.dali 34
+5 2
+3 2
+5 4
+3 4
+2 2
+1 1
+7 1
+4 1
+7 5
+6 5
+7 5
+6 6
+7 5
+4 3
+7 5
+4 3
+7 5
+4 3
+7 5
+4 3
+7 5
+4 3
+7 5
+4 3
+7 5
+4 3
+7 0
+5 3
+1 3
+1 3
+7 3
+7 2
+7 2
+7 2
+maskdata_sheet.xspace 34
+#6901aa
+#ffff00
+#aa00ff
+#55ff00
+#008700
+#ff0000
+#ffffff
+#0000ff
+#e6e6e6
+#55ffff
+#c7c7c7
+#4ab4ff
+#a7a7a7
+#55aaff
+#8d8d8d
+#55aaff
+#7a7a7a
+#55aaff
+#797979
+#55aaff
+#717171
+#55aaff
+#636363
+#55aaff
+#585858
+#55aaff
+#ffaa7f
+#ffaaff
+#aa0000
+#aa5500
+#aaaa00
+#000000
+#000000
+#000000
+maskdata_sheet.comment 34
+n-type well implant
+p-type well implant
+n-type s/d doping
+p-type s/d doping
+active area
+poly-silicon
+contact
+metal1
+via1
+metal2
+via2
+metal3
+via3
+metal4
+via4
+metal5
+via5
+metal6
+via6
+metal7
+via7
+metal8
+via8
+metal9
+via9
+metal10
+salicide block
+thick-oxide implant
+low threshold implant
+general threshold implant
+high threshold implant
+nodrc
+bbox
+bbox2
+gds2_sheet.mask 44
+nwell
+pwell
+nimplant
+pimplant
+active
+active
+poly
+poly
+contact
+metal1
+metal1
+via1
+metal2
+metal2
+via2
+metal3
+metal3
+via3
+metal4
+metal4
+via4
+metal5
+metal5
+via5
+metal6
+metal6
+via6
+metal7
+metal7
+via7
+metal8
+metal8
+via8
+metal9
+metal9
+via9
+metal10
+metal10
+vthg
+vthh
+thkox
+nodrc
+bb
+bb2
+gds2_sheet.textmap 44
+<none>
+<none>
+<none>
+<none>
+<none>
+terminal
+<none>
+terminal
+<none>
+<none>
+terminal
+<none>
+<none>
+terminal
+<none>
+<none>
+terminal
+<none>
+<none>
+terminal
+<none>
+<none>
+terminal
+<none>
+<none>
+terminal
+<none>
+<none>
+terminal
+<none>
+<none>
+terminal
+<none>
+<none>
+terminal
+<none>
+<none>
+terminal
+<none>
+<none>
+<none>
+<none>
+<none>
+<none>
+gds2_sheet.gdsnr 44
+3
+2
+4
+5
+1
+1
+9
+9
+10
+11
+11
+12
+13
+13
+14
+15
+15
+16
+17
+17
+18
+19
+19
+20
+21
+21
+22
+23
+23
+24
+25
+25
+26
+27
+27
+28
+29
+29
+6
+7
+8
+80
+63
+183
+units_list.resistance 1
+1
+units_list.c_resistance 1
+1e-12
+units_list.s_resistance 1
+1
+units_list.a_capacitance 1
+1e-6
+units_list.e_capacitance 1
+1e-12
+units_list.capacitance 1
+1e-15
+units_list.distance 1
+1e-6
+units_list.resize 1
+1e-6
+units_list.vdimension 1
+1e-6
+units_list.shape 1
+1e-6
+color_sheet.name 1
+@sub
+color_sheet.xspace 1
+#aa5500
+setting.spec_res 1
+off
+conductors_sheet.name 14
+cond_nw
+cond_an
+cond_ap
+cond_ps
+cond_m1
+cond_m2
+cond_m3
+cond_m4
+cond_m5
+cond_m6
+cond_m7
+cond_m8
+cond_m9
+cond_m10
+conductors_sheet.cond_list 14
+( nwell )
+( !nwell nimplant active !poly )
+( nwell pimplant active !poly )
+( poly )
+( metal1 )
+( metal2 )
+( metal3 )
+( metal4 )
+( metal5 )
+( metal6 )
+( metal7 )
+( metal8 )
+( metal9 )
+( metal10 )
+conductors_sheet.mask 14
+nwell
+active
+active
+poly
+metal1
+metal2
+metal3
+metal4
+metal5
+metal6
+metal7
+metal8
+metal9
+metal10
+conductors_sheet.sheet_res 14
+933
+0
+0
+7.8
+0.38
+0.25
+0.25
+0.21
+0.21
+0.21
+0.075
+0.075
+0.03
+0.03
+conductors_sheet.carr_type 14
+n doped conductor
+n doped conductor
+p doped conductor
+metal
+metal
+metal
+metal
+metal
+metal
+metal
+metal
+metal
+metal
+metal
+conductors_sheet.comment 14
+n-well area
+active n+ area
+active p+ area
+poly-silicon
+1st metal
+2nd metal
+3rd metal
+4th metal
+5th metal
+6th metal
+7th metal
+8th metal
+9th metal
+10th metal
+fets_sheet.name 2
+nenh
+penh
+fets_sheet.cond_list 2
+( !nwell pwell nimplant active poly )
+( nwell !pwell pimplant active poly )
+fets_sheet.mask_g 2
+poly
+poly
+fets_sheet.mask_ds 2
+active
+active
+fets_sheet.cond_dsarea 2
+( !nwell nimplant active !poly )
+( nwell pimplant active !poly )
+fets_sheet.mask_b 2
+@sub
+nwell
+contacts_sheet.name 14
+cont_su
+cont_nw
+cont_an
+cont_ap
+cont_ps
+cont_m1
+cont_m2
+cont_m3
+cont_m4
+cont_m5
+cont_m6
+cont_m7
+cont_m8
+cont_m9
+contacts_sheet.cond_list 14
+( !nwell pimplant active contact metal1 )
+( nwell nimplant active contact metal1 )
+( !nwell nimplant active !poly contact metal1 )
+( nwell pimplant active !poly contact metal1 )
+( poly contact metal1 )
+( metal1 via1 metal2 )
+( metal2 via2 metal3 )
+( metal3 via3 metal4 )
+( metal4 via4 metal5 )
+( metal5 via5 metal6 )
+( metal6 via6 metal7 )
+( metal7 via7 metal8 )
+( metal8 via8 metal9 )
+( metal9 via9 metal10 )
+contacts_sheet.mask_1 14
+@sub
+nwell
+active
+active
+poly
+metal1
+metal2
+metal3
+metal4
+metal5
+metal6
+metal7
+metal8
+metal9
+contacts_sheet.mask_2 14
+metal1
+metal1
+metal1
+metal1
+metal1
+metal2
+metal3
+metal4
+metal5
+metal6
+metal7
+metal8
+metal9
+metal10
+contacts_sheet.resistivity 14
+0
+0
+0
+0
+0.0338
+0.02535
+0.0245
+0.0245
+0.0588
+0.0588
+0.0588
+0.16
+0.16
+0.32
+contacts_sheet.comment 14
+substrate to m1
+nwell to m1
+active n+ to m1
+active p+ to m1
+poly to m1
+m1 to m2
+m2 to m3
+m3 to m4
+m4 to m5
+m5 to m6
+m6 to m7
+m7 to m8
+m8 to m9
+m9 to m10
+vdimensions_sheet.name 13
+vdim_an
+vdim_ap
+vdim_ps
+vdim_m1
+vdim_m2
+vdim_m3
+vdim_m4
+vdim_m5
+vdim_m6
+vdim_m7
+vdim_m8
+vdim_m9
+vdim_m10
+vdimensions_sheet.cond_list 13
+( !nwell nimplant active !poly )
+( nwell pimplant active !poly )
+( poly )
+( metal1 )
+( metal2 )
+( metal3 )
+( metal4 )
+( metal5 )
+( metal6 )
+( metal7 )
+( metal8 )
+( metal9 )
+( metal10 )
+vdimensions_sheet.mask 13
+active
+active
+poly
+metal1
+metal2
+metal3
+metal4
+metal5
+metal6
+metal7
+metal8
+metal9
+metal10
+vdimensions_sheet.bottom 13
+0.196
+0.196
+0.200
+0.370
+0.620
+0.880
+1.140
+1.710
+2.280
+2.850
+4.470
+6.090
+10.090
+vdimensions_sheet.thickness 13
+0
+0
+0.085
+0.130
+0.140
+0.140
+0.280
+0.280
+0.280
+0.800
+0.800
+2.000
+2.000
+vdimensions_sheet.spacing 13
+
+
+0.075
+
+
+
+
+
+
+
+
+0.800
+0.800
+dielectrics_sheet.name 3
+field_base
+stddiel
+air
+dielectrics_sheet.permittivity 3
+3.9
+2.5
+1
+dielectrics_sheet.bottom 3
+0
+0.200
+14.090
+dielectrics_sheet.comment 3
+field_base diel
+standard diel
+no diel
+sublayers_sheet.name 1
+substrate
+sublayers_sheet.conductivity 1
+6.7
+sublayers_sheet.top 1
+0
+space_params.min_art_degree 1
+3
+space_params.min_degree 1
+4
+space_params.min_res 1
+100
+space_params.min_sep_res 1
+10
+space_params.max_par_res 1
+25
+space_params.no_neg_res 1
+off
+space_params.min_coup_cap 1
+0.04
+space_params2.name 3
+lat_cap_window
+low_sheet_res
+low_contact_res
+space_params2.value 3
+0.5
+1.0
+0.1e-12
+space_params2.comment 3
+micron
+ohm/square
+ohm.square meter
+cap3d.name 6
+be_mode
+be_window
+max_be_area
+omit_diff_cap
+omit_gate_ds_cap
+omit_gate_gnd_cap
+cap3d.value 6
+0c
+0.1
+0.005
+on
+on
+on
+cap3d.comment 6
+pwc collocation
+micron
+square micron
+default=on
+default=off
+default=on
+sub3d.name 5
+be_mode
+be_window
+max_be_area
+edge_be_ratio
+edge_be_split
+sub3d.value 5
+0g
+1
+0.1
+0.01
+0.2
+sub3d.comment 3
+pwc galerkin
+micron
+square micron
+sne.name 1
+frequency
+sne.value 1
+1e9
+sne.comment 1
+Hz
+getepslay_pl.includefile_nelsis 1
+epslay.pro
+getepslay_pl.plotfont 1
+Helvetica-Bold
+getepslay_pl.font_min 1
+6
+getepslay_pl.font_max 1
+14
+getepslay_pl.pattern_scale 1
+1
+getepslay_pl.termtxt 1
+Center at

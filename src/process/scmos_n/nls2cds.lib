@@ -1,0 +1,73 @@
+# process scmos_n
+# table of components of libraries from Cadence
+# type  Nelsis_Name  Cadence_Name  Cadence_Lib  Terminals_Cds  Terminals_Nelsis
+  fet   nenh         nmos          analogLib    G,D,S          g,d,s
+  fet   penh         pmos          analogLib    G,D,S          g,d,s
+  pwr	vdd	     vdd           analogLib	v	       v
+  pwr   gnd	     gnd 	   analogLib	n 	       n
+  res	res	     res	   analogLib    MINUS,PLUS     n,p
+  cap   cap          pcapacitor    analogLib	MINUS,PLUS     n,p
+  trans npnBS	     npn	   analogLib	C,B,E	       c,b,e
+  trans npnBW	     npn	   analogLib	C,B,E	       c,b,e
+  trans npnBI	     npn	   analogLib	C,B,E	       c,b,e
+  trans pnpWP	     pnp	   analogLib	C,B,E	       c,b,e
+  trans pnpSP	     pnp	   analogLib	C,B,E	       c,b,e
+endtable
+
+{
+  (edifLevel 0)
+  (technology
+   (numberDefinition
+    (scale 160 (E 25400 -6) (unit DISTANCE)))
+   (figureGroup pin
+     (color 100 0 0)
+    (visible (true))
+    (property layerNumber (integer 229))
+    (property priority (integer 45)))
+   (figureGroup instance
+     (color 100 0 0)
+    (visible (true))
+    (property layerNumber (integer 236))
+    (property priority (integer 25)))
+   (figureGroup text
+     (color 100 100 100)
+    (visible (true))
+    (property layerNumber (integer 230))
+    (property priority (integer 33)))
+   (figureGroup wire
+     (color 22 75 100)
+    (pathWidth 0)
+    (textHeight 10)
+    (visible (true))
+    (property layerNumber (integer 228))
+    (property priority (integer 40)))
+   (figureGroup device
+     (color 0 80 40)
+    (pathWidth 0)
+    (visible (true))
+    (property layerNumber (integer 231))
+    (property priority (integer 37)))
+   (figureGroup prBoundary
+     (color 60 0 90)
+    (visible (true))
+    (property layerNumber (integer 235))
+    (property priority (integer 27)))
+   (figureGroup annotate
+     (color 100 50 0)
+    (visible (true))
+    (property layerNumber (integer 237))
+    (property priority (integer 15)))
+   (figureGroup grid
+     (color 55 55 65)
+    (visible (true))
+    (property layerNumber (integer 251))
+    (property priority (integer 1)))
+   (figureGroup supply
+     (color 0 100 0)
+    (visible (true))
+    (property layerNumber (integer 227))
+    (property priority (integer 77)))
+    (userData gridResolution
+      (integer 20 20)))
+}
+

@@ -1,0 +1,69 @@
+#!/bin/sh
+
+cat << EOF
+
+			O C E A N   COMPILATION MANUAL
+			------------------------------
+
+This manual describes how to compile the OCEAN software.  In order to compile
+and install the OCEAN software, please first read the file INSTALLATION, which
+describes how to install OCEAN in executable form.  The following things are
+different when not using the pre-compiled executables, but compiling the tools
+yourself:
+
+First you need to download all files from "https://github.com/space-tud/cacd".
+Let's assume that you have put these files in the directory "/users/cacd".
+Note that this directory shall also have a subdirectory "src/ocean".
+See also file "/users/cacd/Installation.txt".
+
+Before compile you need to choice an "install" directory, where all binaries are
+to go "installed" in the subdirectory "bin".  The environment variable ICDPATH
+needs to be set to the absolute path of this "install" directory.
+Let's assume that this "install" directory is equal to the "download" directory.
+Give the following command:
+
+  [1] setenv ICDPATH /users/cacd
+
+To compile and install all the Space CACD software, go to the "download" directory and
+give the "make" command.  See the "Makefile", that default the target "install" is
+done after the "init" target. Also inspect the general compile file "src/Config.mk".
+(On a 32 bits system you need to change this compile file.)
+Give the following commands:
+
+  [2] cd /users/cacd
+  [3] cat Makefile
+  [4] cat src/Config.mk
+  [5] cat src/Makefile
+  [6] make
+
+If a program fails to compile, go to that subdirectory and try to fix the problem:
+
+  [11] cd src/<thefailedprogram>
+  [12] ...try to fix the problem...
+  [13] make
+
+To compile/install the OCEAN software separately:
+
+  [13] cd src/ocean
+  [14] make
+
+If a program fails to compile, go to that subdirectory and so on:
+
+  [15] cd <thefailedprogram>
+  [16] ...try to fix the problem...
+  [17] make
+
+To compile/install the OCEAN cell libraries separately:
+
+  [18] cd src/ocean
+  [19] sh scripts/ICELLS
+Note:
+  Run ICELLS only after all Space CACD tools are build and
+  when the environment variable PATH is set to "$ICDPATH/bin".
+  ICELLS internally wants to run a number of tools (mkpr,
+      addproj, impcell, xcontrol, gnarp, nelsea, csls, ...)
+  Note that the environment variable OCEANPROCESS is used.
+  (If not set the "fishbone" process/image is used.)
+  Note that the ICELLS command can be run from any place.
+
+EOF

@@ -1,0 +1,139 @@
+
+
+INTRODUCTION
+
+This file describes how to (semi automatically) determ sls
+transistor model parameters for a particular process.
+The method is based on the report "Determination of SLS
+transistor model parameters" by A.J. Schooneveld,
+Delft University of Technology, May 1987.
+
+
+TOOLS AND FILES USED
+
+The following tools and files support the determination of
+the sls transistor model file.
+(The files that are called NAME_ex - where NAME is a string
+of characters - are example files for the actual data files
+used.)
+
+(1) A libary of parameterized circuits according to the
+    test circuits as described in "Determination of SLS
+    transistor model parameters" by A.J. Schooneveld.
+    (Note: The libary currently only contains CMOS circuits).
+
+(2) A file 'models' with appropriate spice transistor models
+    for the current process (see the example file 'models_ex').
+
+(3) The circuit simulator 'spice'.
+
+(4) For each desired pair of transistor <width and length>:
+    a parameter file describing how to generate the actual
+    set of test circuits from the library circuits (see
+    the example file 'values_ex').
+    These files have to be determined experimentally !!!
+    (see "how to proceed").
+
+(5) The unix shell script 'dospice' that instantiates a
+    particular cell from the library and runs spice.
+
+(6) The program 'delay' that finds the delay time from
+    a spice output file.
+
+(7) The unix shell script 'resis' that extracts the drain
+    source current and the drain source voltage from a spice
+    output file.
+
+(8) The program 'solve' that solves (for a particular
+    transistor width and length) the sls transistor model
+    parameters.
+
+(9) A file 'header' that contains a header for the sls
+    transistor model file (see the example 'header_ex').
+
+(10) A file 'offsets' that contains the offset values for the
+     length and width of the sls transistor models (see
+     'offsets_ex').
+
+(11) The unix shell script 'collect' that collects (for each
+     different transistor width and length) the output of
+     'solve', and that assembles the final slsmod file.
+
+
+INSTALLATION
+
+After installation of the software, first go to the directory
+'slsmodgen/src' and type 'make install'.
+Then, add to your Unix path variable the directory 'slsmodgen/bin'.
+
+
+HOW TO PROCEED
+
+When determining the sls transistor model file for a particular
+process it is best to create special directory for the process:
+
+$ mkdir proc
+$ cd proc
+
+In this directory a file called 'models' should be placed that
+contains spice transistor models (see models_ex').
+
+Then, for each desired pair <transistor width and length> for
+which transistor parameters have to be determined do:
+
+(a) Make a sub directory and go to that directory.
+
+    $ mkdir wid_len
+    $ cd wid_len
+
+(b) Construct a parameter file as in 'values_ex'.
+
+    $ vi values
+
+    This file is a unix shell script that contains the
+    variables that determine the actual form of the test
+    circuits used and that contains calls to 'dospice'
+    to actually generate the test circuits and run spice
+    on them.
+
+(c) Execute the above shell script.
+
+    $ sh values
+
+(d) Run the program 'solve' to solve the sls transistor
+    model parameters.
+
+    $ solve values > solved
+
+    The delay values found should all be larger than zero.
+    (Inspect this in the output of the program 'solve'.)
+    If not, the appropriate variables should be adjusted
+    and the spice simulations (for the relevant circuits)
+    have to be excuted again.
+    (This process is usually repeated several times before
+    the final result is obtained.)
+
+
+Then, if correct parameters have been determined for all
+<width and length> pairs, return to the directory <proc>,
+create a header file for the sls transistor model file
+(see header_ex)
+
+$ vi header
+
+create a correct 'offsets' file (see 'offsets_ex')
+
+$ vi offsets
+
+and obtain the final slsmod file by running the program
+collect as in the example script 'docol_ex':
+
+collect \
+2.4_1.6/solved \
+6_1.6/solved \
+20_1.6/solved \
+ > slsmod
+
+
+		Arjan van Genderen
+

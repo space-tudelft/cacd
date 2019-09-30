@@ -1,0 +1,49 @@
+.TH DMATTRPRINT 5ICD "DMI User's Manual"
+.SH NAME
+dmAttrPrint - concatenate attribute to attribute string
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+char *dmAttrPrint (char *attr, char *last, char *par, char *val);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "char *attr"
+is a pointer to the beginning of the attribute string.
+.TP
+.B "char *last"
+is a pointer to the part of the attribute string
+that remains for writing.
+.TP
+.B "char *par"
+is the parameter that is written.
+.TP
+.B "char *val"
+is the value that is written.
+.SH DESCRIPTION
+Function
+.B dmAttrPrint
+concatenates attributes to an
+attribute string used for design-data transfer.
+The beginning of the attribute string should be the first
+argument, while the part of the attribute string that remains
+for writing should be the second argument.  \fIPar\fP
+and \fIval\fP are the parameter and value
+that form the attribute that is written.
+\fBdmAttrPrint\fP returns the part of the attribute
+string that is left for writing.
+In order to concatenate different attributes in one attribute string,
+the return value of \fBdmAttrPrint\fP can be used as
+a second argument in a subsequent call to \fBdmAttrPrint\fP.
+.SH DIAGNOSTICS
+\fBdmAttrPrint\fP returns the part of the attribute
+string that is left for writing.
+.SH EXAMPLES
+.SH SEE ALSO
+dmAttrScan(5ICD)
+.SH NOTE
+The strings denoted by \fIpar\fP and \fIval\fP may not contain
+the characters '=' and ';'.

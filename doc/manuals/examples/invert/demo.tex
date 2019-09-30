@@ -1,0 +1,216 @@
+\chapter{invert Example of Junction Capacitance Extraction}
+\section{Introduction}
+\label{PEintro}
+In this example,
+we demonstrate the extraction of an inverter with transistor bulk
+connections and drain/source regions.
+The latter are extracted as either non-linear junction capacitances,
+or as drain/source area and perimeter information attached to the MOS transistors.
+See also the "Space Tutorial" sections "3.8", "4" and "5".
+\\[1 ex]
+The layout looks as follows, using the layout editor \io{dali} (see \manualpage{dali}):
+
+\begin{figure}[h]
+\centerline{\epsfig{figure=invert/invert.eps, width=11cm}}
+\end{figure}
+
+\section{Files}
+This tutorial is located in the directory \CACDTOP{demo/invert}.
+Initially, it contains the following files:
+\begin{filelist}
+\item[README] A file containing information about the demo.
+\item[invert.cmd] Command file for circuit simulation.
+\item[invert.gds] GDS2 file of the layout of the design.
+\item[jun.lib] Model library file for circuit listing.
+\item[script.sh] Batch file for running all commands of the demo in sequence.
+\item[xspicerc] Init file for circuit listing.
+\end{filelist}
+
+\section{Running the Extractor}
+First, we need a project directory.
+To change the current working directory '.' into a project directory, type:
+\small
+\begin{Verbatim}
+% mkpr -p scmos_n -l 0.2 .
+\end{Verbatim}
+\normalsize
+We use the \io{scmos\_n} process from the technology library and a lambda of $0.2 \mu m$.
+We are using the default technology
+file \io{space.def.s} and parameter file \io{space.def.p} of the library.
+\\[1 ex]
+Second, the layout description is put into the project database.
+The layout is supplied in a GDS2 file, which can be converted to
+internal database format with the \io{cgi} program:
+\small
+\begin{Verbatim}
+% cgi invert.gds
+\end{Verbatim}
+\normalsize
+Now, we can perform an extraction of the "invert" cell.
+Use option \io{-C} to include coupling capacitances.
+The drain/source regions are extracted as non-linear junction capacitances
+that have parameters 'area' and 'perimeter' (using option \io{-S}).
+The following command is used:
+\small
+\begin{Verbatim}
+% space -C -Sjun_caps=area-perimeter invert
+\end{Verbatim}
+\normalsize
+Look to the listing of file "xspicerc" to see how the junction capacitances are
+printed in the netlist output as diodes with parameters '\io{area}' and '\io{pj}':
+
+\small \begin{Verbatim}[frame=single]
+listing of file xspicerc
+  4    include_library spice3f3.lib
+  5    include_library jun.lib
+  6
+  7    model nenh_0 nenh nmos ()
+  8    model penh_0 penh pmos ()
+  9    model ndif  ndif  d ()
+ 10    model nwell nwell d ()
+ 11    model pdif  pdif  d ()
+ 12
+ 13    bulk nmos 0.0
+ 14    bulk pmos 5.0
+ 15
+ 16    params ndif  { area=$area pj=$perim }
+ 17    params nwell { area=$area pj=$perim }
+ 18    params pdif  { area=$area pj=$perim }
+\end{Verbatim}
+\normalsize
+Next, retrieve a SPICE circuit description.
+Use the \io{xspice} command with options \io{-a} and \io{-u} to e\io{x}stract SPICE from the database:
+\small
+\begin{Verbatim}
+% xspice -au invert
+\end{Verbatim}
+\normalsize
+\small \begin{Verbatim}[frame=single]
+invert
+
+* circuit invert b_in t_out l_vdd r_vdd l_vss r_vss
+vnet1 l_vdd r_vdd 0
+vnet2 l_vss r_vss 0
+m1 t_out b_in l_vss l_vss nenh_0 w=6.8u l=1.2u
+m2 l_vdd b_in t_out l_vdd penh_0 w=12.4u l=1.2u
+c1 l_vdd b_in 795.12e-18
+c2 l_vdd t_out 3.04892f
+d1 t_out l_vdd pdif area=20.48p pj=14.8u
+c3 l_vdd GND 249.6e-18
+d2 GND l_vdd nwell area=155.52p pj=50.4u
+c4 b_in t_out 495.12e-18
+c5 b_in GND 3.21264f
+c6 b_in l_vss 282.72e-18
+c7 t_out GND 987.68e-18
+d3 GND t_out ndif area=16.16p pj=11.2u
+c8 l_vss GND 774.4e-18
+d4 GND l_vss ndif area=27.92p pj=22.6u
+* end invert
+
+.model nenh_0 nmos(level=2 ...)
+.model penh_0 pmos(level=2 ...)
+.model pdif d(is=10u cjo=500u vj=800m m=500m)
+.model nwell d(is=2u cjo=100u vj=800m m=500m)
+.model ndif d(is=2u cjo=100u vj=800m m=500m)
+\end{Verbatim}
+\normalsize
+An alternative is to extract the drain/source regions as 'area' and 'perimeter'
+information that is attached to the MOS transistors.
+This is achieved by modifying the transistor definitions in the element definition file.
+Therefore, first copy the element definition file from the process directory to the local file "elem.s":
+\small
+\begin{Verbatim}
+% cp $ICDPATH/share/lib/process/scmos_n/space.def.s elem.s
+\end{Verbatim}
+\normalsize
+\small \begin{Verbatim}[frame=single]
+listing of file elem.s
+    ...
+41  conductors :
+42  # name    : condition     : mask : resistivity : type
+43    cond_mf : cmf           : cmf  : 0.045       : m   # first metal
+44    cond_ms : cms           : cms  : 0.030       : m   # second metal
+45    cond_pg : cpg           : cpg  : 40          : m   # poly interconnect
+46    cond_pa : caa !cpg !csn : caa  : 70          : p   # p+ active area
+47    cond_na : caa !cpg  csn : caa  : 50          : n   # n+ active area
+48    cond_well : cwn         : cwn  : 0           : n   # n well
+49
+50  fets :
+51  # name : condition    : gate d/s : bulk
+52    nenh : cpg caa  csn : cpg  caa : @sub  # nenh MOS
+53    penh : cpg caa !csn : cpg  caa : cwn   # penh MOS
+    ...
+66  junction capacitances ndif :
+67  # name    :  condition                 : mask1 mask2 : capacitivity
+68    acap_na :  caa       !cpg  csn !cwn  : @gnd  caa : 100  # n+ bottom
+69    ecap_na : !caa -caa !-cpg -csn !-cwn : @gnd -caa : 300  # n+ sidewall
+70
+71  junction capacitances nwell :
+72    acap_cw :  cwn                  : @gnd  cwn : 100  # bottom
+73    ecap_cw : !cwn -cwn             : @gnd -cwn : 800  # sidewall
+74
+75  junction capacitances pdif :
+76    acap_pa :  caa       !cpg  !csn cwn      :  caa cwn : 500 # p+ bottom
+77    ecap_pa : !caa -caa !-cpg !-csn cwn -cwn : -caa cwn : 600 # p+ sidewall
+    ...
+\end{Verbatim}
+\normalsize
+Change in line 46 and in line 47 the resistance value to zero
+(conductor elements \io{cond\_pa} and \io{cond\_na}).
+This, to avoid complaints by \io{tecc} about the fact the resistance for drain/source
+regions should be zero (the resistance is already modeled in the transistor model).
+\\[1 ex]
+Change line 52 and line 53 of the fets definitions, into:
+\small \begin{Verbatim}[frame=single]
+52    nenh : cpg caa  csn : cpg caa (!cpg caa csn) : @sub # nenh MOS
+53    penh : cpg caa !csn : cpg caa (!cpg caa !csn): cwn  # penh MOS
+\end{Verbatim}
+\normalsize
+This, to extract area/perimeter information of the drain/source regions.
+And remove the \io{ndif} and \io{pdif} junction capacitance lists,
+lines (68,69) and lines (76,77).
+\\[1 ex]
+Next, run the technology compiler \io{tecc} to compile the new element definition file:
+\small
+\begin{Verbatim}
+% tecc elem.s
+\end{Verbatim}
+\normalsize
+Now, extract again, using the compiled element definition file:
+\small
+\begin{Verbatim}
+% space -C -Sjun_caps=area-perimeter -E elem.t invert
+\end{Verbatim}
+\normalsize
+And watch the resulting SPICE output again:
+\small
+\begin{Verbatim}
+% xspice -au invert
+\end{Verbatim}
+\normalsize
+\small \begin{Verbatim}[frame=single]
+invert
+
+* circuit invert b_in t_out l_vdd r_vdd l_vss r_vss
+vnet1 l_vdd r_vdd 0
+vnet2 l_vss r_vss 0
+m1 t_out b_in l_vss l_vss nenh_0 w=6.8u l=1.2u ad=16.16p as=27.92p pd=11.2u
++  ps=22.6u nrs=0.603806 nrd=0.349481
+m2 l_vdd b_in t_out l_vdd penh_0 w=12.4u l=1.2u ad=23.36p as=20.48p pd=10.8u
++  ps=14.8u nrs=0.133195 nrd=0.151925
+c1 l_vdd b_in 795.12e-18
+c2 l_vdd t_out 3.04892f
+c3 l_vdd GND 249.6e-18
+d1 GND l_vdd nwell area=155.52p pj=50.4u
+c4 b_in t_out 495.12e-18
+c5 b_in GND 3.21264f
+c6 b_in l_vss 282.72e-18
+c7 t_out GND 987.68e-18
+c8 l_vss GND 774.4e-18
+* end invert
+
+.model nenh_0 nmos(level=2 ...)
+.model penh_0 pmos(level=2 ...)
+.model nwell d(is=2u cjo=100u vj=800m m=500m)
+\end{Verbatim}
+\normalsize

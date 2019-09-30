@@ -1,0 +1,5 @@
+# Ldmc technology description for standard 4u nmos process
+# name	id	width	sep
+np	p	2	2 1 0
+nd	d	2	1 2 0
+nm	m	2	0 0 2

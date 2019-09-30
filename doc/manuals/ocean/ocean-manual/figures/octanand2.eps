@@ -1,0 +1,1069 @@
+%!PS-Adobe-1.0
+%%BoundingBox: 29 149 567 687
+%%Pages: 1
+%%EndComments
+%% getepslay prolog for c3tu process, fish variant.
+
+% begin inclusion of /usr/cacd/lib/epslay.pro
+%
+% Author: N.P. van der Meijs.
+%
+% This is the common part of the eps prolog for getepslay,
+% the process-specific part is still to be added.
+% This is to be done with %%Include directive of getepslay.
+
+/fillBigPaths {/bigPathFill exch def} def
+
+  true  fillBigPaths   % Goes well if poly has no holes.
+% false fillBigPaths   % Uncomment this line if poly has holes that are
+		       % plotted incorrectly. The result is that the masks
+		       % that contain such polygons are not filled
+		       % (contour only), but the layout is otherwise
+		       % plotted normally.
+
+% Assumes three pass plotting:
+% pass 1: filled mask layers
+% pass 2: contour of mask layers, and other stroked paths
+% pass 3: text, so it is on top of everyting.
+
+/EPSLayDict 140 dict def EPSLayDict begin
+/Style 40 dict def
+0 setlinewidth
+
+% The following has to do with pathLimit of (Level 1) Postscript.
+/pathCount 0 def
+/pathLimit 1000 def
+/pathLimitExceeded false def
+
+% First, some procedure definitions for defining overal appearance,
+% and setting of defaults.
+
+% [min max lambda fontname] plotFont -
+/plotFont {
+    aload pop
+    /FontName exch def
+    /LambdaFs exch def
+    /MaxFs    exch def
+    /MinFs    exch def
+    % [(FontName) FontName (LambdaFs) LambdaFs (MaxFs) MaxFs (MinFs) MinFs] ==
+    % /FontSize MinFs def % avoid use before define
+} def
+[8 8 1 /Helvetica-Bold] plotFont % default 8 point non-proportional
+
+% [factor] plotPatScale -
+/patternScale {aload pop /Bfreq exch def} def
+[1] patternScale % default
+
+% bool plotRotate
+/plotRotate {/Rotate exch def} def
+false plotRotate % default
+
+% Defaults
+/Tailwd    1 def % width of arrow tails, in points
+/Tipwd     6 def % width of arrow heads, in points
+
+/plotPass {/passnumber exch def} def
+1 plotPass
+
+% Drawing patterns.
+%
+/basketweave  [1 8 <d1e3c5885c3e1d88>] def
+/fishscale    [1 8 <3e418080e3140808>] def
+
+/p2 [2 16 <1010200840048002000100000000000010100820044002800100000000000000>]
+def
+/p4 [2 16 <18000c00040000000004000c00180030006000c0008000008000c00060003000>]
+def
+/p5 [2 16 <c071c00101e001e001e0e001e001e3c103c003c0000f1c0f1c0f1c000070c071>]
+def
+/p6 [2 16 <1000001000000200000040000008010000000000100200000000004000000001>]
+def
+/p7 [2 16 <002100210021ffe1e1e1e1e1e1ffe1ff210021002100e1ffe1e1e1e1ffe1ffe1>]
+def
+/p8 [2 16 <0000000080c0c0c160033006180c0c1806300360c1c0c08000000000cccccccc>]
+def
+/p9 [2 16 <00000000c0c0c0c00000000000c000c000000000cccccccc0000000000c000c0>]
+def
+/p13 [2 16 <00ff00ff00ff00ff00ff00ff00ff00ffff00ff00ff00ff00ff00ff00ff00ff00>]
+def
+/p15 [2 16 <ffff0202040408081010202040408080ffff4040202010100808040402020101>]
+def
+/p16 [2 16 <4040202010100808040402020101808040402020101008080404020201018080>]
+def
+/p17 [2 16 <c0c06060303018180c0c060603038181c0c06060303018180c0c060603038181>]
+def
+/p18 [2 16 <0180024004200810100820044002800180014002200410080810042002400180>]
+def
+/p19 [2 16 <8080808080808080808080808080808080808080808080808080808080808080>]
+def
+
+/lines0    [1 8 <ff000000ff000000>] def % lines 0 degrees inclined (horiz)
+/lines45   [1 8 <0102040810204080>] def % lines 45 degrees inclined (/)
+/lines90   [1 8 <1111111111111111>] def % lines 90 degrees inclined (vert)
+/lines135  [1 8 <8040201008040201>] def % lines 135 degrees inclined (\)
+/flines0   [1 8 <ffff000000000000>] def % fat lines 0 dg. inclined (horiz)
+/flines45  [1 8 <03060C183060C081>] def % fat lines 45 dg. inclined (/)
+/flines90  [1 8 <3333333333333333>] def % fat lines 90 dg. inclined (vert)
+/flines135 [1 8 <81C06030180C0603>] def % fat lines 135 dg. inclined (\)
+/cross0    [1 8 <ff01010101010101>] def % lines 0 and 90
+/cross45   [1 8 <110a040a11a040a0>] def % lines 45 and 135
+/fcross45  [1 8 <331e0c1e33e1c0e1>] def % lines 45 and 135
+/black     [1 8 <ffffffffffffffff>] def % black (or dots 100%)
+/dots50    [1 8 <aa55aa55aa55aa55>] def % dots 50%
+/dots25    [1 8 <8822882288228822>] def % dots 25%
+/dots12    [1 8 <8800220088002200>] def % dots ~12% (1 of 8)
+/dots6     [1 8 <8800000088000000>] def % dots ~ 6% (1 of 16)
+/dots3     [1 8 <8000000080000000>] def % dots ~ 3% (1 of 32)
+/dots2     [1 8 <8000000000000000>] def % dots ~ 2% (1 of 64)
+/white     [1 8 <0000000000000000>] def % white (or dots 0%)
+
+/bitison {
+    /ybit exch def /xbit exch def
+    bstring ybit bwidth mul
+    xbit 8 idiv add get
+    1 7 xbit 8 mod sub bitshift
+    and 0 ne
+} def
+
+/setpattern {
+    /bstring exch def
+    /onbits 0 def /offbits 0 def
+    freq 0 {
+      /y exch def /x exch def
+      /xindex x 1 add 2 div bpside mul cvi def
+      /yindex y 1 add 2 div bpside mul cvi def
+      xindex yindex bitison
+        {/onbits onbits 1 add def 1}
+        {/offbits offbits 1 add def 0}
+        ifelse
+    } setscreen
+    {} settransfer
+    offbits offbits onbits add div setgray
+} def
+
+% Adapted from cookbook example program.
+% x1 y1 x2 y2 Tailwd headwd headlen type arrow
+/arrow {
+    0 begin
+    /ArrowType exch def 
+    /headlength exch def
+    /halfheadthickness exch 2 div def
+    /halfthickness exch 2 div def
+    /tipy exch def /tipx exch def
+    /taily exch def /tailx exch def
+    /dx tipx tailx sub def
+    /dy tipy taily sub def
+    /arrowlength dx dx mul dy dy mul add sqrt def
+    /angle dy dx atan def
+    /base arrowlength headlength sub def
+                                                            
+    /savematrix matrix currentmatrix def
+    tailx taily translate
+    angle rotate
+
+    /Forward false def
+    /Backward false def
+    ArrowType 1 eq {/Forward  true def} if
+    ArrowType 3 eq {/Forward  true def} if
+    ArrowType 2 eq {/Backward true def} if
+    ArrowType 3 eq {/Backward true def} if
+    0 0 moveto
+
+    Backward {
+        headlength halfheadthickness neg lineto
+        headlength halfthickness neg lineto
+    } { 0 halfthickness neg lineto
+    } ifelse
+
+    Forward {
+        base halfthickness neg lineto
+        base halfheadthickness neg lineto
+        arrowlength 0 lineto
+        base halfheadthickness lineto
+        base halfthickness lineto
+    } { arrowlength halfthickness neg lineto
+        arrowlength halfthickness lineto
+    } ifelse
+
+    Backward {
+        headlength halfthickness lineto
+        headlength halfheadthickness lineto
+    } { 0 halfthickness lineto
+    } ifelse
+
+    closepath savematrix setmatrix end
+} def
+/arrow load 0 16 dict put
+
+% x y dx dy text Text -
+% Shows string with (dx,dy) relative to bounding box at (x,y)
+% Dx and dy work same as in mathematica
+% On white background.
+/Text {
+    0 begin
+    /text exch def
+    /dy exch def /dx exch def
+    /Y exch def /X exch def
+    text stringwidth pop /W exch def
+    /H FontSize def
+
+    % center text
+    /Y Y FontSize 2 div sub def
+    /X X W 2 div sub def
+
+    % adjust according to dx,dy
+    /X X dx W mul 2 div sub def
+    /Y Y dy H mul 2 div sub def
+
+    gsave
+	% determine bbox of text.
+	newpath X Y moveto text true charpath pathbbox
+	/st exch def /sr exch def /sb exch def /sl exch def
+
+	% define a margin around bbox of text
+	/Margin st sb sub 0.2 mul def
+	/sb sb Margin sub def
+	/sl sl Margin sub def
+	/sr sr Margin add def
+	/st st Margin add def
+
+	% construct path corresponding to bbox
+	newpath sl sb moveto sr sb lineto sr st lineto sl st lineto
+	closepath
+
+	% make it white.
+	gsave 1 setgray fill grestore
+
+	% stroke outline
+	gsave 0 setlinewidth stroke grestore
+
+    grestore
+
+    % print text.
+    X Y moveto text show
+
+    end
+} def
+/Text load 0 20 dict put
+
+/BeginLayout {
+    /EPSLayGC save def
+    /TForm exch def % TForm ==
+
+    /bbxl TForm 4 get def
+    /bbxr TForm 6 get def
+    /bbyb TForm 5 get def
+    /bbyt TForm 7 get def
+    /Resolution TForm 8 get def
+
+    % Rotate if necessary
+    Rotate {
+        /xl TForm 7 get neg def
+        /xr TForm 5 get neg def
+        /yb TForm 4 get def
+        /yt TForm 6 get def
+
+        TForm 4 xl put
+        TForm 6 xr put
+        TForm 5 yb put
+        TForm 7 yt put
+    } if % TForm ==
+
+    /DrawWd TForm 2 get TForm 0 get sub def
+    /DrawHt TForm 3 get TForm 1 get sub def
+
+    /PicHt TForm 7 get TForm 5 get sub def
+    /PicWd TForm 6 get TForm 4 get sub def   
+
+    /WdScale DrawWd PicWd div def
+    /HtScale DrawHt PicHt div def
+
+    /ScaleFactor
+        WdScale HtScale lt {WdScale} {HtScale} ifelse def
+
+    % now move to center
+    TForm 0 get DrawWd PicWd ScaleFactor mul sub 2 div add
+    TForm 1 get DrawHt PicHt ScaleFactor mul sub 2 div add
+    translate
+
+    % Finally, perform scaling.  [(ScaleFactor) ScaleFactor] ==
+    ScaleFactor ScaleFactor scale
+
+    % but following items should not be scaled, so undo it.
+    /Tailwd Tailwd ScaleFactor div def
+    /Tipwd Tipwd ScaleFactor div def
+
+    % Compute {min,max}fontsize and target fontsize in scaled coordinates.
+    /MinFs MinFs ScaleFactor div def
+    /MaxFs MaxFs ScaleFactor div def
+    /FontSize LambdaFs Resolution mul def
+    % [MinFs MaxFs FontSize] ==
+
+    % Apply min and max, and set font
+    FontSize MinFs lt {/FontSize MinFs def} if
+    FontSize MaxFs gt {/FontSize MaxFs def} if
+    FontName findfont FontSize scalefont setfont
+
+    % set user origin
+    TForm 4 get neg TForm 5 get neg translate
+    Rotate {90 rotate} if
+} def
+
+/SetClipPath {
+    newpath
+    bbxl bbyb moveto
+    bbxr bbyb lineto
+    bbxr bbyt lineto
+    bbxl bbyt lineto
+    closepath
+    clip
+} def
+
+/SetLayer {
+    /Layer exch def
+    gsave
+    passnumber 1 eq {SetClipPath} if
+    SetStyle clear newpath
+    /pathLimitExceeded false def
+} def
+
+/EndLayer {
+    pathCount 0 gt {DrawPolygons} if
+    grestore
+} def
+
+% Start a polygon: x0 y0 P -
+/P {moveto /pathCount pathCount 1 add def} def
+
+% Continue a polygon: x y T -
+/T {lineto /pathCount pathCount 1 add def} def
+
+% Close a polygon: x y L -
+/L {
+    T closepath
+    pathCount pathLimit gt {
+	/pathLimitExceeded true def DrawPolygons
+    } if
+} def
+
+% Rectangular box: x0 y0 w h B -
+/B {
+    /dy exch def /dx exch def /yb exch def /xl exch def
+    /xr xl dx add def
+    /yt yb dy add def
+    xl yb P xr yb T xr yt T xl yt L
+} def
+
+/R {
+    /dy exch def /dx exch def /y0 exch def /x0 exch def
+    x0 y0 P dx 0 rlineto 0 dy rlineto
+    /pathCount pathCount 2 add def
+} def
+
+/X {
+    exch 0 rlineto 0 exch rlineto
+    /pathCount pathCount 2 add def
+} def
+
+/C {
+    exch 0 rlineto 0 exch rlineto
+    % [(current) currentpoint (x0) x0 (y0) y0 ] ==
+    x0 currentpoint pop sub 0 rlineto
+    closepath
+    /pathCount pathCount 4 add def
+    pathCount pathLimit gt {
+	/pathLimitExceeded true def DrawPolygons
+    } if
+} def
+
+/EndLayout {
+    EndLayer showpage
+    % EPSLayDict length =
+    EPSLayGC restore
+    end
+} def
+
+/DrawPolygons {
+    % pathLimitExceeded { [(pathLimitExceeded) pathCount Layer] == } if
+    passnumber 1 eq {
+	pathLimitExceeded false eq bigPathFill true eq or {
+	    gsave FillPolygons grestore
+	} if
+    } if
+    % Always stroke polygon boundaries, because a mask
+    % might be skipped in pass 2.
+    OutlinePolygons 
+    /pathCount 0 def
+} def
+
+/FillPolygons {FillPattern setpattern fill} def
+
+/OutlinePolygons {
+    /bwidth 1    def
+    /bpside 8    def
+    <ffffffffffffffff> setpattern
+    LineWd setlinewidth
+    0 setgray
+    stroke
+} def
+
+/SetStyle {
+    Style Layer get aload pop
+    /LineWd exch Resolution mul def % in lambda's
+    /Pfreq exch def
+    aload pop
+    /FillPattern exch def
+    /bpside exch def
+    /bwidth exch def
+    /freq 300 bpside div Pfreq div Bfreq div def
+    % [(bpside, bwidth, freq) bpside bwidth freq (FillPattern) FillPattern]==
+} def
+
+% x1 y1 x2 y2 ArrowType plotArrow
+% ArrowType has meaning as defined in dali/comment.h
+/plotArrow {
+    /ArrowType exch def
+    /y2 exch def
+    /x2 exch def
+    /y1 exch def
+    /x1 exch def
+    newpath
+    x1 y1 x2 y2 Tailwd Tipwd Tipwd 2 mul ArrowType arrow
+    fill
+} def
+
+/align false def
+%[dx dy] termTextAlignment
+/termTextAlignment {
+    aload pop
+    /ady exch def
+    /adx exch def
+    /align true def
+} def
+
+% xl xr yb yt dx dy termname plotTerminal
+/plotTerminal {
+    /name exch def
+    /dy exch def /dx exch def
+    /yt exch def /yb exch def /xr exch def /xl exch def
+    passnumber 2 eq {
+	LineWd setlinewidth
+	newpath
+	xl yb moveto xr yb lineto xr yt lineto xl yt lineto
+	closepath stroke
+	newpath xl yb moveto xr yt lineto stroke
+	newpath xr yb moveto xl yt lineto stroke
+    } if
+    passnumber 3 eq {
+	align true eq {/dx adx def /dy ady def} if
+        xl xr add 2 div yb yt add 2 div dx dy name Text
+    } if
+} def
+
+/PlotBBox {
+    passnumber 2 eq {
+	1 setlinewidth newpath
+	bbxl bbyb moveto
+	bbxr bbyb lineto
+	bbxr bbyt lineto
+	bbxl bbyt lineto
+	closepath stroke
+    } if
+} def
+
+% [ (maskname) pattern pfreq linewidth ] defineStyle -
+/defineStyle {
+    /stylearg exch def
+    Style stylearg 0 get stylearg 1 3 getinterval put
+} def
+% end inclusion of /usr/cacd/lib/epslay.pro
+
+%%Order: nn pp ps in ins co cos cot cb
+
+[5 14 15 /Helvetica-Bold] plotFont
+[-1 1] termTextAlignment
+
+%% mask   patt      pscale linewidth
+[ (bb)     white    1.0    0.1 ] defineStyle
+[ (sdi)    white    1.0    0.1 ] defineStyle
+[ (sp)     white    1.0    0.1 ] defineStyle
+[ (sn)     white    1.0    0.1 ] defineStyle
+[ (te)     white    1.0    0.1 ] defineStyle
+[ (cb)     white    1.0    0.1 ] defineStyle
+[ (nw)     white    1.0    0.1 ] defineStyle
+[ (od)     white    1.0    0.1 ] defineStyle
+[ (xa)     white    1.0    0.1 ] defineStyle
+[ (xb)     white    1.0    0.1 ] defineStyle
+[ (nn)     dots2    1.0    0.1 ] defineStyle
+[ (pp)     dots2    1.0    0.1 ] defineStyle
+[ (cos)    fcross45 1.0    2.0 ] defineStyle
+[ (cot)    fcross45 1.0    2.0 ] defineStyle
+[ (int)    dots50   1.0    0.1 ] defineStyle
+[ (ins)    dots25   1.0    0.1 ] defineStyle
+[ (in)     dots12   1.0    0.1 ] defineStyle
+[ (co)     black    1.0    0.1 ] defineStyle
+[ (ps)     dots6    1.0    0.1 ] defineStyle
+[ (t_ps)   p18      1.0    0.1 ] defineStyle
+[ (t_in)   p16      1.0    0.1 ] defineStyle
+[ (t_ins)  p15      1.0    0.1 ] defineStyle
+[29 149 567 687 0 0 1952 1952 4] BeginLayout
+1 plotPass
+(nn) SetLayer
+512 224 P
+432 224 T
+368 288 T
+368 368 T
+288 368 T
+224 432 T
+224 512 T
+0 512 T
+0 432 T
+32 432 T
+32 368 T
+0 368 T
+0 288 T
+80 288 T
+144 224 T
+144 144 T
+224 144 T
+288 80 T
+288 0 T
+368 0 T
+368 32 T
+432 32 T
+432 0 T
+512 0 L
+512 1952 P
+432 1952 T
+432 1920 T
+368 1920 T
+368 1952 T
+288 1952 T
+288 1872 T
+224 1808 T
+144 1808 T
+144 1728 T
+80 1664 T
+0 1664 T
+0 1584 T
+32 1584 T
+32 1520 T
+0 1520 T
+0 1440 T
+224 1440 T
+224 1520 T
+288 1584 T
+368 1584 T
+368 1664 T
+432 1728 T
+512 1728 L
+1952 512 P
+1728 512 T
+1728 432 T
+1664 368 T
+1584 368 T
+1584 288 T
+1520 224 T
+1440 224 T
+1440 0 T
+1520 0 T
+1520 32 T
+1584 32 T
+1584 0 T
+1664 0 T
+1664 80 T
+1728 144 T
+1808 144 T
+1808 224 T
+1872 288 T
+1952 288 T
+1952 368 T
+1920 368 T
+1920 432 T
+1952 432 L
+1952 1664 P
+1872 1664 T
+1808 1728 T
+1808 1808 T
+1728 1808 T
+1664 1872 T
+1664 1952 T
+1584 1952 T
+1584 1920 T
+1520 1920 T
+1520 1952 T
+1440 1952 T
+1440 1728 T
+1520 1728 T
+1584 1664 T
+1584 1584 T
+1664 1584 T
+1728 1520 T
+1728 1440 T
+1952 1440 T
+1952 1520 T
+1920 1520 T
+1920 1584 T
+1952 1584 L
+EndLayer
+(pp) SetLayer
+944 656 P
+928 656 T
+800 784 T
+800 800 T
+784 800 T
+656 928 T
+656 944 T
+576 944 T
+576 912 T
+512 912 T
+512 944 T
+144 944 T
+144 720 T
+304 720 T
+432 592 T
+432 576 T
+576 576 T
+576 432 T
+592 432 T
+720 304 T
+720 144 T
+944 144 T
+944 512 T
+912 512 T
+912 576 T
+944 576 L
+944 1808 P
+720 1808 T
+720 1648 T
+592 1520 T
+576 1520 T
+576 1376 T
+432 1376 T
+432 1360 T
+304 1232 T
+144 1232 T
+144 1008 T
+512 1008 T
+512 1040 T
+576 1040 T
+576 1008 T
+656 1008 T
+656 1024 T
+784 1152 T
+800 1152 T
+800 1168 T
+928 1296 T
+944 1296 T
+944 1376 T
+912 1376 T
+912 1440 T
+944 1440 L
+1808 944 P
+1440 944 T
+1440 912 T
+1376 912 T
+1376 944 T
+1296 944 T
+1296 928 T
+1168 800 T
+1152 800 T
+1152 784 T
+1024 656 T
+1008 656 T
+1008 576 T
+1040 576 T
+1040 512 T
+1008 512 T
+1008 144 T
+1232 144 T
+1232 304 T
+1360 432 T
+1376 432 T
+1376 576 T
+1520 576 T
+1520 592 T
+1648 720 T
+1808 720 L
+1808 1232 P
+1648 1232 T
+1520 1360 T
+1520 1376 T
+1376 1376 T
+1376 1520 T
+1360 1520 T
+1232 1648 T
+1232 1808 T
+1008 1808 T
+1008 1440 T
+1040 1440 T
+1040 1376 T
+1008 1376 T
+1008 1296 T
+1024 1296 T
+1152 1168 T
+1152 1152 T
+1168 1152 T
+1296 1024 T
+1296 1008 T
+1376 1008 T
+1376 1040 T
+1440 1040 T
+1440 1008 T
+1808 1008 L
+EndLayer
+(ps) SetLayer
+224 656 -224 -80 R
+96 -160 X
+-96 -32 X
+128 192 C
+224 1376 -96 192 R
+-128 -32 X
+96 -160 X
+-96 -80 C
+368 512 P
+288 512 T
+288 456 T
+264 432 T
+56 224 T
+0 224 T
+0 144 T
+80 144 T
+80 200 T
+312 432 T
+368 432 L
+368 1520 P
+312 1520 T
+80 1752 T
+80 1808 T
+0 1808 T
+0 1728 T
+56 1728 T
+288 1496 T
+288 1440 T
+368 1440 L
+512 368 P
+432 368 T
+432 312 T
+408 288 T
+200 80 T
+144 80 T
+144 0 T
+224 0 T
+224 56 T
+456 288 T
+512 288 L
+512 1664 P
+456 1664 T
+224 1896 T
+224 1952 T
+144 1952 T
+144 1872 T
+200 1872 T
+432 1640 T
+432 1584 T
+512 1584 L
+560 944 -32 -96 R
+-448 96 X
+-80 -224 X
+80 96 C
+560 1136 -480 96 R
+-80 -224 X
+80 96 X
+448 -96 C
+656 224 -80 -96 R
+-192 -128 X
+32 96 X
+160 -96 C
+656 1952 -80 -96 R
+-160 96 X
+-32 -128 X
+192 -96 C
+800 944 P
+720 944 T
+720 888 T
+696 864 T
+472 640 T
+408 704 T
+392 704 T
+352 664 T
+344 656 T
+288 656 T
+288 576 T
+368 576 T
+368 632 T
+400 664 T
+464 600 T
+480 600 T
+744 864 T
+800 864 L
+800 1088 P
+744 1088 T
+480 1352 T
+464 1352 T
+400 1288 T
+368 1320 T
+368 1376 T
+288 1376 T
+288 1296 T
+344 1296 T
+392 1248 T
+408 1248 T
+472 1312 T
+720 1064 T
+720 1008 T
+800 1008 L
+944 560 -128 -480 R
+-96 -80 X
+224 80 X
+-96 448 C
+944 800 P
+864 800 T
+864 744 T
+840 720 T
+600 480 T
+600 464 T
+664 400 T
+656 392 T
+632 368 T
+576 368 T
+576 288 T
+656 288 T
+656 344 T
+704 392 T
+704 408 T
+640 472 T
+888 720 T
+944 720 L
+944 1232 P
+888 1232 T
+640 1480 T
+704 1544 T
+704 1560 T
+656 1608 T
+656 1664 T
+576 1664 T
+576 1584 T
+632 1584 T
+664 1552 T
+600 1488 T
+600 1472 T
+864 1208 T
+864 1152 T
+944 1152 L
+944 1952 -224 -80 R
+96 -480 X
+128 32 X
+-96 448 C
+1232 80 -96 480 R
+-128 -32 X
+96 -448 X
+-96 -80 C
+1232 1952 -224 -80 R
+96 -448 X
+-96 -32 X
+128 480 C
+1376 368 P
+1320 368 T
+1288 400 T
+1352 464 T
+1352 480 T
+1088 744 T
+1088 800 T
+1008 800 T
+1008 720 T
+1064 720 T
+1312 472 T
+1248 408 T
+1248 392 T
+1296 344 T
+1296 288 T
+1376 288 L
+1376 1664 P
+1296 1664 T
+1296 1608 T
+1272 1584 T
+1248 1560 T
+1248 1544 T
+1312 1480 T
+1304 1472 T
+1064 1232 T
+1008 1232 T
+1008 1152 T
+1088 1152 T
+1088 1208 T
+1352 1472 T
+1352 1488 T
+1288 1552 T
+1320 1584 T
+1376 1584 L
+1568 128 -192 96 R
+-80 -224 X
+80 96 X
+160 -96 C
+1568 1952 -32 -96 R
+-160 96 X
+-80 -224 X
+80 96 C
+1664 656 P
+1608 656 T
+1560 704 T
+1544 704 T
+1480 640 T
+1232 888 T
+1232 944 T
+1152 944 T
+1152 864 T
+1208 864 T
+1472 600 T
+1488 600 T
+1552 664 T
+1584 632 T
+1584 576 T
+1664 576 L
+1664 1376 P
+1584 1376 T
+1584 1320 T
+1560 1296 T
+1552 1288 T
+1488 1352 T
+1472 1352 T
+1432 1312 T
+1208 1088 T
+1152 1088 T
+1152 1008 T
+1232 1008 T
+1232 1064 T
+1480 1312 T
+1544 1248 T
+1560 1248 T
+1608 1296 T
+1664 1296 L
+1808 80 P
+1752 80 T
+1520 312 T
+1520 368 T
+1440 368 T
+1440 288 T
+1496 288 T
+1728 56 T
+1728 0 T
+1808 0 L
+1808 1952 P
+1728 1952 T
+1728 1896 T
+1704 1872 T
+1496 1664 T
+1440 1664 T
+1440 1584 T
+1520 1584 T
+1520 1640 T
+1752 1872 T
+1808 1872 L
+1952 224 P
+1896 224 T
+1664 456 T
+1664 512 T
+1584 512 T
+1584 432 T
+1640 432 T
+1872 200 T
+1872 144 T
+1952 144 L
+1952 656 -224 -80 R
+96 -192 X
+128 32 X
+-96 160 C
+1952 944 -80 -96 R
+-448 96 X
+-32 -128 X
+480 -96 C
+1952 1232 -80 -96 R
+-480 -128 X
+32 96 X
+448 -96 C
+1952 1568 -128 -192 R
+-96 -80 X
+224 80 X
+-96 160 C
+1952 1808 P
+1872 1808 T
+1872 1752 T
+1848 1728 T
+1640 1520 T
+1584 1520 T
+1584 1440 T
+1664 1440 T
+1664 1496 T
+1896 1728 T
+1952 1728 L
+EndLayer
+(in) SetLayer
+224 224 -80 -80 R
+12 -76 X
+-144 -56 X
+200 132 C
+656 368 -80 -12 R
+-64 12 X
+-80 -80 X
+80 12 X
+64 -12 C
+800 80 -80 -12 R
+-64 12 X
+-80 -80 X
+80 12 X
+64 -12 C
+800 224 -80 -12 R
+-276 -132 X
+-12 -80 X
+80 80 X
+-12 76 X
+220 -12 C
+944 512 -12 420 R
+-56 -144 X
+-76 12 X
+-80 -80 X
+80 12 X
+76 -220 X
+-12 -80 C
+EndLayer
+(ins) SetLayer
+EndLayer
+(co) SetLayer
+172 172 24 24 B
+460 28 24 24 B
+460 316 24 24 B
+604 28 24 24 B
+604 316 24 24 B
+748 28 24 24 B
+748 172 24 24 B
+748 748 24 24 B
+892 460 24 24 B
+EndLayer
+(cos) SetLayer
+EndLayer
+(cot) SetLayer
+EndLayer
+(cb) SetLayer
+EndLayer
+2 plotPass
+(t_in) SetLayer
+156 212 12 68 0 0 (vss) plotTerminal
+876 932 876 932 0 0 (vdd) plotTerminal
+588 644 12 68 0 0 (B) plotTerminal
+444 500 156 212 0 0 (Y) plotTerminal
+444 500 300 356 0 0 (A) plotTerminal
+EndLayer
+(t_ins) SetLayer
+EndLayer
+3 plotPass
+(t_in) SetLayer
+156 212 12 68 0 0 (vss) plotTerminal
+876 932 876 932 0 0 (vdd) plotTerminal
+588 644 12 68 0 0 (B) plotTerminal
+444 500 156 212 0 0 (Y) plotTerminal
+444 500 300 356 0 0 (A) plotTerminal
+EndLayer
+(t_ins) SetLayer
+EndLayer
+EndLayout

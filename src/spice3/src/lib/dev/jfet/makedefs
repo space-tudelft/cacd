@@ -1,0 +1,12 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+
+COBJS		= jfet.o jfetacld.o jfetask.o jfetdel.o jfetdest.o jfetdist.o \
+		  jfetdset.o jfetic.o jfetload.o jfetmask.o jfetmdel.o \
+		  jfetmpar.o jfetnoi.o jfetpar.o jfetpzld.o jfetset.o \
+		  jfettemp.o jfettrun.o
+
+LIB_TARGET	= ../../dev.a
+INCLUDE		= -I../../../include
+

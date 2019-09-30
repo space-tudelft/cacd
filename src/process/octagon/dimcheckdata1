@@ -1,0 +1,12 @@
+nw_vln  NOFILE  40 40   0  0  3  NW.1.1+NW.2.2
+od_vln  NOFILE   8 16   0  0  2  OD.1.1+OD.2.1
+ps_vln  NOFILE   8 12   0  0  2  PS.1.1+PS.1.2+PS.1.4+PS.2.1
+sp_vln  NOFILE  12 12   0  0  3  SP.1.1+SP.2.1
+sn_vln  NOFILE  12 12   0  0  3  SN.1.1+SN.2.1
+con_vln NOFILE  10 10  -1  10 2  CON.1.1+CON.2.1
+cop_vln NOFILE  10 10  -1  10 2  COP.1.1+COP.2.1
+cps_vln NOFILE  10 10  -1  10 2  CPS.1.1+CPS.2.1
+in_vln  NOFILE  12 12   0  0  2  IN.1.1+IN.2.1
+cos_vln NOFILE   0 10   0  0  2  COS.2.1
+ins_vln NOFILE  12 12   0  0  2  INS.1.1+INS.2.1
+cb_vln  NOFILE 600 350  0  0  2  CB.2.1+CB.2.2+CB.3.1

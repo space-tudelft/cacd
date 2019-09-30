@@ -1,0 +1,264 @@
+.de OP
+\fB\\$1\fP\\fI\\$2\\fP\\$3
+..
+.TH SPACE3D 1ICD "User Commands"
+.UC 4
+.SH NAME
+space3d - 3D hierarchical layout to circuit extractor
+
+.SH SYNOPSIS
+.B space3d
+[all space options]
+[-3BUX]
+cell
+
+.SH OPTIONS
+The following additional options can be specified:
+.TP
+.B -3
+Use a boundary-element technique for 3-dimensional
+.I capacitance
+extraction.
+Use with
+.B -c
+or
+.B -C
+option.
+.TP
+.B -B
+Use a boundary-element technique to compute
+.I substrate
+resistances.
+.TP
+.B -U
+No calculation of Green's functions and no Schur matrix inversion.
+.TP
+.B -X
+Start tool
+.I Xspace
+directly from
+.I space3d.
+All options of the
+.I space3d
+run are given to
+.I Xspace.
+You must also specify the display options.
+This option is used by the
+.I helios
+interface.
+
+.SH HIDDEN OPTIONS
+For hidden options a '%' sign needs to be specified after the first '-'.
+The following options can be specified:
+.TP
+.B -f
+Extract fine network (no nodes are eliminated).
+.TP
+.B -g
+Extract moments (use option -r and -C).
+.TP
+.B -m
+Enable monitor (produces a "mon.out" file).
+.TP
+.B -q
+Print recognized masks and elements.
+.TP
+.B -w
+Print statistics of recognized elements.
+.TP
+.B -Z
+Do only the prepass steps (no extract pass).
+.TP
+.B -0
+Skip the mesh refinement pass(es).
+.TP
+.B -2
+Skip all prepasses (only extract pass).
+.TP
+.B "-L \fImax_depth\fP"
+Extract cell tree to specified maximum depth.
+
+.SH NOTICE
+This manual page only gives a brief introduction to \fIspace3d\fP.
+It should in most cases be sufficient, however,
+for performing straight-forward extraction tasks.
+Other documentation is available, see below.
+
+.SH DESCRIPTION
+.I Space3d
+is a 3D hierarchical layout to circuit extractor for 45 degree polygonal geometries.
+The program is capable of accurately extracting
+MOS and bipolar integrated circuits,
+including interconnect resistances and capacitances,
+and substrate resistances.
+Generally spoken,
+.I space3d
+extracts the circuits for all layout cells that are specified
+in the cell argument list.
+These circuits can then be directly simulated,
+for example, with
+.I sls(1ICD)
+or
+.I spice.
+.PP
+.I Space3d
+is an upgraded version of the fast
+.I space
+extractor.
+For all common behaviour see the manual page of
+.I space(1ICD)
+and the Space User's Manual for details.
+Note that
+.I space3d
+is using the
+.I flat
+extraction mode
+when using one of the following options: \fB-3\fP, \fB-B\fP, \fB-b\fP or \fB-X\fP.
+
+.SS "3D Capacitance Extraction (-3)"
+.I Space3d
+can perform very accurate capacitance extraction by using
+a three-dimensional boundary element method.
+This is a numerical technique capable of numerically solving
+the Laplace equation which governs the electrical field
+around the interconnections wires on the IC.
+This capability is fully explained in a separate document,
+and is not discussed here any further.
+
+.SS "3D Substrate Extraction (-B)"
+.I Space3d
+can perform very accurate substrate resistance and capacitance extraction by using
+a three-dimensional boundary element method.
+In modern analog circuits and mixed digital/analog circuits,
+coupling effects via the substrate can be an important cause of
+malfunctioning of the circuit.
+Therefor,
+the extraction of an accurate substrate model is very important.
+
+.SS "Element Definition File"
+For 3D capacitance extraction the following special sections
+must be added to the technology file:
+.TP
+.B vdimensions
+The vertical dimension list specifies for different conductors under
+different mask conditions (1) the distance between the ground plane
+(substrate) and the bottom of a mask conductor and
+(2) the thickness of that conductor.
+.TP
+.B dielectrics
+The dielectric structure of the chip.
+The first dielectric layer starts at the bottom (ground plane) and
+all other layers start at a positive vertical position.
+Each layer has a relative permittivity value.
+.TP
+.B eshapes
+Optional, an edge shape list may be specified (see 3D Capacitance User's Manual).
+.TP
+.B cshapes
+Optional, a cross-over shape list may be specified (see 3D Capacitance User's Manual).
+.PP
+For 3D substrate resistance extraction the following special section
+must be added to the technology file:
+.TP
+.B sublayers
+Specifies the conductivity of the substrate (see Substrate Resistance User's Manual).
+.PP
+For 3D substrate capacitance extraction the following special section
+must be added to the technology file:
+.TP
+.B subcaplayers
+Specifies the relative permittivity of the substrate (see Substrate Resistance User's Manual).
+
+.SS "Parameter File"
+Much of the operation of
+.I space3d
+is also under control of parameters
+that are specified in a parameter file.
+.PP
+The special 3D capacitance parameters start with a leading "\fBcap3d.\fP"
+(see 3D Capacitance User's Manual).
+.PP
+The special 3D substrate resistance parameters start with a leading "\fBsub3d.\fP"
+(see Substrate Resistance User's Manual).
+
+.SH EXAMPLES
+To produce a transistor network for the cell \fIlatch\fP
+including non-metal resistances
+and accurate substrate resistances
+and 2D couple capacitances,
+type:
+.PP
+% space3d -rBC latch
+.PP
+To produce a transistor network for the cell \fIlatch\fP
+including non-metal resistances
+and with 3D couple capacitances,
+type:
+.PP
+% space3d -rC3 latch
+
+.SH SPECIAL CONSIDERATIONS
+Before performing the actual extraction,
+beside the preprocessors,
+for accurate substrate extraction
+.I space3d
+first runs a prepass
+and after that the
+.I makesubres(1ICD)
+and if requested the
+.I makesubcap(1ICD)
+program.
+
+.AU "A.J. van Genderen, N.P. van der Meijs, F. Beeftink, P.J.H. Elias, U. Geigenmuller, S. de Graaf"
+.SH FILES
+.TP
+\fCICDPATH/share/lib/process/\fIprocess\fP/space.def.t\fP
+default element definition file
+.TP
+\fCICDPATH/share/lib/process/\fIprocess\fP/space.def.p\fP
+default parameter file
+.TP
+\fCNELSISPROJECT/exp_dat\fP
+list of cells to be extracted
+.TP
+\fCSPACE_TMPDIR/space[12].xxxxxx\fP
+green buffer temporary files
+
+.SH SEE ALSO
+N.P. van der Meijs, A.J. van Genderen,
+F. Beeftink and P.J.H. Elias,
+"Space User's Manual",
+Delft University of Technology,
+Delft,
+The Netherlands.
+.PP
+N.P. van der Meijs and A.J. van Genderen,
+"Space Tutorial",
+Delft University of Technology,
+Delft,
+The Netherlands.
+.PP
+S. de Graaf, N.P. van der Meijs and A.J. van Genderen,
+"Space Tutorial Helios Version",
+Delft University of Technology,
+Delft,
+The Netherlands.
+.PP
+A.J. van Genderen and N.P. van der Meijs,
+"Space 3D Capacitance Extraction User's Manual",
+Delft University of Technology,
+Delft,
+The Netherlands.
+.PP
+A.J. van Genderen, N.P. van der Meijs and T. Smedes,
+"Space Substrate Resistance Extraction User's Manual",
+Delft University of Technology,
+Delft,
+The Netherlands.
+.PP
+helios(1ICD),
+makesubcap(1ICD),
+makesubres(1ICD),
+space(1ICD),
+tecc(1ICD),
+Xspace(1ICD).

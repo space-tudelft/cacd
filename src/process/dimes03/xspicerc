@@ -1,0 +1,5 @@
+# process dimes03
+model npn npn npn ()
+model pnp pnp pnp ()
+model pjf pjf pmos ()
+model pnjun pnjun d ()

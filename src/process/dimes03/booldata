@@ -1,0 +1,53 @@
+#
+# booldata of DIMES03 process, V0.1 (DTS) 14/01/1999
+#
+# General information:
+# This file assumes a lambda of 0.1 micron/gridspace
+#
+# File History.
+#
+#   --- 30/10/1995 --  Creation by C.A. Schot
+#
+#   --- 13/11/1995 --  Change by C.A. Schot
+# Addition of boolmasks for rules CO.3.0, WN.0.2, WN.0.3 and WN.4.1
+# (bool 23, 26, 15 and 41 resp.)
+#   --- 14/01/1999 --  Change by C.A. Schot
+# Addition of boolmasks for rules NPW and LBL
+#
+bn_vln dp_vln dp_vln lp_vln lb_vln lbl_vln co_vln wn_vln nwp_vln cap_vln ic_vln ct_vln in_vln cb_vln: filenames
+bn_vln&dn_vln                                        : 10  DN.3.1
+!bn_vln                                              : 11  DN.3.1
+!dp_vln                                              : 21  LP.3.2
+!dp_vln&!dn_vln&!lp_vln&!lb_vln&!lbl_vln&co_vln&wn_vln        : 15  WN.0.3
+dp_vln&lp_vln                                        : 20  LP.3.2
+dp_vln&!lp_vln&co_vln                                : 23  CO.3.0
+dp_vln&co_vln                                        : 22  CO.3.1
+dn_vln&co_vln                                        : 25  CO.4.1
+dn_vln&co_vln&!wn_vln                                : 26  WN.0.2
+lp_vln&lbl_vln                                       : 29  LBL.5.1
+lp_vln&lb_vln                                        : 30  LB.5.1
+!lp_vln                                              : 31  LB.5.1
+lp_vln&co_vln                                        : 32  CO.5.1
+lbl_vln&co_vln                                       : 39  CO.6.1
+lb_vln&co_vln                                        : 40  CO.6.1
+lb_vln&co_vln&wn_vln                                 : 41  WN.4.1
+lbl_vln&co_vln&wn_vln                                : 42  WN.4.1
+co_vln&wn_vln                                        : 45  WN.3.1
+co_vln&!ic_vln                                       : 46  IC.3.0
+co_vln&ic_vln                                        : 47  IC.3.1
+cap_vln&!ic_vln                                      : 50  IC.4.0
+cap_vln&ic_vln                                       : 51  IC.4.1
+cap_vln&ct_vln                                       : 52  CT.4.1
+cap_vln&!in_vln                                      : 53  IN.3.0
+cap_vln&in_vln                                       : 54  IN.3.1
+!ic_vln&ct_vln                                       : 55  CT.3.0
+ic_vln&ct_vln                                        : 56  CT.3.1
+!ic_vln&cb_vln                                       : 57  CB.5.0
+ic_vln&cb_vln                                        : 58  CB.5.1
+ct_vln&!in_vln                                       : 60  IN.4.0
+ct_vln&in_vln                                        : 61  IN.4.1
+!ct_vln&in_vln&cb_vln                                : 62  CB.7.0
+in_vln&cb_vln                                        : 65  IN.6.0+IN.6.1
+in_vln&!cb_vln                                       : 66  IN.6.0
+!in_vln&cb_vln                                       : 67  IN.6.0
+co_vln&nwp_vln                                       : 70  NWP.3.1

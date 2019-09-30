@@ -1,0 +1,44 @@
+
+%%% Various Description List Types
+%%% Adapted from pp60-66 The Latex Companion
+%%%
+\newcommand{\entrylabel}[1]{\mbox{\texttt{#1:}}\hfil}
+
+\newlength{\Mylen}
+
+\newenvironment{fentry}
+    {\begin{list}{}%
+        {\renewcommand{\makelabel}{\entrylabel}%
+            \setlength{\labelwidth}{4cm}%
+	    \setlength{\itemsep}{0.0cm}%
+            \setlength{\leftmargin}{\labelwidth+\labelsep}%
+        }}%
+    {\end{list}}
+
+\newenvironment{oentry}
+    {\begin{list}{}%
+        {\renewcommand{\makelabel}{\entrylabel}%
+            \setlength{\labelwidth}{2.8em}%
+	    \setlength{\itemsep}{0.0cm}%
+            \setlength{\leftmargin}{\labelwidth+\labelsep+1em}%
+        }}%
+    {\end{list}}
+
+
+\newcommand{\Oentrylabel}[1]{%
+    \settowidth{\Mylen}{\texttt{#1:}}%
+    \ifthenelse{\lengthtest{\Mylen > \labelwidth}}%
+        {\parbox[b]{\labelwidth}%        term > labelwidth
+            {\makebox[0pt][l]{\texttt{\small  #1:}}\\}}%
+        {\texttt{\small#1:}}%                  term < labelwidth
+    \hfil\relax}
+
+\newenvironment{optionlist}
+    {\renewcommand{\entrylabel}{\Oentrylabel}%
+     \begin{oentry}}
+    {\end{oentry}}
+
+\newenvironment{filelist}
+    {\renewcommand{\entrylabel}{\Oentrylabel}%
+     \begin{fentry}}
+    {\end{fentry}}

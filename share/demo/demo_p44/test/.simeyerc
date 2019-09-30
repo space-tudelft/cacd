@@ -1,0 +1,26 @@
+# # # # # # # # # # # # # # # # # #
+#
+# This is the file '.simeyerc'
+# Contents: Initialisation commands for the program 'simeye'
+# Purpose:  proper startup of simeye, especially tailored for
+#           'fishbone' image
+# Created:  dec 1992 by Arjan van Genderen
+# Modified: jan 1993 by Patrick Groeneveld
+# Modified: feb 1993 by [Ps] (PRINT stuff)
+#
+# This file was copied into this project directory by 'mkopr'.
+# If necessary, you can customize by editing this file.
+#
+# (c) The OCEAN/NELSIS Sea-of-Gates design system
+# Delft University of Technology
+#
+SLS: sls $cell $cell.cmd
+SLS_LOGIC_LEVEL: 2
+SLS_LOGIC_SIGNAL: D
+SLS_TIMING_SIGNAL: A
+SPICE: nspice $cell $cell.cmd
+XDUMP_FILE: simeye.wd
+PRINT: xpr -device ps -output $cell.ps simeye.wd; lpr $cell.ps; rm simeye.wd $cell.ps
+PRINT_LABEL: $user $file $date $time
+SETTINGS_FILE: simeye.set
+TRY_NON_CAPITAL_ON

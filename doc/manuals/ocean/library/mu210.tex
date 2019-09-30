@@ -1,0 +1,71 @@
+\section{mu210}
+
+Function: 4-line-to-1-line data selector/multiplexer
+
+Terminals: (S1, S2, A, B, C, D, Y, vss,vdd)
+
+
+IEC-symbol:
+%figuur mu210.iec.eps
+\begin{figure}[bth]
+\callpsfig{mu210.iec.eps}{width=.31\textwidth}
+\end{figure}
+
+Function table:
+\begin{table}[bth]
+\begin{tabular}{|cc|cccc||c|}
+\hline
+S2	&S1	&A 	&B	&C	&D	&Y\\
+\hline
+L	&L	&L	&-	&-	&-	&L\\
+L	&L	&H	&-	&-	&-	&H\\
+L	&H	&- 	&L	&-	&-	&L\\
+L	&H	&-	&H	&-	&-	&H\\
+H	&L	&-	&-	&L	&-	&L\\
+H	&L	&-	&-	&H	&-	&H\\
+H	&H	&-	&-	&-	&L	&L\\
+H	&H	&-	&-	&-	&H	&H\\
+\hline
+\end{tabular}
+\vspace{1cm}
+
+	
+Propagation and load dependent delays:\\
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Parameter		&From		&To 	&Typ	&Unit\\
+\hline
+T$_{PLH}$		&A, B, C, D	&Y	&2.4	&ns\\
+T$_{PHL}$		&A, B, C, D	&Y	&2.1	&ns\\
+T$_{PLH}$		&S1		&Y	&3.0	&ns\\
+T$_{PHL}$		&S1		&Y	&2.4	&ns\\
+T$_{PLH}$		&S2		&Y	&2.0	&ns\\
+T$_{PHL}$		&S2		&Y	&1.1	&ns\\
+\hline
+$\Delta$T$_{PLH}$	&alle		&Y	&3.0	&ns/pF\\
+$\Delta$T$_{PHL}$	&alle		&Y	&7.0	&ns/pF\\
+\hline	
+C$_{in}$		&A, B, C, D	&vss	&0.12	&pF\\
+C$_{in}$		&S1		&vss	&0.42	&pF\\
+C$_{in}$		&S2		&vss	&0.28	&pF\\
+\hline
+\end{tabular}
+\end{table}
+
+Equivalent chip area: 20
+
+
+\begin{figure}[bth]
+circuit:\\
+
+\callpsfig{mu210.cir.eps}{width=.6\textwidth}
+\end{figure}
+
+\begin{figure}[bth]
+layout:\\
+
+\callpsfig{mu210.lay.eps}{height=4in}
+\end{figure}
+
+\clearpage

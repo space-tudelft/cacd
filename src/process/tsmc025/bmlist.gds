@@ -1,0 +1,41 @@
+# MOSIS tsmc025
+# When importing a gds file:
+#    Text structures with type 9 are interpreted as labels.
+#    Other text structures are interpreted as terminals.
+#    Records with property 62 are also interpreted as terminals.
+# When generating a gds file:
+#    Labels are translated to text structures with type 9
+#    Termimals are translated to records with a property 62 to
+#    specify their name.
+#
+cvp       21        # p high voltage
+cvn       22        # n high voltage
+ccc       25        # contact
+xp        26
+cwn       42        # n well
+caa       43        # active
+caa:label 43 9
+csp       44        # p plus select
+csn       45        # n plus select
+cpg       46        # poly
+cpg:label 46 9
+ccp       47        # poly contact
+cca       48        # active contact
+cmf       49        # metal 1
+cmf:label 49 9
+cva       50        # via
+cms       51        # metal 2
+cms:label 51 9
+cvs       61        # via 2
+cmt       62        # metal 3
+cmt:label 62 9
+cvt       30        # via 3
+cmq       31        # metal 4
+cmq:label 31 9
+cvq       32        # via 4
+cmp       33        # metal 5
+cmp:label 33 9
+cog       52        # glass
+csb       29        # silicide block
+cta       60        # thick active
+ctm       35        # metal4 prime

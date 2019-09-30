@@ -1,0 +1,65 @@
+.TH SEA 1SDF "THE SEADIF PROGRAMMERS MANUAL"
+.UC 4
+.SH NAME
+sea - nelsis interface to sea-of-gates placement and routing
+.SH SYNOPSIS
+.B sea
+[-options] <lay_name>
+.SH OPTIONS
+.TP
+.B <lay_name>
+Nelsis layout name of cell (= your placement).
+.TP
+.B -h
+Help: print list of options.
+.TP
+.B -c <cir_name>
+Nelsis circuit of the cell (default: <lay_name>).
+.TP
+.B -o <out_name>
+Nelsis layout cell in which to write the routed circuit (default: <lay_name> = overwrite).
+.TP
+.B -p
+Placement only (default: both).
+.TP
+.B -r
+Routing only (default: both).
+.TP
+.B -P <options>
+Pass 'options' to the placer.
+.TP
+.B -R <options>
+Pass 'options' to the router.
+.TP
+.B -v
+Verify the circuit only.
+.TP
+.B -V
+Verbose parsing.
+.TP
+.B -x <xl> -y <yt>
+Set left top of box for placement or routing (in lambda).
+.TP
+.B -X <xr> -Y <yb>
+Set right bottom of box for routing (default: 0,0).
+.TP
+.B -q
+Quiet option: print nothing except errors.
+
+.SH DESCRIPTION
+.I Sea
+is a command line interface for Sea-of-Gates placement and routing.
+Normally, placement and routing is done with the layout editor \fIseadali\fP(1ICD).
+
+.SH EXAMPLE
+To place the layout of cell counter4bit use:
+
+% sea -p counter4bit
+
+.SH AUTHORS
+Paul Stravers,
+Patrick Groeneveld
+
+.SH FILES
+.ta 6c
+proj_dir/image.seadif	(technology file)

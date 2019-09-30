@@ -1,0 +1,163 @@
+%  
+% Werktitel : Development of a technology file interface for SPACE
+%
+% Onderwerp : Ontwikkeling van een programma waarmee de technologie bestanden van SPACE
+%             op een snelle manier gemaakt kunnen worden.
+%
+%
+% Hoofdvraag: Wat zijn de belangrijkste problemen bij de ontwikkeling en hoe zijn deze opgelost?
+%
+% Achtergrondvragen:
+%   - Wat is de omgeving waarin het programma is ontwikkeld?
+%   - Welke ontwerpmethodes zijn toegepast?
+%   - Waarom helpt dit programma bij de ontwikkeling van technologie bestanden? (Waarom optimaal)
+%  
+% Kernvragen:
+%   - technische haalbaarheid
+%   - flexibiliteit
+%   - betrouwbaarheid
+%
+%
+%
+% Voorlopige inhoudsopgave
+% -------------------------
+% Titel
+%   Development of a technology file interface for SPACE
+% 
+% Voorwoord    
+%
+% Samenvatting
+%
+% Inleiding
+%
+% Randvoorwaarden/wensen/eisen
+%   - ontwikkelomgeving
+% 
+% ?? Systeemconcepten ??
+%
+% Uitwerking ontwerp
+%
+%   Use cases
+%
+%   Collaboration
+%
+%   The interface/generator specification language
+%
+% Testen
+%
+% Conclusie
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[10pt,a4paper,twoside]{book}
+% packages
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{alltt}
+\usepackage{tabularx}
+\usepackage{rotating}
+
+% page header setup
+\pagestyle{fancy}
+\addtolength{\headheight}{\baselineskip}
+%\renewcommand{\sectionmark}[1]{\markboth{\thesection.\ #1}{\thesection.\ #1}}
+
+\renewcommand{\chaptermark}[1]{\markboth{\chaptername \ \thechapter.\ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}}
+
+%\lhead{\leftmark\\\rightmark}
+%\rhead{\thepage}
+
+\cfoot{}
+%%%%%%%%\renewcommand{\sectionmark}[1]{\markboth{\thesection.\ #1}{\thesection.\ #1}}
+%%%%%%%%%%\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}}
+%%%%%%%%%%\renewcommand{
+%%%%%%%%\fancyhead[R]{\thepage}
+%%%%%%%%\fancyhead[L]{\rightmark}
+
+\fancypagestyle{plain}{%
+\fancyhf{}
+\fancyhead[RO,LE]{\thepage} \renewcommand{\headrulewidth}{0pt} 
+\fancyhead[LO,RE]{\renewcommand{\headrulewidth}{0pt} }
+%\fancyhead[]{\thepage} \renewcommand{\headrulewidth}{0pt}
+} 
+
+
+% Environments used in the language reference sections of the language chapter:
+\newenvironment{PropTable}[1][Supported properties:]
+{
+    \par \bigskip \noindent {#1}\\
+    \begin{tabular}{l|p{8cm}}
+    \hline
+     \textsf{Property}  & \textsf{Description} \\
+    \hline
+}
+{\\ \hline \end{tabular}}
+
+% This is from Nick, for the big table in the language.tex file.
+\newcounter{act}
+\newcommand{\R}[1]{\ref{a#1}}
+\newcommand{\actd}[1]{\refstepcounter{act}\label{a#1}}
+\newcommand{\rotated}[1]{\begin{sideways}#1\end{sideways}}
+\newcommand{\TabCap}[1]{\multicolumn{1}{|l|}{\begin{sideways}\texttt{#1}\end{sideways}}}
+\newcommand{\TR}[2][]{\R{#2} #1}
+
+% titlepage stuff
+%\title{Design and implementation of a technology file interface for SPACE}
+%\author{Xander Burgerhout \\ Delft University of Technology \\ CAS report nr.: N\&S-A-2003 (pre-release)}
+%\date{November 2000}
+
+% Sloppy.
+\sloppy
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+% front matter
+%\maketitle
+\fancyhf{}
+%\fancyhead[LE,RO]{\thepage \renewcommand{\headrulewidth}{0pt}}
+%\fancyhead[RE,LO]{\renewcommand{\headrulewidth}{0pt}}
+
+\include{./title}
+
+
+\frontmatter
+\include{./preface}
+
+\lhead{\leftmark}
+\tableofcontents
+\mainmatter
+
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[LO,RE]{}
+
+\include{./abstract}
+\listoffigures
+\listoftables
+
+
+% The chapters
+\fancyhead[LO,RE]{\rightmark}
+\include{./introduction}
+\include{./demands}
+\include{./design}
+\include{./uidesign}
+\include{./language}
+\include{./conclusion}
+
+% backmatter
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliographystyle{alpha}
+\bibliography{./biblio}
+
+\appendix
+\include{./environment}
+\include{./testing}
+%\include{./background}
+\include{./cdrom}
+\include{./samplespock}
+%\include{./sourceref}
+
+\end{document}
+

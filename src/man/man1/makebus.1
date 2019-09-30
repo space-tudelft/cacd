@@ -1,0 +1,59 @@
+.TH MAKEBUS 1SDF "THE SEADIF PROGRAMMERS MANUAL"
+.UC 4
+.SH NAME
+makebus - analyzes a netlist to extract buses from it
+.SH SYNOPSIS
+.B makebus
+[...options...] <circuitname>
+.SH OPTIONS
+.TP
+.B <circuitname>
+Seadif circuit name to be analyzed.
+.TP
+.B -f <functionname>
+Seadif function name (default: <circuitname>).
+.TP
+.B -l <libraryname>
+Seadif library name (default: current working directory name).
+.TP
+.B -R
+Remove all buses, do not create new ones.
+.TP
+.B -s
+Silent, do not print (show) which buses were found.
+.TP
+.B -e <regexp>
+Set the Extended Regular Expression (see regexp(5))
+that matches names of nets that belong to buses.
+The name of the bus must be the first parenthesized sub-expression.
+The default is "^(.+)_[0-9]+_$".
+.TP
+.B -n
+Also print the nets contained in each bus.
+.TP
+.B -h
+Print help screen, then exit.
+
+.SH DESCRIPTION
+.I Makebus
+is a netlist analyzer,
+it appends information to a circuit in the seadif database describing
+which nets form buses.
+Both structural analysis of the network and
+plain guessing based on the net names is performed.
+
+.SH EXAMPLE
+To produce buses for the circuit of cell count8 use:
+
+% makebus count8
+
+.SH AUTHORS
+Paul Stravers,
+Patrick Groeneveld
+
+.SH FILES
+.ta 8c
+proj_dir/seadif/sealib.sdf	(database file)
+
+.SH "SEE ALSO"
+showbus(1SDF)

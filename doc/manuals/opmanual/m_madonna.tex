@@ -1,0 +1,126 @@
+\selectlanguage{british}
+\title{Automatic Placement with Madonna}
+\maketitle
+\label{madonna}
+\index{madonna@\tool{madonna}|(bold}
+\index{automatic!placement|see{\tool{madonna}}}
+The job of placing the instances can be performed by an automatic tool which
+was called after one of the most famous singers of the 1980'ies\footnote{And
+90'ies.}. She places the instances such that the total wire length is
+(hopefully) minimized. As we all know, \tool{madonna} is rather unpretentious;
+If you like, you can improve her results manually using the other commands in
+the instance menu. A circuit which was placed using \tool{madonna} can be routed
+automatically, since \tool{madonna} makes sure that all instances are present in the
+layout.
+
+\section{What is required before I can call \protect\button{Madonna}?}
+\tool{Madonna} is very sensitive to errors in her input.
+To prevent offending her the following data must be present:
+\begin{itemize}
+\item
+A proper circuit description in the database. \tool{Seadali}
+complains if a circuit description with the specified name
+doesn't exist.
+Do not forget to convert your
+\tool{sls} network description into the database using \tool{csls}.
+\item
+For each of the son-cells (instances) in the circuit description
+a layout must exist which has the same name. We made sure that
+this is always the case for all library cells.
+\end{itemize}
+If there is an error in the netlist description \tool{madonna} opens a window to
+explain what you did wrong.
+
+\section{Running \protect\tool{madonna}} \label{s-run-madonna}
+Just like \tool{fish}, \tool{madonna} can be called both
+from \tool{seadali} and the command shell. 
+
+\subsection{From \protect\tool{seadali}}
+Calling her
+by pressing the button \button{Madonna} in the instances
+menu is the most convenient for you.
+Pressing this button will overwrite the design which
+your are currently editing in \tool{seadali}. Therefore you will be
+asked whether you are sure to continue in case the workspace
+is not empty.
+
+As next step you must enter the name of the circuit which
+has to be placed. A small menu will appear, in which you
+just click \button{DO IT !} to start \tool{madonna}.
+In the menu some optional features of can be set for \tool{madonna}:
+\begin{description}
+\item[\button{set box}]
+\index{madonna!set placement box|bold}
+Set the box within which \tool{madonna} has to place the instances.  Click the
+right-top corner. In this way you can control the shape and the size of the
+placement. Specifying a big box will leave quite some unused transistors.
+Specifying a very small box will squeeze the instances on minimum area. If the
+box is too small, \tool{madonna} will expand it in either the x- or the y-direction,
+depending on what you specified. It is better not no make the box much to
+small, because \tool{madonna} will have a hard time recovering from that.
+
+If the workspace was empty, \tool{seadali} will make an empty image array
+before you can specify the box. In this way you have some reference for the
+size of the box.
+\item[\button{X-expand}]
+Force \tool{madonna} to expand horizontally if the box was too small.
+This is default.
+\item[\button{Y-expand}]
+Expand vertically if the box was too small.
+\item[\button{Channels}]
+\index{madonna!channels}
+\index{channels}
+Create a placement with routing channels. If this feature is active,
+\tool{madonna} computes the amount of space that \tool{trout} needs 
+to complete the routing process successfully. This computation actually
+involves a call to
+\tool{madonna}'s internal global router. A report of the global routing
+process is written to the file \file{seadif/groutes}.
+
+Note that the routing channels increase the layout area in both the X and the Y
+direction, regardless of the preferences indicated by means of the
+\button{X/Y-expand} buttons or the \button{set box} button.
+\item[\button{Options}]
+Set any other (unofficial) option which you want to propagate to
+\tool{madonna}. Don't touch this button unless you know what you are
+doing. 
+\item[\button{DO IT!}]
+Start \tool{madonna}. This may take anywhere from 30 seconds up to
+10 minutes, depending
+on the number of instances and the system load. You can kill \tool{madonna}
+using the \button{KILL}-button.
+\end{description}
+You can try to place the circuit with various shapes and sizes.
+
+\attention{Can I pre-place some instances?}
+{No, \tool{madonna} is quite possessive. She wants to do everything herself.
+She will always place all instances in your circuit description.
+Pressing \button{Madonna} a second time will overwrite the
+existing placement.
+You can only request her to place the instances in a certain box.
+Obviously, you can modify \tool{madonna}'s placement manually using the
+buttons in the instance menu.}
+
+\subsection{Calling \protect\tool{madonna} from the command line using \protect\tool{sea}}
+\label{m-sea}
+\index{sea@\tool{sea}}
+The non-interactive way to call her is by using the tool \tool{sea} from the
+command line: \type{sea -p name} in which {\sl name} is the name of the
+circuit cell.
+As a result,
+the output placement will be written into the layout database.
+The program \tool{sea} is a kind of bodyguard to \tool{madonna},
+it checks the correctness of your input.
+Only if everything is correct,
+it calls \tool{madonna} to look at your circuit. 
+
+\tool{Sea} also allows you to place and route a circuit in one step:
+\index{automatic!placement and routing in one step|bold}
+\type{sea hotelLogic}
+for instance, will place and route the cell {\tt hotelLogic} and write the
+result into the layout database under the name {\tt hotelLogic} (use the '-o
+name' option to write it under a different name).
+Just type \type{sea -h} to see all the options.  
+
+\index{madonna@\tool{madonna}|)}
+\cleardoublepage

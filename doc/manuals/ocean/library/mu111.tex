@@ -1,0 +1,72 @@
+
+\section{mu111}
+
+Function: 2-line-to-1-line data selector/multiplexer
+
+Terminals: (A, B, S, Y, vss, vdd)
+
+
+IEC-symbol:
+%figuur mu111.iec.eps
+\begin{figure}[bth]
+\callpsfig{mu111.iec.eps}{width=.31\textwidth}
+\end{figure}
+
+Function table:
+\begin{table}[bth]
+\begin{tabular}{|c|cc||c|}
+\hline
+S	&A	&B	&Y\\
+\hline
+L	&L	&-	&L\\
+L	&H	&-	&H\\
+H	&-	&L	&L\\
+H	&-	&H	&H\\
+\hline
+\end{tabular}
+\vspace{1cm}
+
+
+Propagation and load dependent delays:\\
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Parameter               &From            &To   &Typ    &Unit\\
+\hline
+T$_{PLH}$               &A, B     	&Y      &0.7    &ns\\
+T$_{PHL}$               &A, B    	&Y      &0.8    &ns\\
+T$_{PLH}$               &S         	&Y      &1.2    &ns\\
+T$_{PHL}$               &S         	&Y      &1.1    &ns\\
+\hline
+$\Delta$T$_{PLH}$       &alle           &Y      &1.1    &ns/pF\\
+$\Delta$T$_{PHL}$       &alle           &Y      &0.9    &ns/pF\\
+\hline
+C$_{in}$                &A, B    	&vss    &0.12   &pF\\
+C$_{in}$                &S             	&vss    &0.26   &pF\\
+\hline
+\end{tabular}
+\end{table}
+
+
+Equivalent chip area: 7
+
+
+
+
+%figuur mu111.cir.eps
+\begin{figure}[bth]
+circuit:\\
+
+\callpsfig{mu111.cir.eps}{width=.5\textwidth}
+\end{figure}
+
+
+
+%figuur mu111.lay.eps
+\begin{figure}[bth]
+layout:\\
+
+\callpsfig{mu111.lay.eps}{height=5in}
+\end{figure}
+
+\clearpage

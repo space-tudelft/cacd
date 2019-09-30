@@ -1,0 +1,28 @@
+
+%% getepslay prolog for dimes01 process.
+
+%%Include <epslay.pro>
+
+%%Order: bn dp dn sp bs bi ci cw wp bw wn ic co in ct
+
+[  6 14 10 /Helvetica-Bold] plotFont
+
+%% mask   patt   pscale linewidth
+[ (bn)    p2    1.0    0.1 ] defineStyle
+[ (dp)    p4    1.0    0.1 ] defineStyle
+[ (dn)    p5    1.0    0.1 ] defineStyle
+[ (sp)    p19   1.0    0.1 ] defineStyle
+[ (sn)    p8    1.0    0.1 ] defineStyle
+[ (bs)    p9    1.0    0.1 ] defineStyle
+[ (bi)    p13   1.0    0.1 ] defineStyle
+[ (ci)    p17   1.0    0.1 ] defineStyle
+[ (cw)    p18   1.0    0.1 ] defineStyle
+[ (wp)    p7    1.0    0.1 ] defineStyle
+[ (bw)    p6    1.0    0.1 ] defineStyle
+[ (wn)    p18   1.0    0.1 ] defineStyle
+[ (co)    black 1.0    0.1 ] defineStyle
+[ (ic)    p16   1.0    0.1 ] defineStyle
+[ (in)    p15   1.0    0.1 ] defineStyle
+[ (ct)    black 1.0    0.1 ] defineStyle
+[ (t_ic)  p16   1.0    0.1 ] defineStyle
+[ (t_in)  p15   1.0    0.1 ] defineStyle

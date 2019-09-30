@@ -1,0 +1,880 @@
+\selectlanguage{dutch} 
+\hyphenation{GoWithTheFlow}
+\title{Handleiding GoWithTheFlow}
+\maketitle
+
+\section{Inleiding}
+Het programma \tool{GoWithTheFlow}
+wordt gebruikt als interface voor het aanroepen
+van allerlei verschillende programma's die gebruikt worden
+bij het ontwerpen van Sea-Of-Gates IC,
+zoals een schematic entry programma, een VHDL simulator,
+een logisch synthese programma en
+tools voor placement and routing.
+Tevens geeft \tool{GoWithTheFlow}
+een overzicht van alle onderdelen van het ontwerp
+die aanwezig zijn en de samenhang tussen deze verschillende onderdelen.
+
+Deze handleiding zal in de eerste plaats 
+de mogelijkheden van \tool{GoWithTheFlow} beschrijven.
+Voor een beschrijving van de werking van de afzonderlijke
+programma's die door \tool{GoWithTheFlow} worden opgestart, zie
+de handleidingen van deze programma's.
+
+Het programma \tool{GoWithTheFlow} wordt gestart door op het desbetreffende icon
+op de DeskTop te klikken of door het in een terminal window typen van het commando:
+\begin{verbatim}
+      GoWithTheFlow &
+\end{verbatim}
+
+\section{Het main-window}
+Nadat het programma \tool{GoWithTheFlow}
+is opgestart verschijnt een window zoals weergegeven in figuur \ref{main-window}.
+\begin{figure}[htb]
+  \centerline{\callpsfig{GoWithTheFlow_hotelend.eps}{width=13cm}}
+  \caption{Het main-window van het programma \tool{GoWithTheFlow}}
+  \label{main-window}
+\end{figure}
+We kunnen in het window de volgende delen onderscheiden:
+\begin{itemize}
+\item Bovenaan bevindt zich de menubalk met een aantal menu's welke in volgende secties besproken worden.
+\item Daaronder bevindt zich een info-balk wordt aangegeven welke project directory
+      geopend is.
+\item In het linker midden-gedeelte worden op hierarchische wijze alle entities uit het ontwerp weergegeven.
+\item In het rechter midden-gedeelte van figuur \ref{main-window} worden  
+      alle packages, entities, architectures en configurations weergegeven die zich in de 
+      de database van de VHDL simulator bevinden, en ook alle circuit en layout representaties
+      die in het project aanwezig zijn.
+      Door de muis op een afgebeeld item te houden en de linker-muisknop in te drukken
+      verschijnt een menu, waarmee operaties op het betreffende item
+      kunnen worden uitgevoerd. Deze menu's worden nader besproken in de
+      hoofdstukken over de package-, entity-, architecture- en configuration-menu's
+      en de hoofdstukken over de circuit en layout menu's.
+      Wanneer op een entity in het linker midden-gedeelte wordt geklikt zal naar de
+      bijbehorende beschrijvingen in het rechter midden-gedeelte worden gescrolled.
+\item Aan de onderzijde bevindt zich een window, waarin het programma
+      mededelingen kan plaatsen, bijvoorbeeld over commando's die worden of zijn
+      uitgevoerd.
+\end{itemize}
+
+\section{De project subdirectories}
+Wanneer een project directory wordt aangemaakt zal \tool{GoWithTheFlow}
+de volgende subdirectories aanmaken in de project directry:
+\begin{itemize}
+\item {\bf VHDL}: waarin alle \smc{vhdl}-files worden geplaatst.
+\item {\bf SLS}: waarin alle tijdens het ontwerp gegenereerde \smc{sls}-files, die
+            nodig zijn voor het \smc{nelsis} systeem worden geplaatst.
+\item {\bf ADB}: waarin alle .db-files worden geplaatst, die tijdens de
+            synthese van de circuits worden gegenereerd door de synthesize
+            software, en die deze software zelf ook weer gebruikt.
+\item {\bf components}: waarin de netwerkcomponenten worden geplaatst, die door
+                  het schematic-entry programma kunnen worden gebruikt en ook
+                  door het programma \tool{GoWithTheFlow} om op een gemak\-kelijke
+                  wijze components aan de architecture van een circuit toe
+                  te voegen.
+\item {\bf circuits}: waarin de circuit beschrijvingen worden geplaatst die worden
+                gemaakt door het schematic-entry programma \tool{schentry}.
+\item {\bf work}: een working directory voor de \smc{vhdl} simulatie-software, waarin
+            deze software de gecompileerde versies van de gemaakte
+            \smc{vhdl}-beschrijvingen kan plaatsen.
+\item {\bf test}: een working directory voor de backend software \smc{ocean/nelsis}, waarin
+            deze software de circuit en layout beschrijvingen kan plaatsen.
+\item {\bf syn\_work}: de working directory voor de synthese-software, waarin
+            deze software de gecompileerde versies van de gemaakte
+            \smc{vhdl}-beschrijvingen kan plaatsen.
+\end{itemize}
+
+\section{De menubalk van het main-window}
+In de menubalk van het main-window van \tool{GoWithTheFlow}
+bevinden zich een aantal menu's, te weten:
+\begin{itemize}
+\item {\bf Het File-menu}: In dit menu
+bevinden zich commando's voor het aanmaken en openen van project directories,
+het aanmaken van een nieuw entities, schematics en packages,
+het lezen en importeren en verwij\-deren van files,
+en het afsluiten van
+\tool{GoWithTheFlow}.
+\item {\bf Het Compile-menu}: In dit menu bevinden zich commando's voor
+het compileren van VHDL files.
+\item {\bf Het Generate-menu}: In dit menu bevinden zich commando's voor
+genereren van een simulatie commando of ref file.
+\item {\bf Het Utilities-menu}: In dit menu bevinden zich hulp commando's.
+Voor het toevoegen van een bond\_bar of bond\_leer, het vergelijken van simulatie resultaten,
+het printen van layouts en voor herstel.
+\item {\bf Het Fonts-menu}: Met dit keuze-menu kan de letter-grootte worden gewijzigd.
+\end{itemize}
+De menu's worden in de nu volgende paragrafen nader besproken.
+
+\subsection{Het File-menu}
+In dit menu bevinden zich de volgende sub-menu's:
+\begin{itemize}
+\item {\bf New project}: Maak een project directory aan.
+		Een window zoals in figuur \ref{newproj} zal verschijnen.
+		Specificeer in het vak achter Selection de naam van een nog niet
+		bestaande directory, en klik op OK.
+		\begin{figure}[h]
+		\centerline{\callpsfig{newproj.eps}{width=.45\textwidth}}
+		\caption{Het aanmaken van een project directory}
+		\label{newproj}
+		\end{figure}
+\item {\bf Open project}: Open een project.  
+                Er is daarbij een keuze uit recent geopende projecten en browsen naar
+                een nieuwe project directory.
+\item {\bf Close project}: Sluit een project.
+\item {\bf New entity}: Via dit commando kan een nieuwe entity worden
+                         gegenereerd.
+               Bij keuze van dit item verschijnt het window van
+               figuur \ref{newcell-window}.
+               \begin{figure}[htb]
+               \centerline{\callpsfig{newhotelent.eps}{width=.40\textwidth}}
+               \caption{Het invoeren van een nieuwe entity}
+               \label{newcell-window}
+               \end{figure}
+               De naam van de entity moet nu worden ingevuld en de
+               namen van de terminals ({\it ports}).
+               Deze kunnen in het tekst-window worden getypt.
+               Bij iedere terminal kan voorts
+	       een {\it mode} ({\bf in}, {\bf out} of {\bf inout})
+	       worden opgegeven en een aantal bits ({\it width}).
+	       De default mode is {\bf in} of de mode van de vorige port.
+	       De default width is altijd 1 bit.
+	       Indien een andere width nodig is, kan default mode worden
+	       aangegeven met een min-teken.
+               De port gegevens moeten worden gescheiden door een \button{Tab}
+	       en iedere regel moet worden afgesloten met \button{Enter}.
+               De terminals worden default van het type 'std\_logic' gemaakt.
+               Wordt na het invoeren van de hierboven genoemde gegevens
+               op \button{OK} geklikt, dan wordt een edit-window gestart, waarin
+               de gegenereerde code wordt getoond. Eventueel kan de code
+               hierin nog worden aangepast.
+               De file-naam die aan de beschrijving wordt gegeven
+               is gelijk aan de naam van de entity met de extensie .vhd.
+               Wordt op \button{Cancel} geklikt, dan verdwijnt het New\_entity-window
+               en gebeurt er verder niets.
+\item {\bf New schematic}: Start de schematic-editor \tool{schentry},
+               waarmee op grafische wijze \smc{vhdl} structuur-beschrijvingen van een
+               circuit kunnen worden gemaakt.
+               Zie voor een beschrijving de handleiding van \tool{schentry}.
+\item {\bf New package}: Door dit item te kiezen wordt er een basis-structuur voor
+                   een \smc{vhdl}-package gegenereerd.
+                  Bij keuze van dit item verschijnt het window van
+                  figuur \ref{newpack-window}.
+                  \begin{figure}[htb]
+                  \centerline{\callpsfig{newpack_wdw.ps}{width=6.5cm}}
+                  \caption{New package-window van het programma \tool{GoWithTheFlow}}
+                  \label{newpack-window}
+                  \end{figure}
+                  \\
+                  De naam van het package moet nu worden ingevuld.
+                  Wordt na het invoeren van de naam
+                  op \button{OK} geklikt,  dan wordt een edit-window gestart, waarin
+               de gegenereerde code wordt getoond. Eventueel kan de code
+               hierin nog worden aangepast.
+                 De file-naam die aan de beschrijving wordt gegeven
+                 is gelijk aan de naam van het package met achtervoegsel \_pkg
+                 en extensie .vhd.
+                 Wordt op \button{Cancel} geklikt, dan verdwijnt het New\_package-window
+                 en gebeurt er verder niets.
+\item {\bf Edit vhdl file}: Wanneer dit commando wordt gekozen verschijnt
+                       er een lijst met alle \smc{vhdl}-files, die in de \smc{vhdl}-directory
+                       aanwezig zijn. Wanneer een file wordt gekozen
+                       verschijnt er een edit-window, waarin de file is
+                       geplaatst en waarin deze file kan worden veranderd.
+                       Voor een verdere beschrijving van het \smc{vhdl} edit window,
+                       zie de sectie ''het \smc{vhdl} edit window''.
+\item {\bf Remove vhdl file}: Wanneer dit commando wordt gekozen verschijnt
+                       er een lijst met alle \smc{vhdl}-files, die in de \smc{vhdl}-directory
+                       aanwezig zijn. Wordt een van de getoonde files
+                       hieruit gekozen, dan wordt deze file uit de \smc{vhdl}-directory
+                       verwijderd.
+\item {\bf Import vhdl file}: Wanneer dit commando wordt gekozen verschijnt
+               er een browser-window waarin een file kan worden gekozen.
+               Deze file wordt gekopieerd naar de \smc{vhdl}-directory.
+\item {\bf Import vhdl dir}: Wanneer dit commando wordt gekozen verschijnt
+\item {\bf Import project cell}: Via dit commando kunnen de gegevens die via \tool{GoWithTheFlow} in
+                  een andere directory zijn gemaakt naar de huidige directory
+                  worden gekopieerd.
+                  Wanneer dit commando wordt gekozen verschijnt het window van
+                  figuur \ref{copy-window}.
+                  \begin{figure}[htb]
+                  \centerline{\callpsfig{copy_wdw.ps}{width=8cm}}
+                  \caption{Het Import cell-window van het programma \tool{GoWithTheFlow}}
+                  \label{copy-window}
+                  \end{figure}
+                  \begin{figure}[htb]
+                  \centerline{\callpsfig{copy_wdw1.ps}{width=8cm}}
+                  \caption{Ge"expandeerd Import cell-window van het programma \tool{GoWithTheFlow}}
+                  \label{copy-window1}
+                  \end{figure}
+                  Kies in dit menu de directory van waaruit gekopieerd moet
+                  worden via de \button{Browse} button of door de directory-naam in de
+                  bovenste entry te typen.\\
+                  Door hierna op de \button{OK} button te klikken expandeert het window
+                  tot het window van figuur \ref{copy-window1}.
+                  Hierin kan een keuze worden gemaakt uit de 'working directory'
+                  waaruit moet worden gekopieerd en de entity hieruit.\\
+                  Bij een andere keuze zullen de betreffende files om te
+                  kopi"eren automatisch worden aangepast.
+                  De keuze of de file al dan niet moet worden gekopieerd kan
+                  worden gemaakt door op de naam te klikken.\\
+                  De default waarden die zijn ingesteld voldoen in de meeste
+                  gevallen.\\
+                  Ook kan een keuze worden gemaakt van welke \smc{nelsis} database
+                  gekopieerd moet worden en welk deel hiervan: circuit, layout
+                  of beide.\\
+                  Door na de instellingen gemaakt te hebben op \button{Copy} te
+                  klikken worden de aangegeven files en delen van de \smc{nelsis}
+                  database gekopieerd. \smc{vhdl}-files worden tevens gecompileerd.\\
+                  In het onderste gedeelte van het Import cell-window verschijnen de
+                  eventuele foutmel\-ding\-en en meldingen over wat het
+                  programma gekopieerd heeft.
+\item {\bf Quit}: Quit \tool{GoWithTheFlow}.
+\end{itemize}
+
+\subsection{Het Compile-menu}
+In dit menu bevinden zich de volgende sub-menu's:
+\begin{itemize}
+\item{\bf New vhdl files}
+Door het aanklikken van dit commando worden alle files uit de \smc{vhdl}-directory
+die nog niet gecompileerd zijn, gecompileerd.
+\item{\bf All in library}
+Door het aanklikken van dit commando worden alle onderdelen van de
+'working-library' die niet meer up-to-date zijn opnieuw gecompileerd.
+\end{itemize}
+
+\subsection{Het Generate-menu}
+In dit menu bevinden zich de volgende sub-menu's:
+\begin{itemize}
+\item{\bf Command file}
+Met dit commando kan een .cmd-file worden gegenereerd voor een sls-simulatie.
+Voordat dit commando wordt gebruikt moet eerst via de \smc{vhdl}-simulator
+een .lst-file zijn gemaakt van de simulatie waarvoor een .cmd-file moet
+worden gegenereerd.
+Dit kan op de volgende wijze:
+\begin{itemize}
+\item Kies nadat de simulatie is gedaan het commando {\bf Make\_list\_file} uit het
+      {\bf Tools}-menu van het wave\_window. Er verschijnt nu een window waaruit
+      een entity(architecture) is te kiezen.
+\item Kies een entity(architecture) en klik \button{OK}. Er verschijnt nu een window
+      waarin men de naam van de te schrijven lst-file kan opgeven.
+\item Geef een naam en klik \button{Save}. De list-file zal nu worden gemaakt.
+\end{itemize}
+
+Wanneer het commando Generate $\rightarrow$ Command file is gekozen verschijnt het window van
+figuur \ref{mk-cmd-window}.
+
+\begin{figure}[htb]
+\centerline{\callpsfig{mkcmd_wdw.ps}{width=10cm}}
+\caption{Het Generate Command file-window van het programma \tool{GoWithTheFlow}}
+\label{mk-cmd-window}
+\end{figure}
+
+In dit window zijn onder het {\bf File}-menu de volgende commando's geimplementeerd:
+\begin{itemize}
+\item {\bf Read}: Met dit commando wordt een reeds bestaande .cmd-file in het
+	tekst-window zichtbaar gemaakt.
+\item {\bf Generate from}: Met dit commando kan de .lst-file worden gelezen, waaruit een
+            .cmd-file moet worden gemaakt. De hieruit gegenereerde code
+            zal zichtbaar worden gemaakt in het tekst gedeelte van het
+            window.
+\item {\bf UpdateForBondbar}: Met dit commando wordt m.b.v. de .buf-file de .cmd-file
+             aangepast voor gebruik bij de in een bond\_bar
+             geplaatste schakeling.
+\item {\bf Write}: Met dit commando wordt de getoonde code weggeschreven naar een
+             file met dezelfde naam als de .lst-file, echter nu met de
+             extensie .cmd. Dus is de .lst-file {\it gerrit.lst}, dan wordt
+             de gegenereerde .cmd-file {\it gerrit.cmd}.
+\item {\bf Quit}: Door de keuze van dit commando wordt het Generate Command file window
+              weer verwij\-derd.
+\end{itemize}
+
+\item{\bf Reference file}
+Met dit commando kan een .ref-file worden gegenereerd waarmee de resultaten
+van een sls-simulatie kunnen worden vergeleken.
+Voordat dit commando wordt gebruikt moet eerst via de simulator een .lst-file
+zijn gemaakt van de simulatie waarvoor een .ref-file moet worden gegenereerd.
+Zie voor het gebruik van dit commando de beschrijving bij het commando {\bf Command file}.
+
+\end{itemize}
+
+\subsection{Het Utilities-menu}
+In dit menu bevinden zich de volgende sub-menu's:
+\begin{itemize}
+\item{\bf Add bond\_bar}
+Een bond\_bar is een omgeving waarbinnen de schakeling van de hoofdopdracht
+moet worden geplaatst. Zie ook de betreffende bibliotheek cell.
+Met dit commando wordt een circuit aangemaakt bestaande uit een bond\_bar
+en de schakeling die binnen de bond\_bar cell moet worden geplaatst.
+Er zijn 32 aansluitpinnen waarmee de schakeling kan worden verbonden.
+
+Wanneer dit commando wordt gekozen verschijnt het window van
+figuur \ref{bondbar-window}.
+\begin{figure}[htb]
+\centerline{\callpsfig{bondbar_wdw.ps}{width=8cm}}
+\caption{Het Add\_bond\_bar-window van het programma \tool{GoWithTheFlow}}
+\label{bondbar-window}
+\end{figure}
+Hierin dient uit de lijst van circuits het circuit dat in de bond\_bar moet
+worden geplaatst worden gekozen, door hierop te klikken.
+In de midden van het window staan de terminals van de bond\_bar schakeling.
+Nadat een circuit is gekozen verschijnen aan de rechterzijde van het
+Add\_bond\_bar-window de terminals van het gekozen circuit, met de aanduiding
+of het een {\bf ingang}(I), een {\bf uitgang}(O) of de terminal van mode {\bf inout}(B) is.
+De verbindingen tussen de schakelingen worden
+                   zodanig gemaakt dat de terminals in dezelfde rij worden
+                   verbonden. De aangegeven verbindingen kunnen op de volgende
+                   manier worden gewijzigd:
+                   \begin{itemize}
+                   \item Kies de terminal uit de linker-kolom waarvan de
+                         aansluiting moet worden gemaakt of gewij\-zigd, door
+                         hierop te klikken. Deze terminal wordt dan als
+                         geselecteerd aangegeven.
+                   \item Klik vervolgens op de terminal uit de rechter-kolom
+                         waarop de geselecteerde terminal uit de linker-kolom
+                         moet worden aangesloten. Deze terminal zal dan
+                         geplaatst worden achter de ge\-se\-lecteerde terminal
+                         in de linker-kolom. De terminal die oorspronkelijk
+                         achter de geselecteerde terminal stond wordt verplaatst
+                         naar de plaats waar de gekozen terminal uit de
+                         rechter-kolom oorspronkelijk stond.
+                   \item Uit de linker-kolom wordt vervolgens de volgende
+                         terminal geselecteerd, om te worden aange\-sloten en
+                         waarvoor dan weer uit de rechter-kolom een
+                         terminal kan worden geselecteerd enz.
+                   \end{itemize}
+De naam voor het totale circuit wordt default gelijk gemaakt aan de naam van
+het oorspronke\-lij\-ke circuit met hieraan '\_bb' toegevoegd.
+Deze naam kan eventueel worden gewijzigd.
+Door het klikken op \button{OK} wordt de schakeling met de bond\_bar aan het circuit
+gedeelte van de \smc{nelsis} database toegevoegd.\\
+Tevens wordt er een .buf-file gemaakt onder de naam
+{\it circuit}.buf, waarbij {\it circuit} staat voor de circuit-naam,
+van het gemaakte circuit.
+De .buf-file bevat de informatie hoe de schakeling is aangesloten op de
+bond\_bar cell en het soort terminal (input, output of direct).
+Wordt op \button{Cancel} geklikt, dan verdwijnt het
+window zonder dat er verder iets gebeurt.
+
+\item{\bf Add bond\_leer}
+Dit commando is gelijksoortig aan het Add bond\_bar commando.
+In plaats van een bond\_bar cel wordt hierbij echter een bond\_leer cel gebruikt,
+die veel kleiner is en slechts 6 vrije aansluitpinnen heeft.
+Voor de naam van het nieuwe circuit wordt de oorspronke\-lij\-ke circuit naam
+gebruikt met daaran '\_bl' toegevoegd.
+Voor het gebruik van het Add\_bond\_leer-window, zie het voorafgaande commando.
+
+\item{\bf Compare}
+Met dit commando kan een vergelijking worden uitgevoerd tussen een .ref-file en
+een simulatie-resultaat van een sls-simulatie, een .res-file.
+Wanneer dit commando wordt gekozen verschijnt een window zoals in
+figuur \ref{compare-window}.
+Onder de bovenste menu-balk zijn een 5 tal velden te vinden.
+Deze hebben de volgende betekenis:
+\begin{itemize}
+\item {\bf start} Starttijd voor de tijd waarover de uitgangssignalen vergeleken worden.
+\item {\bf stop} Stoptijd voor de tijd waarover de uitgangssignalen vergeleken worden.
+\item {\bf period} Klokperiodeduur (niet wijzigbaar).
+\item {\bf cycles} Aantal klokperioden tussen start en stop (niet wijzigbaar).
+\item {\bf shift} Offset (in aantal klokperioden) voor het vergelijken van de uitgangssignalen. 
+                  T.o.v. de uitgangssignalen uit de .ref file worden de uitgangssignalen
+                  uit de andere file dit aantal klokperioden in de tijd verschoven (mag ook een negatieve
+                  waarde zijn).
+\item {\bf inout} Wanneer deze optie aanstaat zullen naast uitgangssignalen ook signalen (terminals)
+                  van het type inout vergeleken worden.
+\end{itemize}
+
+\begin{figure}[htb]
+\centerline{\callpsfig{compare.eps}{width=14cm}}
+\caption{Het Compare-window van het programma \tool{GoWithTheFlow}}
+\label{compare-window}
+\end{figure}
+
+Onder het {\bf File}-menu van dit window zijn de volgende commando's beschikbaar:
+\begin{itemize}
+\item {\bf Read ref}: Met dit commando wordt een simulatie referentie file oftewel
+                een .ref-file gelezen. 
+                Tevens worden default waarden voor de start, stop, period, cycles en shift
+                ingesteld.
+\item {\bf Compare res}: Met dit commando wordt een .res-file gelezen en worden
+               de uitgangssignalen uit deze file vergeleken met de uitgangssignalen
+               uit de .ref-file.
+               De tijdstippen van vergelijking bestaan uit de momenten juist voor
+               de actieve klokflanken.
+               Voor ieder tijdstip waarop een vergelijking wordt uitgevoerd
+               wordt een regel getoond met achtereenvolgens de simulatie tijd, 
+               het volgnummer van de klokperiode, de waarden van de ingangssignalen,
+               de waarden van de uitgangssignalen uit de .ref-file en
+               de waarden van de uitgangssignalen uit de .res-file.
+               Wanneer de uitgangswaarden uit beide files overeenkomen staat aan
+               het einde van de regel tenslotte nog {\bf OK} en anders {\bf error}.
+	       Verder wordt op het onderste
+               tekst-window aangegeven hoeveel vergelijkingen zijn uitgevoerd
+               en het aantal fouten wat hierbij is gevonden.
+               In het rechter window zijn de namen van de in en uitgangssignalen te zien.
+               Door in het linker tekst-gedeelte van het Compare-window op
+               een regel met {\bf OK} of {\bf error} te klikken worden de uitgangssignalen
+               van de ref en res waarden van deze regel gekopieerd naar het bovenste
+               tekst-gedeelte van het Compare-window. 
+               Door nu in het rechter gedeelte op de naam van een uitgangssignaal te klikken
+               worden de ref- en res-waarden voor dit signaal
+               in het bovenste tekst-gedeelte van het Compare-window
+               geaccentueerd.
+\item {\bf Compare csv}: Zie het bovenstaande commando maar nu worden de signalen gelezen uit
+                         een .csv-file.
+\item {\bf Compare again}: Vergelijk de ingelezen signalen opnieuw, rekening houdend met eventuele
+                           nieuwe waarden voor start, stop en shift.
+\item {\bf Write results}: Schrijf de resultaten weg in een file {\it cell}.cmp
+\item {\bf Quit}: Met dit commando wordt het Compare-window weer verwijderd.
+\end{itemize}
+Onder het {\bf Commands}-menu van het Compare-window zijn de volgende commando's
+beschikbaar:
+\begin{itemize}
+\item {\bf First\_eror}: Door dit commando te kiezen wordt de eerste error-line
+                  in het bovenste tekst-gedeelte getoond.
+\item {\bf Next\_error}: Dit commando toont de volgende error-line
+                  in het tekst-gedeelte.
+\item {\bf Prev\_error}: Dit commando toont de voorgaande error-line
+                  in het tekst-gedeelte.
+\item {\bf Last\_error}: Dit commando toont de laatste error-line
+                  in het tekst-gedeelte.
+\end{itemize}
+Voorts zijn in het Compare-window nog entries gemaakt om te kunnen
+opgeven wat het eerste tijdstip is waarop een vergelijking moet worden
+gemaakt (start-time), het tijdsverschil tussen opeenvolgende stappen (time-step)
+en het laatste tijdstip waarop nog een vergelijking wordt gedaan.\\
+Default wordt als time-step de periode van de klok van de schakeling
+genomen en als start-tijd een zodanige waarde dat de vergelijkingen steeds
+worden gemaakt tegen het einde van een klok-periode (default 80 procent).
+
+\item {\bf Print Layout}: Via dit commando kan een PostScript-file worden gemaakt van de
+                     layout van een cell.
+                    Wanneer dit commando wordt gekozen verschijnt het window van
+                    figuur \ref{pr-layout-window}.
+                    \begin{figure}[htb]
+                    \centerline{\callpsfig{pr_layout_wdw.ps}{width=6cm}}
+                    \caption{Print\_Layout-window van het programma \tool{GoWithTheFlow}}
+                    \label{pr-layout-window}
+                    \end{figure}
+                    Door in dit window op \button{cell} te klikken verschijnt een lijst
+                    van layout-cellen waarvan de PostScript-file kan worden gemaakt.
+                    Door op een naam te klikken wordt de betreffende cell gekozen.
+		    Voorts kan nog worden gekozen voor {\it landscape} of {\it portrait} orientatie.\\
+                    Door op \button{MakeEps} te klikken wordt de PostScript-file gemaakt. Wordt
+                    op \button{Cancel} ge\-klikt, dan verdwijnt het Print\_layout-window
+                    zonder dat er een file wordt gemaakt.
+                    De naam waaronder de PostScript-file wordt weggeschreven is de
+                    naam van de cell met de extensie .eps.
+\item {\bf Reset project dir}: Door dit item te kiezen, wordt de directory waarin wordt
+                    gewerkt weer terug gezet naar de geopende project directory.
+                    Tijdens het werken met \tool{GoWithTheFlow} 
+                    wordt soms van directory gewisseld.
+                    In sommige gevallen, bijvoorbeeld wanneer fouten
+                    optreden tijdens het uitvoeren van sub-commando's,
+                    kan het voorkomen, dat de directory niet correct wordt
+                    teruggezet. In dat geval biedt dit commando uitkomst.
+\item {\bf Fix sealib}: Wanneer er foutmeldingen zijn over de library sealib of seadif, dan kan
+                    met dit commando er een reset worden gedaan waardoor het probleem
+                    waarschijnlijk verholpen wordt.
+\end{itemize}
+
+\subsection{Het Fonts-menu}
+Wanneer dit menu wordt gekozen verschijnen er een viertal letter-groottes, namelijk
+{\it Small}, {\it Normal}, {\it Large} en {\it XLarge} waaruit een keuze gemaakt kan worden
+door op het betreffende item te klikken.\\
+De letter-grootte in alle windows van het programma \tool{GoWithTheFlow} zal dan
+aan de gekozen grootte worden aangepast.
+
+\section{Het Package-menu}
+Dit menu wordt getoond wanneer in het rechter midden-gedeelte van \tool{GoWithTheFlow}
+op de naam van een package wordt geklikt.
+In dit menu bevinden zich de volgende sub-menu's:
+\begin{itemize}
+\item {\bf Edit}: Door dit item te kiezen wordt een edit-window gestart, waarin de
+             \smc{vhdl}-beschrijving van het package kan worden gewijzigd.
+Zie ook hoofdstuk \ref{edit-section}.
+\item {\bf Recompile}: Door dit item te kiezen, wordt de \smc{vhdl}-beschrijving van
+                  het package opnieuw gecompileerd.
+\item {\bf Delete}: Door dit item te kiezen wordt een window getoond, waarmee het
+             package kan worden verwijderd. De (fout)meldingen hierbij zullen
+             in dit window worden getoond.
+\end{itemize}
+
+\section{Het Entity-menu}
+Dit menu wordt getoond wanneer in het rechter midden-gedeelte van \tool{GoWithTheFlow}
+op de naam van een entity wordt geklikt.
+In dit menu bevinden zich de volgende sub-menu's:
+\begin{itemize}
+\item {\bf Edit}: Door dit item te kiezen wordt een edit-window gestart, waarin de
+             \smc{vhdl}-beschrijving van de entity kan worden gewijzigd.
+Zie ook hoofdstuk \ref{edit-section}.
+\item {\bf Recompile}: Door dit item te kiezen, wordt de \smc{vhdl}-beschrijving van
+                  de  entity opnieuw gecompileerd.
+\item {\bf Make Component}: Hiermee wordt vanuit de \smc{vhdl}-beschrijving
+                     een component-beschrijving gegenereerd en geplaatst in de
+                     components-directory voor later gebruik als component
+                     in een architecture beschrijving of als cell in de
+                     schematic-editor.
+\item {\bf Add Architecture}: Door dit item te kiezen, wordt een edit-window
+                         gestart met daarin een frame-work voor een
+                         architecture bij de betreffende entity. Deze
+                         architecture kan dan worden geedit en opgeslagen.
+\item {\bf Delete}: Door de keuze van dit commando verschijnt er een window
+                waaruit kan worden gekozen welke delen van de betreffende
+                cell uit de diverse databases moeten worden verwij\-derd.
+                De (fout)meldingen hierbij zullen ook in dit window worden
+                getoond.
+\end{itemize}
+
+\section{Het Architecture-menu}
+Dit menu wordt getoond wanneer in het rechter midden-gedeelte van \tool{GoWithTheFlow}
+op de naam van een architecture wordt geklikt.
+In dit menu bevinden zich de volgende sub-menu's:
+\begin{itemize}
+\item {\bf Edit}: Door dit item te kiezen wordt een edit-window gestart, waarin de
+             \smc{vhdl}-beschrijving van de architecture kan worden gewijzigd.
+Zie ook hoofdstuk \ref{edit-section}.
+\item {\bf Recompile}: Door dit item te kiezen, wordt de \smc{vhdl}-beschrijving van
+                  de  architecture opnieuw gecompileerd.
+\item {\bf Parse SLS}: (Alleen bij architectures van het type 'structural'.)
+                  Genereer de circuit beschrijving.
+\item {\bf Add Configuration}: Door dit item te kiezen wordt een nieuwe
+                         configuratie gemaakt voor het betreffende
+                         entity-architecture paar. Er verschijnt een window
+                         waarin de naam van de nieuwe configuration moet
+                         worden gegeven. Daarna wordt de configuration
+                         gegenereerd. Voor de eventuele componenten in
+                         de architectuur-beschrijving wordt gezocht naar
+                         aanwezige configuraties hiervan.
+                         Is er geen configuratie aanwezig, dan wordt de
+                         generatie onderbroken, en moet deze eerst worden
+                         gemaakt.  Is er slechts
+                         \'e\'en configuratie, dan wordt deze gekozen.\\
+                         Zijn er meerder configuraties aanwezig,
+                         dan verschijnt er een window, waaruit men een keuze
+                         kan maken voor \'e\'en van de configuraties.\\
+                         Er verschijnt een edit-window, waarin de
+                         gemaakte configuratie wordt getoond, en waarin deze
+                         eventueel nog kan worden gewijzigd.
+\item {\bf Delete}: Door dit item te kiezen wordt een window getoond, waarmee de
+             architecture kan worden verwijderd. De (fout)meldingen hierbij
+             zullen ook in dit window worden getoond.
+\end{itemize}
+
+\section{Het Configuration-menu}
+Dit menu wordt getoond wanneer in het rechter midden-gedeelte van \tool{GoWithTheFlow}
+op de naam van een configuration wordt geklikt.
+In dit menu bevinden zich de volgende sub-menu's:
+\begin{itemize}
+\item {\bf Edit}: Door dit item te kiezen wordt een edit-window gestart, waarin de
+             \smc{vhdl}-beschrijving van de configuration kan worden gewijzigd.
+Zie ook hoofdstuk \ref{edit-section}.
+\item {\bf Recompile}: Door dit item te kiezen, wordt de \smc{vhdl}-beschrijving van
+                  de  configuration opnieuw gecompileerd.
+\item {\bf Simulate}: Door het aanklikken van dit commando wordt de ModelSim simulator
+               gestart waarbij de betreffende configuration in de simulator
+               wordt geladen.
+\item {\bf Synthesize}: Door het aanklikken van dit commando wordt het window van
+	figuur \ref{synth-window} gestart, van waaruit de synthese
+	software van Synopsys kan worden gestart.
+	Voor een uitleg, zie de paragraaf hieronder.
+\item {\bf Delete}: Door dit item te kiezen wordt een window getoond, waarmee de
+             configuration kan worden verwijderd. De (fout)meldingen hierbij
+             zullen ook in dit window worden getoond.
+\end{itemize}
+
+\subsection{Het Synthesize commando}
+Wanneer het Synthesize commando uit het Configuration-menu
+wordt gekozen, wordt het window van figuur \ref{synth-window} gestart.
+\begin{figure}[htb]
+\centerline{\callpsfig{synth_wdw.ps}{width=12cm}}
+\caption{Het Synthese-window van het programma \tool{GoWithTheFlow}}
+\label{synth-window}
+\end{figure}
+De \smc{vhdl}-code van het bijbehorende entity-architecture paar zal daarbij worden
+gesynthetiseerd, waarbij de gesynthetiseerde subcircuits zullen worden
+gekozen aan de hand van de configuration.
+Voordat de synthese plaats vindt moeten alle subcircuits zijn gesynthetiseerd.\\
+In het bovenste gedeelte van het Synthese-window staat de bibliotheek met basis-cellen die worden
+gebruikt om de schakeling samen te stellen.
+Voor deze bibliotheek is een default-waarde gegeven, waarvan alleen in
+bijzondere omstandigheden mag worden afgeweken.\\
+Aan de linkerzijde van het window kan worden opgegeven in welk formaat het
+resultaat moet worden getoond:
+\begin{itemize}
+\item {\bf infinite}: waarbij het totale ontwerp op \'e\'en A4-tje wordt afgebeeld of
+\item {\bf A4}: waarbij het totale ontwerp over meerdere A4-tjes zal worden verdeeld.
+\end{itemize}
+Aan de linkerzijde van het Synthese-window bevinden zich de volgende
+commando-knoppen:
+  \begin{itemize}
+  \item {\bf ReadSynthScript}: De opties voor de synthesizer kunnen in de vorm van een
+                       tcl-script aan de synthese-software worden
+                       opgegeven. Dit synthese-script kan automatisch
+                       worden gegenereerd. (zie het volgende commando).
+                       Het laatst-gemaakte script kan met het commando
+                       'ReadSynthScript' in het tekst-window van het
+                       synthesizer options window zichtbaar worden gemaakt.
+  \item {\bf MakeSynthScript}: Via dit commando wordt een tcl-script gegenereerd
+                       met aanwijzingen voor de synthese software hoe de
+                       betreffende schakeling te synthetiseren. In het algemeen
+                       zal dit automatisch gegenereerde script goed zijn voor
+                       de synthese. Het wordt getoond in het tekst-window van
+                       het synthese options window. Eventueel kan het script
+                       hier nog worden aangepast.
+  \item {\bf Synthesize}: Door het klikken op deze knop zal de synthese worden
+      gestart. Allereerst wordt de te synthetiseren code nog door
+      de Synopsys software gecompileerd en daarna wordt de synthese
+      uitgevoerd.\\
+      Eventuele foutmeldingen verschijnen in het tekst gedeelte van het
+      synthese-window.
+      Ook worden hierin wanneer de synthese succesvol is verlopen
+      gegevens over het aantal gebruikte cellen weergegeven.
+      Het is goed om te kijken, of vooral het aantal flipfloppen wat wordt
+      gebruikt overeenkomt met het te verwachten aantal.\\
+      Wanneer de synthese is gelukt worden gesynthetiseerde \smc{vhdl}-files
+      gemaakt en in de \smc{vhdl}-directory geplaatst.
+      Tevens wordt er van het gesynthetiseerde circuit een \smc{sls}-file gemaakt.
+  \item {\bf Show circuit}: Via dit commando wordt een schema van het
+                      gesynthetiseerde circuit getoond.
+  \item {\bf Compile}: Via dit commando worden alle gemaakte \smc{vhdl}-files
+	in de 'working-library' van de simulator gecompileerd voor verdere simulaties.
+  \item {\bf Parse\_sls}: Via dit commando wordt de gemaakte \smc{sls}-file ingevoerd
+                     in het circuit gedeelte van de \smc{nelsis} database die
+                     is gekozen via het Database menu.
+  \item {\bf Write logfile}: Door het klikken op deze knop zal de tekst van het
+      tekst-gedeelte van het synthese-window naar een file worden weggeschreven.
+      De naam van de file is dezelfde als die van de originele \smc{vhdl}-file,
+      maar dan met de extensie synlog.
+      Dus is de oorspronkelij\-ke file bijvoorbeeld {\it piet.vhd}, dan wordt de
+      log-file {\it piet.synlog}.
+  \item {\bf Cancel}: Door het klikken op deze knop zal het synthese-window weer
+      verdwijnen.
+  \end{itemize}
+
+\section{Het circuit-menu}
+Dit menu wordt getoond wanneer in het rechter midden-gedeelte van \tool{GoWithTheFlow}
+op de naam van een circuit wordt geklikt.
+In dit menu bevinden zich de volgende sub-menu's:
+\begin{itemize}
+\item {\bf Place \& route}:
+Via dit commando wordt de layout-editor \tool{seadali} gestart, waarmee de layout
+van een circuit kan worden gemaakt d.m.v. placement (\tool{madonna}) en routing (\tool{trout}).
+\item {\bf Run row placer}:
+Via dit commando kan een alternatief plaatsingsprogramma worden opgestart.
+Deze plaatser is vooral geschikt voor het op efficiente wijze plaatsen van 
+(grote aantalen) sub-cellen uit de cel-blbliotheek.
+Deze plaatser kan niet worden gebruikt voor het plaatsen van sub-cellen
+die door de gebruiker zelf ontworpen zijn.
+Het bedraden moet daarna nog worden gedaan m.b.v. het programma \tool{trout}
+via het commando Place \& route.
+\item {\bf Simulate}:
+Met dit commando kan een \tool{sls} of \tool{spice} simulatie worden uitgevoerd.
+Dit is een simu\-latie op transistor-niveau van het circuit.
+Wanneer het dit commando wordt gekozen verschijnt het window van
+figuur \ref{sim-sls-window}.
+\begin{figure}[htb]
+\centerline{\callpsfig{sim_sls_wdw.ps}{width=12cm}}
+\caption{Het Simulate-window van het programma \tool{GoWithTheFlow}}
+\label{sim-sls-window}
+\end{figure}
+In dit window kan de commando file worden gekozen door op het tekst-vak
+na 'commands:' te klikken of de simulator door op het tekst-vak na 'simulator:'
+te klikken.
+Door op de \button{Doit} knop te klikken wordt de simulatie uitgevoerd.
+De resultaten van de simulatie worden o.a. weggeschreven op een .res file,
+die weer door het commando {\bf Compare} kan worden gebruikt.\\
+Door de knop \button{ShowResult} te kiezen worden de resultaten van de
+simulatie getoond. (negeer een eventuele foutmelding over het niet aanwezig zijn
+van de .dmrc-file).\\
+Door de \button{Cancel} knop te kiezen wordt het Simulatie-window weer verwijderd.
+\item {\bf Delete}:
+Met dit commando kan het circuit worden verwijderd.
+\end{itemize}
+
+\section{Het layout-menu}
+Dit menu wordt getoond wanneer in het rechter midden-gedeelte van \tool{GoWithTheFlow}
+op de naam van een layout wordt geklikt.
+In dit menu bevinden zich de volgende sub-menu's:
+\begin{itemize}
+\item {\bf Place \& route}: Via dit commando wordt de layout-editor \tool{seadali} gestart, 
+waarmee de layout opnieuw kan worden geplaatst en bedraad of waarbij de layout
+eventueel op een andere manier kan worden aangepast.
+\item {\bf Run row placer}:
+Zie hetzelfde commando in het circuit-menu.
+\item {\bf Simulate}:
+Dit commando komt overeen met het simulate commando uit het circuit menu.
+Omdat nu voor de simulatie het circuit eerst ge"extraheerd wordt uit de layout,
+kunnen hier echter nog een aantal opties voor extractie worden ingesteld.
+Zie ook de {\bf Simulate\_dac} paragraaf (\ref{dac-section}).
+\item{\bf Simulate as DAC}
+\label{dac-section}
+Met dit commando kan een spice-simulatie worden uitgevoerd op de layout van
+een ontworpen digitaal-analoog convertor.\\
+Wanneer dit commando wordt gekozen verschijnt het window van figuur \ref{dac-window}.
+
+\begin{figure}[htb]
+\centerline{\callpsfig{dac_wdw.ps}{width=12cm}}
+\caption{Het Simulate\_dac-window van het programma \tool{GoWithTheFlow}}
+\label{dac-window}
+\end{figure}
+
+De volgende instellingen moeten worden gemaakt:
+\begin{itemize}
+\item De naam van de \smc{dac} die moet worden gesimuleerd door een keuze te maken
+     uit de lijst met cellen die verschijnt wanneer op de knop na cells wordt
+     geklikt.
+\item De waarde van de weerstand die moet worden aangesloten op de ingang van
+      de \smc{dac}; deze moet als een integer worden opgegeven na value bij
+      input-resistor.
+\item De naam van de ingang van de \smc{dac} waaraan de weerstand moet worden
+      aangesloten via de lijst terminals, die verschijnt na het klikken op de
+      knop na 'to' op de input-resistor balk.
+\item De verbinding van de ingangsweerstand naar vss of vdd, welke keuze
+      gemaakt kan worden door het klikken op de knop na 'from' op de
+      input-resistor balk.
+\item De waarde van de weerstand die moet worden aangesloten op de uitgang van
+      de \smc{dac}; deze moet als een integer worden opgegeven na value bij
+      output-resistor.
+\item De naam van de uitgang van de \smc{dac} waaraan de weerstand moet worden
+      aangesloten via de lijst terminals, die verschijnt na het klikken op de
+      knop na 'to' op de output-resistor balk.
+\item De verbinding van de uitgangsweerstand naar vss of vdd, welke keuze
+      gemaakt kan worden door het klikken op de knop na 'from' op de
+      output-resistor balk.
+\end{itemize}
+Aan de linkerzijde van het window kunnen nog de volgende opties worden ingesteld:
+\begin{itemize}
+\item {\bf extraction}: Hiermee kan worden gekozen of voor de simulatie het circuit
+      eerst opnieuw uit de layout moet worden ge"extraheerd ({\bf yes}, {\bf no} of {\bf auto}).
+      In dit laatste geval wordt alleen een extractie uitgevoerd, wanneer geen
+      up-to-date ge"extraheerd circuit meer beschikbaaar is.
+\item {\bf capacitors}: Hiermee kan worden gekozen of de op de chip aanwezige
+      capaciteiten ook moeten worden ge"extraheerd ({\bf yes}, {\bf no}). De simulatie wordt
+      door de extractie van de capaciteiten wat nauwkeuriger ten koste
+      van een langere simulatietijd.
+\end{itemize}
+Wanneer bovenstaande instellingen zijn uitgevoerd kan en spice-simulatie van het geheel
+worden gedaan door op de button \button{Doit} te klikken.
+Er wordt dan een command file gemaakt, die eventueel nog gewijzigd kan worden,
+en de spice-simulatie wordt m.b.v. deze file uitgevoerd.
+De resultaten van de simulatie worden in het tekst gedeelte van het
+Simulatie\_dac window in tabelvorm getoond.\\
+Door het klikken op \button{ShowResult} wordt een grafische voorstelling getoond van
+de \smc{dac}-signalen.\\
+Het Simulatie\_dac window verdwijnt weer door op \button{Cancel} te klikken.
+\item {\bf Extract vhdl}: Via dit commando kan de \smc{vhdl}-code uit de layout worden ge"extraheerd.
+  Wanneer dit commando wordt gekozen verschijnt het window van
+  figuur \ref{extr-vhdl-window}.
+  \begin{figure}[htb]
+  \centerline{\callpsfig{extr_wdw.ps}{width=12cm}}
+  \caption{Het Extract-\smc{vhdl}-window van het programma \tool{GoWithTheFlow}}
+  \label{extr-vhdl-window}
+  \end{figure}
+
+  In het algemeen zal alleen van de hoogste cell in de hierarchie een
+  extractie behoeven te worden gedaan.
+  Alleen als na simulatie blijkt dat de resultaten
+  hiervan niet correct zijn, kan om dit nader te onderzoeken
+  ook van sub-cellen een extractie worden gedaan.\\
+  Aan de linkerzijde van dit window bevinden zich de commando-knoppen, waarmee
+  de volgende commando's zijn geimplementeerd:
+  \begin{itemize}
+  \item {\bf Get}: Door de keuze van dit commando wordt vanuit de layout van het
+           gekozen design uit de gekozen \smc{nelsis} database een \smc{vhdl}-beschrijving
+           gemaakt, die wordt getoond in het rechter gedeelte van het
+           extract vhdl window.\\
+           De extractie is zodanig, dat de hierarchie uit het ontwerp wordt
+           gehaald, zodat alleen basis-cellen in de ge"extraheerde beschrijving
+           aanwezig zijn.
+  \item {\bf Write}: Door de keuze van dit commando wordt het resultaat van de
+             extractie, zoals getoond in het window weggeschreven naar een
+             file. De naam waaronder dit gebeurd is dezelfde als die van de
+             cell, maar dan met de toevoeging -extracted. De extensie is .vhd.
+             Dus is de naam van de cell {\it klaas}, dan wordt de naam van
+             de file: {\it klaas-extracted.vhd}. De directory waarin de file wordt
+             geschreven is \smc{vhdl}.
+  \item {\bf Compile}: Hiermee wordt de gegeneerde \smc{vhdl} beschrijving compileerd.
+  \item {\bf Cancel}: Door de keuze van dit commando wordt het Extract\_vhdl-window
+                verwijderd.
+  \end{itemize}
+\item {\bf Make ldm}:
+Met dit commando kan een layout-file worden gemaakt in het \smc{ldm}-formaat.
+Wanneer dit commando wordt gekozen verschijnt het window van
+figuur \ref{ldm-window}.
+
+\begin{figure}[htb]
+\centerline{\callpsfig{ldm_wdw.ps}{width=11cm}}
+\caption{Het make\_ldm-window van het programma \tool{GoWithTheFlow}}
+\label{ldm-window}
+\end{figure}
+
+De naam van de file die moet worden gemaakt moet worden opgegeven in
+het venster achter outfile. De extensie .ldm zal automatisch worden
+toegevoegd en behoeft dus niet te worden opgegeven.\\
+Omdat onder de naam van de outfile een layout wordt aangemaakt,
+moet deze naam anders zijn dan een bestaande layout cell.
+Bijvoorbeeld {\it hotelout} voor de cell {\it hotel}.\\
+De generatie van de \smc{ldm}-file zal worden uitgevoerd door het klikken
+op de \button{Make\_ldm} knop.\\
+Wordt op \button{Cancel} geklikt, dan verdwijnt het make\_ldm-window weer.
+\item {\bf Delete}:
+Met dit commando kan de layout worden verwijderd.
+\end{itemize}
+
+\section{Het \smc{vhdl} edit-window}
+\label{edit-section}
+Voor het genereren en veranderen van \smc{vhdl}-files wordt in \tool{GoWithTheFlow} een
+edit-window gebruikt wat wordt opgeroepen op een van de hiervoor behandelde manieren.
+Het ziet er uit als aangegeven in figuur \ref{edit-window}.
+In de titelbalk van dit window staat vermeld welke file is geladen in de editor.
+
+\begin{figure}[htb]
+\centerline{\callpsfig{hotelG.vhd.eps}{width=12cm}}
+\caption{Het edit-window van het programma \tool{GoWithTheFlow}}
+\label{edit-window}
+\end{figure}
+
+De menubalk bevat een drietal menu's:
+\begin{itemize}
+\item {\bf File}: Hierin zijn de volgende commando's opgenomen:
+            \begin{itemize}
+            \item {\bf Read}: Voor het inlezen van een andere  \smc{vhdl}-file uit de
+             \smc{vhdl}-directory
+            \item {\bf Save}: Voor het Saven van de getoonde tekst in een file
+              met de naam als getoond in de titelbalk.
+            \item {\bf Quit}: Voor het afsluiten van de editor.
+            \end{itemize}
+\item {\bf Edit}: Hierin zijn de volgende commando's opgenomen:
+            \begin{itemize}
+            \item {\bf Copy}: Voor het kopieren van geselecteerd tekst.
+            \item {\bf Cut}: Voor het weghalen van geselecteerde tekst.
+            \item {\bf Paste}: Voor het invoegen van tekst uit de buffer.
+            \item {\bf Search/Replace}: Voor het zoeken naar tekst en het
+            vervangen hiervan door andere tekst in het tekst-window van de editor.
+            \item {\bf Add component}: Voor het toevoegen van een component
+            declaratie aan de architecture beschrijving van een circuit.
+            Wanneer dit commando wordt gekozen verschijnt een lijst met
+            bestaande componenten, waaruit er een gekozen kan worden.
+            Deze wordt dan aan de architecture toegevoegd.
+            \end{itemize}
+\item {\bf Text}: Hierin zijn de volgende commando's opgenomen:
+            \begin{itemize}
+            \item {\bf Font}: Hiermee kan de grootte van de letters in het tekst-window worden
+            \item {\bf Tab}: Hiermee kan de tabgrootte worden veranderd.
+            \end{itemize}
+\end{itemize}
+Voorts bevat de menubalk nog de \button{compile} knop. Door hierop te klikken
+wordt de getoonde file gecompileerd voor gebruik in de simulator.\\
+De eventuele foutmeldingen die hierbij optreden worden in het onderste
+gedeelte van het edit-window getoond.\\
+Rechts in de menubalk wordt nog de positie van de cursor aangegeven wanneer
+de linker muisknop wordt ingedrukt.\\
+In het tekst-window wordt de gemaakte \smc{vhdl}-code getoond.\\
+Hierin kan op de normale manier tekst worden ingevoerd.
+Text kan worden geselecteerd door het indrukken van de linker-muisknop en met
+ingedrukte knop over de tekst te bewegen. De tekst die is aangeduid wordt dan
+geselecteerd wanneer de linker-muisknop weer wordt losgelaten.
+Copy en paste operaties kunnen worden uitgevoerd via CTRL-C en CTRL-V, maar ook
+door wanneer tekst is geselecteerd met de middelste-muisknop te klikken op de
+plaats waar de geselecteerde tekst geplaatst moet worden.
+\clearpage

@@ -1,0 +1,37 @@
+.TH DMRENAMESTREAM 5ICD "DMI User's Manual"
+.SH NAME
+dmRenameStream - rename a certain cell stream
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+int dmRenameStream (DM_CELL *key, char *oldname, char *newname);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "DM_CELL *key"
+is a pointer to a valid
+.B DM_CELL
+as obtained from the function dmCheckOut().
+.TP
+.B "char *oldname"
+the old name of the stream.
+.TP
+.B "char *newname"
+the new name of the stream.
+.SH DESCRIPTION
+Function
+.B dmRenameStream
+renames a stream for a cell in certain view specified by the cell access \fBkey\fP.
+.SH DIAGNOSTICS
+On success,
+.I zero
+is returned.
+On error, -1 is returned, and
+.I errno
+is set appropriately (see function rename(2)).
+.SH SEE ALSO
+dmCheckOut(5ICD),
+rename(2).

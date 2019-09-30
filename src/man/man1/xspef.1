@@ -1,0 +1,209 @@
+.TH XSPEF 1ICD "User Commands"
+.UC 4
+.SH NAME
+xspef - extract SPEF network description out of the database
+.SH SYNOPSIS
+.ie n .ta 20
+.el .ta 8
+.B xspef
+[-cdefgGhilopqrsvxy -z name -O name -C file
+.br
+	-D name -F outfile -M file -X lib] cell
+.SH OPTIONS
+.TP
+.B -c
+Add "*C x y" coordinates and *N statements.
+.TP
+.B -d
+Also add "*D cell" to instance statements.
+.TP
+.B -e
+Expand name arrays into single names.
+.TP
+.B -f
+Send output to a file \fIcell\fP.spef instead of to \fIstdout\fP.
+.br
+With option \fB-h\fP,
+also a file is created for every sub-cell.
+.TP
+.B -g
+Don't exclude the
+.I ground
+net.
+.TP
+.B -G
+Also don't exclude the
+.I ground
+node in *CAP lines.
+.TP
+.B -h
+Also extract
+.I hierarchy
+(used local sub-cells).
+.TP
+.B -i
+Also extract
+.I imported
+sub-cells (when option \fB-h\fP is used).
+.TP
+.B -l
+Use an instance_pin name for
+.I local
+DNET names.
+.TP
+.B -o
+Don't try to
+.I omit
+the *RES sections.
+.TP
+.B -p
+Don't use
+.I port
+names in place of net_name:index.
+.TP
+.B -q
+Don't use
+.I instance
+names in place of net_name:index.
+.TP
+.B -r
+Don't generate *DEFINE lines.
+.TP
+.B -s
+Don't generate the *GROUND_NETS line.
+.TP
+.B -v
+Enable
+.I verbose
+mode.
+.TP
+.B -x
+Omit nodes whose name start with "gnd" or "GND".
+.TP
+.B -y
+Omit nodes whose name start with "vss" or "VSS".
+.TP
+\fB-z\fP \fIprefix\fP
+Omit nodes whose name start with \fIprefix\fP.
+.TP
+\fB-O\fP \fIname\fP
+Omit the node that has this name.
+This option has a default value "GND".
+.TP
+\fB-C\fP \fIfile\fP
+Use the specified \fIfile\fP as the control file.
+.TP
+\fB-D\fP \fIname\fP
+Define label \fIname\fP for conditional reading of the control file.
+.TP
+\fB-F\fP \fIoutfile\fP
+Send output to the specified file.
+.TP
+\fB-M\fP \fIfile\fP
+Read conductors/contacts file and add comments to the resistors.
+.TP
+\fB-X\fP \fIlib\fP
+Exclude specific certain library cells from the listing
+(when options \fB-hi\fP are used).
+This is very useful if you have a design with your own imported libraries.
+This option may be given several times.
+There are two exclude possibilities:
+(1) all lib's starting with absolute path (for example "-X /usr/ocean");
+(2) the lib with basename (for example "-X primitives").
+.SH DESCRIPTION
+.I Xspef
+is a program to extract an SPEF circuit description out of the database.
+Default, only a circuit description of the cell itself is extracted and
+no sub-cells are extracted.
+When using the
+.B -h
+option the program will also extract all (local) sub-cells
+that are not a function (see "SLS: Switch-Level Simulator User's Manual")
+or a device.
+.PP
+See also the description in the
+.I xspice
+manual page.
+.PP
+The
+.I xspef
+program
+generates output in Standard Parasitic Exchange Format (SPEF)
+as proposed by IEEE Standard Draft P1481, v1.0.4 April 8, 1997.
+The output is in many aspects different from SPF and SPICE.
+.PP
+For
+.I xspef
+the netlist in the database must contain conductor numbers.
+This netlists are generated with the
+.I space(1ICD)
+layout to circuit extractor.
+.SH "THE CONTROL FILE"
+For
+.I xspef
+a control file may be used.
+The default name of the control file is "xspicerc".
+First,
+the program tries to read this file from the current working directory.
+Next,
+it tries to open the control file in the process directory.
+Note,
+the control file may also be used for other programs.
+.PP
+See the
+.I xspice
+manual page for a complete description of all possible parameters.
+Only two useful specifications for
+.I xspef
+are given here.
+.PP
+The
+.I hier_name_sep
+parameter defines the DIVIDER character (default '/') that must be used:
+.nf
+
+   hier_name_sep  \fIchar\fP
+
+.fi
+The
+.I inst_term_sep
+parameter defines the DELIMITER character (default ':') that must be used:
+.nf
+
+   inst_term_sep  \fIchar\fP
+
+.fi
+For SPEF,
+this separator characters may only be '.', '/', ':' or '|'.
+.SH "CONTROL FILE CONDITIONALS"
+See the
+.I xspice
+manual page for more details.
+.br
+The following condition is true for \fIxspef\fP:
+.TP
+#if SPEF
+.SH EXAMPLES
+.nf
+% xspef -h latch
+.AU "A.J. van Genderen"
+.SH MODIFIED BY
+.nf
+S. de Graaf
+.SH FILES
+.TP 12
+\fC\fIcell\fP.spef\fP
+(output file, when option \fB-f\fP is used)
+.TP
+\fCxspicerc\fP
+(default control file for xspef/xspice/...)
+.TP
+\fCspicemod\fP
+(models file for xspef/xspice/...)
+.SH SEE ALSO
+cspice(1ICD),
+putdevmod(1ICD),
+space(1ICD),
+xcontrol(1ICD),
+xspice(1ICD),
+xspf(1ICD).

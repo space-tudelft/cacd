@@ -1,0 +1,11 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+
+COBJS		= tra.o traacct.o traacld.o traask.o tradel.o tradest.o \
+		  traload.o tramdel.o traparam.o trasetup.o tratemp.o \
+		  tratrunc.o
+
+LIB_TARGET	= ../../dev.a
+INCLUDE		= -I../../../include
+

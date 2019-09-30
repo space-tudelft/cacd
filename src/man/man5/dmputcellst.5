@@ -1,0 +1,123 @@
+.TH DMPUTCELLSTATUS 5ICD "DMI User's Manual"
+.SH NAME
+dmPutCellStatus - put or modify extraction status of a cell
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+int dmPutCellStatus (DM_PROJECT *dmproject, DM_XDATA *xdata);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "DM_PROJECT *dmproject"
+a pointer to a valid \fBDM_PROJECT\fP as obtained from dmOpenProject().
+.TP
+.B "DM_XDATA *xdata"
+a pointer to a \fBDM_XDATA\fP structure.
+.SH DESCRIPTION
+Function
+.B dmPutCellStatus
+is used to set the extraction state information of a cell.
+The data written to the database is conveyed in the \fBDM_XDATA\fP
+data structure. The cell has to be in the project or imported into the project.
+You may create / update entries for non-existing cells.
+.PP
+The \fBDM_XDATA\fP structure has the following members:
+.PP
+.nf
+.if n .ta 4 11 29
+.if t .ta 1c 2c 6c
+	char *	\fBname\fP	cell name
+	long	\fBtimestamp\fP	last modified date
+	short	\fBcelltype\fP	type of cell
+	short	\fBinterfacetype\fP	type of interface
+	char *	\fBmasks\fP	list of masks
+.PP
+.fi
+Member \fBtimestamp\fP needs not to be set,
+because it is set by the function itself after writing to the database.
+.SH EXAMPLE
+.nf
+.if n .ta 4 8 12
+.if t .ta 1c 2c 3c
+/* the error handling has been omitted */
+
+int mskno (DM_PROCDATA *md, char *name)
+{
+	int i;
+	for (i = 0; i < md->nomasks; ++i)
+		if (strcmp (md->nomasks[i], name) == 0) break;
+	return i;
+}
+
+write_cell (char *cell)
+{
+	DM_XDATA xdata;
+	DM_PROCDATA *md = NULL;
+	DM_PROJECT *pkey;
+	int i, msks[64];
+	char mbuf[255], *mptr;
+
+	dmInit ("test");
+	pkey = dmOpenProject (DEFAULT_PROJECT, DEFAULT_MODE);
+	if (pkey)
+		md = (DM_PROCDATA *) dmGetMetaDesignData (PROCESS, pkey);
+	if (md) {
+		xdata.name = cell;
+		xdata.celltype = DM_CT_DEVICE;
+		xdata.interfacetype = DM_CT_FREEMASKS;
+		xdata.masks = mbuf;
+		for (i = 0; i < 64; ++i) msks[i] = 0;
+		if ((i = mskno (md, "cpg")) < 64) msks[i] = 1;
+		if ((i = mskno (md, "cmf")) < 64) msks[i] = 1;
+		if ((i = mskno (md, "cca")) < 64) msks[i] = 1;
+		mptr = mbuf;
+		for (i = 0; i < 64; ++i) if (msks[i]) {
+			if (mptr != mbuf) *mptr++ = ' ';
+			sprintf (mptr, "%d", i);
+			mptr += strlen (mptr);
+		}
+		*mptr = '\\0';
+		dmPutCellStatus (pkey, &xdata);
+	}
+	if (pkey) dmCloseProject (pkey, COMPLETE);
+	dmQuit ();
+}
+.SH DIAGNOSTICS
+If \fBdmPutCellStatus()\fP is successful,
+\fB0\fP will be returned.
+.if n .br
+.if t .PP
+If \fBdmPutCellStatus()\fP fails,
+\fB-1\fP is returned after dmError() has been called.
+.if t .br
+This may happen in the following cases:
+.TP 16
+.B DME_BADPR
+Bad project.
+.TP
+.B DME_FOPEN
+Cannot read/write xcontrol file.
+.TP
+.B DME_GET
+Data read error.
+.TP
+.B DME_NOCELL
+No xdata.
+No cell name specified.
+.TP
+.B DME_NOCELLTYPE
+Unknown celltype specified.
+.TP
+.B DME_NOINTERFACETYPE
+Unknown interfacetype specified.
+.TP
+.B DME_NOMASK
+No mask data.
+Too many masks in mask data.
+.br
+No or unknown mask specified.
+.SH SEE ALSO
+dmGetCellStatus(5ICD), xcontrol(1ICD).

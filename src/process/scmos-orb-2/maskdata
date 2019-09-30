@@ -1,0 +1,56 @@
+#-----------------------------------------------------------------------------
+#
+#                       M A S K D A T A   I N F O
+#
+#       Layer fields (2):       field  1: layer name
+#                               field  2: layer type
+#                                         type = 0: normal layer
+#                                         type = 1: interconnect layer
+#                                                   (terminals/labels may be
+#                                                    defined for this layer).
+#                                         type = 2: symbolic layer
+#
+#       Pattern-Generate (2):   field  3: job number
+#       (Only used by           field  4: mask type
+#        PG-tape programs)                type = 0: negative
+#                                         type = 1: positive
+#
+#       CMask Terminals (2):    field  5: color number
+#       (Obsolete)              field  6: fill style
+#
+#       (Sea)Dali (2):          field  7: color number
+#                                         0=black, 1=red, 2=green,
+#                                         3=yellow, 4=blue, 5=violet,
+#                                         6=aqua, 7=white
+#                               field  8: fill style
+#                                         0=hashed, 1=solid, 2=hollow
+#                                         3,4,5 = 12,25,50% hash+outline
+#                                         6,7,8 = idem, no outline
+#
+#       Plotter (2):            field  9: pen number
+#       (Obsolete)                        1=black, 2=red, 3=yellow,
+#                                         4=green, 5=brown, 6=violet,
+#                                         7=blue, 8=aqua
+#                               field 10: fill style
+#
+"scmos-orb-2" "example double metal N-well cmos process"
+#---------------------------------------------+---------------------
+# Layer     | PG-Tape | CMask | Dali  | Plot  | Comment
+#-----------+---------+-------+-------+-------+---------------------
+# name      | job     | color | color | pen   |
+# |    type | |  type | | fill| | fill| | fill|
+# |    |    | |  |    | |  |  | |  |  | |  |  |
+# 1    2    | 3  4    | 5  6  | 7  8  | 9  10 |
+#-v----v----+-v--v----+-v--v--+-v--v--+-v--v--+---------------------
+cpg    1      1  1      1  1    1  1    1  0   "polysilicon"
+caa    1      2  1      2  1    7  0    2  0   "active area"
+cmf    1      3  1      3  1    4  1    4  0   "metal"
+cms    1      4  1      5  1    5  1    6  0   "metal2"
+cca    0      5  1      8  1    5  3    8  0   "contact metal to diffusion"
+ccp    0      7  1      8  1    0  1    8  0   "contact metal to poly"
+cva    0      8  1      6  1    7  1    6  0   "contact metal to metal2"
+cwn    0      9  1      4  1    5  0    5  0   "n-well"
+csn    0     10  1      5  1    2  5    3  0   "n-channel implant"
+csp    0     14  1      3  1    3  5    3  0   "p-channel implant"
+cog    0     12  1      6  1    6  0    6  0   "contact to bondpads"
+cx     2      0  1      0  0    7  0    8  0   "bounding box"

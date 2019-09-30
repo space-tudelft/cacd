@@ -1,0 +1,15 @@
+# Dali design rule file for the c3tu process.
+# Author: P. van der Wolf, TU-Delft.
+# mask  width   gap     sh_gap  crit_length
+0       8       12      0       0
+1       8       16      0       0
+2       12      12      0       0
+3       12      12      0       0
+4       10      10      0       0
+5       10      10      0       0
+6       10      10      0       0
+7       10      10      0       0
+8       40      40      0       0
+9       12      12      0       0
+10      12      12      0       0
+11      600     350     0       0

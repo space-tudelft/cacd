@@ -1,0 +1,55 @@
+/* * * * * * * * * * * * * * * *
+ *
+ * This is the file 'digilib8_93.ext'.
+ * Contents: The external sls-declarations of all cells
+ *           in the library digilib8_93. (version august 1993)
+ * Purpose:  To determine the terminal configuration of the
+ *           library cells and to include in your sls-description file.
+ * Created:  july 18th by Patrick Groeneveld
+ * Modified: ..
+ *
+ * This file was copied into this project directory by 'mkopr' or
+ * 'mkepr'
+ */
+
+extern network buf40    (terminal A, Y, vss, vdd)
+extern network de211    (terminal A, B, Y0, Y1, Y2, Y3, vss, vdd)
+extern network de310    (terminal A, B, C, Y0, Y1, Y2, Y3, Y4, Y5, Y6, Y7, vss, vdd)
+extern network dfn10    (terminal D, CK, Q, vss, vdd)
+extern network dfr11    (terminal D, R, CK, Q, vss, vdd)
+extern network dfa11    (terminal D, R, CK, Q, vss, vdd)
+extern network ex210    (terminal A, B, Y, vss, vdd)
+extern network iv110    (terminal A, Y, vss, vdd)
+extern network mu111    (terminal A, B, S, Y, vss, vdd)
+extern network mu210    (terminal S1, S2, A, B, C, D, Y, vss, vdd)
+extern network na210    (terminal A, B, Y, vss, vdd)
+extern network na310    (terminal A, B, C, Y, vss, vdd)
+extern network no210    (terminal A, B, Y, vss, vdd)
+extern network no310    (terminal A, B, C, Y, vss, vdd)
+
+
+/* * * * * * * * * * * * * * * * *
+ *
+ * Start of extracted cells
+ * These cells start with capitals
+ * you probably never want to use these
+ * Therefore they are commented out now.
+ * Remove the comment marks to enable them
+ */
+
+/* commented out (to enable, remove this line and the last)
+extern network Buf40    (terminal A, Y, vss, vdd)
+extern network De211    (terminal A, B, Y0, Y1, Y2, Y3, vss, vdd)
+extern network De310    (terminal A, B, C, Y0, Y1, Y2, Y3, Y4, Y5, Y6, Y7, vss, vdd)
+extern network Dfn10    (terminal D, CK, Q, vss, vdd)
+extern network Dfr11    (terminal D, R, CK, Q, vss, vdd)
+extern network Dfa11    (terminal D, R, CK, Q, vss, vdd)
+extern network Ex210    (terminal A, B, Y, vss, vdd)
+extern network Iv110    (terminal A, Y, vss, vdd)
+extern network Mu111    (terminal A, B, S, Y, vss, vdd)
+extern network Mu210    (terminal S1, S2, A, B, C, D, Y, vss, vdd)
+extern network Na210    (terminal A, B, Y, vss, vdd)
+extern network Na310    (terminal A, B, C, Y, vss, vdd)
+extern network No210    (terminal A, B, Y, vss, vdd)
+extern network No310    (terminal A, B, C, Y, vss, vdd)
+end of comment out, (remove this line to enable) */

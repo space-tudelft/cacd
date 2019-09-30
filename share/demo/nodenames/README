@@ -1,0 +1,48 @@
+# directory: demo/nodenames
+
+Demonstration of using node names when extracting resistances.
+This demo is using the switchbox4 leaf cell nan3.
+Currently not yet available in the Space Tutorial.
+
+STEPS
+=====
+
+1.  Make project from cwd, use scmos_n technology and lambda = 1 (micron)
+    % mkpr -p scmos_n -l 1 .
+
+2.  Use cgi to put the switchbox layout from GDS2 file into the database.
+    % cgi ../switchbox/switchbox4.gds
+
+3.  List contents of project.
+    % dblist
+    or
+    % dblist -h
+
+4.  Watch the layout of nan3 using the layout editor/viewer dali.
+    % dali nan3
+
+5.  Perform an extraction of leaf cell nan3.
+    % space -v nan3
+
+6.  List contents of project and inspect circuit.
+    % dblist -dh
+    % xspice -aou nan3
+    % xsls nan3
+    % dbcat -c nan3
+
+7.  Perform an extraction of leaf cell nan3 with resistances.
+    % space -rv nan3
+
+8.  Inspect the circuit and internal net again.
+    % xsls nan3
+    % dbcat -cs net nan3
+
+9.  Perform an extraction of leaf cell nan3 with resistances
+    now using parameter term_is_netname=on to get net names
+    derived from terminal names.
+    % space -rv -Sterm_is_netname nan3
+
+10. Inspect the circuit and internal net again.
+    % xsls nan3
+    % dbcat -cs net nan3
+

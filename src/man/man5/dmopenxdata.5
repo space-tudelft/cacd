@@ -1,0 +1,34 @@
+.TH DMOPENXDATA 5ICD "DMI User's Manual"
+.SH NAME
+dmOpenXData - open the xcontrol file
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+FILE *dmOpenXData (DM_PROJECT *dmproject, char *mode);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "DM_PROJECT *dmproject"
+a pointer to a valid \fBDM_PROJECT\fP as obtained from dmOpenProject().
+.TP
+.B "char *mode"
+the file access mode used by fopen().
+.SH DESCRIPTION
+Function
+.B dmOpenXData
+opens the xcontrol file of the specified project database,
+which can contain extraction state information of the database cells.
+.SH DIAGNOSTICS
+If \fBdmOpenXData()\fP is successful,
+a valid FILE pointer will be returned from fopen().
+.PP
+If \fBdmOpenXData()\fP fails,
+\fBNULL\fP will be returned.
+.SH SEE ALSO
+dmGetXData(5ICD),
+dmStatXData(5ICD),
+dmUnlinkXData(5ICD),
+xcontrol(1ICD).

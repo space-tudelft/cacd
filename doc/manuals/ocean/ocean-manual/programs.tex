@@ -1,0 +1,117 @@
+\chapter{The programs in the OCEAN system: a glossary}
+\label{s-programs}
+All tools that are available from the {\sc ocean} distribution are listed
+below, with a one-liner briefly describing each tool. The most important
+programs are indicated in figure~\ref{oceantools2}, and are also described in
+more detail in the following sections. 
+Some programs
+document themselves briefly if you pass them the '-h' option.
+Other tools have manual pages (use \tool{icdman}).
+\begin{figure}
+\centerline{\psfig{figure=\figdir/tools.eps,width=1.1\linewidth}}
+\caption{\label{oceantools2} The main programs in the \smc{ocean} Sea-of-Gates
+design system. The arrows indicate the design flow.}
+\end{figure}
+
+\newcommand{\bprogs}{\begin{itemize}}
+\newcommand{\prog}[2]{\item[~~~ \tool{#1}] ~~~~ #2}
+\newcommand{\eprogs}{\end{itemize}}
+
+\section{Programs to generate netlists}
+\bprogs
+\prog{kissis}{Run SIS logic synthesis for automatic FSM generation.}
+\prog{ghoti}{purifies sea-of-gates extracted circuits.}
+\prog{makebus}{analyzes a netlist to extract buses from it.}
+\prog{space}{extracts a circuit from a layout.}
+\prog{vspace}{special space extract script.}
+\eprogs
+
+\section{Programs to generate layout}
+\bprogs
+\prog{fish}{purifies a sea-of-gates layout.}
+\prog{getldm}{script to get a flat ldm description.}
+\prog{layflat}{removes all hierarchy from a layout cell.}
+\prog{madonna}{partitioning based sea-of-gates placer.}
+\prog{seadali}{interactive tool for layout editing, placing and routing.}
+\prog{trout}{Through-the-cell sea-of-gates router.}
+\prog{sea}{front-end for calling \tool{madonna} and/or \tool{trout} from a nelsis environment.}
+\eprogs
+
+\section{Programs for simulation}
+\bprogs
+\prog{arrexp}{expands the arrays in an {\sc sls} commandfile, used by \tool{simeye}.}
+\prog{dofunc}{front-end for the functional simulator tool \tool{cfun}.}
+\prog{cfun}{creates a functional (``behavioral'') simulator.}
+\prog{nspice\_bs}{pre-processor for {\sc spice-2} and {\sc spice-3}, used by \tool{simeye}.}
+\prog{nspice\_pp}{post-processor for {\sc spice-2} and {\sc spice-3}, used by \tool{simeye}.}
+\prog{nspice}{front-end for {\sc spice-2} and {\sc spice-3}, used by \tool{simeye}.}
+\prog{simeye}{interactive switch-level and {\sc spice} simulator for X-windows.}
+\prog{sls\_exp}{pre-processor for \tool{sls}.}
+\prog{sls}{switch-level simulator, used by \tool{simeye}.}
+\eprogs
+
+\section{Programs to list and manipulate design projects}
+\bprogs
+\prog{dblist}{lists the contents of the nelsis database.}
+\prog{freedif}{removes cells from the seadif database.}
+\prog{mkopr}{creates a new sea-of-gates design project.}
+\prog{mkpr}{creates a nelsis project (see \tool{mkopr}).}
+\prog{mksls}{constructs a Makefile for updating a nelsis database.}
+\prog{rmdb}{removes cells from the nelsis database.}
+\prog{rmpr}{removes a nelsis design project.}
+\prog{rmsdflock}{removes (blasts) the locks from a seadif database.}
+\prog{seedif}{lists the contents of the seadif database.}
+\prog{tutorial}{creates a sea-of-gates design project containing a tutorial.}
+\eprogs
+
+\section{Programs to list and manipulate cells}
+\bprogs
+\prog{clambda}{changes the lambda value of a design project.}
+\prog{colaps}{flatten the hierarchy of a seadif circuit cell.}
+\prog{dbcat}{lists the contents of cells that are in the nelsis database.}
+\prog{dbclean}{removes data from the database that can be regenerated.}
+\prog{exp}{expands a layout cell (generate derived data from it).}
+\prog{gnarp}{performs various kind of operations on a seadif cell.}
+\prog{impcell}{imports a cell from another project (see also \tool{addproj}).}
+\prog{macro}{sets or unsets a macro status for a layout cell.}
+\prog{makeboxh}{expands a layout cell hierarchically to boxes (see \tool{exp}).}
+\prog{makeboxl}{expands a layout cell linearly to boxes (see \tool{exp}).}
+\prog{makegln}{creates a non-vertical line segment representation (see \tool{exp}).}
+\prog{makevln}{creates a set of ``\_vln'' data files (see \tool{exp}).}
+\prog{mplot}{makes a plotfile for a masklayout.}
+\prog{putdevmod}{puts a device model description into the circuit database.}
+\prog{showbus}{shows the buses in a netlist, as found by \tool{makebus}.}
+\eprogs
+
+\section{Programs to convert to and from the database}
+\bprogs
+\prog{bliff2sls}{Converts {\sc bliff} circuit format into {\sc sls} format.}
+\prog{ccif}{compiles {\sc cif} data format into the nelsis database.}
+\prog{cedif}{compiles {\sc edif} sources into the nelsis database.}
+\prog{cga}{converts {\sc gds-ii} data format to {\sc ascii}.}
+\prog{cgi}{compiles {\sc gds-ii} sources into the nelsis database.}
+\prog{cig}{converts info from the nelsis database to {\sc gds-ii} format.}
+\prog{cldm}{compiles {\sc ldm} (= layout description language) into the database.}
+\prog{csls}{compiles {\sc sls} (= circuit description language) into the database.}
+\prog{esea}{compiles {\sc edif} sources into the seadif database.}
+\prog{getepslay}{converts a layout cell to PostScript suitable for printing.}
+\prog{playout}{print a hardcopy of a given layout cell (uses getepslay).}
+\prog{nelsea}{nelsis to seadif and seadif to nelsis database converter.}
+\prog{cspice}{compiles a {\sc spice} network description into the database.}
+\prog{xcif}{extracts {\sc cif} format from the layout database.}
+\prog{xcmk}{extracts {\sc circuitmask} format from the layout database.}
+\prog{xedif}{extracts {\sc edif} format from the circuit database, see \tool{cedif}.}
+\prog{xldm}{extracts {\sc ldm} format from the layout databse, see \tool{cldm}.}
+\prog{xsls}{extract {\sc sls} format from the circuit database, see \tool{csls}.}
+\prog{xspice}{extracts {\sc spice} format from the circuit database, see \tool{cspice}.}
+\eprogs
+
+\section{Miscellaneous programs}
+\bprogs
+\prog{ICELLS}{compiles and installs sea-of-gates cell libraries.}
+\prog{seatail}{temporarely shows output from a sea-of-gates tool.}
+\prog{sea}{front-end for calling seadif tools in a nelsis environment.}
+\prog{setcmap}{manipulates the X-window colormap for nelsis and {\sc ocean} tools.}
+\prog{tecc}{technology compiler for \tool{space}.}
+\eprogs
+

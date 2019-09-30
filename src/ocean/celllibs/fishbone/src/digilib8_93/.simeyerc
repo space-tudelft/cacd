@@ -1,0 +1,13 @@
+# This is the file '.simeyerc'  12-1992
+# It is the start-up file for simeye. This file was put in this project
+# directory by 'mkopr'. If necessary, you can customize by editing this file.
+SLS: sls $cell $cell.cmd
+SLS_LOGIC_LEVEL: 2
+SLS_LOGIC_SIGNAL: D
+SLS_TIMING_SIGNAL: A
+SPICE: nspice $cell $cell.cmd
+XDUMP_FILE: simeye.wd
+PRINT: xtops -white 1 -in simeye.wd -out $cell.ps; pspr $cell.ps; rm simeye.wd
+PRINT_LABEL: $cell  $date  $time
+SETTINGS_FILE: simeye.set
+TRY_NON_CAPITAL_ON

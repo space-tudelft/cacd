@@ -1,0 +1,127 @@
+.TH MKPR 1ICD "8/28/86"
+.UC 4
+.SH NAME
+mkpr - make a project
+.SH SYNOPSIS
+.B mkpr
+[-p process] [-l lambda] [-u project] project
+.SH PARAMETERS
+.TP
+.I project
+Absolute or relative path of the project to be created.
+.SH OPTIONS
+.TP
+\fB-p\fP \fIprocess\fP
+Create project for the specified process.
+The \fIprocess\fP argument can be
+a process \fIname\fP,
+a process \fInumber\fP or
+a process \fIdirectory\fP.
+.TP
+\fB-l\fP \fIlambda\fP
+Use the specified lambda value (in microns) for the project.
+.TP
+\fB-u\fP \fIproject\fP
+Use existing project (path) for parameter defaults.
+.SH DESCRIPTION
+.I Mkpr
+creates a project (for the latest release) with the specified name.
+The argument may contain slashes (/), in which case the first part (up to the last /)
+has to be a legal UNIX path to a directory in which the new project directory
+will be created.
+When the project directory exists, then
+.I mkpr
+tries to turn the existing directory into a project directory.
+This directory may not already contain any project files.
+.PP
+Default,
+.I mkpr
+tries to use the information of the current project (if existing).
+Use option \fB-u\fP, to use a specific project instead.
+This information is read from the ".dmrc" file.
+When this file has a bad format, no information is used.
+.PP
+To connect the project to a process,
+.I mkpr
+first tries to use the process
+that is specified using the option \fB-p\fP,
+second the value of an existing current project.
+Next,
+.I mkpr
+tries to use the environment variable ICDPROCESS (if defined).
+Otherwise,
+the user has to interactively specify the process.
+.PP
+To define a lambda value
+(the smallest grid for layout design)
+for the project,
+.I mkpr
+first tries to use the value that is specified
+using the option \fB-l\fP,
+second the value of an existing current project.
+Next,
+.I mkpr
+tries to read the value from a file `default_lambda'
+that is present in the process directory.
+Otherwise,
+the user has to interactively specify the value for lambda.
+.PP
+.I Mkpr
+creates standard entries in the project directory, that is,
+view directories with empty celllists, a file ".dmrc" and a file "projlist".
+The entry ".dmrc" contains process information such as the process id
+and the value for lambda.
+The entry ".dmxdata" contains \fIxcontrol\fP(1ICD) information.
+The entry "projlist" is intended to contain a list of paths to projects
+that may be
+used as libraries for the design that will be created in the new project.
+.SH LIMITATIONS
+.I Mkpr
+requires write permission in the parent directory.
+.I Mkpr
+does not use the environment variable CWD.
+.SH EXAMPLES
+.nf
+% mkpr my_project
+% mkpr -l 0.1 my_project2
+% mkpr -p scmos_n -l 0.1 ../../projects/new_project
+% mkpr -p /usr/cacd/lib/process/scmos_n -l 0.1 other_project
+% mkpr -u other_project other_project2
+.fi
+.SH AUTHORS
+P. van der Wolf, A.J. van Genderen, S. de Graaf
+.SH FILES
+.TP 30
+\fCICDPATH/share/lib/process/processlist\fP
+(input file)
+.TP
+\fCproject/.dmrc\fP
+(output file)
+.TP
+\fCproject/.dmxdata\fP
+(output file)
+.TP
+\fCproject/projlist\fP
+(output file)
+.TP
+\fCproject/\fIview\fP/celllist\fP
+(output file)
+.TP
+\fCproject/\fIview\fP/impcelllist\fP
+(output file)
+.TP
+\fCICDPATH/share/lib/process/\fIname\fP/default_lambda\fP
+(opt. input file)
+.TP
+\fCICDPROCESS/default_lambda\fP
+(opt. input file)
+.SH SEE ALSO
+addproj(1ICD),
+getproc(1ICD),
+rmpr(1ICD),
+xcontrol(1ICD).
+.SH DIAGNOSTICS
+Upon successful completion
+.I mkpr
+returns exit code 0.
+Otherwise, a diagnostic is printed and 1 is returned.

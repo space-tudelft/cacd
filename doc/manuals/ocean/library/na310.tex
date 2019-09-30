@@ -1,0 +1,65 @@
+\section{na310}
+
+Function: 3-input nand
+
+Terminals: (A, B, C, Y, vss, vdd)
+
+
+IEC-symbol:
+%figuur na310.iec.eps
+\begin{figure}[bth]
+\callpsfig{na310.iec.eps}{width=.31\textwidth}
+\end{figure}
+
+Function table:
+\begin{table}[bth]
+\begin{tabular}{|c|c|c||c|}
+\hline
+A	&B	&C	&Y\\
+\hline
+-	&-	&L	&H\\
+-	&L	&-	&H\\
+L	&-	&-	&H\\
+H	&H	&H	&L\\
+\hline
+\end{tabular}
+
+\vspace{1cm}
+
+Propagation and load dependent delays:\\
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Parameter               &From            &To   &Typ    &Unit\\
+\hline
+T$_{PLH}$               &A     		&Y      &0.6    &ns\\
+T$_{PHL}$               &A    		&Y      &1.2    &ns\\
+T$_{PLH}$               &B     		&Y      &0.5    &ns\\
+T$_{PHL}$               &B    		&Y      &1.1    &ns\\
+T$_{PLH}$               &C     		&Y      &0.4    &ns\\
+T$_{PHL}$               &C    		&Y      &0.9    &ns\\
+\hline
+$\Delta$T$_{PLH}$       &any          	&Y      &9.0    &ns/pF\\
+$\Delta$T$_{PHL}$       &any           	&Y      &3.0    &ns/pF\\
+\hline
+C$_{in}$                &any	    	&vss    &0.12   &pF\\
+\hline
+\end{tabular}
+\end{table}
+
+
+Equivalent chip area: 4
+
+
+
+
+
+%figuur na310.lay.eps
+\begin{figure}[bth]
+layout:\\
+
+\callpsfig{na310.lay.eps}{height=5in}
+\end{figure}
+
+
+\clearpage

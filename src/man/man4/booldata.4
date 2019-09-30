@@ -1,0 +1,72 @@
+.TH BOOLDATA 4ICD "File Formats"
+.UC 4
+.SH NAME
+booldata - technology description for the program nbool
+.SH DESCRIPTION
+The description of the combination of masks that must
+be made by the program
+.I nbool
+(1ICD)
+(part of the design_rule checker
+.I dimcheck
+(1ICD)) is done in
+the technology file
+.I booldata.
+The format of this file is illustrated by the following example.
+.br
+.SH EXAMPLE
+.PP
+.nf
+od_vln nw_vln sp_vln ps_vln con_vln cop_vln
+cps_vln cb_vln in_vln sn_vln : filenames
+od_vln&!nw_vln               : 0  OD.3.1
+od_vln&nw_vln                : 1  OD.4.1.1
+od_vln&sp_vln&!nw_vln        : 2  OD.3.2+SP/SN.3.3+4.3
+od_vln&ps_vln                : 3  PS.3.1+PS.5.1
+sp_vln|sn_vln                : 4  SP.3.1+SN.3.1
+od_vln&ps_vln&nw_vln         : 5  SP.3.2+SP.4.2
+od_vln&!ps_vln               : 6  OD.2.1
+od_vln&con_vln&!nw_vln|
+od_vln&cop_vln&nw_vln|od_vln&ps_vln : 7  SP/SN.3.3+4.3
+od_vln&sn_vln&nw_vln         : 8  SP/SN.3.3+4.3
+od_vln&ps_vln&!nw_vln        : 9  SN.3.2+SN.4.2
+od_vln&con_vln               : 12 CON.3.1+CON.3.2
+od_vln&con_vln&sn_vln&nw_vln : 13 CON.3.3+CON.3.4
+od_vln&cop_vln               : 14 COP.3.1+COP.3.2
+od_vln&sp_vln&cop_vln&!nw_vln : 15 COP.3.3+COP.3.4
+od_vln&ps_vln&cps_vln        : 16 CPS.4.1
+cps_vln&ps_vln               : 17 CPS.4.2+CPS.4.3
+con_vln&!in_vln|cop_vln&!in_vln|
+cps_vln&!in_vln              : 18 IN.3.1
+con_vln&in_vln|cop_vln&in_vln|
+cps_vln&in_vln               : 19 IN.3.2
+cb_vln&in_vln                : 20 CB.1.1
+.fi
+.PP
+The first lines of the file until the first ':' contain the names of the
+input files that are involved in the formulas to come.
+After that each line(s) of the file until the ':'
+contains the logical formula to make.
+In this formula the logical AND operation is indicated by the
+character '&', the logical OR operation by '|' and
+the negation operation by the character '!'.
+The precedence of the operators is !, &, |.
+The end of the formula is indicated by the ':' on the line.
+After this ':' a number is given indicating the name of
+the file where the result has to be stored.
+The name of the file becomes bool_nn,
+where nn is the number just mentioned.
+After this number a string is given indicating what
+design rule is involved in the operation.
+.AU "J. Liedorp"
+.SH FILES
+.TP
+\fCICDPATH/share/lib/process/\fIprocess_name\fR/booldata\fP
+.SH SEE ALSO
+.br
+T.G.R. van Leuken, J. Liedorp "An Hierarchical
+and Technology Independent Design Rule Checker", Delft University
+of Technology,
+.br
+autocheck(1ICD), dimcheck(1ICD), nbool(1ICD),
+dimdata(4ICD)

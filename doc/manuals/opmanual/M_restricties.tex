@@ -1,0 +1,52 @@
+\subsection{Restricties ontwerpsoftware}
+In deze sectie zullen de restricties worden behandeld, die in acht
+moeten worden genomen bij het gebruik van de ontwerpsoftware.
+\begin{itemize}
+\item De 'ports' van entities van \smc{vhdl}-beschrijvingen die moeten worden
+      gesynthetiseerd mogen {\it alleen} van het type {\it std\_logic} of
+      {\it std\_logic\_vector} zijn.\\
+      Dit om te voorkomen dat allerlei conversies moeten worden gemaakt,
+      waarbij wellicht niet steeds van dezelfde testbench gebruik kan
+      worden gemaakt, en ook conversies van \smc{vhdl} naar sls kunnen mislukken.
+\item Gebruik voor de namen van signalen, ports en entities {\it kleine letters}
+      Bij de diverse data-omzettingen, die gedurende het ontwerp plaatsvinden
+      kunnen anders fouten ontstaan.
+\item De namen die worden gebruikt voor terminals en
+      circuits dienen onderscheidbaar te zijn in de eerste 14 letters.
+\item Voor entities, architectures en configurations moeten aparte files
+      worden gemaakt.
+\item Geef de layout cellen dezelfde naam als de overeenkomstige circuit cel.
+      Dit om bij extractie van
+      \smc{vhdl}-code uit het layout-gedeelte naam-problemen te voorkomen.
+\item signalen van het type 'inout' mogen alleen worden gebruikt voor
+      'analoge' signalen, dus signalen die aan de aangesloten moeten worden
+      op een 'direct' buffer aan de rand.
+\item Aan ports mogen geen gedeelten van een std\_logic\_vector worden
+      aangesloten.
+\end{itemize}
+De synthese-software voor het genereren van de circuits stelt ook
+beperkingen aan de \smc{vhdl}-beschrijvingen.
+Naast de algemene aanwijzingen in appendix \ref{good_vhdl} voor het maken van ''synthetiseerbare''
+\smc{vhdl}-beschrijvingen noemen we nog de volgende aandachtspunten:
+\begin{itemize}
+\item Initialisaties van signalen bij hun declaratie worden genegeerd.\\
+      Dus bijv. {\it signal a: std\_logic := '0';} wordt gelezen
+      als {\it signal a: std\_logic;}.
+\item After-clauses in statements worden genegeerd.\\
+      Dus bijv. {\it a $<$= '1' after 2 ns;} wordt gelezen als {\it a $<$= '1';}.
+\item Process-statements moeten worden gemaakt met een process-list
+      waarin, bij een register beschrijving, alleen het klok signaal voorkomt,
+      of, bij een beshcrijving van een combinatorische schakeling, {\it alle} 
+      signalen voorkomen die tijdens de uitvoering van
+      het process worden gelezen.
+\item In case- en select-statements moeten {\it alle} mogelijke waarden
+      worden behandeld.
+\item In iedere tak van case- en if-statements moeten {\it alle}
+      uitgangs-signalen een waarde krijgen.
+\end{itemize}
+Om de tijdvertragingen van de schakelingen te kunnen bekijken is de
+nauwkeurigheid van de sls-simulatie default op 100 ps ingesteld.
+De maximale tijsduur die dan nog kan worden gesimuleerd, zonder
+'overflow'-problemen te krijgen is 100 ms.
+{\it Hou hier met het simuleren van de \smc{vhdl} code rekening mee en pas zonodig
+de klok-frequentie van de schakeling aan.}

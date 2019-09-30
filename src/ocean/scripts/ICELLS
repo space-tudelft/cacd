@@ -1,0 +1,241 @@
+#!/bin/sh
+#
+# ICELLS --- install the cell libraries for Ocean and Nelsis. Create Nelsis
+#            projects for users with cell libraries already imported. This
+#            script sets up an environment of shell variables and shell
+#            functions, and then sources a script in the cell library tree.
+#            See the function sourceCommandScript() below for details.
+#
+# Before you can execute this script you'll have to
+# set the following environment variables:
+#
+# OCEANPROCESS  -- the name of the Ocean process/image to use,
+#            possible names are: "fishbone", "octagon" or "gatearray"
+# ICDPATH -- the absolute path to the place where the Ocean & Nelsis tree lives
+
+# Interpret the name of the script and the command line arguments
+LIBSCRIPT=`basename $0`
+ARGUMENT1="$1"
+
+# The default image/process is "fishbone":
+if [ "$OCEANPROCESS" = "" ] ; then
+   OCEANPROCESS="fishbone"
+fi
+
+if [ "$ICDPATH" = "" ] ; then
+   echo "ERROR: the environment variable ICDPATH is not set!"
+   exit 1
+fi
+if [ ! -d "$ICDPATH" ] ; then
+   echo "ERROR: the ICDPATH variable points to a non existing directory!"
+   exit 1
+fi
+
+# Place where the Ocean ascii stuff lives:
+OCEAN_ASCIICELLS="$ICDPATH/share/lib/celllibs/$OCEANPROCESS/src"
+
+# Place where the Ocean cell libraries live:
+OCEAN_CELLLIBDIR="$ICDPATH/share/lib/celllibs/$OCEANPROCESS"
+
+##############################################################################
+
+# Read commands from the script $OCEAN_ASCIICELLS/$LIBSCRIPT and execute
+# them. The script can call any function defined in ICELLS. In addition, it
+# can assume that the following shell variables have been set:
+#
+#     $PROJECT  (the full path name of the project to be created)
+#     $BINLIBS  (the full path to the directory containing the
+#                binary version of the libraries)
+#     $SRCLIBS  (the full path to the directory containing the ascii version
+#                of the libraries, as well as the template directory)
+#
+# Useful functions to call from $LIBSCRIPT are:
+#
+# To compile cell library "primitives" and install it under the $BINLIBS tree:
+#     checkOrCreateProject     $BINLIBS/primitives
+#     cp $SRCLIBS/primitives/* $BINLIBS/primitives
+#     installCellLibrary       $BINLIBS/primitives
+#     runProgramInLib $BINLIBS/primitives gnarp -CFb primitives mkLibprim
+#
+# To compile cell library "oplib" and install it under the $BINLIBS tree:
+#     checkOrCreateProject     $BINLIBS/oplib # no complaints if already exists
+#     cp $SRCLIBS/primitives/* $BINLIBS/oplib
+#     importCellLibrary        $BINLIBS/oplib $BINLIBS/primitives
+#     installCellLibrary       $BINLIBS/oplib
+#
+# To create a project with pre-imported libraries "primitives" and "oplib":
+#     checkAndCreateNewProject $PROJECT # complain badly if something wrong
+#     importCellLibrary        $PROJECT $BINLIBS/primitives
+#     importCellLibrary        $PROJECT $BINLIBS/oplib
+
+sourceCommandScript()
+{
+   SCRIPT="$OCEAN_ASCIICELLS/$LIBSCRIPT"
+   if [ ! -r "$SCRIPT" ] ; then
+      echo "ERROR: $SCRIPT does not exist or is not readable ..."
+      exit 1
+   fi
+
+   SRCLIBS="$OCEAN_ASCIICELLS"
+   BINLIBS="$OCEAN_CELLLIBDIR"
+   PROJECT="$ARGUMENT1"
+
+   if [ $LIBSCRIPT != ICELLS -a ! -d "$BINLIBS/primitives" ] ; then
+      echo "ERROR: library \"$OCEANPROCESS/primitives\" does not exist."
+      echo "Run first ICELLS to install the libraries."
+      exit 1
+   fi
+
+   . "$SCRIPT"
+}
+
+runProgramInLib()
+{
+   thedir=$1 # is the library
+   prog="$2 $3 $4 $5 $6 $7 $8 $9" # program to run in the library and its arguments
+
+   if [ "$prog" = "" ] ; then
+      echo "ERROR: no program specified for runProgramInLib ..."
+      exit 1
+   fi
+   (cd $thedir || exit 1
+    $prog || exit 1)
+}
+
+importCellLibrary()
+{
+   proj=$1 # the project
+   libr=$2 # the cell library to import
+
+   OLD_DIR=`pwd`
+   cd $proj
+   CWD=`pwd` ; export CWD   # required by the nelsis tools
+   if [ "$libr" != "" ] ; then
+      if grep "^$libr\$" projlist > /dev/null; then
+         :
+      else
+         addproj $libr
+      fi
+      impcell -c -a $libr
+      impcell -l -a $libr
+   fi
+   cd $OLD_DIR
+}
+
+checkOrCreateProject()
+{
+   # make sure that the parent directories exists:
+   THEPARENT=`dirname $1`
+   if [ ! -d "$THEPARENT" ] ; then        # bash does not like this
+      mkdir -p "$THEPARENT" || exit 1
+   fi
+   if [ ! -d "$1" ] ; then
+      case "$OCEANPROCESS" in
+         fishbone)  PROCESSID=41 ; PROCESSLAMBDA=0.2 ;;
+         octagon)   PROCESSID=40 ; PROCESSLAMBDA=0.1 ;;
+         gatearray) PROCESSID=6  ; PROCESSLAMBDA=1.0 ;;
+         *) echo "ERROR: I don't know what image you want. All I have is"
+	    echo "the environment OCEANPROCESS set to \"$OCEANPROCESS\"."
+	    echo "It should be set to either fishbone, octagon or gatearray."
+	    exit 1
+      esac
+      mkpr -p $PROCESSID -l $PROCESSLAMBDA "$1" > /dev/null || exit 1
+   fi
+   if [ ! -f "$1/.dmrc" ] ; then
+      echo "ERROR: $1 exists but is not a project directory!"
+      exit 1
+   fi
+   if [ "`head -1 $1/.dmrc`" != 3 ] ; then
+      if [ "`head -1 $1/.dmrc`" != 302 ] ; then
+         echo "ERROR: $1 exists but is not a release 3 project!"
+         exit 1
+      fi
+   fi
+}
+
+# Exit if there is any reason to not create a new project argv[1].
+checkNewProject()
+{
+   if [ "$1" = "" ] ; then
+      echo "ERROR: You forgot to specify a project ..."
+      echo "       Usage: $LIBSCRIPT <project>"
+      exit 1
+   fi
+   if [ -d $1 -o -f $1 -o -h $1 -o -p $1 -o -c $1 -o -b $1 ] ; then
+      echo "ERROR: project \"$1\" already exists ..."
+      exit 1
+   fi
+   if [ ! -w `dirname $1` ] ; then
+      echo "ERROR: directory \"`dirname $1`\" is not writable,"
+      echo "       cannot create project \"$1\" ..."
+      exit 1
+   fi
+}
+
+checkAndCreateNewProject()
+{
+   checkNewProject $1
+   checkOrCreateProject $1
+}
+
+installCellLibrary()
+{
+   proj=$1 # the directory containing the cell library to install
+           # the proj has to be checked with checkOrCreateProject
+   OLD_DIR=`pwd`
+   cd $proj
+   CWD=`pwd` ; export CWD   # required by the nelsis tools
+
+   if [ -f cells.sls ] ; then
+      csls cells.sls        # compile ascii circuit representation
+   fi
+   if [ -f cells.ldm ] ; then
+      cldm -xf cells.ldm    # compile ascii layout representation (origin mode)
+   fi
+   if [ -f cells.o.ldm ] ; then
+      cldm -f cells.o.ldm   # compile ascii layout representation (no origin mode)
+   fi
+   if [ -f devices ] ; then
+      for cell in `cat devices`; do
+          if [ -f .dmxdata ] ; then
+              xcontrol -device $cell
+          else
+              device -s $cell
+          fi
+      done
+   fi
+   if [ -f macros ] ; then
+      for cell in `cat macros`; do
+          if [ -f .dmxdata ] ; then
+              NOTDEVICE=1
+              if [ -f devices ] ; then
+                  grep "^$cell *"$ devices
+                  NOTDEVICE=$?
+              fi
+              if [ $NOTDEVICE = 0 ] ; then
+                  xcontrol -free $cell   # device with free interface type
+              else
+                  xcontrol -macro $cell
+              fi
+          else
+              macro -s $cell
+          fi
+      done
+   fi
+   rm -f seadif/*.sd?	    # remove all seadif representations
+   if [ -f cells.sls -o -f cells.ldm -o cells.o.ldm ] ; then
+      if [ -f Mapfile ] ; then
+         nelsea -m Mapfile  # convert cells in Mapfile from nelsis to seadif
+      else
+         nelsea		    # convert all cells from nelsis to seadif
+      fi
+      chmod ugo=r seadif/*.sdf # make the library read-only
+      for cell in `cat circuit/celllist`; do
+          sls_exp $cell     # make binary expansion for switch level simulator
+      done
+   fi
+   cd $OLD_DIR
+}
+
+sourceCommandScript
+exit 0

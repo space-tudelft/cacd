@@ -1,0 +1,160 @@
+% CHAPTER HEADINGS
+% \@makechapterhead {TEXT} : Makes the heading for the \chapter command.
+%
+
+%
+% macro for fancy numbers 
+%
+\newwrite\tfno
+\def\fancynum#1{%\begingroup
+\immediate\openout\tfno ./tmp/#1.ps
+\immediate\write\tfno{/Helvetica-BoldOblique findfont 100 scalefont setfont}
+\immediate\write\tfno{0 0 moveto (#1) true charpath 2 setlinewidth stroke }
+\immediate\closeout\tfno
+\ifnum #1 > 9
+    \makebox[4cm][l]{\special{psfile=./tmp/#1.ps}\rule{0pt}{3.75cm}}%
+\else
+    \makebox[2cm][l]{\special{psfile=./tmp/#1.ps}\rule{0pt}{3.75cm}}%
+\fi
+}
+
+
+%\font\chapterfont=ag-demi at 18pt
+%\font\chapfont=ag-demi at 18pt
+%\font\numberfont=ag-demi at 26pt
+%\font\chapterfont=h-bol at 18pt
+%\font\chapfont=h-bol at 18pt
+%\font\numberfont=h-bol at 26pt
+
+\font\chapterfont=phvb at 18pt
+\font\chapfont=phvb at 18pt
+\font\numberfont=phvb at 26pt
+
+\newdimen\titlewidth
+
+\def\@makechapterhead#1{             % Heading for \chapter command
+    \titlewidth=\textwidth
+    \advance\titlewidth -1.0cm
+    \setbox0\vbox{
+	\rule{\textwidth}{.75pt}		% was .7
+	\vspace{-.6\baselineskip}\\
+        \parbox[b]{\titlewidth}{
+             \begin{flushleft}
+		    {\baselineskip=0ex
+                     \chapterfont \uppercase{#1} \par}
+             \end{flushleft}
+	}
+	\vspace{-.6\baselineskip}\\
+    \rule{\textwidth}{.75pt}
+    }
+    \vbox to 4cm{
+	\ \hfill \chapfont Chapter\ \numberfont\thechapter%\\[-.2ex]
+    \vss
+    \box0 
+    }
+    %\vskip 40pt
+    \vskip 1.6cm	% was 2cm
+    \nobreak
+}
+
+% \@makeschapterhead {TEXT} : Makes the heading for the \chapter* command.
+%
+
+\def\@makeschapterhead#1{             % Heading for \chapter* command
+    \titlewidth=\textwidth
+    \advance\titlewidth -1.0cm
+    \setbox0\vbox{
+	\rule{\textwidth}{.75pt}
+	\vspace{-.6\baselineskip}\\
+         \parbox[b]{\titlewidth}{
+             \begin{flushleft}
+		    {\baselineskip=0ex
+                    \chapterfont \uppercase{#1} \par}
+             \end{flushleft}
+	}
+	\vspace{-.6\baselineskip}\\
+    \rule{\textwidth}{.75pt}
+    }
+    \vbox to 4cm{
+    \vss \box0 }
+    %\vskip 40pt
+    \vskip 1.6cm	% was 2cm
+    \nobreak
+}
+
+
+% \secdef{UNSTARCMDS}{STARCMDS} :
+%    When defining a \chapter or \section command without using
+%    \@startsection, you can use \secdef as follows:
+%       \def\chapter { ... \secdef \CMDA \CMDB }
+%       \def\CMDA    [#1]#2{ ... }  % Command to define \chapter[...]{...}
+%       \def\CMDB    #1{ ... }      % Command to define \chapter*{...}
+
+\def\chapter{\cleardoublepage % Starts new right-hand page.
+   \thispagestyle{plain}     % Page style of chapter page is 'plain'
+   \global\@topnum\z@        % Prevents figures from going at top of page.
+   \@afterindentfalse        % Suppresses indent in first paragraph.  Change
+   \secdef\@chapter\@schapter}   % to \@afterindenttrue to have indent.
+
+\def\@chapter[#1]#2{\ifnum \c@secnumdepth >\m@ne
+        \refstepcounter{chapter}
+        \typeout{\@chapapp\space\thechapter.}
+        \addcontentsline{toc}{chapter}{\protect
+        \numberline{\thechapter}#1}\else
+      \addcontentsline{toc}{chapter}{#1}\fi
+   \chaptermark{#1}
+   \addtocontents{lof}{\protect\addvspace{10pt}} % Adds between-chapter space
+   \addtocontents{lot}{\protect\addvspace{10pt}} % to lists of figs & tables.
+   \if@twocolumn                                 % Tests for two-column mode.  
+           \@topnewpage[\@makechapterhead{#2}]  
+     \else \@makechapterhead{#2}
+           \@afterheading                  % Routine called after chapter and
+     \fi}                                  % section heading.
+
+\def\@schapter#1{
+	% AJ ADDITION: Can also add unnumbered chapters to contents (OK ?)
+        % \addcontentsline{toc}{chapter}{#1}
+   \chaptermark{#1}
+	\if@twocolumn \@topnewpage[\@makeschapterhead{#1}]
+        \else \@makeschapterhead{#1} 
+              \@afterheading\fi}
+
+
+% sections are bold and have pointsize \normalsize:
+\def\section
+     {\@startsection {section}{1}{\z@}{-5.0ex plus -1ex minus
+     -.2ex}{1.5ex plus .2ex}{\normalsize\bf}}
+\def\subsection
+     {\@startsection{subsection}{2}{\z@}{-1.4ex plus -.7ex
+     minus -.2ex}{0.7ex plus .2ex}{\normalsize\bf}}
+\def\subsubsection
+     {\@startsection
+     {paragraph}{4}{\z@}{2.3ex plus 1ex minus .2ex}{-1em}{\normalsize\it}}
+\def\paragraph
+     {\@startsection
+     {paragraph}{4}{\z@}{3.25ex plus 1ex minus .2ex}{-1em}{\normalsize\bf}}
+\def\subparagraph{\@startsection
+    {subparagraph}{4}{\parindent}{3.25ex plus 1ex minus
+    .2ex}{-1em}{\normalsize\bf}}
+ 
+
+% Figure captions
+\newdimen\indwidth
+\long\def\@makecaption#1#2{
+    \vskip 10pt
+    \setbox\@tempboxa\hbox{#1. #2}
+    \ifdim \wd\@tempboxa >\hsize 
+%	#1. #2\par 
+	\setbox\@tempboxa\hbox{#1.\ }
+	\indwidth=\hsize
+	\advance\indwidth -\wd\@tempboxa
+        #1. \parbox[t]{\indwidth }{#2\par}
+    \else 
+	\hbox to\hsize
+        {\hfil\box\@tempboxa\hfil}
+    \fi
+}
+
+\def\fnum@figure{{\bf Figure \thefigure}}
+\def\fnum@table{{\bf Table \thetable}}
+

@@ -1,0 +1,8 @@
+bbox 6 14
+port in S1
+port in S2
+port in A
+port in B
+port in C
+port in D
+port out Y

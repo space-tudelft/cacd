@@ -1,0 +1,104 @@
+.TH DMOPENPROJECT 5ICD "DMI User's Manual"
+.SH NAME
+dmOpenProject - initiate a project transaction
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+DM_PROJECT *dmOpenProject (char *projectname, int mode);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "char *projectname"
+identifies the project to be used.
+Either the path of the project directory or the value
+\fBDEFAULT_PROJECT\fP (current working directory).
+.TP
+.B "int mode"
+is the project access mode.
+Valid modes as predefined in "dmincl.h" are:
+.sp 0.5
+\fBPROJ_READ\fP -
+'in +3
+the project is opened for read access.
+.in -3
+\fBPROJ_WRITE\fP -
+'in +3
+the project is opened for write access.
+.in -3
+\fBDEFAULT_MODE\fP -
+'in +3
+the project is opened for read and write access.
+.in -3
+.SH DESCRIPTION
+Function
+.B dmOpenProject
+initiates a project transaction.
+It returns a pointer to a \fBDM_PROJECT\fP data structure,
+containing information about the particular project,
+identified by \fBprojectname\fP and the access rights represented by \fBmode\fP.
+The \fBDM_PROJECT\fP data structure will be used as an argument
+to the functions in the cell transaction layer.
+.PP
+If a project transaction was already in progress on this project,
+the existing key will be returned immediately.
+.PP
+There are two pre-defined default argument values for
+the function \fBdmOpenProject\fP:
+\fBDEFAULT_PROJECT\fP and \fBDEFAULT_MODE\fP, which may be
+used when the tool operates in a default environment.
+If \fBprojectname\fP has the value \fBDEFAULT_PROJECT\fP,
+.B dmOpenProject
+opens the project identified by the environment
+variable \fBCWD\fP, if it is set, or
+takes the current working directory as the project directory.
+If the specified \fBprojectname\fP is not \fBDEFAULT_PROJECT\fP
+it may be a local absolute or relative path.
+If \fBprojectname\fP is relative,
+.B dmOpenProject
+tries to make an absolute path.
+.PP
+After a successful call to \fBdmOpenProject\fP the
+.I dmpath
+member of the \fBDM_PROJECT\fP data structure contains
+the absolute path of the project directory.
+This member should be used by tools that want to store / retrieve
+result files into / from the project directory.
+.SH DIAGNOSTICS
+If properly executed,
+.B dmOpenProject
+will return a pointer to a
+DM_PROJECT data structure.
+If
+.B dmOpenProject
+fails \fBNULL\fP will be returned,
+.B dmerrno
+will be set to indicate the error,
+and a call to dmError() will be done.
+.br
+This may happen in the following cases:
+.TP 14
+.B DME_NOINIT
+DMI not yet initialized.
+.TP
+.B DME_SYS
+Error in system call.
+.TP
+.B DME_BADPR
+Bad project name.
+.TP
+.B DME_PRLOCK
+Project is locked.
+.TP
+.B DME_NODMRC
+Cannot open ".dmrc" file.
+.TP
+.B DME_FMT
+Bad ".dmrc" file format.
+.TP
+.B DME_BADREL
+Bad release number.
+.SH SEE ALSO
+dmCloseProject(5ICD).

@@ -1,0 +1,105 @@
+.TH ESEA 1SDF "THE SEADIF PROGRAMMERS MANUAL"
+.UC 4
+.SH NAME
+esea - compile an EDIF source into the Seadif database
+.SH SYNOPSIS
+.B esea
+[options] [edif_source_file]
+.SH OPTIONS
+.TP
+.B -N
+Set the target language to "Nelsis", see also cedif(1ICD).
+.TP
+.B -S
+Set the target language to "Seadif" (default).
+.TP
+.B -P
+Set the target language to "Pseudo-Seadif".
+.TP
+.B -b <lib>
+Translate the (explicit) EDIF library named <lib>.
+The default <lib> is the library with the same name as
+the current working directory (sans leading path name).
+.TP
+.B -B <lib>
+Translate the implicit EDIF library named <lib>.
+An implicit library is a library that is not defined in the EDIF source,
+but only referenced through the EDIF libraryRef statement.
+See also the section "Explicit and implicit libraries" in this manual page.
+.TP
+.B -o <outputfile>
+Output goes to <outputfile> (this option is a no-op if the target language is "Nelsis").
+.TP
+.B -m <lib1>,<lib2>
+If the EDIF source references the external library <lib1> then replace this
+with a reference to the external library <lib2>.
+Multiple
+.B -m
+mapping options are allowed.
+.TP
+.B -l
+Only list the (explicit) libraries that appear in the EDIF source.
+Do not translate.
+.TP
+.B -L
+Only list the implicit libraries that appear in the EDIF source.
+Do not translate.
+See also the option \fB-B <lib>\fP.
+.TP
+.B -E
+If the EDIF source contains "external" declarations of external cells, accept
+references to these cells without checking that they really exist.
+This is of course a bad thing,
+but sometimes it may be an acceptable way to deal with messy EDIF sources.
+.TP
+.B -h
+Help, print a list of options.
+
+.SH DESCRIPTION
+.I Esea
+compiles an EDIF version 2.0.0 source file into the Seadif database.
+.PP
+The program
+.I esea
+maps an EDIF library to a Seadif library of the same name, and vice versa.
+As described above, you can use the options "\fB-b <lib>\fP"
+and "\fB-m <lib1>,<lib2>\fP" to change this default library mapping.
+.PP
+Note that your environment variable SEALIB must include the path(s) to the
+Seadif files containing the external Seadif libraries before attempting to
+translate an EDIF library that references these external libraries.
+.I Esea
+complains and exits if it cannot resolve a reference to an external Seadif library.
+
+.SH "EXPLICIT AND IMPLICIT LIBRARIES"
+Normally we only deal with libraries that are explicitly defined in the EDIF
+source by means of the EDIF "library" statement.
+If such an explicitly defined
+library references cells in libraries that are not defined by the EDIF source,
+then this can be interpreted as an implicit definition of these undefined libraries.
+For example, if cell "des" in library "newlib" references the cell "nand"
+in library "cmoslib",
+this can be regarded as an implicit definition of "nand" and "cmoslib".
+We can carry this even further:
+if a net in cell "des" references port "F" of "nand",
+then we can regard this as an implicit interface definition of "nand",
+that is: we assume that "nand" has a port named "F".
+.PP
+In this way, it is possible to compile an implicitly defined library into the Seadif database.
+The options "\fB-B <lib>\fP" and \fB-L\fP support implicit libraries.
+One example of their usage is when we want to translate the EDIF
+library "newlib" but we do not actually have "cmoslib" hanging around.
+In this case we first translate the implicit library "cmoslib" to Seadif by creating the
+project "cmoslib" and then typing "esea -B cmoslib file.edif".
+Following this,
+we create the project "newlib" and import all circuit cells from "cmoslib" into "newlib".
+Finally we can translate newlib by executing "cedif file.edif" from within the project "newlib".
+
+.SH AUTHOR
+Paul Stravers,
+Patrick Groeneveld.
+
+.SH "SEE ALSO"
+cedif(1ICD),
+sealib(3SDF),
+xedif(1ICD).

@@ -1,0 +1,11 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+
+COBJS		= sw.o swacload.o swask.o swdelete.o swdest.o swload.o \
+		  swmask.o swmdel.o swmparam.o swnoise.o swparam.o swpzload.o \
+		  swsetup.o
+
+LIB_TARGET	= ../../dev.a
+INCLUDE		= -I../../../include
+

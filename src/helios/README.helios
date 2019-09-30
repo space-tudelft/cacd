@@ -1,0 +1,14 @@
+
+Introduction
+------------
+
+This is the `README' file for `helios', the X-Windows Graphical User
+Interface for the space layout-to-circuit extractor.   Comments etc.
+are welcome at space-support-ewi@tudelft.nl
+
+
+How to Run Helios
+-----------------
+
+Please type `icdman helios' for information on running Helios.
+

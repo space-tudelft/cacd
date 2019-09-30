@@ -1,0 +1,44 @@
+\input{man_init}
+\setcounter{secnumdepth}{0}
+
+\subsubsection{Railway traffic lights}
+On a railway line a new station is built.
+To guarantee a good throughput of express trains,
+an extra track is made near the platforms.
+This way the main track remains free for passing
+express trains.
+
+%figuur trein.eps
+\begin{figure}[bth]
+\centerline{\callpsfig{train.eps}{width=1\textwidth}}
+\caption{Situation}
+\end{figure}
+
+To prevent accidents, a system with traffic lights is constructed.
+There are four light ($S_{1a}, S_{1b}, S_{2a}, S_{2b}$)
+that are controlled by two signals
+($S_{1}\ en\ S_{2}$). 
+When a signal is at a logical '1', the 
+corresponding lights $S_{na}\ en\ S_{nb}$
+are yellow and red respectively.
+In the other case, they are both green.
+To control the lights, there are three sensors
+($d_{1},d_{2},d_{3}$).
+They give a logical '1' when the train is in that segment.
+It is your task to create a circuit that takes care that the lights are
+controlled in such a way that, when the train drivers obey the signals,
+there will not occur any accidents.
+Further, the design should be such that when two trains are arriving
+at the same time on the main track and side track, the train at the main 
+track gets priority.
+Further it holds that:
+\begin{itemize}
+\item
+The distance to stop a train is less than the distance
+between $S_{na}\ and\ S_{nb}$.
+\item
+It is not possible that a train activitates two sensors at the same time.
+\item
+The trains are only going from left to right.
+\end{itemize}
+\end{document}

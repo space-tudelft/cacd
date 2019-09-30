@@ -1,0 +1,13 @@
+# directory: demo/FreePDK45
+
+FreePDK is an effort to develop an open-source, Open-Access-based PDK for
+the 45nm technology node and the Predictive Technology Model (PTM).
+See also "www.eda.ncsu.edu/wiki/FreePDK".
+
+Start with installing the Nangate 45nm Open Cell Library.
+Go to the directory "NangateOpenCellLibrary".
+See also the README file.
+
+All directories use the FreePDK45 technology files which are
+installed in directory "$ICDPATH/share/lib/process".
+

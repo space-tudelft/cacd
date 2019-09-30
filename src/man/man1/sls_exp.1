@@ -1,0 +1,95 @@
+.TH SLS_EXP 1ICD "User Commands"
+.UC 4
+.SH NAME
+sls_exp - network expansion program for sls
+.SH SYNOPSIS
+.B sls_exp
+[-fgmst] cell
+.SH OPTIONS
+The following options can be specified:
+.TP
+.B -f
+Forces the generation of new binary file(s), independent of the creation
+date of existing ones.
+.TP
+.B -g
+Use the debug flag when an executable sls is generated.
+.TP
+.B -m
+When the monitoring option is given the program will print run time
+statistics in a file called "sls_exp.mon".
+.TP
+.B -s
+Usually the program will print the names of all cells that are expanded
+and the actions that are taken when an executable sls simulator is generated.
+When the option -s is specified these messages will be suppressed.
+.TP
+.B -t
+By specifying this option, from the name-tables in each binary format file
+that will be generated
+all names but the terminal names will be removed.
+During simulation
+only terminal nodes will be accessible then.
+However, the advantage is that
+less memory and disk space is needed.
+The latter can be useful when very large networks are simulated.
+.SH DESCRIPTION
+.I Sls_exp
+is a program used for expanding networks.
+The expanded networks are dumped into a binary format file
+which can be used as input for the program
+.I sls.
+.I Sls_exp
+works upon a network description in the database.
+The network description in the database can have been made
+by the program
+.I csls
+for example.
+Normally, the program
+.I sls_exp
+is called by the
+program
+.I sls.
+.PP
+The full hierarchy of the network specified by \fIcell\fP is expanded by
+.I sls_exp.
+This means that in a recursive way first binary format files
+are generated for sub-cells.
+For each cell a new binary format file is only generated
+when there was none, or when
+the current one is older than the network description in the database
+or than a binary format file of a sub-cell.
+.PP
+When the network contains instances of function blocks,
+.I sls_exp
+will generate
+an executable
+.I sls
+simulator.
+This simulator must be used to simulate the network that
+was expanded.
+A new executable simulator is only generated when
+no appropriate simulator exists
+or when function block descriptions have modified.
+The file "sls.ld_arg"
+can be used to define the (additional) flags for linking the simulator.
+.SH EXAMPLES
+% sls_exp latch
+.AU "A.J. van Genderen"
+.SH FILES
+.TP 16
+\fCsls_exp.mon\fP
+(opt.) output file
+.TP
+\fCsls.ld_arg\fP
+(opt.) input file
+.TP
+\fCsls\fP
+generated simulator (for networks containing function blocks).
+.TP
+\fCsls.funlist\fP
+file describing the function blocks contained by the sls executable.
+.SH SEE ALSO
+sls(1ICD),
+csls(1ICD),
+cfun(1ICD).

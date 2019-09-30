@@ -1,0 +1,343 @@
+\section{Het IC Ontwerptrajekt}
+
+\subsection{Inleiding}
+
+Vanaf het moment dat iemand een idee krijgt tot het moment dat het produkt 
+ook echt in de winkel verkrijgbaar is, 
+moeten heel wat ontwerpstappen doorlopen worden. 
+Dit ontwerptrajekt lijkt voor heel veel produkten sterk op elkaar. 
+Zo'n algemeen geldend trajekt is systematisch afgebeeld in figuur~\ref{ontw}.
+
+%figuur ontwerpen.eps
+\begin{figure}[bth]
+\centerline{\callpsfig{ontwerpen.eps}{width=.90\textwidth}}
+\caption{Algemeen geldend ontwerptrajekt}
+\label{ontw}
+\end{figure}
+
+Ook voor het ontwerp van een ASIC (Application Specific Integrated Circuit) geldt ongeveer dit trajekt.
+Na het ontstaan van een idee moeten er specificaties opgesteld worden waaraan de schakeling moet voldoen 
+en moeten er ook randvoorwaarden vastgesteld worden.
+Hierna wordt de schake\-ling ontworpen. Eerst op circuitniveau en vervolgens de layout.
+Deze layout wordt geprocessed en vervolgens wordt de ontstane chip getest.
+Als alles goed is, wordt het sein gegeven om de chip in massaproductie te nemen.
+Met deze laatste stap zijn we bij het uiteindelijke produkt gekomen. \\
+In het ontwerppracticum doorlopen we dit gehele trajekt vanaf de specificaties tot aan het testen.
+De nadruk zal echter vooral liggen op het ontwerpen van een IC,
+dus het verkrijgen van een circuit en layout uit de specificaties en de randvoorwaarden.\\
+Bij het ontwerpen van een IC staan ons computers, software en programmeerbare
+hardware (voor ''rapid prototyping'') terzijde.
+Deze hulpmiddelen zijn in onze tijd onmisbaar 
+vanwege de zeer grote en nog steeds groeiende complexiteit van het hele IC-gebeuren. 
+Ze zijn echter nutteloos als ze niet met verstand worden gebruikt. 
+Bovendien blijft het echte ontwerpen nog steeds het werk van de ingenieur. \\
+Om het ontwerpproces te stroomlijnen is het noodzakelijk enige afspraken te maken met betrekking 
+tot de ontwerpstrategie en het gebruik van de hulpmiddelen. 
+In dit hoofdstuk zullen daarom allereerst enige (ontwerp)regels gegeven worden, 
+waarna vervolgens de tot uw beschikking staande hulpmiddelen aan bod komen. 
+
+\subsection{Ontwerpregels}
+
+\paragraph{Ontwerp hi\"erarchisch}
+Hi\"erarchie is absoluut noodzakelijk om een goed overzicht over een ingewikkelde schakeling te kunnen behouden. 
+Als vuistregel kan men stellen dat voor een goed overzicht niet meer dan 5 \`a 10 deelblokken 
+op \'e\'en hi\"erarchisch niveau gedefinieerd moeten worden.
+Ook de software is gebaseerd op een hi\"erarchisch ontwerp.
+Bovendien hebben programma's als de automatische plaatser en bedrader de grootste moeite met grote "plat'' ontworpen circuits.\\
+Een uitzondering op deze regel vormen de circuits die met "logische synthese'' gemaakt zijn.
+Hiervoor is het argument van "het overzicht'' niet zo belangrijk. De begrenzing ligt dan bij de software.
+Als vuistregel moet u zich dan houden aan niet meer dan 100 \`a 200 instances per hi\"erarchisch niveau.
+
+\paragraph{Verricht eerst een goede verificatie van het volledige circuit m.b.v. simulatie en m.b.v. rapid prototyping,
+voordat u begint met het maken van de layout}
+In het ont\-werptrajekt zijn er talrijke analyse-stappen.
+E\'en van de belangrijkste contr\^oles die u vaak zult doen, is (computer)simulatie van het ingevoerde circuit.
+Een andere manier is rapid prototyping, waarbij 
+speciale hardware (een FPGA) zodanig wordt geprogrammeerd dat deze zich gedraagt 
+overeenkomstig de gedragsbeschrijving van het ontwerp.
+Verricht deze vormen van verificatie voordat u begint met het maken van de layout.
+Beide manieren vullen elkaar aan en maken het mogelijk fouten in
+het ontwerp vroegtijdig op te merken en te herstellen.
+De voordelen zijn kortere iteratie-lussen, wat inhoudt dat men minder ver terug moet in het 
+ontwerptrajekt als iets niet goed blijkt te zijn. 
+Hoewel een grondige verificatie vaak tijdrovend lijkt, 
+blijkt in de praktijk dat deze tijdsinvestering zich ruimschoots terugverdient.
+
+\paragraph{Hou rekening met de hardware bij maken van VHDL-beschrijvingen}
+Hou bij het maken van een \smc{vhdl}-beschrijving er altijd rekening mee dat
+de beschrijving een digitaal circuit voorstelt.
+Hoewel het voordelig is om hoog-niveau \smc{vhdl}-beschrijvingen te maken 
+(bijvoorbeeld c $<$= a + b voor de optelling van 2 integer getallen)
+en deze door de logic synthesizer te laten vertalen 
+naar een netwerk met logische poorten en flipflops,
+moet altijd in ogenschouw worden genomen dat de \smc{vhdl}-beschrijving
+uiteiendelijk wordt afgebeeld op hetzij een combinatorische schakeling, 
+hetzij een sequenti\"ele schakeling volgens het Moore-model.
+Wanneer de gemaakte VHDL beschrijving niet duidelijk genoeg is m.b.t.
+het gedrag van de schakeling dan zal de logic synthesizer niet in staat
+zijn de VHDL gedragsbeschrijving te vertalen naar een structuurbeschrijving,
+of het gegenereerde circuit zal ongewenst/onvoorspelbaar gedrag vertonen. 
+Meer informatie hierover is te vinden in
+appendix~\ref{good_vhdl}.
+
+\paragraph{Ontwerp besturingen volgens het Moore-model}
+Besturingen of sequenti\"ele machines kunnen ontworpen worden volgens het Moore- of het Mealy-model. 
+\index{Mealy}
+Het verschil tussen deze twee ontwerpmethoden is dat bij het Moore-model de uitgangssignalen slechts 
+afhankelijk zijn van de toestand van de schakeling, terwijl bij het Mealy-model de uitgangssignalen 
+ook afhankelijk (kunnen) zijn van de ingangssignalen (zie voor meer uitleg appendix \ref{intro_seq_machine}).\\
+In de praktijk heeft dit tot gevolg dat "Moore-besturingen'' minder storingsgevoelig zijn 
+en gemakkelijker correct te ontwerpen zijn.
+Een nadeel is de grotere hoeveelheid toestanden en dientengevolge
+een groter beslag op het silicium-oppervlak.
+Dit nadeel weegt echter (zeker tijdens het practicum) niet op tegen de voordelen.
+
+\paragraph{Ontwerp synchroon}
+\index{synchroon|(bold}
+Synchroon ontwerpen betekent dat alle signalen in een schakeling na een tijd\-je stopgezet worden om 
+vervolgens op een bepaald tijdstip weer verder te gaan. 
+Dit is noodzakelijk om het overzicht te kunnen houden in de mengelmoes van signalen en hun vertragingstijden 
+die anders zou ontstaan. 
+Het (centrale) signaal dat aangeeft wanneer de schakeling weer verder mag, noemen we de klok.
+Een ander voordeel van deze synchrone of "geklokte'' systemen is dat de problemen die altijd 
+aanwezige spikes kunnen opleveren, zo goed als verwaarloosd kunnen worden: 
+Op het moment dat de flipflops hun nieuwe waarde inlezen, 
+zal hun ingangssignaal altijd stabiel zijn (mits de klokfrequentie laag genoeg gekozen wordt).\\
+\index{synchroon|)}
+
+\paragraph{Gebruik als geheugenelement alleen edge-triggered flipflops}
+\index{flipflop!edge-triggered|bold}
+Geheugenelementen kunnen hun nieuwe waarde aannemen tijdens een klokflank (edge)
+of gedurende de hele periode dat het kloksignaal "hoog'' is (pulse).
+De storingsgevoeligheid van zgn.\ edge-triggered flipflops is veel lager dan die van zijn pulse-triggered broertje.
+Om deze reden wordt afgesproken dat tijdens het practicum alleen edge-triggered flipflops zijn toegestaan.
+De {\tt oplib} (ontwerppracticum-library) bevat trouwens alleen flipflops van dit type.
+
+\paragraph{Ga zorgvuldig om met het kloksignaal}
+\index{flipflop!klokflank}
+Het kloksignaal is het hart van de schakeling. 
+Het is heel belangrijk dat bij alle flipflops de klokflank gelijktijdig aankomt, 
+omdat dat het moment is dat de flipflops inlezen. 
+In de praktijk zal dit echter nooit helemaal lukken.
+Dit verschijnsel, dat ook wel "clock-skew'' \index{clock-skew} wordt genoemd, 
+kan ervoor zorgen dat uw schakeling niet werkt, terwijl hij logisch gezien wel klopt. 
+Ook simulatoren merken clock-skew vaak niet op. 
+Het is dus zaak dat u bij het ontwerpen al met dit verschijnsel rekening houdt en zodanig te werk 
+gaat dat er zo min mogelijk clock-skew ontstaat. 
+Hiervoor zijn in de praktijk een paar regeltjes:
+\begin {itemize}
+\item
+Gebruik geen logica in uw kloklijn.
+\item
+Buffer uw kloksignaal voldoende en gebruik in elke "tak'' van uw klok"boom'' eenzelfde aantal buffers.
+Dit betekent dat tussen elke flipflop in uw circuit en het oorspronkelijke kloksignaal hetzelfde aantal buffers staat. \index{buffer}
+\item
+Belast elke buffer ongeveer even zwaar. 
+\end{itemize}
+
+\paragraph{Gebruik geen dynamische (basis)schakelingen}
+Dynamische schakelingen gebruiken de altijd aanwezige capaciteit om tijdelijk informatie op te slaan.
+Het bekendste voorbeeld van een dynamische schakeling is het dynamische RAM (Random Access Memory),
+of kortweg DRAM dat tegenwoordig in de meeste computers gebruikt wordt.
+Het voordeel van dynamische boven gewone "statische'' schakelingen is dat ze minder silicium-oppervlak in beslag nemen,
+wat vooral bij grote repeterende structuren (bijvoorbeeld geheugens) belangrijk is.
+Nadelen zijn de verplichte aanwezigheid van een meerfase-klok en de slechte testbaarheid bij lage frequenties.
+Vanwege deze nadelen spreken we in het practicum af dat we geen dynamische geheugencellen of logica zullen gebruiken.
+
+\paragraph{Gebruik alleen positieve logica}
+Signalen kunnen positief en negatief gedefinieerd worden.
+Voorbeelden van positieve definities zijn "lamp aan'' of "persoon gedetecteerd''.
+Een veel gebruikt voorbeeld van een negatieve definitie is "niet-reset'' of $\overline{reset}$.
+Dit laatste wordt vaak gedaan uit oogpunt van besparing: Het scheelt soms een invertor.
+Het nadeel van negatieve logica is dat het niet intu{\ii}tief is.
+In gedachten moet steeds weer ge{\ii}nverteerd worden.\\
+In het practicum spreken we af dat we daarom bij voorkeur positieve logica zullen gebruiken. 
+
+\paragraph{Plaats een buffer als een uitgang te zwaar belast wordt}
+\index{buffer|bold}
+Wanneer een uitgang belast wordt, wordt de "flank'' van het uitgaande signaal minder steil.
+Enerzijds wordt uw schakeling hierdoor trager, anderzijds wordt er naar verhouding meer vermogen gedissipeerd.
+In uw kloklijn heeft u daarnaast nog het probleem van vergroting van de clock-skew.\index{clock-skew}
+Om deze effecten binnen de perken te houden, is het belangrijk dat u op tijd buffert.
+Hiervoor worden bij de bibliotheekcellen de waarden van de ingangscapaciteit en de fanout vermeldt.
+Als de belasting de fanout-waarde overschrijdt is het verstandig een buffer (b.v.\ buf40) te plaatsen.
+
+\subsection{Hulpmiddelen}
+\subsubsection{IC ontwerpsoftware}
+In dit hoofdstuk komen 
+de verschillende computerprogramma's voor het ontwerpen
+en controleren van uw schakeling aan bod. 
+Deze programma's
+vormen het gereedschap (engels: \tool{tools}), net als een timmerman een
+hamer en een boormachine gebruikt. Het is niet al te ingewikkeld om met
+de computergereedschappen om te gaan. U zult er dan ook heel snel
+mee vertrouwd raken. 
+Het probleem van IC ontwerp is echter dat we
+met heel veel componenten te maken hebben, die allemaal foutloos op
+de chip gelegd moeten worden. De computer helpt u hierbij, maar 
+de programma's zijn vaak niet zo slim en bevatten soms ook fouten.
+Daardoor kan het voorkomen dat de computer hele rare en onverwachte 
+dingen blijkt te doen. Hiervan moet u niet in paniek raken, want het is
+heel normaal.
+
+De computerhulpmiddelen die U gaat gebruiken om Uw schakeling te maken,
+komen van verschillende bronnen. Gedeeltelijk zijn het commercieel
+verkrijgbare programma's, zoals het door u in het eerste jaar al gebruikte
+\smc{vhdl}-simulatie programma ModelSim,
+alsmede het synthese programma van de firma Synopsys.
+Het ontwerpsysteem \smc{ocean/nelsis} voor het maken van de
+layouts is een hier op de universiteit zelf door studenten en promovendi
+ontwikkeld systeem.\\
+In dit hoofdstuk zullen we eerst gaan kijken welke stappen er nodig zijn om
+een schakeling op Sea-of-Gates te implementeren.
+Deze stappen zijn aangegeven in figuur \ref{desflow-window}.
+
+\begin{figure}[htb]
+  \centerline{\callpsfig{desflow.ps}{width=12cm}}
+  \caption{De design-flow voor het IC ontwerptraject}
+  \label{desflow-window}
+\end{figure}
+
+We kunnen hierin de volgende stappen onderscheiden:
+\begin{itemize}
+\item Allereerst moeten uiteraard de \smc{vhdl}-files worden gemaakt.
+      \\
+      Voor een bepaald onderdeel uit het ontwerp (een ''entity'') kan
+      daarbij een gedrags (''behaviour'') beschrijving of een 
+      structurele (''structural'') beschrijving gemaakt worden. 
+      Aanwijzingen hiervoor kunnen verder worden gevonden in appendix~\ref{good_vhdl}.
+      Een speciale file hierbij is verder de file met de \smc{vhdl}-code voor 
+      een testbench. Met behulp van deze testbench kan de schakeling worden
+      getest. De testbench bestaat in principe uit een instantiatie van
+      de schakeling die moet worden getest, met testsignalen die op de
+      ingangen worden aangesloten en uitgangssignalen, waaraan men de
+      correctheid van de schakeling kan aflezen.
+\item De gemaakte beschrijvingen moeten vervolgens op hun correctheid
+      worden getest m.b.v. een \smc{vhdl}-simulator. Afhankelijk van de resultaten
+      van deze simulatie kan worden verder gegaan met de volgende stap
+      of, bij een niet correcte werking moeten de \smc{vhdl}-beschrijvingen
+      worden aangepast. De verbeterde beschrijvingen moeten dan weer worden
+      gesimuleerd enz. tot de simulaties het gewenste resultaat opleveren.
+\item De volgende stap is het synthetiseren van de gemaakte gedragsbeschrijvingen.
+      Hiervoor is, naast de \smc{vhdl}-beschrijvingen, ook een bibliotheek nodig
+      van basis-circuits waaruit de te ont\-werpen schakeling kan worden
+      opgebouwd.\\
+      Bij de synthese kunnen de volgende stappen worden onderscheiden:
+      \begin{itemize}
+      \item De \smc{vhdl}-beschrijvingen worden omgezet in logische formules.
+      \item Deze formules worden geoptimaliseerd.
+      \item De geoptimaliseerde formules worden gerealiseerd m.b.v. de
+            cellen uit de bibliotheek.
+      \item Van de gesynthetiseerde schakeling wordt een structurele
+            \smc{vhdl}-code gegenereerd, die dus uitsluitend bestaat uit
+            bibliotheek-cellen en hun verbindingen.\\
+            Tevens wordt een \smc{sls}-file gemaakt waarin het circuit wordt
+            beschreven. Deze zal worden gebruikt om de layout te maken. 
+      \end{itemize}
+\item De gesynthetiseerde schakeling moet hierna weer worden gesimuleerd,
+      Dit kan m.b.v. dezelfde testbench als die ook bij de simulaties
+      van de oorspronkelijke \smc{vhdl}-code is gebruikt. Alleen moet
+      via een configuratie statement worden aangegeven dat nu de
+      gesynthetiseerde versie van het circuit moet worden gebruikt.\\
+      Wanneer de simulaties uitwijzen, dat het gesynthetiseerde circuit
+      ook de juiste werking vertoont, kan worden verder gegaan met de
+      volgende stap; zo niet, dan moeten de oorspronkelijke \smc{vhdl}-beschrijvingen
+      zodanig worden aangepast, dat wel het gewenste gesynthetiseerde
+      circuit ontstaat.
+\item De volgende stap is het vanuit de \smc{sls}-beschrijvingen genereren van de
+      layout. Hiertoe kunnen aan de hand van de \smc{sls}-beschrijvingen de
+      gebruikte cellen automatisch geplaatst worden door een placement-programma
+      (hiervoor kan het programma \tool{madonna} of de \tool{row placer}. 
+      Daarna kunnen de verbindingen tussen de cellen
+      worden verzorgd door het routing-programma \tool{trout}.
+\item Uit de layout van de schakeling kan weer
+      \smc{vhdl}-code worden gegenereerd, die nu zal bestaan uit
+      alle basis-cellen van de ontworpen schakeling en hun verbindingen.
+      Deze circuit-extractie gebeurt m.b.v. het programma \tool{space}.
+\item Ook deze beschrijving moet weer worden gesimuleerd m.b.v. de
+      testbench, waarbij nu, via een configuration statement,
+      moet worden aangegeven dat de geextraheerde versie van de scha\-ke\-ling
+      moet worden getest. Verloopt deze simulatie succesvol, dan kan de volgende
+      stap worden uitgevoerd. Is de simulatie niet succesvol, dan moet uit een
+      nadere analyse van de resultaten van de simulatie worden afgeleid wat
+      er fout is, en wat er aan het ontwerp moet worden veranderd.
+\item Als voorlaatste stap kan er nog een simulatie worden uitgevoerd op
+      het transistor niveau van de schakeling.
+      Deze stap bestaat uit de volgende sub-stappen:
+      \begin{itemize}
+      \item Het transistor-circuit wordt uit de layout geextraheerd en de
+           losse transistoren worden hieruit verwijderd.
+     \item Vanuit de resultaten van een \smc{vhdl}-simulatie van het oorspronkelijke
+           circuit worden een command-file en een referentie-file gemaakt.
+           De command-file bevat de ingangssignalen die aan de schakeling
+           moeten worden toegevoegd, en de referentie-file bevat de
+           resultaten van de simulatie.
+     \item De simulatie wordt nu uitgevoerd m.b.v. de command-file.
+     \item Het resultaat van de simulatie, een result-file moet nu worden
+           vergeleken met de referentie-file van de simulatie.
+           Komen de twee overeen, dan is het ontwerp klaar en kan worden
+           overgegaan tot de laatste stap. Komen de files niet overeen, 
+           dan moet uit een nadere analyse van de verschillen worden
+           afgeleid wat er fout is aan de schakeling en wat hieraan kan worden
+           gedaan.
+     \end{itemize}
+\item Als laatste stap moet er nog een file worden gemaakt waarin de
+      layout van de schakeling staat beschreven (de ldm-file).
+\end{itemize}      
+\subsubsection{Rapid prototyping}
+Naast de IC ontwerp software zal er ook programmeerbare hardware beschikbaar
+zijn, in de vorm van een Altera FPGA bord, waarmee het ontwerp ''run-time''
+geverifieerd kan worden.
+Deze vorm van verificatie maakt het
+mogelijk om fouten uit het ontwerp te halen die met simulatie alleen
+veel moeilijker te achterhalen zijn.
+Terwijl bij simulatie de gebruiker op logisch niveau alle ingangsignalen moet 
+specificeren en de uitgangsignalen moet interpreteren, 
+zorgen bij rapid prototping de randapparaten ervoor dat de gebruiker 
+op ''hoog niveau'' de invoer bepaalt en de uitvoer kan interpreteren.
+Het is aan te raden verificatie m.b.v. rapid prototyping te verrichten
+nadat de simulatie van de gedragsbeschrijving van het ontwerp succesvol is 
+afgerond, en voordat met het maken van de layout van het ontwerp
+wordt begonnen.
+
+De volgende stappen zullen hierbij worden uitgevoerd:
+\begin{itemize}
+\item
+Na een eerste verificatie met behulp van de \smc{vhdl}-simulator
+wordt de \smc{vhdl} beschrijving van (een gedeelte van)
+het ontwerp gesynthetiseerd voor de FPGA die aanwezig is op het Altera bord.
+Dit gebeurt met het programma \tool{quartus}.
+Gebruik hiervoor alleen behaviour en structural/circuit beschrijvingen,
+en geen voor de Sea-of-Gates cellen bibliotheek gesynthetiseerde 
+\smc{vhdl}-beschrijvingen.
+Op Blackboard staat een template voor een \tool{quartus} project.
+\item
+De d.m.v. synthese met \tool{quartus} verkregen configuratie 
+(bitstream) file wordt, eveneens met \tool{quartus},
+gebruikt om de FPGA te configureren.
+\item
+Op het Altera bord is al aardig wat randapparatuur
+(schakelaars, LEDs, LCD display, etc.) aanwezig 
+welke gebruikt kan worden tezamen met de FPGA.
+Eventuele andere randapparaten
+(luidspreker, monitor, etc.) kunnen ook
+met het bord worden verbonden.
+\item
+Het geprogrammeerde bord wordt ''run-time'' op verschillende manieren
+uitgeprobeerd.
+\item
+Wanneer het ontwerp niet aan de eisen voldoet
+wordt de oorspronkelijke \smc{vhdl} beschrijving aangepast
+en wordt weer bij de eerste stap begonnen.
+\end{itemize}
+Merk op dat een werkend prototype op het FPGA bord niet automatisch betekend
+dat de \smc{vhdl} beschrijving helemaal ''af'' is.
+De ''hardware'' van de Sea-of-Gates chip zal zich over het algemeen anders gedragen
+dan de hardware van het FPGA bord en een goede werking op het bord hoeft geen garantie
+te zijn voor een goede werking van de chip.
+Een simulatie van de voor de chip gesynthetiseerde \smc{vhdl} beschrijving
+of (nog beter) een simulatie van de layout van de chip, zal 
+hierover meer uitsluitsel geven.
+
+\cleardoublepage
+

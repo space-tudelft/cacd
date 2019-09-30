@@ -1,0 +1,40 @@
+# This is a maptable for nelsis <--> seadif conversion,
+# generated manually for library generation
+# Patrick Groeneveld 18-7-1993
+# Each line contains the name of a nelsis cell and its corresponding seadif cell
+# The status field may contain the following values:
+#    'written'       the cell was succesfully written into seadif resp. nelsis
+#    'primitive'     the cell is a primitive which should not be read or converted
+#    [anything else] the cell will be written if necessary
+#
+#    N E L S I S     |                   S E A D I F                     | nelsis->sdf sdf->nelsis
+# view    cellname   | library      function     circuit      layout     |   status      status
+#--------------------+---------------------------------------------------+------------------------
+ layout   no310        g_digilib4_05  no310        no310        no310
+ layout   na310        g_digilib4_05  na310        na310        na310
+ layout   na210        g_digilib4_05  na210        na210        na210
+ layout   mu210        g_digilib4_05  mu210        mu210        mu210
+ layout   mu111        g_digilib4_05  mu111        mu111        mu111
+ layout   iv110        g_digilib4_05  iv110        iv110        iv110
+ layout   ex210        g_digilib4_05  ex210        ex210        ex210
+ layout   dfr11        g_digilib4_05  dfr11        dfr11        dfr11
+ layout   dfn10        g_digilib4_05  dfn10        dfn10        dfn10
+ layout   dfa11        g_digilib4_05  dfa11        dfa11        dfa11
+ layout   de211        g_digilib4_05  de211        de211        de211
+ layout   de310        g_digilib4_05  de310        de310        de310
+ layout   no210        g_digilib4_05  no210        no210        no210
+ layout   buf40        g_digilib4_05  buf40        buf40        buf40
+ circuit  No310        g_digilib4_05  no310        no310        $dummy
+ circuit  No210        g_digilib4_05  no210        no210        $dummy
+ circuit  Na310        g_digilib4_05  na310        na310        $dummy
+ circuit  Na210        g_digilib4_05  na210        na210        $dummy
+ circuit  Mu210        g_digilib4_05  mu210        mu210        $dummy
+ circuit  Mu111        g_digilib4_05  mu111        mu111        $dummy
+ circuit  Iv110        g_digilib4_05  iv110        iv110        $dummy
+ circuit  Ex210        g_digilib4_05  ex210        ex210        $dummy
+ circuit  Dfr11        g_digilib4_05  dfr11        dfr11        $dummy
+ circuit  Dfn10        g_digilib4_05  dfn10        dfn10        $dummy
+ circuit  Dfa11        g_digilib4_05  dfa11        dfa11        $dummy
+ circuit  De211        g_digilib4_05  de211        de211        $dummy
+ circuit  De310        g_digilib4_05  de310        de310        $dummy
+ circuit  Buf40        g_digilib4_05  buf40        buf40        $dummy

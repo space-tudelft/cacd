@@ -1,0 +1,307 @@
+.TH DMCHECKOUT 5ICD "DMI User's Manual"
+.SH NAME
+dmCheckOut - initiate a cell transaction
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+DM_CELL *dmCheckOut (DM_PROJECT *dmproject, char *cell, char *status,
+                int versionnumber, char *view, int mode);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "DM_PROJECT *dmproject"
+is a pointer to a valid \fBDM_PROJECT\fP as obtained from dmOpenProject().
+.TP
+.B "char *cell"
+is a character string naming the cell to be checked out.
+This cell can not be an imported cell (or alias name).
+.TP
+.B "char *status"
+controls the selection of a particular version of the cell.
+Valid status types (as pre-defined in "dmincl.h") are:
+.sp 0.5
+\fBWORKING\fP -
+'in +3
+the working version is selected, if present, else the actual version.
+If updates are made to the primitive design data
+(as is determined with mode)
+and there is no working version,
+a working version will be created.
+.in -3
+\fBACTUAL\fP -
+'in +3
+the actual version which is a member of the consistent tree.
+This status type is the appropriate one to
+obtain design information of a cell when
+an expansion of this cell has to be
+created at a higher level.
+No \fBUPDATE\fP or \fBCREATE\fP mode may be used for this status.
+.TP
+.B "int versionnumber"
+Not used in this DMI release.
+Always \fBDONTCARE\fP.
+.TP
+.B "char *view"
+is the view type from which design information is to be read and written.
+Function
+.B dmCheckOut
+checks whether this is a valid view type for the project
+identified by \fBdmproject\fP.
+Currently, default view types for project creation are
+\fBLAYOUT\fP, \fBCIRCUIT\fP and \fBFLOORPLAN\fP (as pre-defined in "dmincl.h").
+.TP
+.B "int mode"
+specifies the intention of the tool for operation on the cell
+that is to be checked-out.
+Valid modes (as pre-defined in "dmincl.h") are:
+.sp 0.5
+\fBREADONLY\fP -
+'in +3
+this mode must be used if you do not want to write at all,
+but only want to read some information from the cell.
+.in -3
+\fBUPDATE\fP -
+'in +3
+this mode (or CREATE) must be used if you want to update your primary design data.
+Also, when a cell did not exist it is created.
+This mode can only be used if status is \fBWORKING\fP (or DERIVED).
+.in -3
+\fBATTACH\fR -
+'in +3
+this mode must be used to signal the framework that you do not want to
+create a new version of the cell,
+but only want to store some
+information with an existing version (secondary information),
+for example, alternative representations for verification purposes
+or check results.
+This mode means that you will not change the primitive design data.
+.in -3
+.SH DESCRIPTION
+Function
+.B dmCheckOut
+must be used to gain access to the design data of
+the specified version of the cell.
+A pointer to a new \fBDM_CELL\fP key is returned.
+This cellkey can subsequently be used by
+the functions dmOpenStream(), dmStat(), and others,
+which can then determine which object to access,
+and finally by the function dmCheckIn().
+.PP
+Function
+.B dmCheckOut
+and
+.B dmCheckIn
+are prominent DMI functions
+that implement some of the powerful framework services.
+Version management is handled largely by these functions;
+they handle the selection of versions, creation of new versions, etc.
+They control access to the cell objects (locking) and
+administer the transactions in the meta data.
+.PP
+A cell in the system is not uniquely identified by its cell name.
+For example, the cell
+.I adder
+in the project
+.I chip
+is another cell than the cell
+.I adder
+in the project
+.I test.
+This distinction is made in the  system through the \fBDM_PROJECT\fP key
+that is passed as an argument.
+.P
+However, this still not completely identifies a cell.
+A cell
+.I adder
+of view type layout
+is another one than the cell
+.I adder
+that was created in the circuit view.
+This distinction is made through the \fBview\fP type parameter
+that is passed as an argument.
+.PP
+Not all combinations of parameters are legal.
+The legal combinations of parameters match with the different types
+of transactions that can be performed on the framework.
+Using these basic types of transactions a variety of tools
+can be integrated.
+Examples of the use of dmCheckOut are given below:
+.TP
+.B "1 - Editor-like tools"
+Such tools work on primary design information of one
+specific view type.
+It can update this information, which can be
+stored as a new (WORKING) version.
+The version parameter for an editor
+must always be WORKING and mode is UPDATE.
+.TP
+.B "2 - External-file readers"
+These tools typically read a design description from a non-framework
+file into the framework database.
+For example, an Edif-reader which reads an Edif circuit description from
+a file to store it as a collection of design objects in the framework
+database.
+Such tools store primary design information of one specific view type.
+The appropriate version parameter is WORKING and mode is CREATE.
+.TP
+.B "3 - Extractor-like tools"
+(Cross-view tools).
+Such tools derive from a design description of one view type
+a design description of another view type.
+It may wish to administer the relationship between the two objects
+by means of an equivalence.
+It has to perform at least two cell transactions,
+one for the existing cell and one for the generated cell.
+For the source design data,
+the version parameter may be WORKING, ACTUAL, BACKUP or DERIVED
+(typically WORKING)
+and mode is READONLY.
+For the generated design data
+the version parameter is DERIVED
+and mode is CREATE (or UPDATE).
+.TP
+.B "4 - Derive tools"
+(like netlist expanders, verifiers etc.).
+Such tools do not create new objects, yet derive
+additional information of a certain cell and
+attach this information to the cell.
+The version parameter may be WORKING, ACTUAL, BACKUP or DERIVED
+(typically WORKING)
+and the mode is ATTACH.
+.TP
+.B "5 - Read-only tools"
+Such tools do not write information to the framework at all.
+The version parameter can be WORKING, ACTUAL, BACKUP or DERIVED
+(typically WORKING)
+and the mode is READONLY.
+.br
+.ne 10
+.PP
+SUMMARY:
+.sp 1
+.TS
+center;
+l l l l.
+TOOL	MODE	VERSION	NEW OBJECT
+=
+EDITOR	UPDATE	WORKING	YES
+EXT-FILE READER	CREATE	WORKING	YES
+EXTRACTOR	READONLY	ALL	NO
+EXTRACTOR	CREATE	DERIVED	YES
+DERIVE TOOLS	ATTACH	ALL	NO
+READ-ONLY	READONLY	ALL	NO
+=
+.TE
+.sp 2
+.SH NOTES
+In this DMI release, there is only one cell version (WORKING is equal to ACTUAL).
+Cell BACKUP and DERIVED versions are not possible.
+.SH DIAGNOSTICS
+If properly executed, dmCheckOut() will return a pointer
+to a structure of type \fBDM_CELL\fP.
+If dmCheckOut() fails \fBNULL\fP will be returned.
+The external variable
+.B dmerrno
+will be set to indicate the error,
+and a call to function dmError() will be done.
+.PP
+This may happen in the following cases:
+.TP 14
+.B DME_BADARG
+Bad status or mode.
+.TP
+.B DME_BADKEY
+Bad project key.
+.TP
+.B DME_BADNAME
+Bad cell name.
+.TP
+.B DME_BADVIEW
+Bad view type.
+.TP
+.B DME_LOCK
+Cannot access the cell (already checked-out).
+.TP
+.B DME_NOCELL
+Cell does not exist.
+.TP
+.B DME_SYS
+System error (cannot create, mkdir).
+.SH EXAMPLES
+A plot program for mask layouts
+may initiate a cell transaction in the following way:
+.sp 1
+key = dmCheckOut (dmproject, cell, WORKING, DONTCARE,
+                      LAYOUT, READONLY);
+.sp 1
+.IP 1
+cell is a character string containing the name of a cell in the database.
+A cell with this name must be present in the layout view of the project
+identified by \fBdmproject\fP.
+.IP 2
+.B WORKING
+means that the program accesses the working version of the cell if present,
+else the actual version.
+.IP 3
+.B LAYOUT
+means that the program requests a cell of the layout view.
+.IP 4
+.B READONLY
+means that the program will not write data to the database.
+.IP 5
+The function dmCheckOut() returns a pointer to a
+.B DM_CELL
+which must be used by the functions dmOpenStream() and dmCheckIn().
+.sp 1
+.PP
+The program 'makevln' derives from a (primitive) layout description
+a representation in terms of vertical line segments,
+to be used for layout verification.
+It may initiate a cell transaction in the following way:
+.sp 1
+key = dmCheckOut (dmproject, cell, WORKING, DONTCARE,
+                      LAYOUT, ATTACH);
+.IP 1
+.B ATTACH
+means that the program will add some information to the
+accessed version of the cell.
+The  system will \fBnot\fP create a new version.
+.sp 1
+.PP
+A layout editor must initiate a cell transaction in the following way:
+.sp 1
+key = dmCheckOut (dmproject, cell, WORKING, DONTCARE,
+                      LAYOUT, UPDATE);
+.IP 1
+.B WORKING
+means that the program will access the latest version of the cell.
+This is the so-called working version, or, if there is no working version,
+one is created where the editor stores the updated design description.
+A lock is set to prevent that other people start updating
+on the same cell.
+.IP 2
+The view
+.B LAYOUT
+indicates that the program will write layout data back into the database.
+.sp 1
+.PP
+A layout-to-circuit
+extractor may initiate its cell transactions in the following way:
+.sp 1
+key1 = dmCheckOut (dmproject, cell, WORKING, DONTCARE,
+                      LAYOUT, READONLY);
+.br
+key2 = dmCheckOut (dmproject, cell, DERIVED, DONTCARE,
+                      CIRCUIT, CREATE);
+.IP 1
+.B DERIVED
+means that the extractor must produce a new circuit cell version.
+Status \fBWORKING\fP may also be used, because only one version is possible.
+.IP 2
+.B CIRCUIT
+indicates that the program will produce information for the circuit view.
+.SH SEE ALSO
+dmOpenStream(5ICD), dmCheckIn(5ICD).

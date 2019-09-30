@@ -1,0 +1,9 @@
+# process nmos
+nd_vln  NOFILE  2  0  0  0  0  1.1
+bool_18 bool_4  0  2  2 10  2  1.2
+np_vln  NOFILE  2  2  2 10  2  3.1+3.2
+nc_vln  NOFILE  2  0  2 10  0  4.1+4.4
+nm_vln  NOFILE  3  2  1 10  2  4.7+4.8
+bool_0	NOFILE  2  0  0  0  0  2.1+2.5    (NB/ND/NP)
+bool_2	NOFILE  1  0  0  0  0  2.3+2.3.1  (NB - ND|NP)
+bool_4 	NOFILE  0  2  0  0  3  3.3        (act.area)

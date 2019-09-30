@@ -1,0 +1,597 @@
+.TH SIMEYE2 1ICD "User Commands"
+.UC 4
+.SH NAME
+simeye2 - simulation signal displayer / editor (old version)
+.SH SYNOPSIS
+.B simeye2
+[X options] [-Lh] [-l|-m|-c|-P|-T] [-a|-b] [cell]
+.SH OPTIONS
+Beside the standard X Toolkit options (e.g. to set the display,
+the geometry, and the foreground color of the program),
+the following other options may be specified:
+.TP
+\fB-high_lowColor\fP \fIcolor\fP
+Specifies the color for signal values that are \fBlogic O\fP or \fBlogic I\fP.
+.TP
+\fB-undefinedColor\fP \fIcolor\fP
+Specifies the color for signal values that are \fBlogic X\fP.
+.TP
+\fB-voltsColor\fP \fIcolor\fP
+Specifies the color for analog signal values.
+.TP
+\fB-pointerColor\fP \fIcolor\fP
+Specifies another color for the screen pointer (default: canvas.foreground).
+.TP
+.B -L
+Load window settings each time new signals are read.
+.TP
+.B -h
+Display only help information.
+.TP
+.B -l
+Use \fBsls-logic\fP as simulation type (default).
+.TP
+.B -m
+Use \fBsls-timing\fP as simulation type.
+.TP
+.B -c
+Use \fBspice\fP as simulation type.
+.TP
+.B -P
+Use \fBpstar\fP as simulation type.
+.TP
+.B -T
+Use \fBplato\fP as simulation type.
+.TP
+.B -a
+Use \fBanalog\fP representation for \fBsls\fP signals.
+.TP
+.B -b
+Use \fBdigital\fP representation for \fBsls\fP signals (default).
+.PP
+.SH DESCRIPTION
+.I Simeye
+is an X Windows based simulation user interface for viewing the results of the
+\fIsls\fP\|(1ICD), \fIspice\fP\|(1ICD), \fIpstar\fP\|(Philips) and \fIplato\fP\|(TU-Eindhoven) simulators.
+The program can be used to inspect the graphical representation of the
+output signals of the simulators and
+it can be used to edit input signals that
+are described in the SLS command file format (see: User's Manual).
+Moreover, from
+.I simeye2
+simulations can be run
+by starting either the \fIsls\fP, \fIspice\fP,
+.I pstar
+or
+.I plato
+simulator
+(Note: \fIspice\fP via the script \fInspice\fP\|(1ICD)).
+.PP
+The following program argument may be specified:
+.TP 10
+.I cell
+This name specifies the name of the cell for
+which simulation signals are displayed and/or edited.
+.PP
+The corresponding file from which the signals are read or to which
+the signals are written has a name
+that is equal to the cell name with an extension ".res"
+for sls digital (output) signals,
+an extension ".plt" for sls analog or waveform (output) signals,
+an extension ".ana" for spice (output) signals,
+an extension ".list" for pstar (output) signals,
+an extension ".sig" for plato (output) signals,
+and an extension ".cmd" for command file (input) signals.
+.PP
+Note that the \fIspice\fP,
+\fIpstar\fP and \fIplato\fP output file
+should contain the signals of a transient analysis in tabular format.
+When running the program
+.I spice
+directly this is achieved by
+using the card ``\fB.print tran\fP ...'' in the spice input file.
+When running \fInspice\fP,
+this is achieved by using
+sls ``\fBplot\fP ...'' commands in the command file.
+When running the program
+.I pstar
+directly this is achieved by
+using ``\fBprint:\fP ...'' commands in the pstar input file.
+.SH COMMANDS
+Commands that can interactively be given are:
+.TP 8
+.I CELL
+This field
+specifies the name of the cell to which the signals belong.
+The cell name is given by the program argument (see above)
+or it is specified by the
+user while running the program.
+To edit it, use the left arrow, right arrow
+and <Backspace> and/or <Delete> keys of the keyboard.
+To load the signals of the specified cell, click the read button.
+.TP
+.I "SLS-LOGIC  SLS-TIMING  SPICE/PSTAR/PLATO"
+These buttons define the type of simulation.
+When clicking the run button,
+an sls simulation at level 1 or 2 is performed when SLS-LOGIC
+is active,
+an sls simulation at level 3 is performed when SLS-TIMING
+is active,
+and a spice,
+pstar or plato simulation is performed when SPICE,
+PSTAR or PLATO is active.
+Note that previous simulation results of PLATO are not deleted by \fIsimeye2\fP.
+When clicking the read button,
+sls signals are read when SLS-LOGIC or SLS-TIMING is active,
+and spice,
+pstar or plato signals are read when SPICE,
+PSTAR or PLATO is active.
+For PLATO only the signal names with extension '.v' (voltages) are read.
+.TP
+.I "A/D  A/D  A"
+These three buttons, that are positioned
+immediately to the right of the simulation-type buttons,
+specify the type of signal representation that is used.
+For SLS-LOGIC and SLS-TIMING these buttons can have
+a value "A" (for analog) or "D" (for digital).
+For SPICE,
+PSTAR and PLATO the value of the button is always "A".
+Click on the "A" to switch from SPICE to PSTAR and from PSTAR to PLATO and visa versa.
+.TP
+.I READ
+Load a new signal file.
+Normally, current signals are cleared from the program.
+However, if the <Shift> key is held down while pressing the
+read button the new signals will be appended to the current signals.
+.TP
+.I RUN
+Perform a simulation by using either the \fIsls\fP, \fIspice\fP,
+.I pstar
+or
+.I plato
+simulator.
+For all simulators
+.I simeye2
+uses the command file "\fIcell\fP.cmd".
+The
+.I spice
+simulator is run by calling the program \fInspice\fP.
+The
+.I pstar
+simulator is (default) called by the
+.I npstar
+shell-script.
+The
+.I plato
+simulator is (default) called by the
+.I nplato
+shell-script.
+If any error message occurs it will automatically be displayed by \fIsimeye2\fP.
+When the
+.I sls
+simulator is run, also intermediate simulation
+results are displayed.
+At the end, in all cases,
+the final simulation results
+are displayed.
+A simulation may be aborted by typing <control>C
+in the simeye2 window
+(place the cursor in the simeye2 window and
+type the character 'c' while holding the <Ctrl> key down).
+.TP
+.I FULL
+Draw all present signals from the beginning of the simulation
+time till the end of the simulation time.
+.TP
+.I REDRAW
+Redraw the current window.
+.TP
+.I IN
+Zoom in on the current window.
+When the <Shift> key is held down and the window contains only
+one analog signal,
+also a zoom-in on the y-axis of the signal
+is performed.
+.TP
+.I OUT
+Zoom out on the current window.
+.TP
+.I LEFT, RIGHT, UP AND DOWN ARROW
+Move the current window leftwards, rightwards, upwards or downwards
+respectively.
+.TP
+.I S
+Save the current window settings (i.e. start-time, stop-time
+and the names of the signals that are displayed)
+in a file (The name of this file is specified
+in the configuration file).
+.TP
+.I L
+Load the current window settings (i.e. start-time, stop-time
+and the names of the signals that are displayed)
+from a file (The name of this file is specified
+in the configuration file).
+.TP
+.I MOVE
+With this command the order of the signals can be changed
+or one signal can be placed over another signal
+in order to compare them.
+First the signal that is moved or that is placed over another signal
+is selected,
+and then the new position of the signal is selected.
+To place the selected signal over another signal one should hold
+the <Shift> key down while selecting the new position.
+To remove a signal that is placed over another signal,
+initially select the signal with the <Shift> key held down.
+.TP
+.I PRINT
+Generate a hardcopy of the current screen.
+.TP
+.I VALUE
+Move a vertical scanline over the display window,
+according to the position of the pointer,
+and show the value of the corresponding x-position (and y-position).
+When clicking the middle (or right) button of the mouse, one
+may toggle between displaying
+in the right margin (if the number of signals is not too large)
+the y-values of the signals at the selected x-position.
+To store the value of a particular position, click the left
+button of the mouse.
+This position will then be subtracted from
+the next positions of the scanline,
+so as to measure delay times and/or voltage differences.
+.TP
+.I QUIT
+Quit the program.
+.TP
+.I INPUT
+Read the command file "\fIcell\fP.cmd" and
+enable the edit menu.
+If the command file "\fIcell\fP.cmd" does not exist,
+.I simeye2
+shall try to read "simeye.def.d",
+the default command file.
+First, it tries to read this file from the current directory
+and second it tries to read this file from the process directory.
+.SH "The following commands are part of the edit menu:"
+.TP 8
+.I GRID
+Specify the smallest unit for the x-axis (= time axis).
+.TP
+.I NEW
+Create a new signal. The user has to enter the name of the new
+signal, and the signal will be placed at the bottom of
+the window.
+.TP
+.I DELETE
+Delete one or more signals by selecting them with the cursor.
+.TP
+.I CLEAR
+Delete all signals.
+.TP
+.I COPY
+Copy the signal description from one signal to another signal.
+.TP
+.I EDIT
+Edit a particular signal by inserting a new logical level
+for a particular time interval (t1, t2).
+The signal description may eventually already be defined for this interval.
+The insertion of the new logical level is done in two steps:
+During the first click of the mouse
+the signal, the new logical level and t1 are selected.
+During the second click t2 is selected and the new signal
+description is drawn.
+To insert an interval that has a free-state
+one should hold the <Shift> key pressed down
+while making the first selection.
+.TP
+.I YANK
+Store a (part of a) signal description in the buffer.
+.TP
+.I PUT
+Insert a copy of the signal description that is in the buffer onto
+a particular position.
+The user has to select the signal to which the contents
+of the buffer is added and the time from which on the
+new signal description is valid.
+The new signal description may (partly) override the existing
+signal description for the selected signal.
+Furthermore,
+the user is asked to type how may periods of the stored signal part
+are added.
+If a value -1 is specified, the selected signal
+will become a periodical signal and (seemingly)
+an infinite number of periods are added.
+In that case, when the simulation end time is enlarged,
+the signal description will automatically
+be extended according to the periodicity of the signal description.
+A periodical signal is indicated by means of a tilde (~)
+immediately to the right of the signal description.
+.TP
+.I SPEED
+Speed up the signals by some factor.
+If a value < 1 is specified, the signals will be slowed down.
+.TP
+.I T_END
+Update the end time of the input signals (= end time of simulation).
+.TP
+.I READY
+Disable the edit menu and
+update the command file "\fIcell\fP.cmd" after a confirmation
+has been given.
+.PP
+.SH "COMMAND FILE"
+For simulation,
+.I simeye2
+uses a command file "\fIcell\fP.cmd".
+This file should contain a description
+of the input signals, values for the simulation control variables,
+and a listing of the terminals for which output should be generated.
+This is explained in more detail in the users manuals of the
+.I sls
+simulator and the
+.I spice
+simulator.
+.PP
+The "\fBset\fP" commands in the command file
+may be edited by enabling the edit menu of \fIsimeye2\fP.
+The new signal descriptions will then be written back
+to the command file when updating the command file.
+However,
+when the command file contains
+a set command that is followed by the keyword "\fBno_edit\fP"
+between comment signs,
+the signal description of this set command can not be modified.
+Additionally,
+when the command file contains on a separate line
+between comment signs the keyword "\fBauto_set\fP",
+.I simeye2
+will automatically turn-on or turn-off these 'non-editable'
+"\fBset\fP" commands according to whether or not
+the node the command refers to is part of the terminal list
+of the cell that is simulated.
+This feature may for example be useful to specify default signals for
+one or more input terminals.
+.PP
+When the command file contains on a separate line
+between comment signs the keyword "\fBauto_print\fP"
+("\fBauto_plot\fP"),
+.I simeye2
+will automatically add a print (plot) statement to the
+command file for each terminal of the cell that is simulated.
+The new print (plot) commands will have a keyword "\fBauto\fP" between
+comment signs following the keyword "\fBprint\fP" ("\fBplot\fP").
+.PP
+An example of a default command file that can be used for
+.I sls
+and
+.I spice
+simulations is:
+.PP
+.in +0.5c
+.nf
+.ft C
+/* auto_set */
+set /* no_edit */ vdd = h*~
+set /* no_edit */ vss = l*~
+set /* no_edit */ phi1 = (l*110 h*80 l*10)*~
+set /* no_edit */ phi2 = (l*10 h*80 l*110)*~
+option sigunit = 1n
+option outacc = 10p
+option simperiod = 4000
+option level = 3
+/*
+*%
+tstep 0.1n
+trise 0.5n
+tfall 0.5n
+*%
+*%
+*/
+/* auto_print */
+/* auto_plot */
+.ft
+.fi
+.in -0.5c
+.SH "CONFIGURATION FILE"
+At start-up of the program,
+.I simeye2
+will read some information from a configuration
+file called ".simeyerc".
+First, it tries to find the file in the current directory.
+Second, it tries to open the file in the home directory of the user.
+Thirdly, it looks for this file in process directory.
+The configuration file may contain the following keywords, followed
+by a specification on the same line if the keyword ends with ':';
+.ie t .TP \w'PSTAR:n'u
+.el .TP 8
+SLS:
+Specifies the command for running the
+.I sls
+simulator.
+.TP
+SLS_LOGIC_LEVEL:
+Specifies the level of simulation when "sls-logic" is selected
+(use 1 or 2).
+.TP
+SLS_LOGIC_SIGNAL:
+Specifies the default signal representation for sls-logic simulations
+(use A or D).
+.TP
+SLS_TIMING_SIGNAL:
+Specifies the default signal representation for sls-timing simulations
+(use A or D).
+.TP
+SPICE:
+Specifies the command for running the
+.I spice
+simulator (use
+.I nspice
+or a derivative of it).
+.TP
+PSTAR:
+Specifies the command for running the
+.I pstar
+simulator (use
+.I npstar
+or a derivative of it).
+.TP
+PLATO:
+Specifies the command for running the
+.I plato
+simulator (use
+.I nplato
+or a derivative of it).
+.TP
+XDUMP_FILE:
+Specifies the name of the X Windows dump file that is generated
+when the print button is clicked.
+.TP
+PRINT:
+Specifies the command that is executed when the print button is clicked
+in order to process the X Windows dump file (e.g. to convert the window dump to
+PostScript and to send the output to a laser-printer).
+.TP
+PRINT_LABEL:
+Specifies an optional label that is placed in upper left corner
+of the display window when an X Windows dump is generated.
+.TP
+SETTINGS_FILE:
+Specifies the name of the file in (from)
+which the window settings are stored (loaded)
+when using the "S" button ("L" button or
+.B -L
+option).
+.TP
+DETAIL_ZOOM_ON
+If this keyword is specified in the configuration file,
+the zoom-in function is also defined for the
+y-axis of a single analog signal.
+Thus, you do not need to hold the <Shift> key down (see command IN).
+. \"In this case it is not necessary to hold the <Shift> key down (see command IN).
+.TP
+TRY_NON_CAPITAL_ON
+If this keyword is specified in the configuration file
+and simeye2 fails to open a command file that starts with a capital letter,
+the program will try to open the same command file but now starting
+with a non-capital letter.
+If this succeeds and
+when performing a simulation, simeye2 will first run the program
+.I arrexp
+on a copy of the command file
+to expand one dimensional array node names into single node names
+(e.g. a[1..3] is converted into a_1_, a_2_, a_3_).
+.PP
+In the above specifications,
+the string '\fB$cell\fP' may be used to refer to the current cell name,
+\&'\fB$file\fP' may be used to refer to the current file on screen,
+\&'\fB$date\fP' and '\fB$time\fP' may be used to refer to the current date and time,
+and '\fB$user\fP' may be used to refer to your login name.
+.PP
+Example of a configuration file (default values are shown):
+.PP
+.in +0.5c
+.nf
+.ft C
+SLS: sls $cell $cell.cmd
+SLS_LOGIC_LEVEL: 2
+SPICE: nspice $cell $cell.cmd
+PSTAR: npstar $cell $cell.cmd
+PLATO: nplato $cell $cell.cmd
+XDUMP_FILE: simeye.wd
+PRINT: xpr -device ps -output $cell.ps \fI(continued)\fP
+    simeye.wd; lp $cell.ps; rm simeye.wd $cell.ps
+PRINT_LABEL: $user  $file  $date  $time
+SETTINGS_FILE: simeye.set
+.ft R
+.fi
+.in -0.5c
+.SH AUTHOR
+A.J. van Genderen,
+S. de Graaf
+.SH FILES
+.ie t .TP 22
+.el .TP 16
+\fC\&.simeyerc\fP
+(default) configuration file
+.TP
+\fCHOME/.simeyerc\fP
+(altern.) configuration file
+.TP
+\fCICDPATH/share/lib/process/\fIprocess\fP/.simeyerc\fP
+(altern.) configuration file
+.TP
+\fCICDPATH/share/lib/process/\fIprocess\fP/.simeyerc\fP
+(altern.) configuration file
+.TP
+\fC\fIcell\fP.res\fP
+(default) input file (SLS logic results)
+.TP
+\fC\fIcell\fP.plt\fP
+(opt.) input file (SLS analog results)
+.TP
+\fC\fIcell\fP.ana\fP
+(opt.) input file (SPICE analog results)
+.TP
+\fC\fIcell\fP.list\fP
+(opt.) input file (PSTAR analog results)
+.TP
+\fC\fIcell\fP.sig.n\fP
+(opt.) input file (PLATO signal names)
+.TP
+\fC\fIcell\fP.sig\fP
+(opt.) binary input file (PLATO analog results)
+.TP
+\fC\fIcell\fP.cmd\fP
+(opt.) command file
+.TP
+\fC*.cxx\fP
+temporary files
+.TP
+\fCsimeye.def.d\fP
+(default) template for command file
+.TP
+\fCICDPATH/share/lib/process/\fIprocess\fP/simeye.def.d\fP
+(altern.) template for command file
+.TP
+\fCICDPATH/share/lib/process/\fIprocess\fP/simeye.def.d\fP
+(altern.) template for command file
+.TP
+\fCsimeye.set\fP
+(default) window-settings file
+.TP
+\fCsimeye.wd\fP
+(default) X windows dump file
+.TP
+\fCsim.diag\fP
+simulation diagnostics
+.TP
+\fCpr.diag\fP
+print diagnostics
+.SH X DEFAULTS
+Some examples of ".Xdefaults" values are:
+.ta \w'simeyeXcommandsX.foreground:X 'u
+.nf
+.PP
+simeye*.borderColor:	white
+simeye*commands*.foreground:	white
+simeye*commands*.background:	black
+simeye*canvas.foreground:	white
+simeye*canvas.background:	black
+simeye.high_lowColor:	cyan
+simeye.undefinedColor:	yellow
+simeye.voltsColor:	green
+simeye.pointerColor:	red
+.SH SEE ALSO
+simeye(1ICD), sls(1ICD), spice(1ICD), nspice(1ICD),
+.br
+SLS: Switch-Level Simulator User's Manual,
+.br
+User's Guide for SPICE, Univ. of California at Berkeley,
+.br
+Pstar User Guide & Reference Manual, Philips ED&T,
+.br
+Plato Users Guide, M.T. van Stiphout,
+TU-Eindhoven (http://www.es.ele.tue.nl/papers/PWL.html),
+.br
+X Window System Documentation.

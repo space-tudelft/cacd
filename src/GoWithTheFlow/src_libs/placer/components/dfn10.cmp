@@ -1,0 +1,4 @@
+bbox 6 6
+port in D
+port in CK
+port out Q

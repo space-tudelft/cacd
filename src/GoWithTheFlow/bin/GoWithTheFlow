@@ -1,0 +1,716 @@
+#!/bin/sh
+# the next line restarts using wish \
+exec /usr/bin/wish "$0" "$@"
+
+set ProgName "GoWithTheFlow"
+
+if {[info exists env(OPPROGPATH)]} {
+   set OPPROGPATH $env(OPPROGPATH)
+} else {
+   puts stderr "env OPPROGPATH not set"
+   exit 1
+}
+if {[lindex $argv 0] == "@"} {
+   puts OPPATH=$OPPROGPATH
+   puts PATH=$env(PATH)
+}
+
+# The following variables can be specified in the install script.
+#----------------------------------------------------------------
+#InstallGlobals#
+set TclLibPath1 $OPPROGPATH/src_libs/gowiththeflow
+set TclLibPath2 $OPPROGPATH/src_libs/shared
+set TclLibPath3 $OPPROGPATH/src_libs/shared/BWidget-1.8.0
+set TclLibPath4 $OPPROGPATH/src_libs/shared/comm
+set TclLibPath5 $OPPROGPATH/src_libs/shared/snit
+
+set SynthLibPath $OPPROGPATH/synth_libs
+#the path to the the basic cells used for synthesis
+
+set CellsLibPath $OPPROGPATH/sim_libs/CellsLib
+#the path to the library of the vhdl_descriptions of the basic cells
+
+set CompLibPath $OPPROGPATH/comp_files
+#the path to the library of the component_descriptions of the basic cells
+
+set DoPath $OPPROGPATH/do_files
+#the path to the do scripts
+
+set SchematicEntry schentry
+#the name of the schematic_entry to use
+
+set ProgRCfile ~/.gowiththflowrc
+#the name of the file to store configuration data
+
+set ProjLockFile .design_flow.lock
+
+set PsViewer1 gv
+set PsViewer2 evince
+#The program used to show the ps_files of the synthesised circuit
+
+set VsimAppName vsim
+#The tk_application_name of the vsim_simulator
+#EndInstallGlobals#
+
+set Vhdl_editor built-in
+
+lappend auto_path $TclLibPath1
+lappend auto_path $TclLibPath2
+lappend auto_path $TclLibPath3
+lappend auto_path $TclLibPath4
+lappend auto_path $TclLibPath5
+
+#-----------------------------------------------------------------------------#
+# globals used:                                                               #
+#-----------------------------------------------------------------------------#
+set topmostWindow ""
+set RecentProjs ""
+set RefFileName ""
+set RefForCompPresent 0
+set ResFileName ""
+set CmdFileName ""
+set SimLibName  "work"
+set DbName      "test"
+set fnt_s       "-*-Courier-Bold-R-Normal--*-100-*"
+set fnt_n       "-*-Courier-Bold-R-Normal--*-120-*"
+set fnt_l       "-*-Courier-Bold-R-Normal--*-140-*"
+set fnt_h       "-*-Courier-Bold-R-Normal--*-180-*"
+set Fnt         $fnt_n
+set EditFnt     $fnt_n
+set Textindent  8
+set MyWd	""
+set MaxNbrMenuItemsInColumn 20
+set Earr()      ""; #array which contains the entities of the design.
+                    # each entry is a list which contains:
+                    # its name, the vhdl_file where it is defined, and the
+                    # indices of the architecture_array Aarr for the
+                    # architectures made for the entity.
+set Aarr()      ""; #array which contains the architectures of the design.
+                    # each entry is a list which contains:
+                    # its name, the index in the Earr of the entity it belongs
+                    # to, the vhdl_file where it is defined, and the index
+                    # in the configurations_array Carr of the configuration
+                    # made for it.
+set Carr()      ""; #array which contains the configurations of the design.
+                    # each entry is a list which contains:
+                    # its name, the name of the entity it is made for,
+                    # the name of the architecture it is made for,
+                    # the vhdl_file that describes the configuration, and
+                    # a list of the names of the configurations used in this
+                    # configuration.
+set Parr()      ""; #array which contains the packages of the design.
+                    # each entry is a list which contains:
+                    # its name, the vhdl_file in which the package
+                    # is defined and a list of the indices of the entities,
+                    # architectures, configurations and packages it is used in.
+                    # The indices have the form A<nbr>, E<nbr>, C<nbr> and
+                    # P<nbr>, where <nbr> is the index in the according array.
+set Sarr()      ""; #array which contains the schematics of the design.
+set Marr()      ""; #array which contains the components of the design.
+set Tarr()      ""; #array which contains the circuits of the design.
+set Larr()      ""; #array which contains the layouts of the design.
+
+proc create_project {} {
+   global CellsLibPath CompLibPath MyWd
+
+   file mkdir $MyWd; cd $MyWd
+
+   # make a mapping to the lib of the basic vhdl_cells
+   if {[catch {exec vmap CellsLib $CellsLibPath} msg]} {
+      df_mess_dialog "$msg\nWARNING: vmap CellsLib not successful"
+   }
+
+   file mkdir VHDL ;# to store the vhdl_descriptions
+   file mkdir ADB  ;# to store the synthesizer output files
+   file mkdir SLS  ;# to store the .sls files
+   file copy $CompLibPath components ;# for the .cmp files
+   file mkdir circuits ;# for the schentry .cir files
+   file mkdir syn_work ;# the synthesizer work_directory
+
+   # make a library work for the VHDL simulator
+   if {[catch {exec vlib work} msg]} {
+      df_mess_dialog "$msg\nWARNING: vdir directory 'work' not made"
+   }
+
+   # make an ocean project database
+   if {[catch {exec mkvopr test} msg]} {
+      df_mess_dialog "$msg\nWARNING: mkvopr directory 'test' not made"
+   }
+}
+
+proc int_open_project {} {
+   global MyWd RecentProjs ProjLockFile
+   #-----------------------------------------------------------------------------#
+   # generate a lock file to prevent multiple uses in the same directory         #
+   #-----------------------------------------------------------------------------#
+   if {[catch {set fp [open $MyWd/$ProjLockFile w]} msg]} {
+      df_mess_dialog "ERROR:
+###############################################################
+# $msg
+###############################################################"
+      return 0
+   }
+   puts  $fp $::env(USER)
+   puts  $fp [clock format [clock seconds]]
+   close $fp
+
+   cd $MyWd; set MyWd [pwd]
+
+   set_project
+
+   # delete if it already exists and add at begin
+   set i [lsearch $RecentProjs $MyWd]
+   if {$i >= 0} {
+      set RecentProjs [lreplace $RecentProjs $i $i]
+   }
+   set RecentProjs [linsert $RecentProjs 0 $MyWd]
+
+   read_infofile
+   return 1
+}
+
+proc open_project {{proj ""}} {
+   global MyWd ProjLockFile
+
+   if {[string equal $proj ""]} {
+      set proj [ask_open_project]
+   }
+   if {[string equal $proj $MyWd] || [string equal $proj ""]} { return 0 }
+
+   if {![file isdir $proj/VHDL] ||
+       ![file isdir $proj/work]} {
+      df_mess_dialog "INSTRUCTION:
+###############################################################
+# The directory '$proj' does not contain a project?
+###############################################################"
+      return 0
+   }
+
+   if {[file exist $proj/$ProjLockFile]} {
+      set fp [open $proj/$ProjLockFile r]
+      set lock_user [gets $fp]
+      set lock_time [gets $fp]
+      close $fp
+      set answ [df_choise_dialog \
+"This directory is locked by a GoWithTheFlow started by
+  $lock_user at $lock_time.
+Two GoWithTheFlows may give unwanted mutual influences
+If you want to start GoWithTheFlow anyway
+click 'yes' to continue, otherwise click 'no'."]
+      if {$answ == "no"} { return 0 }
+      file delete $proj/$ProjLockFile
+   }
+   close_project
+
+   set MyWd $proj
+   int_open_project
+}
+
+proc new_project {} {
+   global MyWd
+
+   set proj [tk_chooseDirectory -initialdir ~ -mustexist false \
+		-title "Specify a new directory for use as a project directory"]
+   if {[string equal $proj ""]} return
+
+   if {[file isdir $proj] || [file isfile $proj]} {
+      if {[file isdir $proj]} { set dir "Directory" } { set dir "File" }
+      df_mess_dialog "\
+	###############################################################\n\
+	# $dir '$proj' already exists.\n\
+	###############################################################"
+      return
+   }
+   close_project
+
+   set MyWd $proj
+   create_project
+   int_open_project
+}
+
+proc close_project {} {
+   global MyWd ProjLockFile
+
+   if {[string equal $MyWd ""]} return
+
+   if {[file writable $MyWd/$ProjLockFile]} {
+      file delete $MyWd/$ProjLockFile
+   }
+   if {[file exists $MyWd/$ProjLockFile]} {
+      df_mess_dialog "\
+	###########################################################\n\
+	# Could not remove project lock\n\
+	# $MyWd/$ProjLockFile\n\
+	###########################################################"
+   }
+   del_infofile
+   set MyWd ""
+   set_project disabled
+}
+
+proc set_project {{state normal}} {
+   global MyWd
+
+   .menubar.file.cmds entryconfigure "Close project"    -state $state
+   .menubar.file.cmds entryconfigure "Edit vhdl file"   -state $state
+   .menubar.file.cmds entryconfigure "Delete vhdl file" -state $state
+   .menubar.file.cmds entryconfigure "Import vhdl file" -state $state
+   .menubar.file.cmds entryconfigure "Import vhdl dir"  -state $state
+   .menubar.file.cmds entryconfigure "Import project cell" -state $state
+   .menubar.file.cmds entryconfigure "Import layout tree"  -state $state
+   .menubar.file.cmds entryconfigure "New entity"       -state $state
+   .menubar.file.cmds entryconfigure "New schematic"    -state $state
+   .menubar.file.cmds entryconfigure "New package"      -state $state
+   .menubar.file.cmds entryconfigure "Export project archive" -state $state
+   .menubar.file.cmds entryconfigure "Import project archive" -state $state
+   .menubar.utils   configure -state $state
+   .menubar.compile configure -state $state
+   .menubar.convert configure -state $state
+
+   .ifr.db configure -text "Project: $MyWd"
+}
+
+proc do_quit {} {
+#-----------------------------------------------------------------------------#
+# procedure to leave the program                                              #
+# removes vsimw*  files end closes the edit_windows before closing            #
+#-----------------------------------------------------------------------------#
+   global ProgRCfile RecentProjs Fnt EditFnt Textindent Vhdl_editor
+
+   foreach i [glob -nocomplain vsimw*] {
+      file delete $i
+   }
+   set children [winfo children .]
+   foreach i $children {
+      if {[string range $i 0 8] == ".edt_wdw_"} {
+         quit_editor [string trimleft $i .]
+      }
+   }
+
+   close_project
+
+   if {[catch {open $ProgRCfile w} rcFile]} {
+      df_mess_dialog "WARNING:
+###########################################################
+# Could not write configuration file
+# $ProgRCfile
+###########################################################"
+   } else {
+      puts $rcFile "recentprojects"
+      foreach proj $RecentProjs { puts $rcFile $proj }
+      puts $rcFile "endrecentprojects"
+      puts $rcFile "font $Fnt"
+      puts $rcFile "editfont $EditFnt"
+      puts $rcFile "textindent $Textindent"
+      puts $rcFile "vhdleditor $Vhdl_editor"
+      close $rcFile
+   }
+
+   destroy .
+}
+
+# Read configuration file
+set MostRecentProj ""
+set NrProjects 0
+if {[file exists $ProgRCfile]} {
+   set rcFile [open $ProgRCfile r]
+   while {![eof $rcFile]} {
+      set line [gets $rcFile]
+      if {[string equal $line "recentprojects"]} {
+         while {![eof $rcFile]} {
+            set line [gets $rcFile]
+            if {[string equal $line "endrecentprojects"]} { break }
+	    if {[incr NrProjects] == 1} { set MostRecentProj $line }
+            lappend RecentProjs $line
+         }
+      }
+      if {[string equal [lindex $line 0] "font"]} {
+         set Fnt [lindex $line 1]
+      }
+      if {[string equal [lindex $line 0] "editfont"]} {
+         set EditFnt [lindex $line 1]
+      }
+      if {[string equal [lindex $line 0] "textindent"]} {
+         set Textindent [lindex $line 1]
+      }
+      if {[string equal [lindex $line 0] "vhdleditor"]} {
+         set Vhdl_editor [lindex $line 1]
+      }
+   }
+   close $rcFile
+}
+
+#-----------------------------------------------------------------------------#
+# interface definition                                                        #
+#-----------------------------------------------------------------------------#
+frame	.menubar     -bg gold2 -borderwidth 2 -relief raised
+frame	.ifr
+label	.ifr.db      -text "Project: "       -font $Fnt -bg wheat3 -width 46 -anchor w -padx 10 -pady 5
+label	.status_line -borderwidth 2 -relief sunk -font $Fnt -bg wheat3 -anchor w -padx 20 -pady 5
+canvas	.cv          -height 500 -yscrollcommand ".sb set" -bg wheat
+
+package require BWidget
+
+frame  .hierarchy
+Tree .hierarchy.tree -bg wheat -xscrollcommand {.hierarchy.xsb set} -yscrollcommand {.hierarchy.ysb set}
+
+scrollbar .hierarchy.ysb -command {.hierarchy.tree yview} -bg wheat
+scrollbar .hierarchy.xsb -command {.hierarchy.tree xview} -bg wheat -orient horizontal
+
+#grid .tree .ysb -sticky nsew
+#grid .xsb -sticky ew
+
+#grid rowconfig    . 0 -weight 1
+#grid columnconfig . 0 -weight 1
+
+scrollbar .sb        -command ".cv yview" -bg wheat
+
+menubutton .menubar.file    -text File      -bg gold2 -font $Fnt -menu .menubar.file.cmds
+menubutton .menubar.compile -text Compile   -bg gold2 -font $Fnt -menu .menubar.compile.cmds
+menubutton .menubar.convert -text Generate  -bg gold2 -font $Fnt -menu .menubar.convert.cmds
+menubutton .menubar.utils   -text Utilities -bg gold2 -font $Fnt -menu .menubar.utils.cmds
+menubutton .menubar.fnts    -text Font      -bg gold2 -font $Fnt -menu .menubar.fnts.cmds
+
+menu	.menubar.file.cmds -font $Fnt -bg wheat3
+	.menubar.file.cmds add command -label "New project"   -command "new_project"
+	.menubar.file.cmds add command -label "Open project"  -command "open_project"
+	.menubar.file.cmds add command -label "Close project" -command "close_project"
+	.menubar.file.cmds add separator
+	.menubar.file.cmds add command -label "New entity"    -command "mk_template"
+	.menubar.file.cmds add command -label "New schematic" -command "do_schematic"
+	.menubar.file.cmds add command -label "New package"   -command "mk_pg_template"
+	.menubar.file.cmds add separator
+	.menubar.file.cmds add command -label "Edit vhdl file"   -command "find_vhdl_file edit 0"
+	.menubar.file.cmds add command -label "Delete vhdl file" -command "find_vhdl_file delete 0"
+	.menubar.file.cmds add separator
+	.menubar.file.cmds add command -label "Import vhdl file" -command {import_vhdl_file}
+	.menubar.file.cmds add command -label "Import vhdl dir"  -command {import_vhdl_dir}
+	.menubar.file.cmds add command -label "Import project cell"  -command {copy_cell}
+	.menubar.file.cmds add command -label "Import layout tree"   -command {import_layout_tree}
+	.menubar.file.cmds add command -label "Export project archive" -command {export_project}
+	.menubar.file.cmds add command -label "Import project archive" -command {import_project}
+	.menubar.file.cmds add separator
+	.menubar.file.cmds add command -label "Quit" -background red -foreground white -command "do_quit"
+
+menu	.menubar.compile.cmds -font $Fnt -bg wheat3
+	.menubar.compile.cmds add command -label "Vhdl file"      -command "find_vhdl_file compile 0"
+	.menubar.compile.cmds add command -label "New vhdl files" -command "compile_new"
+	.menubar.compile.cmds add command -label "All in library" -command "recompile_lib"
+
+menu	.menubar.convert.cmds -font $Fnt -bg wheat3
+	.menubar.convert.cmds add command -label "Command file"   -command "mk_cmdfile"
+	.menubar.convert.cmds add command -label "Reference file" -command "mk_reffile"
+
+menu	.menubar.utils.cmds -font $Fnt -bg wheat3
+	.menubar.utils.cmds add command -label "Create Quartus DE1 Project" -command "quartus_proj DE1"
+	.menubar.utils.cmds add command -label "Create Quartus DE2 Project" -command "quartus_proj DE2"
+	.menubar.utils.cmds add command -label "Run Quartus" -command "start_quartus"
+	.menubar.utils.cmds add command -label "Add bond_bar" -command "add_bondbar"
+	.menubar.utils.cmds add command -label "Add bond_leer" -command "add_bondleer"
+	.menubar.utils.cmds add command -label "Compare" -command "compare"
+	.menubar.utils.cmds add command -label "Reset project dir"  -command "restore_cwd"
+	.menubar.utils.cmds add command -label "Fix sealib" -command "fix_sealib"
+	.menubar.utils.cmds add cascade -label "VHDL editor" -menu .menubar.utils.cmds.editors
+
+menu	.menubar.utils.cmds.editors -font $Fnt -bg wheat3 -tearoff 0
+	.menubar.utils.cmds.editors add radiobutton -label "built-in" -variable Vhdl_editor -value built-in
+	.menubar.utils.cmds.editors add radiobutton -label "gedit" -variable Vhdl_editor -value gedit
+	.menubar.utils.cmds.editors add radiobutton -label "vim" -variable Vhdl_editor -value vim
+	.menubar.utils.cmds.editors add radiobutton -label "emacs" -variable Vhdl_editor -value emacs
+
+menu	.menubar.fnts.cmds -font $Fnt -bg wheat3
+	.menubar.fnts.cmds add command -label "Small"  -command {update_font $fnt_s}
+	.menubar.fnts.cmds add command -label "Normal" -command {update_font $fnt_n}
+	.menubar.fnts.cmds add command -label "Large"  -command {update_font $fnt_l}
+	.menubar.fnts.cmds add command -label "XLarge" -command {update_font $fnt_h}
+
+#
+#  make also a text_window that is not shown to manipulate text in.
+#
+text       .scratch
+
+#
+# popup menu's for the items in the main picture
+#
+
+# architecture (behavioral)
+menu .menua -tearoff 0 -font $Fnt -bg wheat
+     .menua add command -label "Edit"\
+                        -command {
+                                  set e_idx [lindex $Aarr($ChosenIndex) 1]
+                                  set fname [lindex $Aarr($ChosenIndex) 2]
+                                  set ename [lindex $Earr($e_idx) 0]
+                                  edit_wdw $fname 0 $ename
+                                 }
+     .menua add command -label "Recompile"\
+                        -command { recompile A $ChosenIndex }
+     .menua add command -label "Add Configuration"\
+                        -command {
+                                  set aname [lindex $Aarr($ChosenIndex) 0]
+                                  set e_idx [lindex $Aarr($ChosenIndex) 1]
+                                  set fname [lindex $Aarr($ChosenIndex) 2]
+                                  set ename [lindex $Earr($e_idx) 0]
+                                  mk_newconf $ename $aname $fname
+                                 }
+     .menua add separator
+     .menua add command -label "Delete" -background red -foreground white\
+                        -command { do_vdel A $ChosenIndex }
+
+# architecture (structural)
+menu .menua2 -tearoff 0 -font $Fnt -bg wheat
+     .menua2 add command -label "Edit"\
+                        -command {
+                                  set e_idx [lindex $Aarr($ChosenIndex) 1]
+                                  set fname [lindex $Aarr($ChosenIndex) 2]
+                                  set ename [lindex $Earr($e_idx) 0]
+                                  edit_wdw $fname 0 $ename
+                                 }
+     .menua2 add command -label "Recompile"\
+                        -command { recompile A $ChosenIndex }
+     .menua2 add command -label "Parse SLS"\
+                        -command {
+                                  set aname [lindex $Aarr($ChosenIndex) 0]
+                                  set e_idx [lindex $Aarr($ChosenIndex) 1]
+                                  set fname [lindex $Aarr($ChosenIndex) 2]
+                                  set ename [lindex $Earr($e_idx) 0]
+                                  upd_status_line "generating $fname $ename ..."
+                                  generate_sls $ename $ename $fname
+                                  set sls_file_name "$MyWd/SLS/$ename.sls"
+                                  compile_sls $ename $aname $sls_file_name
+                                 }
+     .menua2 add command -label "Add Configuration"\
+                        -command {
+                                  set aname [lindex $Aarr($ChosenIndex) 0]
+                                  set e_idx [lindex $Aarr($ChosenIndex) 1]
+                                  set fname [lindex $Aarr($ChosenIndex) 2]
+                                  set ename [lindex $Earr($e_idx) 0]
+                                  mk_newconf $ename $aname $fname
+                                 }
+     .menua2 add separator
+     .menua2 add command -label "Delete" -background red -foreground white\
+                        -command { do_vdel A $ChosenIndex }
+
+# component
+menu .menum -tearoff 0 -font $Fnt -bg wheat
+     .menum add command -label "Delete" -background red -foreground white\
+                        -command {
+                                  set cellname [lindex $Marr($ChosenIndex) 0]
+                                  file delete "$MyWd/components/$cellname.cmp"
+                                  read_infofile
+                                 }
+
+# schematic
+menu .menus -tearoff 0 -font $Fnt -bg wheat
+     .menus add command -label "Edit"\
+                        -command {
+                                  set cellname [lindex $Sarr($ChosenIndex) 0]
+                                  upd_status_line "running schematic editor ..."
+                                  do_schematic $cellname
+                                  upd_status_line ""
+                                 }
+     .menus add separator
+     .menus add command -label "Delete" -background red -foreground white\
+                        -command {
+                                  set cellname [lindex $Sarr($ChosenIndex) 0]
+                                  file delete "$MyWd/circuits/$cellname.cir"
+                                  read_infofile
+                                 }
+
+# entity
+menu .menue -tearoff 0 -font $Fnt -bg wheat
+     .menue add command -label "Edit"\
+                        -command {
+                                  set ename [lindex $Earr($ChosenIndex) 0]
+                                  set fname [lindex $Earr($ChosenIndex) 1]
+                                  edit_wdw $fname 0 $ename
+                                 }
+     .menue add command -label "Recompile"\
+                        -command { recompile E $ChosenIndex }
+     .menue add command -label "Make Component"\
+                        -command {
+                                  set ename [lindex $Earr($ChosenIndex) 0]
+                                  set fname [lindex $Earr($ChosenIndex) 1]
+                                  upd_status_line "generating component $ename ..."
+                                  mk_component $ename $fname
+                                  read_infofile
+                                  upd_status_line "component $ename made"
+                                 }
+     .menue add command -label "Add Architecture"\
+                        -command {
+                                  set ename [lindex $Earr($ChosenIndex) 0]
+                                  mk_newarch $ename
+                                 }
+     .menue add separator
+     .menue add command -label "Delete" -background red -foreground white\
+                        -command { do_vdel E $ChosenIndex }
+
+# configuration
+menu .menuc -tearoff 0 -font $Fnt -bg wheat
+     .menuc add command -label "Edit"\
+                        -command {
+                                  set ename [lindex $Carr($ChosenIndex) 1]
+                                  set fname [lindex $Carr($ChosenIndex) 3]
+                                  edit_wdw $fname 0 $ename
+                                 }
+     .menuc add command -label "Recompile"\
+                        -command { recompile C $ChosenIndex }
+     .menuc add command -label "Simulate"\
+                        -command {
+                                  set cname [lindex $Carr($ChosenIndex) 0]
+                                  do_vsim $SimLibName $cname
+                                 }
+     .menuc add command -label "Synthesize"\
+                        -command { set_synth_opt $ChosenIndex }
+     .menuc add separator
+     .menuc add command -label "Delete" -background red -foreground white\
+                        -command { do_vdel C $ChosenIndex }
+
+# package
+menu .menup -tearoff 0 -font $Fnt -bg wheat
+     .menup add command -label "Edit"\
+                        -command {
+                                  set fname [lindex $Parr($ChosenIndex) 1]
+                                  edit_wdw $fname 0 ""
+                                 }
+     .menup add command -label "Recompile"\
+                        -command { recompile P $ChosenIndex }
+     .menup add separator
+     .menup add command -label "Delete" -background red -foreground white\
+                        -command { do_vdel P $ChosenIndex }
+
+# circuit
+menu .menut -tearoff 0 -font $Fnt -bg wheat
+     .menut add command -label "Place & route"\
+                        -command {
+                                  set cellname [lindex $Tarr($ChosenIndex) 0]
+                                  create_layout $cellname
+                                 }
+     .menut add command -label "Run row placer"\
+                        -command {
+                                  set cellname [lindex $Tarr($ChosenIndex) 0]
+                                  run_placer_circuit $cellname
+                                 }
+     .menut add command -label "Simulate"\
+                        -command {
+                                  set cellname [lindex $Tarr($ChosenIndex) 0]
+                                  simulate_ntw "sls" "$cellname (circuit)" "$cellname.cmd"
+                                 }
+     .menut add separator
+     .menut add command -label "Delete" -background red -foreground white\
+                        -command {
+                                  set cellname [lindex $Tarr($ChosenIndex) 0]
+                                  delete_db_cell $cellname "circuit"
+                                 }
+
+# layout
+menu .menul -tearoff 0 -font $Fnt -bg wheat
+     .menul add command -label "Place & route"\
+                        -command {
+                                  set cellname [lindex $Larr($ChosenIndex) 0]
+                                  edit_layout $cellname
+                                 }
+     .menul add command -label "Run row placer"\
+                        -command {
+                                  set cellname [lindex $Larr($ChosenIndex) 0]
+                                  run_placer_layout $cellname
+                                 }
+     .menul add command -label "Simulate"\
+                        -command {
+                                  set cellname [lindex $Larr($ChosenIndex) 0]
+                                  simulate_ntw "sls" "$cellname (layout)" "$cellname.cmd"
+                                 }
+     .menul add command -label "Simulate as DAC"\
+                        -command {
+                                  set cellname [lindex $Larr($ChosenIndex) 0]
+                                  simulate_dac $cellname
+                                 }
+     .menul add command -label "Extract vhdl"\
+                        -command {
+                                  set cellname [lindex $Larr($ChosenIndex) 0]
+                                  extract_vhdl $cellname
+                                 }
+     .menul add command -label "Print"\
+                        -command {
+                                  set cellname [lindex $Larr($ChosenIndex) 0]
+                                  print_layout $cellname
+                                 }
+     .menul add command -label "Make ldm"\
+                        -command {
+                                  set cellname [lindex $Larr($ChosenIndex) 0]
+                                  make_ldm $cellname
+                                 }
+     .menul add command -label "Export tree"\
+                        -command {
+                                  set cellname [lindex $Larr($ChosenIndex) 0]
+                                  export_layout_tree $cellname
+                                 }
+     .menul add separator
+     .menul add command -label "Delete" -background red -foreground white\
+                        -command {
+                                  set cellname [lindex $Larr($ChosenIndex) 0]
+                                  delete_db_cell $cellname "layout"
+                                 }
+
+pack .menubar       -side top    -fill x
+pack .ifr.db        -side left   -fill x -expand 1
+pack .ifr           -side top    -fill x
+pack .status_line   -side bottom -fill x
+pack .hierarchy     -side left  -fill both -expand 1
+pack .hierarchy.ysb       -side right  -fill y
+pack .hierarchy.xsb       -side bottom  -fill x
+pack .hierarchy.tree      -fill both -expand 1
+pack .cv            -side left   -fill both -expand 1
+pack .sb            -side right  -fill y
+pack .menubar.file  -side left
+pack .menubar.compile -side left
+pack .menubar.convert -side left
+pack .menubar.utils -side left
+pack .menubar.fnts  -side left
+
+# some bindings to give a correct working of the terminals in zaal PC2
+bind Text <Control-c> {tk_textCopy %W}
+bind Text <Control-v> {tk_textPaste %W}
+
+.hierarchy.tree bindText <ButtonPress-1> { canvas_focus }
+
+wm title . $ProgName
+wm protocol . WM_DELETE_WINDOW do_quit
+
+determine_cv_width
+
+if {$argc > 0 && [lindex $argv 0] != "@"} {
+   set proj [lindex $argv 0]
+   set ok 1
+} else {
+   if {$NrProjects > 1} {
+      set proj [ask_open_project]
+   } else {
+      set proj $MostRecentProj
+   }
+   set ok 0
+}
+
+if {[file isdir $proj]} {
+   set ok [open_project $proj]
+} elseif {$ok || $proj != ""} {
+   if {$ok} {
+      set ok 0
+      set msg "Given argument"
+   } else {
+      set msg "Project path"
+   }
+   df_mess_dialog "INSTRUCTION:
+###############################################################
+# $msg '$proj' is not a directory?
+###############################################################"
+}
+if {!$ok} { set_project disabled }
+
+set GWTF_VHDL_EDITOR ""
+if {[info exists env(GWTF_VHDL_EDITOR)]} {
+   set GWTF_VHDL_EDITOR $env(GWTF_VHDL_EDITOR)
+   df_mess_dialog "NOTE:
+You have set environment variable GWTF_VHDL_EDITOR.
+This will overrule the editor that you select with
+Utilities -> VHDL editor"
+}

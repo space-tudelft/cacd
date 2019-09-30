@@ -1,0 +1,327 @@
+\selectlanguage{dutch}
+\title{Handleiding SLS}
+\maketitle
+\label{mansls}
+\index{sls|(bold}
+\section{Inleiding}
+
+SLS is een afkorting van Switch Level Simulator en is een simulator welke 
+gebruikt kan worden voor het simuleren van mos-circuits ter bepaling van
+het logische gedrag en timing eigenschappen. De simulator modelleert de
+mos-transistoren door geaarde capaciteiten en geschakelde weerstanden. Alle
+knooppunten in het netwerk krijgen na simulatie een logische toestand 0, 1 of
+X (ongedefinieerd) toegewezen.\\
+Het SLS-pakket omvat 2 programma's: \tool{csls} en \tool{sls}. \tool{csls} wordt
+gebruikt om een netwerk aan de circuit-database toe te voegen, \tool{sls} is 
+de eigenlijke simulator. Het gebruik van beide programma's wordt hieronder
+toegelicht.
+\index{csls|(bold}
+\section{Het gebruik van \tool{csls} en de sls-taal}
+Met \tool{csls} wordt een netwerk aan de circuit-database als volgt toegevoegd:
+\type{\tool{csls} $<$filenaam$>$}
+Het netwerk is in de database in een aantal binaire files opgeslagen.
+(Om van dit interne database-formaat weer een netwerk sls-beschrijving
+te krijgen moet men het programma \tool{xsls} gebruiken.)
+De $<$filenaam$>$ is een tekstfile waarin het toe te voegen netwerk in de
+sls-taal beschreven staat. De $<$filenaam$>$ heeft bij voorkeur de naam van
+het netwerk met de extensie .sls. De beschrijving bestaat uit twee gedeelten. Eerst \index{externe netwerkdeclaratie}
+komt er een declaratie van externe netwerken. Dit zijn netwerken die reeds in
+de circuit-database aanwezig zijn en (eventueel) in het nieuwe netwerk als
+subcircuit aangeroepen wordt. Het tweede deel bevat de eigenlijke 
+netwerkbeschrijving.
+De externe declaratie is verplicht. Alle netwerken die in het nieuwe netwerk
+gebruikt worden moeten als extern netwerk gedeclareerd zijn.
+\paragraph{Externe netwerkdeclaratie} De externe netwerkdeclaratie begint met 
+de sleutelwoorden {\bf extern network}, gevolgd door de naam van het externe 
+netwerk. Dan tussen ronde haakjes het sleutelwoord {\bf terminal} en alle 
+externe aansluitingen gescheiden door komma's. 
+De volgorde van deze aansluitingen hoeft niet gelijk
+te zijn aan de volgorde zoals deze was bij definitie van het netwerk. 
+Wel legt het de volgorde vast van de aansluitingen bij de aanroep van het 
+netwerk in het nieuw te beschrijven netwerk. Alle externe netwerkdeclaraties 
+van de bibliotheekcellen worden bij het maken van een project 
+met \tool{mkopr} \index{mkopr} in een file \fname{oplib.ext} in
+de project-subdirectory \fname{sls\_prototypes} gezet.
+Deze file kan als header (d.m.v.\ een \fname{\#include} statement)
+in een sls-file worden opgenomen.
+\paragraph{Netwerkbeschrijving} De netwerkbeschrijving begint met het 
+sleutelwoord {\bf network} gevolgd door de naam van het netwerk. Deze naam
+mag niet beginnen met een hoofdletter. Dit om verwarring te voorkomen
+met namen van netwerken die ontstaan uit extractie. 
+Achter de naam van het netwerk
+komen tussen ronde haakjes het sleutelwoord {\bf terminal} en alle externe 
+aansluitingen gescheiden door komma's. 
+De laatste twee aansluitingen moeten altijd vss, vdd zijn.
+Dan volgt een regel met accolade-open (\{), gevolgd door een of meerdere 
+regels met alle interne en externe subnetwerken waaruit het netwerk 
+is opgebouwd,
+afgesloten met een punt-komma (;). De beschrijving eindigt met een 
+accolade-sluiten (\}).\\
+De externe subnetwerken mogen vooraf gegaan worden met tussen accolades een
+specifieke naam voor dat subnetwerk. Dit kan handig zijn indien men onderscheid
+wil maken tussen subnetwerken die in de beschrijving meerdere keren voorkomen.
+Commentaar mag op elke plaats worden toegevoegd en moet staan tussen /* en */.\\
+De interne netwerken die gebruikt kunnen worden zijn:
+
+\begin{tabular}{lll}
+Naam & parameters & toelichting\\
+\\
+cap & {\it waarde} (node1,node2) & Capaciteit ter grootte {\it waarde} in Farad\\ \index{cap}
+res & {\it waarde} (node1,node2) & Weerstand ter grootte {\it waarde} in $\Omega$\\ \index{res}
+nenh & w={\it breedte} l={\it lengte} (gate,drain,source) & enhancement nmos transistor\\ \index{nenh}
+&                                of   (gate,source,drain) & De breedte en lengte parameters\\
+&& zijn in meters en optioneel\\
+penh & w={\it breedte} l={\it lengte} (gate,drain,source) & enhancement pmos transistor\\ \index{penh}
+&                                of   (gate,source,drain) & De breedte en lengte parameters\\
+&& zijn in meters en optioneel\\
+ndep & w={\it breedte} l={\it lengte} (gate,drain,source) & depletion nmos transistor\\
+&                                of   (gate,source,drain) & De breedte en lengte parameters\\
+&& zijn in meters en optioneel\\
+net & \{node1,node2\} & kortsluiting tussen node1 en node2\\\index{net}
+\\
+\end{tabular} 
+
+Naast deze ingebouwde interne netwerken kunnen een aantal logische functies
+als intern netwerk worden aangeroepen.
+Deze functies dienen vooraf gegaan te worden door het {\bf @} karakter.
+De volgende logische functies zijn mogelijk:\\
+\begin{tabular}{lll}
+\\
+Naam & parameters & toelichting\\
+\\
+@ invert & (A, Y) & invertor met ingang A en uitgang Y\\
+@ nand & ($A_1, A_2,...A_n, Y$) & n-input nand met uitgang Y\\
+@ nor & ($A_1, A_2,...A_n, Y$) & n-input nor met uitgang Y\\
+@ and & ($A_1, A_2,...A_n, Y$) & n-input and met uitgang Y\\
+@ or & ($A_1, A_2,...A_n, Y$) & n-input or met uitgang Y\\
+@ exor & ($A_1, A_2,...A_n, Y$) & n-input exclusive or met uitgang Y\\
+\end{tabular}
+\\
+\\
+\\
+{\bf NB:} De terminal- , netwerk-namen moeten voldoen aan
+de volgende voorwaarden:
+\begin{itemize}
+\item
+Een naam moet beginnen met een {\it letter} en mag verder alleen uit
+{\it letters}, {\it cijfers} en {\it underscores (\_)} bestaan.
+\item
+De lengte van een naam mag niet groter zijn dan 14 karakters.
+\end{itemize}
+\clearpage
+
+\paragraph{Voorbeelden} Hieronder volgend twee voorbeelden van netwerkbeschrijvingen
+in de sls-taal.\\
+
+Voorbeeld 1 :\\
+\\
+
+\begin{figure}[thb]
+\centerline{\callpsfig{no210.cir.eps}{width=0.35\textwidth}}
+\caption{\label{nor} Transistornetwerk van een 2-input nor}
+\end{figure}
+
+\begin{verbatim}
+
+/* Netwerkbeschrijving van een 2-input nor nor2
+   Dit voorbeeld heeft geen externe netwerk aanroep
+   omdat alleen gebruik gemaakt wordt van interne netwerken */
+
+network nor2 (terminal A, B, Y, vss, vdd)
+{
+    nenh l=1.6u w=23.2u (A, vss, Y);
+    nenh l=1.6u w=23.2u (B, vss, Y);
+    penh l=1.6u w=29.6u (B, 1, Y);
+    penh l=1.6u w=29.6u (A, 1, vdd); 
+}
+
+\end{verbatim}
+
+\clearpage
+
+Voorbeeld 2 :\\
+\\
+
+\begin{figure}[thb]
+\centerline{\callpsfig{latch.eps}{width=0.5\textwidth}}
+\caption{\label{latch} SR-latch met 1 pF belasting aan beide uitgangen}
+\end{figure}
+
+
+\begin{verbatim}
+
+/* Netwerkbeschrijving van een SR-latch met 1 pF belasting 
+   aan beide uitgangen */
+
+extern network nor2 (terminal A, B, Y, vss, vdd)
+
+network sr_latch (terminal S, R, Y, YN, vss, vdd)
+{
+    {nor1} nor2 (S, Y, YN, vss, vdd);
+    {nor2} nor2 (R, YN, Y, vss, vdd);
+    cap 1p (Y, vss);
+    cap 1p (YN, vdd);
+}
+\end{verbatim}
+\index{csls|)}
+\clearpage
+
+\section{Gebruik van \tool{sls} en de commandfile}
+
+De simulator \tool{sls} kan zowel met \tool{simeye} opgestart worden als vanaf
+de commandline. De aanroep van de commandline is als volgt:
+\type{\tool{sls} $<$netwerknaam$>$ $<$commandfile$>$}
+$<$netwerknaam$>$ is de naam van het te simuleren netwerk, $<$commandfile$>$ is de stimuli-file
+met bij voorkeur de extensie .cmd.\\
+Voor het gebruik van \tool{sls} in \tool{simeye} wordt verwezen naar de handleiding van
+\tool{simeye}.\\
+In de commandfile worden de stimuli beschreven van de inputsignalen. Tevens kunnen
+een aantal opties meegegeven worden voor zowel \tool{sls} als voor \tool{spice}. Dit laatste \index{spice}
+kan belangrijk zijn indien het netwerk (b.v.\ vanuit \tool{simeye})
+met \tool{spice} gesimuleerd wordt.\\
+De structuur van de commandfile is als volgt: \index{commandfile}
+\begin{quote}
+{\tt
+{\it inputstimuli en sls-opties}\\
+/$\ast$\\
+$\ast$\%\\
+{\it Transi\"ent-informatie voor spice}\\
+$\ast$\%\\
+{\it Directe spice-commando's}\\
+$\ast$\%\\
+$\ast$/\\
+}
+\end{quote}
+
+\paragraph{Inputstimuli}
+Alle inputsignalen worden gezet met het set-commando:
+\begin{quote}
+\begin{verbatim}
+set A = (l*2 h*2)*2 l*~
+\end{verbatim}
+\end{quote}
+Inputsignaal A is nu twee tijdstappen laag, 2 tijdstappen hoog, dan weer tweemaal laag en
+tweemaal hoog, en dan voor altijd laag.
+\paragraph{Sls-opties}
+Hieronder volgen een paar van de belangrijkste opties. Voor overige opties en instellingen
+wordt verwezen naar de "Switch Level Simulator User's Manual"
+\index{commandfile!opties}
+\begin{itemize}
+\item
+option level = 1/2/3 (default is 1)
+\begin{description}
+\item[-] level = 1 : Puur logische simulatie zonder de circuitparameters te betrekken.
+\item[-] level = 2 : Logische simulatie gebaseerd op circuitparameters zoals de 
+transistor-afmetingen, weerstandwaarden en capaciteitwaarden.
+\item[-] level = 3 : Logische simulatie en bepaling van vertragingstijden gebaseerd 
+op circuitparameters zoals de transistor-afmetingen, weerstanden en capaciteiten.
+\end{description}
+\item
+option simperiod = n (default n is oneindig)\\
+Specificeert het aantal simulatietijdstappen.
+\item
+option sigunit = getal (default getal is 1)\\
+Specificeert de duur van een tijdstap in seconden.
+\item
+option outunit = macht\_van\_tien (default macht\_van\_tien is macht van 10 het dichtst bij sigunit. Macht\_van\_tien wordt aangeduid met de 
+achtervoegsels f,p,n,u,m,k,M,G.
+Bijvoorbeeld: 10p, 1u.\\
+Specificeert de tijdseenheid welke gebruikt wordt bij de uitvoer.
+\item
+option outacc = macht\_van\_tien (default macht\_van\_tien is outunit)\\
+Specificeert de nauwkeurigheid van de simulatie-uitvoer (outacc $<=$ outunit).
+\item
+option sta\_file is = on\\
+Deze regel specificeert of de file {\it $<$cel$>$.sta} moet worden ingelezen.
+Deze file wordt bij de automatische circuitgeneratie vanuit een toestandsdiagram door \tool{kissis} aangemaakt en bevat de definitie van de \index{kissis}
+toestandsvariabele State.
+\item
+option initialize (full) random = on\\
+Soms is het nodig een schakeling te initialiseren in een bepaalde begintoestand,
+b.v.\ als flipflops zonder reset gebruikt worden.
+Dit voorkomt dat sommige knooppunten ongedefinieerd (X) blijven.
+Met 'full random' wordt de schakeling iedere keer anders ge{\ii}nitialiseerd.
+\item
+define XXXX (XXXX is een naam voor een nieuw te defini\"eren variabele)\\
+Met dit commando kunnen nieuwe variabelen gedefinieerd worden die
+een combinatie zijn van ingangs- of uitgangssignalen. Dit commando
+wordt o.a.\ gebruikt bij de definitie van de toestandsvariabele State
+bij de automatische circuitgeneratie vanuit een toestandsdiagram
+ door \tool{kissis}. State is dan een combinatie van alle flipflop-uitgangen
+die de toestand coderen.
+\item
+print A,b,..  (A,b,.. zijn inputsignalen en/of outputsignalen)\\
+Deze regel specificeert welke inputsignalen en/of outputsignalen 
+in de sls-uitvoer komen. Dus ook welke signalen bij \tool{simeye} 
+op het scherm getekend gaan worden.
+\item \index{spice|(}
+plot A,b,.. (A,b,.. zijn inputsignalen en/of outputsignalen)\\
+Deze regel specificeert welke inputsignalen en/of outputsignalen 
+in de spice-uitvoer komen. Dus ook welke signalen bij \tool{simeye} 
+op het scherm getekend gaan worden.
+\end{itemize}
+\paragraph{Transi\"ent-informatie voor spice}
+\index{commandfile!spice}
+In dit gedeelte kunnen een aantal transi\"entparameters voor \tool{spice} gezet worden:\\
+\\
+\begin{tabular}{lll}
+tstart & getal & starttijd voor de output van de transi\"ent-analyse in seconden \\
+tstep & getal & stapgrootte van de transi\"ent-analyse in seconden\\
+tfall & getal & daaltijd van de inputsignalen in seconden\\
+trise & getal & stijgtijd van de inputsignalen in seconden\\
+uic && "use initial conditions"\\
+vhigh & getal & spanningsniveau van het hoogsignaal in Volts\\
+vlow  & getal & spanningsniveau van het laagsignaal in Volts\\
+\end{tabular}
+
+\paragraph{Directe spice-commando's}
+In dit gedeelte kunnen commando's worden opgegeven die letterlijk aan de spice-invoerfile
+worden toegevoegd zoals:
+\begin{quote}
+\begin{verbatim}
+.options cptime=100
+.ic v("3")=0 v("out")=5
+\end{verbatim}
+\end{quote}
+Voor informatie over deze en andere mogelijke commando's wordt u verwezen naar de
+desbetreffende spice-handleidingen.\\
+\\
+\\
+{\bf Voorbeeld commandfile sr\_latch.cmd} :
+\index{commandfile!voorbeeld}
+\begin{verbatim}
+set S = l*2 h*2 l*6 h*2 l*8 
+set R = l*6 h*2 l*6 h*2 l*2
+set vss = l*~
+set vdd = h*~
+print S ,R, Y, YN
+plot  S, R, Y, YN
+option level = 3
+option sigunit = 1e-8
+option simperiod = 20
+option outacc = 10n
+/*
+*%
+tfall  0.5n
+trise  0.5n
+tstep  0.1n
+*%
+.options cptime = 500
+*%
+*/
+\end{verbatim}
+\index{spice|)}
+\index{sls|)}
+\cleardoublepage
+
+
+
+
+
+
+
+
+
+
+
+

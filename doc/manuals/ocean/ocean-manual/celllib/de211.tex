@@ -1,0 +1,75 @@
+\subsection{de211}
+
+Function: 2-to-4 decoder/demultiplexer
+
+Terminals: (A, B, Y0, Y1, Y2, Y3, vss, vdd)
+
+
+IEC-symbol:
+%figuur de211.iec.eps
+\begin{figure}[bth]
+\callpsfig{de211.iec.eps}{width=.31\textwidth}
+\end{figure}
+
+Function table:
+\begin{table}[bth]
+\begin{tabular}{|cc||cccc|}
+\hline
+B	&A	&Y0	&Y1	&Y2	&Y3\\
+\hline
+L	&L	&H	&L	&L	&L\\
+L	&H	&L	&H	&L	&L\\
+H	&L	&L	&L	&H	&L\\
+H	&H	&L	&L	&L	&H\\	
+\hline
+\end{tabular}
+\vspace{1cm}
+
+
+Timing parameters:\\
+
+\begin{tabular}{|c|cc|ccc|c|}
+\hline
+Parameter               &From            &To   &Min	&Typ	&Max    &Unit\\
+\hline
+T$_{PLH}$               &A     		&Y0,Y2  &0.23	&0.34	&0.51    &ns\\
+T$_{PHL}$               &A     		&Y0,Y2  &0.17	&0.25	&0.38    &ns\\
+T$_{PLH}$               &A     		&Y1,Y3  &0.41	&0.62	&0.93    &ns\\
+T$_{PHL}$               &A     		&Y1,Y3  &0.36	&0.54	&0.81    &ns\\
+T$_{PLH}$               &B	    	&Y0,Y1  &0.20	&0.30	&0.45    &ns\\
+T$_{PHL}$               &B	    	&Y0,Y1  &0.15	&0.22	&0.33    &ns\\
+T$_{PLH}$               &B	    	&Y2,Y3  &0.38	&0.57	&0.87    &ns\\
+T$_{PHL}$               &B	    	&Y2,Y3  &0.34	&0.51	&0.76    &ns\\
+\hline
+$\Delta$T$_{PLH}$       &any           &any   &-	&-	&1.8    &ns/pF\\
+$\Delta$T$_{PHL}$       &any           &any   &-	&-	&0.8    &ns/pF\\
+\hline
+C$_{in}$                &A   		&vss    &-	&0.36	&0.54   &pF\\
+C$_{in}$                &B             	&vss    &-	&0.30	&0.45   &pF\\
+\hline
+\end{tabular}
+\end{table}
+
+Equivalent chip area: 12
+
+Fanout: 2.4pF
+
+%figuur de211.cir.eps
+\begin{figure}[bth]
+circuit:\\
+
+\callpsfig{de211.cir.eps}{height=3in}
+\end{figure}
+
+
+
+%figuur de211.lay.eps
+\begin{figure}[bth]
+layout:\\
+
+\callpsfig{de211.lay.eps}{height=5in}
+\end{figure}
+
+
+\clearpage
+

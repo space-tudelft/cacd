@@ -1,0 +1,74 @@
+\subsubsection{na310}
+
+Functie: 3-input nand
+
+Terminals: (A, B, C, Y, vss, vdd)
+
+
+IEC-symbool:
+%figuur na310.iec.eps
+\begin{figure}[bth]
+\callpsfig{na310.iec.eps}{width=.25\textwidth}
+\end{figure}
+
+\begin{minipage}[t]{0.3\textwidth}
+Waarheidstabel:\\
+
+\begin{tabular}{|c|c|c||c|}
+\hline
+A	&B	&C	&Y\\
+\hline
+-	&-	&L	&H\\
+-	&L	&-	&H\\
+L	&-	&-	&H\\
+H	&H	&H	&L\\
+\hline
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.6\textwidth}
+Timing parameters:\\
+
+\begin{tabular}{|c|cc|ccc|c|}
+\hline
+Parameter               &From            &To	&Min	&Typ	&Max    &Unit\\
+\hline
+T$_{PLH}$               &A     		&Y      &0.06	&0.37	&0.61    &ns\\
+T$_{PHL}$               &A    		&Y      &0.26	&0.39	&0.77    &ns\\
+T$_{PLH}$               &B     		&Y      &0.06	&0.35	&0.58    &ns\\
+T$_{PHL}$               &B    		&Y      &0.27	&0.40	&0.77    &ns\\
+T$_{PLH}$               &C     		&Y      &0.06	&0.21	&0.37    &ns\\
+T$_{PHL}$               &C    		&Y      &0.26	&0.39	&0.77    &ns\\
+\hline
+$\Delta$T$_{PLH}$       &any          	&Y      &-	&-	&0.9    &ns/pF\\
+$\Delta$T$_{PHL}$       &any           	&Y      &-	&-	&1.4    &ns/pF\\
+\hline
+C$_{in}$                &any	    	&vss    &-	&0.12   &0.18	&pF\\
+\hline
+\end{tabular}
+\end{minipage}
+\\
+
+Equivalent chip oppervlak: 4
+
+Fanout: 2.5 pF
+
+\makebox[0.98\textwidth]{
+%figuur na310.cir.eps
+\begin{minipage}[t]{0.5\textwidth}{
+Circuit:\\
+\\
+{\callpsfig{na310.cir.eps}{height=2.5in}}
+}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\textwidth}{
+%figuur na310.lay.eps
+Layout:\\
+\\
+
+{\callpsfig{na310.lay.eps}{height=2.5in}}
+}
+\end{minipage}
+}
+\clearpage

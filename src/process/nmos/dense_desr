@@ -1,0 +1,16 @@
+# process nmos
+nbr_checkmasks: 13
+nbr_diff_aa: 1
+Well_Substr_Conmask NONE
+active_area: nd&np&!nb&!nx 2
+np	- np		= 2
+np	- nx		= 1
+np	- nb&nd		= 1
+np	- nd&!nx&!nb	= 1
+nd	- nd		= 2
+nd	- nb&np		= 1
+nm	- nm		= 2
+ni	- np&nd&!nb&!nx = 1
+nb	- np&nd&!nb&!nx	= 1
+nx	- nc&nd		= 1
+nc   	- np&nd&!nb&!nx = 2

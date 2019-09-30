@@ -1,0 +1,60 @@
+#-----------------------------------------------------------------------------
+#
+#                       M A S K D A T A   I N F O
+#
+#       Layer fields (2):       field  1: layer name
+#                               field  2: layer type
+#                                         type = 0: normal layer
+#                                         type = 1: interconnect layer
+#                                                   (terminals/labels may be
+#                                                    defined for this layer).
+#                                         type = 2: symbolic layer
+#
+#       Pattern-Generate (2):   field  3: job number
+#       (Only used by           field  4: mask type
+#        PG-tape programs)                type = 0: negative
+#                                         type = 1: positive
+#
+#       CMask Terminals (2):    field  5: color number
+#       (Obsolete)              field  6: fill style
+#
+#       (Sea)Dali (2):          field  7: color number
+#                                         0=black, 1=red, 2=green,
+#                                         3=yellow, 4=blue, 5=violet,
+#                                         6=aqua, 7=white
+#                               field  8: fill style
+#                                         0=hashed, 1=solid, 2=hollow
+#                                         3,4,5 = 12,25,50% hash+outline
+#                                         6,7,8 = idem, no outline
+#
+#       Plotter (2):            field  9: pen number
+#       (Obsolete)                        1=black, 2=red, 3=yellow,
+#                                         4=green, 5=brown, 6=violet,
+#                                         7=blue, 8=aqua
+#                               field 10: fill style
+#
+"dimes01" "bipolar dimes 01 process"
+#---------------------------------------------+---------------------
+# Layer     | PG-Tape | CMask | Dali  | Plot  | Comment
+#-----------+---------+-------+-------+-------+---------------------
+# name      | job     | color | color | pen   |
+# |    type | |  type | | fill| | fill| | fill|
+# |    |    | |  |    | |  |  | |  |  | |  |  |
+# 1    2    | 3  4    | 5  6  | 7  8  | 9  10 |
+#-v----v----+-v--v----+-v--v--+-v--v--+-v--v--+---------------------
+bn     0      1  0      5  0    5  0    5  0   "buried layer"
+dp     0      2  0      2  1    2  1    2  1   "isolation well"
+dn     0      3  0      5  2    5  2    5  0   "collector plug"
+sp     0      4  0      6  0    6  2    6  0   "OPT: extrinsic base bs npn"
+sn     0      5  0      1  2    1  2    1  0   "OPT: emitter bs npn"
+bs     0      6  0      3  0    3  0    3  0   "OPT: intrinsic base bs npn"
+bi     0      7  0      3  0    3  0    3  0   "OPT: intrinsic base bi npn"
+ci     0      8  0      3  0    3  0    3  0   "OPT: channel p-channel fet"
+cw     0      9  0      7  0    7  0    7  0   "OPT: only for proc.techn."
+wp     0     10  0      6  0    6  2    6  0   "extrinsic base b1 & bw npn"
+bw     0     11  0      3  0    3  0    3  0   "intrinsic base BW-npn"
+wn     0     12  0      1  2    1  2    1  0   "washed emitter"
+co     0     13  0      7  1    7  1    7  0   "first contact window"
+ic     1     14  0      4  1    4  1    4  0   "first interconnect"
+ct     0     15  0      7  2    7  2    7  0   "second contact window"
+in     1     16  0      1  1    1  1    8  0   "second interconnect "

@@ -1,0 +1,386 @@
+% \documentclass[11pt]{article}
+% \usepackage{a4wide,times,latexsym,calc,ifthen,float}
+% \usepackage{epsfig}
+% \usepackage{fancyvrb}
+% \usepackage[dvips,colorlinks]{hyperref}
+% \setlength{\parindent}{0cm}
+% \setlength{\parskip}{1.5ex}
+%\newcommand{\io}[1]{{\Verb+#1+}}
+% \newcommand{\io}[1]{{\ttfamily #1}}
+% \newcommand{\CACDTOP}[1]{\io{\$ICDPATH/share/#1}}
+% \newcommand{\manualpage}[1]{\io{icdman\ #1}}
+% \input{list.sty}
+% \begin{document}
+
+\chapter{ny9t Example for Capacitive Coupling via the Substrate}
+\section{Introduction}
+\label{SEintro}
+In this tutorial, we will be studying the ny9t example.
+We will see that the capacitive coupling from metal through the substrate
+to other metal can be a relevant coupling effect, and we will see
+how this effect can be modelled using Space.
+\\[2 ex]
+
+The example is a calibration/de-embedding structure for MOSFET device
+characterization. It is accompanied by measurements. We will see
+that we can match the measurements fairly accurately if the extraction
+takes the combined effect of capacitive coupling of interconnect into
+the substrate and resistive coupling through the substrate into account.
+The layout looks as follows (such a figure can be printed using \io{getepslay}, see
+\manualpage{getepslay}):
+
+\begin{figure}[h]
+\centerline{\epsfig{figure=ny9t/ny9t.eps, width=12cm}}
+\end{figure}
+
+We will study the $Y_{12}$ between port \io{TA} and \io{TB}. The ports
+\io{TCx}, where x is a number, impose a ground-signal-ground structure. The
+black pad with port (terminal) \io{TC1} is connected to the
+substrate, the others are galvanically connected to \io{TC1} but
+are floating above the substrate. Ports \io{TA1, TA2, TB1, TB2}
+are connected to \io{TA} or \io{TB} respectively.
+\\[2 ex]
+
+The basic circuit topology is shown below.
+\newpage
+
+\begin{figure}[h]
+\centerline{\epsfig{figure=ny9t/circuit_a.eps, width=9cm}}
+\end{figure}
+
+Nodes $A$, $B$ and $C$ are
+the terminals (ports) in the layout. In the layout there are multiple
+terminals with a number attached to the name, they are connected.
+Nodes $A$ and $B$ have a capacitance to nodes $1$ and $2$
+respectively, these nodes are physically located on top of the
+substrate underneath the metal traces. If distributed effects are
+ignored, the coupling areas from metal to substrate become single
+nodes. Of course, that is only an approximation, the extractor can
+extract the distributed network. With a single node for $1$ and $2$,
+the substrate resistance network is connected to
+nodes $1$, $2$ and $C$, while $C$ is also grounded. There are
+interconnect capacitances between $A$ and $B$, between $A$ and $C$ and
+between $B$ and $C$. In the simulation we will connect voltage sources
+to nodes $A$ and $B$. $V_{in}$ is the input, and we will measure the
+current through $V_{load}$. The ratio between load current and input
+voltage is the $Y_{ab}$ parameter.
+
+Since the $SUBSTR$ node is floating, it can be eliminated from the
+circuit w/o any accuracy penalty. Since $C$ is grounded, we can also
+remove the capacitors from $A$ and $B$ to $C$. Then, the resulting
+equivalent circuit can be redrawn as follows:
+
+\begin{figure}[h]
+\centerline{\epsfig{figure=ny9t/circuit_b.eps, width=9cm}}
+\end{figure}
+
+In this circuit, $C_{A1}$ and $C_{B2}$ will have values around $10
+fF$, $C_{AB}$ will be much smaller, around $30 aF$.  The resistors to
+ground will have values around $50 \Omega$ and $R_{12}$ will have a
+value around $200 \Omega$.
+
+\section{Files}
+This tutorial is located in the directory \CACDTOP{demo/ny9t}.
+Initially, it contains the following files:
+\begin{filelist}
+\item[meas.dat] Contains the measurement data.
+\item[ny9t.gds] The layout of the ny9t design.
+\item[stim.spc] Contains the sources and control commands for Spice.
+See Section \ref{SEscript}.
+\item[commands.gnp] Contains the commands for gnuplot to generate the
+plots.
+\item[tech.s] The technology file for Space. See Section
+\ref{SEtech}.
+\item[param.p] The parameter settings file for Space. See Section
+\ref{SEparam}.
+\item[script.sh] A file containing the commands for executing all
+steps of the demo in sequence. See Section \ref{SEscript}.
+\end{filelist}
+\section{Technology File}
+\label{SEtech}
+The technology file that we will use is the file \io{tech.s}, see below.
+#<file ny9t/tech.s>
+#<listfile>
+Please note that the masks to be used in this file have already been defined
+in the \io{maskdata} file in the process library \CACDTOP{lib/process}.
+In this example, we will only use the metal-1 (\io{cmf}) and
+contact-to-substrate (\io{cca}) masks.
+We will now dissect this file, section by section.
+The first section is the colors section:
+#<section colors>
+It specifies that the metal-1 mask \io{cmf}
+is to be shown in blue and that the cca mask is to be shown in black.
+%
+Then comes the units section.
+#<section units>
+This section specifies the units to be used in the rest of the file.
+It specifies that vertical dimensions are in $\mu m$ and contact
+resistances in $\Omega / \mu m^2$.
+%
+The next section is the conductors section:
+#<section conductors>
+Line #<line conductors + 2> specifies that the conductor
+name \io{cond\_mf} is defined by the boolean condition
+\io{cmf} and that mask \io{cmf} represents the actual
+conductor. The metal-1 sheet resistance is $60 m \Omega / \Box$.
+%
+The subsequent section defines the contacts:
+#<section contacts>
+On line #<line contacts + 2> the contact of metal-1
+to the substrate is defined.
+It is a normal contact definition, but the \io{@sub} indicates
+that the contact is to substrate. The contact resistance is
+$100 \Omega / \mu m^2$, see line #<line units + 1>.
+Subsequently, the \io{capacitances} section starts the interconnect capacitances.
+#<section capacitances>
+It specifies the capacitance values (as a function of the geometry)
+for 2.5D capacitance extraction, but these values are not used in our
+example, since we will use the 3D BEM method for capacitance extraction.
+Nevertheless, the \io{@sub} in these lines defines that the
+metal-1 capacitance couples to the substrate, instead of ideal ground (as
+would be the case when
+\io{gnd} would have been used instead of \io{@sub}).
+Thus, although the specified values are not used,
+we can not remove these lines (although we could remove the
+metal sidewall to metal sidewall capacitance on lines
+#<line capacitances + 5> $...$ #<line capacitances + 7>).
+%
+Subsequently, the 3D data for the interconnect is started on
+line #<line vdimensions>.
+#<section vdimensions>
+Line #<line vdimensions + 2> section specifies
+a very simple boolean condition for the metal-1 height and thickness,
+being $0.95 \mu m$ and $0.6 \mu m$, respectively. The \io{vdimension}
+units were specified on line #<line units + 1>.
+Subsequently, the \io{dielectrics} section
+specifies the dielectric properties for the interconnect
+capacitance extraction.
+#<section dielectrics>
+Line #<line dielectrics + 2> states that a layer with
+$\epsilon_r = 3.9$ begins on $z = 0$, i.e. on the silicon surface.
+The next line states that
+a layer with
+$\epsilon_r = 1.0$ begins on $z = 3.5 \mu m$,
+implying that the SiO2 actually ends here.
+Air extends to infinity.
+The strings \io{SiO2}
+and \io{air} are just arbitrary names only used for documentation
+and messages.
+The final section is the sublayers section.
+#<section sublayers>
+It works similar to the dielectrics section, but here the conductivity
+in $S/m$ or $1/\Omega m$ of the substrate layers is specified, where
+the top of each layer is given with the silicon surface again at $z=0$,
+and here $z$ being negative.
+\section{Parameter File}
+\label{SEparam}
+The next file controlling the extraction is the parameter file
+\io{param.p}.
+We will only be looking at the following part of this file:
+#<file ny9t/param.p>
+#<section capsub>
+Here, line #<line cap3d> specifies the mode for 3D boundary element
+extraction. It is the \io{0g} mode, meaning $0th$ order
+Galerkin mode, see
+% \cite{space manual}.
+the Space User's Manual.
+The next line specifies the maximum
+area in $\mu m^2$ for the BEM panels (which is chosen
+relatively large in order to reduce the computation time),
+and the window in $mu m$ over
+which coupling capacitances should be computed. The value shown
+is reasonable, given the fact that the metal-1 is very close to the
+substrate. Hence, the electric field lines die out very rapidly.
+Lines #<line sub3d> and #<line sub3d + 1> specify the maximum
+panel area and influence window for the substrate resistance extraction.
+On the type of substrate, the $10 \mu m$ is actually far greater
+then necessary, since over such distances the current will be flowing
+through the deep substrate anyway.
+%
+%
+\section{Running the Extractor}
+\label{SEscript}
+The file \io{script.sh} is a batch file for running all the commands
+for this example, see below.
+The script can be executed by the following command at the Unix
+prompt:
+\small
+\begin{Verbatim}
+# sh script.sh
+\end{Verbatim}
+\normalsize
+Alternatively, commands from this file can be cut and paste
+individually in a terminal window.
+#<file ny9t/script.sh>
+#<listfile>
+Line #<line rmpr> tests if a database already exists,
+if so, the database is removed to start
+completely fresh.
+A database will not exist
+if this script is run for the first time but should exist
+on each subsequent occasion of running this script.
+The test is to see if the file \io{.dmrc} exists,
+which is one of the files and directories that are created for a
+database. The command for removing the database is \io{rmpr}, it takes
+as argument a pathname to the database. In this case, the path is
+\io{.}, meaning the current working directory.  See \manualpage{rmpr}.
+If there are other non-project files and/or directories, they are preserved.
+Options:
+\begin{optionlist}
+\item[-f] Force removal of all cells in project before project is removed.
+Without this option, \io{rmpr} requires the project to be empty before removal.
+\end{optionlist}
+To remove all or part of the contents of a project, use command \io{rmdb}
+(see \manualpage{rmdb}).
+
+The next command, on line #<line mkpr>, creates a new database. It
+takes the following options:
+\begin{optionlist}
+\item[-p scmos\_n]
+Use the \io{scmos\_n} process from the technology library. The process
+data is normally located in the directory \CACDTOP{lib/process},
+and any name or number of the process can be specified at the \io{-p}
+option.
+\item[-l \emph{lambda}]
+Specify the internal grid of the database in $\mu m$. Here we have
+used a value of $0.01 \mu m$. This value should be fine enough so that
+the co-ordinates of the items in the GDS2 file to be imported (see the
+next line) fit on the grid. If they
+don't fit, they are rounded (and warning messages are printed).
+\item[.]
+The last item is the pathname to the database created. It can be a
+relative or absolute pathname. Here it is \io{.} for the current
+working directory.
+\end{optionlist}
+
+The next command on line #<line cgi> is to import the GDS2 file, see
+\manualpage{cgi}. No options are needed in this case. Now, the layout can
+be seen using the command (see Dali User's Manual):
+\small
+\begin{Verbatim}
+# dali ny9t
+\end{Verbatim}
+\normalsize
+
+Subsequently, on line #<line tecc> the technology file (see Section
+\ref{SEtech}) is compiled. The technology compiler turns a \io{.s}
+file into a \io{.t} file. Space can only read a \io{.t} file, not a
+\io{.s} file directly.
+
+Now, the actual extractions and simulations can be run. Two different
+extractions will be run, one without and one with substrate resistance
+extraction.
+Line #<line C3> and line #<line BC3> are the two
+command lines for \io{space3d}. See
+\manualpage{space} for a full list of all the possible options.
+The options that are specified,
+beside \io{-v} for verbose,
+have the following meaning:
+\begin{optionlist}
+\item[-F] Flat extraction. Note that this is actually the default behavior.
+\item[-C] Capacitance extraction. It is combined with the -3 option.
+\item[-3] Use the 3-dimensional BEM for capacitance extraction.
+\item[-r] Extract interconnect resistances.
+\item[-B] Extract substrate resistances using a boundary-element
+technique. This option is used for the
+second invocation of \io{space} on line #<line BC3> but not on
+line #<line C3>.
+\item[-E tech.t] Use the file \io{tech.t} as technology file.
+\item[-P param.p] Use the file \io{param.p} as parameter setting file.
+\item[-S name\_extension=\emph{ext}]
+Use \emph{ext} as an extension for the name of the circuit
+to be extracted, relative to the name of the layout. For example,
+on line #<line C3>
+the layout of \io{ny9t} is to be extracted as circuit
+\io{ny9t\_nosub}.
+\end{optionlist}
+The final argument of the \io{space3d} command is the name of the
+layout (here: \io{ny9t}) to be extracted.
+
+The next command in this file is the \io{xspice} command,
+see lines #<line C3 + 1> and #<line BC3 + 1>.
+This command retrieves a spice listing from the database, which is
+redirected into a file
+(\io{ny9t\_nosub.spc} and \io{ny9t\_sub.spc}
+respectively). See \manualpage{xspice} for a full list of
+options. Options used:
+\begin{optionlist}
+\item[-a] Produce alpha-numeric node names. W/o this option, only
+node numbers are produced. The node-names are inherited from the
+terminal names (port names) in the layout.
+\item[-x] Use node number = 0 for nodes whose name start
+with "gnd" or "GND".
+\item[-S \emph{stimfile}]
+append the file \io{\emph{stimfile}} to the output file. The
+stimfile can contain input stimuli and simulation control
+statements (such as print and plot commands and the
+.tran statement).  This file is just copied, no checking
+or interpretation of its contents is done.
+\end{optionlist}
+For the example, the contents of \io{stim.spc} look as follows:
+#<file ny9t/stim.spc>
+#<listfile>
+It contains three sources, starting on line #<line input + 1>,
+and a control block starting on line #<line control>.
+The \io{plot} command on line #<line control + 3> is commented
+out in favor of the \io{print} statement on the next line. We
+will use \io{gnuplot} to produce a graph from the output
+produced by the \io{print} statement. Alternatively, a program
+such as \io{matlab} or most any other program that can produce
+graphs could be used.
+If the \io{plot} command is used, the signals could be
+viewed using \io{nutmeg} or any other \io{spice} viewer.
+The analysis to be done by \io{spice} is an AC sweep, see line
+#<line control + 2>, and the output is the real and imaginary parts
+of the output current (which was short-circuited to ground on line
+#<line input + 2>).
+
+#<file ny9t/script.sh>
+We now continue with the file \io{script.sh}, see lines
+#<line sim1> and #<line sim2>:
+#<section sim1>
+#<section sim2>
+These lines run the spice simulations for the two circuits,
+named \io{ny9t\_nosub} and \io{ny9t\_sub} for the
+versions with and without the substrate resistances extracted
+respectively, and store the results in the two \io{.dat} files.
+
+If the simulations have been run, the results are plotted using
+\io{gnuplot} on line #<line gnuplot>. Then, two .eps files are
+produced, which can be inspected using e.g. \io{ghostscript}.
+Alternatively, the \io{commands.gnp} file can be edited to instruct
+\io{gnuplot} to produce one of many other possible output formats or
+to produce the graphs directly on the screen. The graphs should
+look as follows.
+
+\suppressfloats
+\begin{figure}[H]
+\centerline{%
+\epsfig{figure=ny9t/ny9t_re_y12.eps, width=6cm, angle=-90}\hfill
+\epsfig{figure=ny9t/ny9t_im_y12.eps, width=6cm, angle=-90}
+}
+\end{figure}
+
+#<file ny9t/stim.spc>
+These graphs compare the simulations to the measurements, for the real
+and imaginary parts of $Y_{12}$ and for the two networks with and w/o
+the substrate, respectively. A reasonable match is demonstrated.
+Please note that the negative peak in the real part of $Y_{12}$
+actually corresponds to a 90-degree phase shift. In the simulation, it
+can be made almost arbitrarily sharp by increasing the number of
+simulation points per decade in the file \io{stim.spc},
+line #<line control + 2>.
+\section{What Next}
+This example is good for experimenting with the different parameters
+and settings of Space. For example, by reducing the parameter
+\io{cap3d.be\_window} in \io{param.p} to about 4, the capacitor between nodes
+$A$ and $B$ (see the schematics in Section \ref{SEintro}) will not be
+found anymore since the distance between $A$ and $B$ in the layout
+exceeds this value. Then, the curve for the case of 'no substrate' in the graph
+for $Im (Y_{12})$ looks completely different, although the curve for
+the case of 'with substrate' is hardly changed.
+Also, instead of using 3D interconnect capacitance
+extraction, 2.5D extraction could be used by specifying the \io{-l}
+option of Space instead of the \io{-3} option, giving similar results
+as with a small window but much faster.
+% \end{document}

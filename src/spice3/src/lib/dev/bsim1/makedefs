@@ -1,0 +1,14 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+
+COBJS		= b1.o b1acld.o b1ask.o b1cvtest.o b1del.o b1dest.o b1disto.o \
+		  b1dset.o b1eval.o b1getic.o b1ld.o b1mask.o b1mdel.o \
+		  b1moscap.o b1mpar.o b1par.o b1pzld.o b1set.o b1temp.o \
+		  b1trunc.o
+
+CFLAGS		= $(CC_OPT_SAFE) $(SYS_CFLAGS)
+
+LIB_TARGET	= ../../dev.a
+INCLUDE		= -I../../../include
+

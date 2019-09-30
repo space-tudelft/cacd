@@ -1,0 +1,64 @@
+.TH DIMCHECK 1ICD "User Commands"
+.UC 4
+.SH NAME
+dimcheck - do design_rule dim-check
+.SH SYNOPSIS
+.B dimcheck
+[\fB-a|-d\fP] [\fB-f\fP] [\fB-g\fP] [\fB-t\fP] [cell_name]
+.SH OPTIONS
+.TP
+.B -a
+Do a-check (called by autocheck) (default mode).
+.TP
+.B -d
+Do d-check (called by dimcheck2).
+.TP
+.B -f
+Use file 'dimcheckdata1' or 'dimcheckdata2'
+if present in the current working directory
+instead of the standard one from the library.
+.TP
+.B -g
+Report gap errors between elements of the same group.
+.TP
+.B -t
+Debugging option,
+do not filter or merge error messages
+for a non orthogonal layout.
+.SH DESCRIPTION
+.I Dimcheck
+is a subprogram.
+.PP
+.I Dimcheck
+is called by
+.I autocheck
+or
+.I dimcheck2
+(see manual pages).
+.PP
+If no cell_name is specified the names of the cells to be
+checked will be read from the file "exp_dat".
+.PP
+The current working directory must be the project directory.
+.AU "T.G.R. van Leuken, J. Fokkema, J. Liedorp"
+.SH FILES
+.TP
+\fCICDPATH/share/lib/process/TECHN/dimcheckdata1\fP
+.TP
+\fCICDPATH/share/lib/process/TECHN/dimcheckdata2\fP
+.TP
+\fCNELSISPROJECT/exp_dat\fP
+names of cells to be checked
+.TP
+\fCNELSISPROJECT/layout/cell/LC_vln\fP
+input files, LC=LayerCode
+.TP
+\fCNELSISPROJECT/layout/cell/bool_BN\fP
+input files, BN=BooleanNr
+.SH SEE ALSO
+T.G.R. van Leuken, J. Liedorp "An Hierarchical and Technology Independent
+Design Rule Checker", Delft University of Technology,
+.br
+autocheck(1ICD),
+dimcheck2(1ICD),
+dimdata(4ICD)

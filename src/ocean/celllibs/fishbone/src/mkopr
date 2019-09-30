@@ -1,0 +1,44 @@
+
+# This script is to be sourced by ICELLS. It creates a nelsis project directory
+# and imports the libraries "primitives", etc. into that project.
+#
+# This script assumes that the following have been set by ICELLS:
+#         $PROJECT  (the path name of the project to be created)
+#         $BINLIBS  (the full path to the directory containing the
+#                    binary version of the libraries)
+#         $SRCLIBS  (the full path to the directory containing the ascii version
+#                    of the libraries, as well as the template directory)
+#
+############################################################
+# First set some parameters ...
+#
+LIB_PRIM=primitives
+LIB_DIG=digilib8_93
+LIB_ANA=analib8_00
+LIB_BONDING=bonding11_93
+SRC_TEMPL=template
+
+############################################################
+# And now for the real work ...
+#
+echo "------- creating $OCEANPROCESS project $PROJECT -------"
+checkAndCreateNewProject $PROJECT
+#
+echo "------- importing $LIB_PRIM -------"
+importCellLibrary $PROJECT $BINLIBS/$LIB_PRIM
+#
+echo "------- importing $LIB_DIG -------"
+importCellLibrary $PROJECT $BINLIBS/$LIB_DIG
+#
+echo "------- importing $LIB_ANA -------"
+importCellLibrary $PROJECT $BINLIBS/$LIB_ANA
+#
+echo "------- importing $LIB_BONDING -------"
+importCellLibrary $PROJECT $BINLIBS/$LIB_BONDING
+#
+echo "------- copying default config files -------"
+cp $SRCLIBS/$SRC_TEMPL/.??* $PROJECT   # copy the default dot files
+cp -r $SRCLIBS/$SRC_TEMPL/* $PROJECT   # copy the external declarations etc.
+#
+echo ""
+echo "...done. Enjoy your new project \"$PROJECT\" !!!"

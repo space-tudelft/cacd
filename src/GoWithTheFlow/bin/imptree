@@ -1,0 +1,19 @@
+if [ -z "$1" ]; then echo usage: imptree cell.lt.tar; exit 1; fi
+
+if [ ! -d test ]; then echo imptree: directory \"test\" not found; exit 1; fi
+if [ ! -f test/.dmrc ]; then echo imptree: directory \"test\" not a project; exit 1; fi
+if [ ! -f $1 ]; then echo imptree: file \"$1\" not found; exit 1; fi
+
+export C=`basename $1 .lt.tar`
+if [ $C = $1 -o -z "$C" ]; then echo imptree: file \"$1\" incorrect; exit 1; fi
+
+if [ -f $C.sls ]; then echo imptree: file \"$C.sls\" exists; exit 1; fi
+if [ -f $C.ldm ]; then echo imptree: file \"$C.ldm\" exists; exit 1; fi
+
+tar xvf $1 
+
+cd test
+csls ../$C.sls
+sleep 1
+cldm -f ../$C.ldm
+cd ..

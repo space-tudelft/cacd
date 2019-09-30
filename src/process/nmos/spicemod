@@ -1,0 +1,39 @@
+nenh    nenhs   0.88e-6   0
+ndep    deps    1.20e-6   0
+%
+
+* parameters for depletion NMOS  w/l = 4/4
+.model deps nmos        level=2
++                       vto=-3.971      kp=31.54u       gamma=0.3642
++                       phi=0.578       pb=0.84         cgso=430p
++                       cgdo=430p       cgbo=130p       rsh=25.3
++                       cj=62u          mj=0.73         cjsw=340p
++                       mjsw =0.20      js=6.2u         tox=0.07u
++                       xj=0.35u        ld=0.605u       uo=640
++                       ucrit=534000    uexp=-0.025     utra=0
++                       xqc=0.5         fc=0.6          lambda=0.0258
++                       vmax=3.5e4      nsub=9.8e14
++                       delta=6.3
+* end deps w/l = 4/4
+
+* parameters for n_enhacement NMOS  w/l = 4/4
+.model nenhs nmos       level=2
++                       vto=0.6838      kp=32u          gamma=0.2787
++                       phi=0.55        pb=0.84         cgso=440p
++                       cgdo=440p       cgbo=100p       rsh=25.3
++                       cj=62u          mj=0.73         cjsw=340p
++                       mjsw =0.20      js=6.2u         tox=0.07u
++                       xj=0.35u        ld=0.625u       uo=650
++                       ucrit=143000    uexp=0.154      utra=0
++                       xqc=0.5         fc=0.6          lambda=0.02269
++                       vmax=6e4        nsub=5.71e14
++                       delta=5.5
+* end nenh w/l = 4/4
+
+vnbulk 1 0 -2.5V
+rnbulk 1 0 100meg
+
+* vdd ? 0 5V
+* rgnd ? 0 1p
+* rvss ? 0 1p
+

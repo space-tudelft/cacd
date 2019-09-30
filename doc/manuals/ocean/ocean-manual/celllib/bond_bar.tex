@@ -1,0 +1,42 @@
+\subsection{bond\_bar}
+
+Functiion: virtual bonding pattern for one quarter of the chip.
+
+Terminals: (t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, 
+                  t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23, t24, 
+                  t25, t26, t27, t28, t29, t30, t31, t32)
+
+Equivalent chip area: 25000
+
+Maximum size of the circuit: 20000
+
+Pins:
+\begin{itemize}
+\item
+2 power pins (vss, vdd)
+\item
+2 power buffers
+\item
+32 user-configurable pins (buffered input, buffered output, buffered
+bi-directional, unbuffered direct).
+\end{itemize}
+
+Four cells of this type can be placed on one chip. The pin positions
+connect to an outer ring of interconnect wires, which connects the
+pins to the bonding pads on the border of the chip. The pins of one
+cell bond\_bar are spread out over the 144 pins in such a way that
+they connect to every 4th bonding pad. Each of the 4 virtual chips
+has its own vdd power supply, which is also used to drive the
+buffers in the bonding pads. In this way the 4 circuits on the chip
+are completely independent. All circuits share one common vss ground
+supply connection. For larger circuits, multiple instances of
+bond\_bar can be used.
+
+%figuur bond_bar.lay.eps
+\begin{figure}[bth]
+Layout:\\
+
+\callpsfig{bond_bar.lay.eps}{width=1\textwidth}
+\end{figure}
+
+\clearpage

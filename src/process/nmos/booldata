@@ -1,0 +1,22 @@
+# process nmos
+nd_vln np_vln ni_vln nb_vln nx_vln nc_vln nm_vln     : filenames
+nb_vln&np_vln&nd_vln                                 : 0 2.1+2.2+2.5
+nb_vln|nd_vln|np_vln                                 : 1  2.2+1.1.2+3.4
+nb_vln&np_vln&!nd_vln|nb_vln&!np_vln&nd_vln
+|nb_vln&!np_vln&!nd_vln                              : 2  2.3+2.3.1
+np_vln&nd_vln&!nx_vln                                : 3  2.4
+nd_vln&np_vln&!nx_vln&!nb_vln                        : 4  2.9+1.1.2+3.4
+nb_vln&nd_vln                                        : 5  2.4.1
+nb_vln&np_vln                                        : 6  2.4.2+5.5
+nc_vln&np_vln                                        : 7  4.2+4.3.1
+nd_vln&np_vln&!nx_vln&!nb_vln&nm_vln                 : 8  4.3.2
+nc_vln&np_vln&nm_vln                                 : 9  4.3.2
+nc_vln&nm_vln                                        : 10 4.6.1+4.9
+np_vln&nm_vln                                        : 11 4.6.1
+nx_vln&nd_vln&np_vln                                 : 12 5.1+5.3
+!nb_vln&np_vln                                       : 13 5.4
+nc_vln&nd_vln                                        : 14 5.6+4.5.1
+nd_vln&np_vln&!nb_vln&!nx_vln&ni_vln                 : 15 2.8
+nd_vln&!nx_vln                                       : 16 3.5
+np_vln&!nb_vln                                       : 17 3.4
+nd_vln&!np_vln|nd_vln&nb_vln|nd_vln&nx_vln           : 18 1.2

@@ -1,0 +1,81 @@
+.TH COUPLEIDTOCOLOR 5ICD "9/6/88"
+.UC 4
+.SH NAME
+CoupleIdToColor - couple a user specified Id to a color from the CACD colormap
+.SH SYNOPSIS
+.nf
+\fB
+CoupleIdToColor (Id, color)
+int Id;
+char *color;
+
+CoupleIdsToColors (Ids, colors, n)
+int Ids[];
+char *colors[];
+int n;
+\fP
+.fi
+.SH PARAMETERS
+.TP 14
+.B Id(s)
+a user specified Id of something he wishes to couple a color to.
+.TP 14
+.B color(s)
+a character string which specifies the color.
+.TP 14
+.B n
+specifies the number of Ids and colors to couple.
+.SH DESCRIPTION
+These functions create a mapping table from user supplied Id's to colors.
+A color specification is an ascii string (ISO Latin-1 encoding,
+upper and lower case does not matter) such as 'red'.
+Using a color database (normally \fI/usr/lib/rgb\fP) the color name is
+translated to an RGB specification which in turn is used to
+find the best matching color in the CACD colormap.
+The obtained pixel value is coupled to the specified Id in an internal
+table.
+When the same Id is specified several times the last color is stored.
+
+Colors can also be specified as a string of the following form:
+.TP 25
+#RGB
+(4 bits each)
+.TP 25
+#RRGGBB
+(8 bits each)
+.TP 25
+#RRRGGGBBB
+(12 bits each)
+.TP 25
+#RRRRGGGGBBBB
+(16 bits each)
+.RE
+
+where R, G and B represent single hexadecimal digits (upper or lower case).
+When fewer than 16 bits are specified, they represent the most
+significant bits of the value.
+For example, #3aF is the same as #3000a000f000.
+.SH DIAGNOSTICS
+If the call to \fBCoupleIdToColor()\fP is successful \fB1\fP is returned.
+If \fBCoupleIdToColor()\fP fails \fB0\fP will be returned
+and \fBcacdcmaperrno\fP will be set to one of the following values:
+.TP 14
+.B NOINIT
+the CACD colormap library was not initialized.
+.TP 14
+.B NOCORE
+not enough core can be allocated.
+.TP 14
+.B BADID
+a specified Id was smaller than zero.
+.TP 14
+.B BADCOLOR
+a specified color cannot successfully be converted to an RGB value.
+.SH SEE ALSO
+InitCacdCmap(5ICD)
+CoupleIdToRGB(5ICD)
+DecoupleId(5ICD)
+GetAffectedIds(5ICD)
+.SH NOTE
+For optimal memory usage in the internal table,
+a set of Id's should be a consecutive set of integers starting at zero.

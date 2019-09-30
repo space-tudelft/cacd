@@ -1,0 +1,148 @@
+.TH BLIF2SLS 1SDF "THE SEADIF PROGRAMMERS MANUAL"
+.UC 4
+.SH NAME
+blif2sls - convert a BLIF file to SLS format
+
+.SH SYNOPSIS
+.B blif2sls
+[options] [network_name]
+
+.SH OPTIONS
+.TP
+.B -h
+Display help info.
+.TP
+.B -v
+Verbose mode for parser.
+.TP
+.B -a
+Create <network>.sta file (see simeye(1ICD)).
+.TP
+.B -x
+Generate external terminals connected to outputs of all latches.
+It can be usefull when debugging circuit with
+.I simeye
+(see simeye(1ICD)) after layout extraction.
+.TP
+.B -b <filename>
+Take input from file.
+.TP
+.B -s <filename>
+Send output to file.
+.TP
+.B -i <filename>
+Alternative prototype file (default: oplib1_93.ext).
+.TP
+.B -c <filename>
+Read the names of special terminals from file.
+.TP
+.B network_name
+Name of the network to be converted.
+It searches for input file
+called <network_name>\.blif and writes output to <network_name>\.sls.
+No other options are required.
+.PP
+If only one of
+.B -b
+and
+.B -s
+options is used then stdin (or stdout) is used instead.
+
+.SH DESCRIPTION
+SIS,
+the Berkeley Logic Synthesis System,
+is an interactive tool for synthesis and optimization of sequential circuits.
+Given a state transition table, a logic level description of a
+sequential circuit or PLA description, it produces an optimized net-list in the
+target technology while preserving the sequential input-output behavior.
+.PP
+This program converts an output from SIS in
+BLIF (Berkeley Logic Interchange Format) format to
+SLS (Switch-Level Simulator) format.
+The following information from BLIF is used:
+.TP 3
+-
+model name
+.TP
+-
+names of output and input terminals.
+.TP
+-
+gates, latches and interconnections between them.
+.TP
+-
+latch order and state coding - only if latches are present and retiming
+in SIS didn't change initial STG (State Transition Graph).
+Information about it is printed to file <network>.sta and can be used in
+.I simeye
+(see simeye(1ICD)).
+.PP
+To determine the right terminals order in the network to be generated,
+.I blif2sls
+uses a prototype file which should be present in the current directory.
+It should contain prototypes of all the networks which are present in the library
+and could be used by SIS.
+If some of gates' terminals are not used, they
+will be left unconnected.
+For example Q\-inverted output from a flip\-flop
+- if not used it could look like this:
+
+prototype:
+
+  extern network dfr11 (terminal D, R, CK, Q, QN, vss, vdd)
+
+and its call:
+
+  {inst0} dfr11 ( n_2370_, R, CK, LatchOut_v3, , vss, vdd);
+
+Some of the terminals in networks do not have any logical function
+(e.i. power,
+clock,
+reset)
+- this is at least the case during sequential synthesis.
+Therefore they are not considered in SIS and do not appear in BLIF file.
+Still however to obtain a working circuit we need to connect these
+terminals with the rest of the world.
+Therefore if any of our cells uses them,
+they will appear in the list of terminals of just created circuit.
+These terminals are recognized by looking at the names in the prototypes.
+The key names are: vdd,
+vss,
+R,
+CK.
+If you would like to extend this list or define a
+new one, you can use
+.B -c
+option followed by a filename.
+Inside this file you should place the list of names, separated with white space.
+.PP
+It is important that the prototypes have the same names of terminals as these
+ones that are defined in genlib library specification used in SIS.
+
+.SH FILES
+.TP 22
+<network_name>.blif
+- input BLIF file.
+.TP
+<network_name>.sls
+- output SLS file.
+.TP
+<network_name>.sta
+- latch order file.
+.TP
+<prototypes>.ext
+- file with SLS network prototypes.
+
+.SH AUTHOR
+Ireneusz Karkowski, Delft University of Technology.
+
+.SH "SEE ALSO"
+kissis(1SDF), csls(1ICD), simeye(1ICD).
+.PP
+For more information about SIS and its interchange formats look into:
+.PP
+"SIS: A System for Sequential Circuit Synthesis" Ellen M. Santovich, Kanwar Jit
+Singh, Luciano Lavagno, Cho Moon, Rajeev Murgai, Alexander Saldanha, Hamid
+Savoj, Paul R. Stephan, Robert K. Brayton, Alberto Sangiovanni-Vincentelli.
+Department of Electrical Engineering and Computer Science,
+University of California, Berkeley, CA 94720. (1992)

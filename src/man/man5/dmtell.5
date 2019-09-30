@@ -1,0 +1,27 @@
+.TH DMTELL 5ICD "DMI User's Manual"
+.SH NAME
+dmTell - get current position in a stream
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+long dmTell (DM_STREAM *streamkey);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "DM_STREAM *streamkey"
+is a pointer to a valid \fBDM_STREAM\fP as obtained from
+function dmOpenStream().
+.SH DESCRIPTION
+Function
+.B dmTell
+returns the offset of the current byte relative to the beginning
+of the stream associated with \fBstreamkey\fP.
+.SH DIAGNOSTICS
+If properly executed, dmTell() will return the offset.
+If dmTell() fails \fB-1\fP will be returned.
+.SH SEE ALSO
+ftell(3S),
+dmOpenStream(5ICD).

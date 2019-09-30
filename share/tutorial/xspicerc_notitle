@@ -1,0 +1,11 @@
+# space online helios tutorial
+
+include_library spice3f3.lib
+
+no_title
+
+model nenh_0 nenh nmos ()
+model penh_0 penh pmos ()
+
+bulk nmos 0.0
+bulk pmos 5.0

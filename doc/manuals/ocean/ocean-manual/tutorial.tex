@@ -1,0 +1,944 @@
+% -*- latex -*-
+
+\chapter{A quick tutorial}
+\label{tutorial}
+\index{tutorials|(}
+\section{Let's get behind the terminal}
+This chapter takes you for a guided tour along the {\sc ocean} tools.
+Using two examples you will get accustomed to operations like circuit
+input, circuit simulation, layout synthesis, and layout verification.  This
+tutorial contains three exercises to introduce you to the {\sc ocean}
+sea-of-gates layout tools and to the {\sc nelsis} tools for circuit
+extraction and simulation.
+
+The first exercise (section~\ref{s-nor3}) deals with the design of a simple
+library cell, a 3-input {\sc nor} gate. It shows a powerful aspect of the {\sc
+ocean} environment, namely that you can get very close to the sea-of-gates
+image to optimize your design for area or speed. You do not depend on a cell
+library because you can very easily design a cell library on your own.
+
+The second example (section~\ref{s-hotel}) shows the hierarchical approach of
+the {\sc ocean} tools. In contrast to most sea-of-gates systems, {\sc ocean}
+does not require a flat circuit description of the design. The hierarchy
+present in the designer's circuit is retained in the sea-of-gates layout.
+
+The third example deals with using the logic synthesis tool \smc{sis} with the
+\smc{ocean} system. It shown how easy you can translate the description of a
+Finite State Machine (FSM) \index{FSM} into a Sea-of-Gates layout.
+
+The examples are intended to be self-contained and can be dealt with
+independent from each other. For instance, you can immediately skip to
+section~\ref{s-hotel} since it does not assume that you have read
+section~\ref{s-nor3}. We advice, however, to do them in the indicated order.
+
+The examples use the {\sl fishbone} image. You can also run them in the other
+two images. This will be explained in section~\ref{s-advanced}.
+
+We distinguish four major steps in the design cycle:
+\begin{enumerate}
+\item
+Creating the circuit level
+\item
+Simulating the circuit on circuit-level.
+\item
+Creating layout from the circuit.
+\item
+Extraction and simulation of the layout.
+\end{enumerate}
+Keeping this design flow is crucial for the hierarchical design strategy. In
+figure~\ref{oceantools} on page~\pageref{oceantools} an overview of the system
+and its design flow is given. To the right the synthesis tools are displayed
+(steps 1 and 3), while the analysis tools can be found on the left (steps 2 and
+4).
+
+\section{Designing a simple library cell}
+\label{s-nor3}
+The purpose of this section is to get you accustomed to circuit
+design on the 'fishbone'-image using the \smc{ocean} tool suite.
+We will start by designing the simple 3-input nor which is shown in
+figure~\ref{nor3}. Normally you'll import such a simple cell from the
+library and you don't have to bother so much making wires by hand. It
+is very illustrative, however, to take you through all design steps
+using a simple example. 
+
+\subsection{Before we start: making a project}
+\index{tutorial tool@\tool{tutorial} tool}
+In \smc{ocean} we perform the design process in a 'project'\index{project}.
+This is nothing other than a \smc{unix} directory tree which contains a
+database.  For the tutorial we have a simple command to create the project.
+Type\footnote{The string \fname{/user/hillary~\%~} is the prompt, so don't type
+it!}: 
+\cd{}
+\typeb{tutorial hotel}{cd hotel} \cd{/hotel}
+This puts you in a project directory that contains all the data
+related to both examples which we use.  You must start all programs
+of \smc{ocean} and \smc{nelsis} in a project directory.
+
+\index{mkopr@\tool{mkopr}}
+\attention{How to make an empty project?}{
+The command \tool{mkopr $<$name$>$} creates an empty project for you. This
+project automatically imports all library cells. See section ~\ref{mkopr} for
+more details.}
+\subsection{Creating a circuit description}
+\index{creating!circuit descriptions}
+\begin{figure}
+\centerline{\psfig{figure=\figdir/nor3.eps,width=0.5\linewidth}}
+\caption{The schematic of the 3-input nor circuit.}
+\label{nor3}
+\end{figure}
+\begin{itemize}
+\item
+In figure~\ref{nor3} the schematic is already given. Normally you'd
+have to draw the schematic yourself, or create it using other tools.
+In this case the schematic of the 3-input nor is very simple: It
+consists of 3 parallel n-enhancement MOS-transistors (bottom of
+figure~\ref{nor3}) and 3 p-enhancement MOS-transistors in series (on top).
+\item
+We describe the circuit in the \file{sls}-circuit
+\index{sls!language syntax}
+language\footnote{At
+the moment we do not yet have a stable schematic editor to perform
+the task of schematic entry. You'll soon notice, however, that the
+\file{sls}-language is powerful enough to describe anything you
+want.}.
+First we have to identify the terminals:
+\begin{itemize}
+\item[input terminals:]
+Our nor has 3 inputs: \terminal{A}, \terminal{B} and \terminal{C}.
+\item[output terminal:]
+The output is tagged \terminal{F}.
+\item[power terminals:]
+Power connections must be called \terminal{vss} and \terminal{vdd}.
+\item[internal terminal:]
+This circuit has two internal nodes which we called \terminal{v1} and
+\terminal{v2}. You can give them any name you want.
+\end{itemize}
+It would take a lot of words to describe the \file{sls}-syntax, so
+let's just look at the example file in figure~\ref{tut-nor3}.
+\begin{figure}
+\begin{verbatim}
+network nor3 (terminal A, B, C, F, vss, vdd)
+{
+    penh w=29.6u l=1.6u (A, v1, vdd);
+    penh w=29.6u l=1.6u (B, v1, v2);
+    penh w=29.6u l=1.6u (C, v2, F);
+    nenh w=23.2u l=1.6u (A, F, vss);
+    nenh w=23.2u l=1.6u (B, F, vss);
+    nenh w=23.2u l=1.6u (C, F, vss);
+}
+\end{verbatim}
+\caption{\label{tut-nor3}
+The \protect\file{sls} circuit description of the 3-input nor.}
+\end{figure}
+The first line declares the network 'nor3' and its (external)
+terminals\index{terminals}\footnote{also called the
+'ports'\index{ports|see{terminals}} of the circuit}. Between the parenthesis
+follows the description: 6 transistors.  Each line declares one instance
+(in this case a transistor) and the way it is connected. The type, width
+and length of the transistors must be specified. Between the brackets are
+its terminal connections. For the transistor the order of the connections
+is {\em gate}, {\em source} and {\em drain}.  The first transistor, for
+example, is a p-type enhancement which has its gate connected to
+\terminal{A}, its source to node
+\terminal{v1} and its drain to \terminal{vdd}.
+
+You are lucky. The file containing this sls-description already
+exists in the tutorial directory. It is called \file{nor3.sls}. You
+can check its contents using your favorite editor.
+
+\item
+The circuit description must be entered into the Nelsis database.
+This is done using the program \tool{csls}\index{csls@\tool{csls}}:
+\type{csls nor3.sls}
+In this way the contents of the file is translated into the binary
+circuit format of the \smc{nelsis} database. 
+You can check whether the circuit is there:
+\type{dblist}
+This command lists the contents of the current database.
+\end{itemize}
+
+\subsection{Simulating your circuit}
+\label{simcircuit}
+\begin{itemize}
+\item
+Start the simulation interface\index{simeye@\tool{simeye}}::
+\type{simeye \&}
+A window will appear with many fancy buttons. Move the mouse to the
+widget \button{cell:~~~~~} (on the left top). Type there the name of
+the circuit ('nor3').
+
+\item
+Just start simulating! Click \button{sls-logic} and then
+\button{run} to perform logic simulation.
+\index{simulation!logic level}
+After a short while the simulation results will appear in the window. Check
+that the circuit really implements a 3-input nor.
+
+Just play around a bit with the buttons. You can zoom in and out
+(\button{in}, \button{out} and \button{full}) and using the arrow
+keys you can pan the window.
+
+\item
+The simulation requires a 'stimuli' file in which the input voltages and other
+simulation commands are specified.  
+\index{sls!stimuli file|see{sls command file}}
+\index{sls!command file}
+The tutorial directory already contains a
+proper stimuli-file for this example (called
+\file{nor3.cmd}). You can modify the input stimuli in this file, or
+graphically in \tool{simeye}. In a later section we will show how you
+can do this yourself. Let's first concentrate on the basics.
+\item
+There are 3 simulators available from \tool{simeye}: 
+\index{simulation!on three levels}
+a logical simulator, a switch-level simulator and the \tool{spice}
+simulator. In this way you can simulate at three levels of accuracy.
+
+The button \button{sls-logic} (which you just pressed)
+\index{simulation!logic level}
+performs a
+logical simulation of the circuit. It assumes that the transistors
+are ideal switches and that the network has no parasitics. Therefore
+there is no delay in the circuit, and the rising and falling edges
+are sharp.
+
+\item
+Now try the button \button{sls-waves}, followed by \button{run}.
+\index{simulation!switch-level}
+This performs a switch-level simulation of the circuit. The
+switch-level simulator uses a simple model for the parasitics and
+gives a reasonable accurate timing result. Check that the output
+signal is now (slightly) delayed.
+
+\item
+Finally, try \button{spice} 
+\index{simulation!spice-level}
+\index{spice@\tool{spice}}
+for the most accurate simulation of the
+circuit.  Notice that the output waveforms are now continuous, and
+look much more like the real-life signal. You will notice that it
+will take much more time before the results show up on the screen.
+\tool{Spice} is notorious for its load.  From our experience you can
+only simulate networks up til several hundred transistors using \tool{spice}.
+
+\item
+The small buttons labeled \button{A} and \button{D} 
+are toggles that either
+cause an ``analogue'' or a ``digital'' interpretation of the signals to be
+displayed. \tool{Spice} only allows an analogue interpretation of course.
+
+\item
+For now, we've completed the circuit simulation. Iconify the window
+and get ready for the next step.
+\end{itemize}
+
+\subsection{Creating a layout}
+At the hart of the layout generation is \tool{seadali}. 
+\index{seadali@\tool{seadali}}
+It allows you to create
+layout manually, automatically or both.  Chapter~\ref{s-seadali} describes
+\tool{Seadali} in greater detail. Here we only outline the minimal commands to
+get started.
+\begin{itemize}
+\item
+\index{seadali!starting}
+Start \tool{seadali}: \type{seadali \&} 
+Click \button{boxes} to enter the box manipulation menu. 
+\item
+Click \button{fish} to create an empty piece of image. In fact,
+you are looking at a small ($20 \times 4$ transistors) portion of
+the sea-of-gates chip. Have a good look at the structure. Play around
+with \button{visible} (in the main menu) to activate masks. The
+bigger transistors (along the middle power rail) are p-type. The
+smaller ones are n-type. The white dots denote the grid points.
+\item
+Now let's think about the layout of our nor3. Try to get some inspiration from
+the way in which the nand-2 circuit was implemented (figure~\ref{f-nand2} on
+page~\pageref{f-nand2}). The nor-3 is the reverse of the nand-2.  We need 3
+n-type transistors (from the bottom row) in parallel. We also need 3 p-type
+transistors in series.
+\item
+Enough philosophy, let's click!. First enable the layer in which you
+want to add wires by switching the bulb \button{in} (= metal1 mask
+code) on. It is the dark blue one in the bottom row of the window. 
+Click \button{APPEND} (in the boxes menu) and try to make some wires.
+Start, for instance, in the left-bottom by making a vertical wire of
+2 grid points long. The bottom of that wire should touch the lower
+power rail.
+
+\item
+Add the individual wires. If you want, you can also use the second
+metal layer (\mask{ins}, light blue) to cross a wire in \mask{in}
+the first layer.
+\item
+Contacts to the transistors are made in the \mask{cps}-mask. 
+\index{creating!contacts}
+Click
+\button{cps} and disable the other masks to add them. The contacts
+are a bit harder to distinguish on the screen because they are black.
+
+You can make contacts between metal1 (\mask{in}) and metal2
+(\mask{ins}) by adding boxes in the \mask{cos}-mask. These contacts
+are white. Do not stack \mask{cos} contact on top of \mask{cps}
+contacts!
+\item
+Now press \button{fish} to check and purify the layout.
+\tool{Fish} will make the layout design-rule correct by rounding all
+the wires to the nearest grid points and substituting the proper
+contact patterns. It will also warn you for errors, such as stacked
+contacts or \mask{cos} contacts on top of a poly gate. You can press
+\button{fish} any time and as often as you want. Just try it.
+
+\item
+To isolate the cell from its surroundings we add an isolation
+transistor on the right side. Just connect the first unused n-type
+and p-type transistors on the right to their nearest power line. The
+gate of the n-type transistor must be connected to \terminal{vss}, the
+gate of the p-type to \terminal{vdd}.  Do not forget the contacts, and
+press \button{fish} as often as you want.
+
+\item
+Once the layout looks like it is really going to work it is time to add the
+terminals. Click \button{return}, \button{terminals} and
+\index{seadali!adding terminals}
+\index{creating!terminals in layout}
+\index{terminals!adding to layout}
+\button{add terminal} and switch only the \mask{in}-mask on. Click at the
+terminal position\footnote{This must be an \mask{in}-wire or an \mask{ins}
+wire, depending on which mask was activated. Other masks cannot be used for
+terminals} and enter the terminal name. Give the terminal the same name as in
+the circuit description. Only add the external terminals (\terminal{A}, \terminal{B},
+\terminal{C}, \terminal{F}, \terminal{vss} and \terminal{vdd}). Put the power
+terminals on a spot on the power rails.
+
+\item
+Write the layout in the database under the name \fname{nor3}. You'll
+find the necessary buttons in the \button{database} menu.
+\end{itemize}
+
+\subsection{Extracting the layout and simulating it}
+We can verify the correctness of the layout which we just created by
+extracting the transistors from the layout using \tool{space} 
+\index{space@\tool{space}}
+\index{extraction!layout|see{\tool{space}}}
+\index{circuit!to layout extraction|see{\tool{space}}}
+and then simulating it again:
+\begin{itemize}
+\item
+Start the circuit extractor: \type{space -c nor3}
+The result is a circuit cell of which the character of the name has been
+capitalized: ``Nor3''. The capitalization is necessary to distinguish
+between the original circuit and the extracted circuit.
+Just for fun, have a look at it by extracting the sls-description from the
+database:
+\type{xsls Nor3}
+\index{xsls@\tool{xsls}}
+\index{extraction!sls-descriptions|see{\tool{xsls}}}
+Do you recognize the circuit? Why are there so many transistors? Notice that
+the circuit also contains the (parasitic) capacitances.
+\item
+Let's get rid of the unused transistors:\type{ghoti Nor3}
+\index{ghoti@\tool{ghoti}}
+\index{circuit!purification|see{\tool{ghoti}}}
+\tool{Ghoti} strips all unused transistors from a circuit
+description. It is essential to run it before running \tool{spice}. If you skip
+ghoti, \tool{spice} aborts with complains about ``singular matrices''. After
+running \tool{ghoti} have a look at the circuit again:\type{xsls Nor3} Only 6
+transistors and the capacitors remain. With some fantasy you should now be able
+to recognize your nor-3.
+\item
+Start a new \tool{simeye} and simulate the circuit. This works
+exactly the same way as was described in \ref{simcircuit}. The only difference
+is the name of the circuit ('Nor3' instead of 'nor3'). Compare
+the results with the original circuit.
+
+You may want to go to the \button{input} menu of \tool{simeye}. 
+There you could
+click the \button{speed} 
+button, type ``0.5'' return, click \button{ready},
+type ``y'' return, and then simulate again. How fast is the nor gate?
+\end{itemize}
+
+% Yet another -*- latex -*- document
+
+\section{The second example: a hotel switch}
+\label{s-hotel}
+This section describes the implementation of a simple circuit {\sl hotel
+switch\/} on the fishbone image. The circuit size is about 24 gates, and its
+implementation uses a three level hierarchy. You can play with the hotel switch
+yourself by typing the following commands.\cd{}
+\typeb{tutorial hotel}{cd hotel} \cd{/hotel}
+This puts you in a project directory that contains all the data related to the
+hotel switch example. (Do not execute the {\tt tutorial} command if you already
+did it for the example of section~\ref{s-nor3}.)
+
+\subsection{Functionality}
+The function of the hotel switch is to control a light bulb in a hotel room by
+means of three switches s1, s2, s3 distributed throughout the room. Whenever
+one of the switches is pushed the bulb switches on if it is off and vice versa.
+There is also a ``freeze'' switch to prevent the bulb from changing state, see
+Figure~\ref{f-hotel-sch}.
+
+\begin{figure}[hbt]
+\centerline{\psfig{figure=\figdir/hotel-sch.ps}}
+\caption{Functional diagram of the hotel switch}
+\label{f-hotel-sch}
+\end{figure}
+
+\subsection{A Moore machine}
+The functionality of this hotel switch is implemented by a Moore-type state
+\index{Moore machine}
+machine. First we observe that we can combine the three buttons s1, s2, s3 by
+making a logic {\sc or} function s = s1 + s2 + s3. The state diagram of the
+hotel switch then looks as depicted in Figure~\ref{f-hotel-state}.
+
+\begin{figure}[hbt]
+\centerline{\psfig{figure=\figdir/hotel-state.ps,width=1.0\textwidth}}
+\caption{State diagram of the Moore machine}
+\label{f-hotel-state}
+\end{figure}
+
+\subsection{A three level hierarchy}
+\label{s-hierarchy}
+With the aid of circuit synthesis tools like Berkeley {\sc sis}, {\sc mis} or
+Philips {\sc phaco} the state diagram of Figure~\ref{f-hotel-state} is
+translated into a combinational circuit that we call {\sl hotelLogic}. Together
+with a 2-flipflop state register and a {\sc nor} gate this implements the hotel
+switch as depicted in Figure~\ref{f-hotel-sch2}.
+
+\begin{figure}[hbt]
+\centerline{\psfig{figure=\figdir/hotel-sch2.ps,width=0.8\textwidth}}
+\caption{Schematic of the highest hierarchical level}
+\label{f-hotel-sch2}
+\end{figure}
+
+Section~\ref{s-oplib} lists the gates that are available from the fishbone cell
+library {\sl oplib}. Figure~\ref{f-hotel-hier} shows the three level hierarchy
+of the hotel switch as implemented with the cells from this library.  Since the
+library {\sl oplib} does not provide a 3-input {\sc or} gate, it is implemented
+with two gates {\sl no310} and {\sl iv110}.
+
+\begin{figure}[hbt]
+\centerline{\psfig{figure=\figdir/hotel-hier.ps,width=0.8\textwidth}}
+\caption{The three level hierarchy of the hotel switch}
+\label{f-hotel-hier}
+\end{figure}
+
+The circuit appears in the project directory as 2 ascii files named
+\file{hotel.sls} and \file{hotelLogic.sls}. You can use a text editor to view
+their contents. Now compile these circuits into the database by typing
+\typeb{csls hotelLogic.sls}{csls hotel.sls}
+You may want to check that it really worked by extracting a copy of the
+circuits from the database:
+\typeb{xsls hotel}{xsls hotelLogic}
+\index{xsls@\tool{xsls}}
+It should look like in figure~\ref{hotelLogic}.
+\begin{figure}
+{\small
+\begin{verbatim}
+network hotelLogic(terminal s, freeze, q0, q1, q0new, q1new, vss, vdd)
+{
+    {inst1}  na210(s, q0, q0new_1, vss, vdd);
+    {inst2}  na210(freeze, q0, q0new_2, vss, vdd);
+    {inst3}  na310(s_n, freeze_n, q1, q0new_3, vss, vdd);
+    {inst4}  na310(q0new_1, q0new_2, q0new_3, q0new, vss, vdd);
+    {inst5}  no210(freeze_n, q1_n, h_1, vss, vdd);
+    {inst6}  no210(q0, q1_n, h_2, vss, vdd);
+    {inst7}  no210(h_1, h_2, q1new_1, vss, vdd);
+    {inst8}  na310(s_n, q0, q1, q1new_2, vss, vdd);
+    {inst9}  na310(s, freeze_n, q0_n, q1new_3, vss, vdd);
+    {inst10} na310(q1new_1, q1new_2, q1new_3, q1new, vss, vdd);
+    {inst11} iv110(s, s_n, vss, vdd);
+    {inst12} iv110(freeze, freeze_n, vss, vdd);
+    {inst13} iv110(q0, q0_n, vss, vdd);
+    {inst14} iv110(q1, q1_n, vss, vdd);
+}
+
+network hotel(terminal s1, s2, s3, freeze, light, ck, reset, vss, vdd)
+{
+    {inst1} no310(s1, s2, s3, s_n, vss, vdd);
+    {inst2} iv110(s_n, s, vss, vdd);
+    {inst3} hotelLogic(s, freeze, q0, q1, q0new, q1new, vss, vdd);
+    {inst4} dfr11(q0new, q0, reset, , ck, vss, vdd);
+    {inst5} dfr11(q1new, q1, reset, , ck, vss, vdd);
+    net {q1, light};
+}
+\end{verbatim}
+}
+\caption{ 
+The sls circuit descriptions of 'hotel' and 'hotelLogic'.}
+\label{hotelLogic}
+\end{figure}
+\subsection{Layout implementation with the {\sc ocean} tools}
+The hierarchy of the layout is similar to the circuit hierarchy of
+Figure~\ref{f-hotel-hier}. First we create the layout of {\sl hotelLogic} by
+automatically placing and routing it. Then
+we use this piece of layout as a sub cell (instance) of the top level cell {\sl
+hotel}. To make each cell, we traverse along some tools. This design flow in
+the \smc{ocean} environment is depicted in figure~\ref{oceantools2}
+(page~\pageref{oceantools2}).
+
+\begin{itemize}
+\item
+Start \tool{seadali} as described in section~\ref{s-start-seadali}.  Click
+\button{inst\_menu}, then \button{Madonna}. 
+\index{seadali!madonna}
+\index{madonna!example}
+Enter the circuit name {\sl
+hotelLogic}, then click \button{DO IT}. After a few seconds a placement
+appears. If you don't like the result, you may want to read
+section~\ref{s-run-madonna} and see what buttons you can click to influence the
+placement.
+\end{itemize}
+\tool{Madonna} has created a placement containing all the instances (= child
+cells) 
+\index{instances}
+in the netlist description. She tried to place them in such a way that
+to total wire length and the total area are a small as possible.
+
+\begin{itemize}
+\item
+Now route the placement. First go to the \button{boxes} menu, then click
+\button{trout} 
+\index{seadali!trout}
+\index{trout!example}
+and \button{DO IT}. 
+\end{itemize}
+You will notice that \tool{trout} created the necessary wires to connect the
+terminals according to the netlist specification. The pattern which
+\tool{trout} created is indicated in bright colors, the existing layout of the
+child-cells (instances) is drawn in a hashed pattern.
+\begin{itemize}
+\item
+Go to \tool{seadali}'s database menu and write the resulting
+layout to the database using the name {\sl hotelLogic}.
+\item
+Just for fun, let's play around a bit with the router. 
+Go to the \button{instances} menu and try to move one (or more)
+instances (use \button{move}). Go back to the boxes menu and click
+\button{trout} again. Click \button{erase wires} before \button{DO IT},
+to cause \tool{trout} to remove the existing wires in the layout.  If you would
+like to try other features of the router, you can proceed to
+section~\ref{s-advanced}.
+\end{itemize}
+
+At this point, you may want to verify that the layout cell {\sl hotelLogic}
+really implements the corresponding circuit. This is not strictly
+necessary, because the {\sc ocean} tools generate layout that is ``correct
+by construction''. See subsection~\ref{s-verification} for details on how to
+verify a layout cell.
+
+For the moment, we'll just go on and use the layout cell {\sl hotelLogic} to
+implement the top level circuit {\sl hotel}. Making the layout of {\sl hotel}
+goes in the same way as we just made its child cell {\sl hotelLogic}:
+\begin{itemize}
+\item
+Go to the \button{instances} menu and click \button{madonna}. Enter
+as cell name {\sl hotel} and click \button{DO IT} to put \tool{madonna}
+to work for you. Verify that \tool{madonna} indeed placed the 5 instances of
+{\sl hotel}, including {\sl hotelLogic}. 
+\item
+Now route the this placement of {\sl hotel}. First go to the \button{boxes}
+menu, then click
+\button{trout}, followed by \button{DO IT}. 
+\item
+Verify the result of the routing by clicking 
+\index{check nets}
+\index{seadali!check nets button}
+\button{check nets}. 
+This button compares the current layout with the circuit description. It
+reports any unconnects or short-circuits. 
+\item
+If no errors are reported, write the layout under the
+name {\sl hotel} to the database.
+\end{itemize}
+
+\subsection{Verification}
+\label{s-verification}
+If everything went well then now the time has come to verify that the layout
+has the desired functionality.  Although we say ``verification'' we actually
+mean ``simulation''. In order to simulate the behavior of the layout we need 2
+items.
+\begin{enumerate}
+\item {\sl The extracted circuit.\/} This is the circuit that the tool
+\tool{space} creates by scanning the actual layout. Depending on the options
+passed to \tool{space}, the extracted circuit may or may not contain parasitic
+resistors and capacitances.
+\item {\sl A stimuli file.\/} This file defines how the input signals for the
+extracted circuit change as a function of time. It also defines which output
+signals of the extracted circuit must be observed.
+\end{enumerate}
+The tool \tool{simeye} takes these 2 items, calls the simulator and displays
+the simulation results. Figure~\ref{f-hotel-extract} shows this verification
+flow.
+\begin{figure}[hbt]
+\centerline{\psfig{figure=\figdir/hotel-extract.ps,width=1.0\textwidth}}
+\caption{The verification flow}
+\label{f-hotel-extract}
+\end{figure}
+
+Note that after extraction we have {\bf two} circuit representations of {\sl
+hotel} in the database! The first {\sl hotel} was created by \tool{csls} as
+described in Subsection~\ref{s-hierarchy} and the second {\sl Hotel} (with the
+first letter a capital) is created by
+\tool{space}. We can tell them apart by looking at the first character of the
+circuit name: extracted cells start with a capital.
+
+\subsection{Extracting the circuit}
+\label{t-ex}
+Now type the following command to extract the circuit {\sl Hotel} from the
+layout {\sl hotel}:
+\type{space -c hotel}
+The option {\tt -c} specifies that \tool{space} must also extract capacitors.
+You can have a look at the extracted circuit by typing
+\type{xsls Hotel | more}
+Watch that capital {\tt H}. Now purify this circuit description by removing all
+unconnected transistors:
+\type{ghoti Hotel}
+Finally, start the simulator by typing:
+\type{simeye Hotel \&}
+Click the \button{run} button to start the simulation. Within a few seconds the
+simulation results are displayed in the \tool{simeye} window.
+
+\subsection{Simulating at various levels of abstraction}
+\index{simulation!on three levels|bold}
+\tool{Simeye} allows you to simulate a circuit at several levels of
+abstraction. The most abstract level is obtained by clicking \button{sls-logic}
+before clicking the \button{run} button. This calls a logic simulator that 
+models a transistor as an ideal switch. A slightly less abstract
+level of simulation is obtained by clicking \button{sls-waves}. This models a
+transistor as a switch with a linear resistance and linear capacitances and it
+recognizes the parasitic capacitances of the wires. Finally, the most detailed
+simulation level is obtained by clicking \button{spice}. This calls the
+Berkeley circuit simulator \tool{spice}.
+
+The small buttons labeled \button{A} and \button{D} are toggles that either
+cause an ``analogue'' or a ``digital'' interpretation of the signals to be
+displayed. Spice only allows an analogue interpretation of course.
+
+\subsection{Graphically editing the stimuli file}
+You may want to experiment with different stimuli for {\sl Hotel}. You can
+easily edit the stimuli with the graphical editor that is part of
+\tool{simeye}. To do this, click the \button{input} button in \tool{simeye}.
+This brings you in a graphical editor. The five most important buttons of this
+editor are
+\begin{itemize}
+\item [\button{new}] define a new input signal for the circuit.
+\item [\button{edit}] edit an existing input signal.
+\item [\button{speed}] change the frequency of the input signals
+\item [\button{t\_end}] change the moment that the simulation stops
+\item [\button{ready}] exit the editor, back to the simulator
+\end{itemize}
+
+\section{The third example: using logic synthesis to make 'hotel'}
+\label{kissistutorial}
+To demonstrate the use of the \smc{sis}\footnote{You can run this tutorial
+with or without having the \smc{sis} logic synthesis package on your
+machine.  In the latter case you can just use the pre-synthesized file
+'hotel.sls'. We cannot distribute the \smc{sis} package with the \smc{ocean}
+tools, unfortunately. You can, however, retrieve \smc{sis} yourself using
+anonymous ftp (host ic.berkeley.edu, directory pub/sis). \smc{sis} runs on
+many hardware platforms.} logic synthesis program we included another
+tutorial directory:
+\cd{}\type{tutorial sis} \cd{/sis}
+
+Essentially it contains the same circuit as the previous 'hotel' tutorial. In
+this case, however, we will also generate the circuit description
+automatically. The main difference is that \smc{sis} generates the circuit {\sl
+hotel} in one step without hierarchy.
+
+The program \tool{kissis} 
+\index{kissis@\tool{kissis}}
+is performing this entire FSM synthesis trajectory
+for you. The format of the input table for \smc{sis} is simple. It basically
+declares the number inputs and outputs, and state transition conditions. For
+example, the kiss2 file in figure~\ref{tut-kiss2} describes a simple hotel 
+switch with 4 states.
+\begin{figure}
+{\small
+\begin{verbatim}
+.i 2     /* 2 inputs: switch (1st column) and freeze (2nd) */
+.o 1     /* 1 output: light (last column) */
+.r off1  /* reset to state off1 */
+-1 off1 off1 0
+10 off1 off1 0
+00 off1 off0 0
+-1 off0 off0 0
+00 off0 off0 0
+10 off0 on1  0
+-1 on1  on1  1
+10 on1  on1  1
+00 on1  on0  1
+-1 on0  on0  1
+00 on0  on0  1
+10 on0  off1 1
+\end{verbatim}
+}
+\caption{
+A file in \protect\fname{kiss2}-format, describing the hotel circuit.}
+\label{tut-kiss2}
+\end{figure}
+Each line in this table corresponds to a state transition (``an arrow'') in the
+state diagram of Figure~\ref{f-hotel-state}, page~\pageref{f-hotel-state}.
+Each line in the table contains four fields: the input signals, the current
+state, the next state and the output signal.
+
+A file which contains this state transition table is present in the 'sis'
+tutorial under the name 'hotel.kiss2'. With this tutorial you can run the logic
+synthesis tools yourself\footnote{If you do not have the \smc{sis} package
+installed, just type ``csls hotel.sls'' instead to use a pre-synthesized
+version of hotel.}:
+\type{kissis hotel.kiss2} The output of
+\tool{kissis} is a circuit description, which was mapped on the 'fishbone'
+Sea-of-Gates library.  The file
+\fname{hotel.sls} which was created by \tool{kissis} looks as in
+figure~\ref{hotelsis} if you look at it using \tool{xsls hotel}.
+\begin{figure}
+{\small
+\begin{verbatim}
+/*  This file was automatically created by blif2sls.
+    Thu Jun 24 09:57:52 1993 */
+#include<oplib.ext>
+
+/*     Code Assignment: off1  00            */
+/*     Code Assignment: off0  10            */
+/*     Code Assignment: on1   11            */
+/*     Code Assignment: on0   01            */
+
+network hotel( terminal IN_0, IN_1, OUT_0, R, CK, vss, vdd)
+{
+ {inst0}    dfr11( n_2355_, R, CK, LatchOut_v2, vss, vdd);
+ {inst1}    dfr11( OUT_0, R, CK, LatchOut_v3, vss, vdd);
+ {inst2}    iv110( LatchOut_v3, n_2314_, vss, vdd);
+ {inst3}    iv110( IN_0, n_2315_, vss, vdd);
+ {inst4}    no210( IN_0, IN_1, n_18_, vss, vdd);
+ {inst5}    mu111( LatchOut_v2, n_2314_, n_18_, n_2355_, vss, vdd);
+ {inst6}    no210( IN_1, n_2315_, n_17_, vss, vdd);
+ {inst7}    mu111( LatchOut_v3, LatchOut_v2, n_17_, OUT_0, vss, vdd);
+}
+\end{verbatim}
+}
+\caption{The output of the logic synthesis program
+\protect\smc{sis} for the hotel circuit.} 
+\label{hotelsis}
+\end{figure}
+\smc{Sis} just numbers the inputs and outputs:
+\begin{itemize}
+\item[IN\_0]
+is the switch button input {\sl s}.
+\item[IN\_1]
+is the {\sl freeze} signal which inhibits the input of {\sl s}.
+\item[OUT\_0]
+the output of the switch: {\sl light}.
+\item[R]
+is the reset input for the flip-flops.
+\item[CK]
+is the clock input.
+\end{itemize}
+
+To avoid problems with undefined flipflop states in \tool{sls}, the program
+\tool{kissis} instructs \smc{sis} to use the resettable flip-flop 'dfr11'. The
+reset-signals of the flip-flops are automatically connected to the terminal 'R'
+of hotel. In this way you can force the FSM to a known state at the beginning
+of the simulation.
+
+Now simulate the hotel switch using \tool{simeye}. An appropriate command
+file is present in the tutorial directory. Click \button{run} to start the
+simulation. Notice that there is also a line called 'State' in the output,
+which indicates the symbolic state of the Finite State Machine. 
+Click on \button{value} and move to the 'State'-bar to see the state as a
+function of the time.
+
+When you finished simulating, generate the layout using \tool{seadali}
+with \tool{madonna} and \tool{trout}: 
+\begin{itemize}
+\item
+Go to the \button{instances} menu and click \button{madonna}. Enter
+as cell name {\sl hotel} and click \button{DO IT} to put \tool{madonna}
+to work for you. Verify that \tool{madonna} indeed placed the 5 instances of
+{\sl hotel}, including {\sl hotelLogic}. 
+\item
+Now route the this placement of {\sl hotel}. First go to the \button{boxes}
+menu, then click
+\button{trout}, followed by \button{DO IT}. 
+\item
+Verify the result of the routing by clicking 
+\index{check nets}
+\index{seadali!check nets button}
+\button{check nets}\footnote{It is not absolutely necessary to do this.
+\tool{trout} automatically performs this connectivity check after routing.}. 
+This button compares the current layout with the circuit description. It
+reports any unconnects or short-circuits. 
+\item
+If no errors are reported, write the layout under the
+name {\sl hotel} to the database.
+\item
+A quick way of doing all of the above in one step is by going to the
+\button{database} menu and clicking \button{Place and Route}.
+\index{automatic!placement and routing in one step}
+\end{itemize}
+
+Now you can extract the circuit and simulate it again. This
+works in exactly the same way as in the previous section. Please proceed to
+section~\ref{t-ex}.
+
+As second example the circuit 'three' is included, which performs essentially
+the same as 'hotel', but has 3 button inputs instead of one. 
+
+\section{Some advanced features}
+\label{s-advanced}
+In this section we demonstrate some advanced features of the \smc{ocean}
+system using the hotel circuit which you've just made. 
+
+\subsection{Playing around with \protect\tool{Madonna}}
+\index{madonna!example}
+Madonna doesn't like to be fooled around with too much. But let's try to see
+how far we can go using the circuit {\sl hotelLogic}. For full details on the
+options you can have a look in chapter~\ref{madonna} on page~\pageref{madonna}.
+
+First read the layout of the cell {\sl hotelLogic} into \tool{seadali} (the one
+which you've made a while ago). Then go to the instances menu and click
+\button{Madonna}. Tell \tool{madonna} that you are sure to do that by 
+clicking \button{yes} and just press [return] at the cell name to 
+select {\sl hotelLogic}.
+
+Now let's ask \tool{madonna} to place the cell in a larger area: use
+\button{zoom Out} to zoom out a bit. 
+\index{madonna!set placement box}
+Then press \button{set box } and
+drag a box over a larger area and click \button{DO IT}.
+\tool{Madonna} will spread out the modules over the specified area. If you make
+the area very large, you will notice that it takes \tool{trout} longer to route
+it.
+
+Obviously, we can also do the opposite. If you specify a very small box
+\tool{Madonna} will squeeze the cells into the minimum area. If the area of the box
+is too small, she will expand into the horizontal direction. If you press
+\button{y-expand}, however, the layout will grow taller because she expands in
+the vertical direction.
+
+\subsection{Using \protect\tool{trout} in various ways}
+\index{trout!example}
+\subsubsection{Partial manual and automatic routing}
+
+The router \tool{trout} is a very powerful tool.  Let's try to use
+\tool{trout} to complete a partially routed circuit.  Read a routed layout
+of {\sl hotelLogic} in and go to the \button{boxes}-menu. Enable the masks
+\mask{in}, \mask{ins}, \mask{cps} and \mask{cos} in the bottom of the
+screen. Now use \button{DELETE} to erase some part of the existing routing.
+Notice that the layout of the son-cells cannot be erased. Now
+click\button{trout} and just \button{DO IT} to cause \tool{trout}
+to 'repair the damage'. \tool{Trout} automatically discovers which nets are
+already connected and which existing wires can be used to make connections
+which are as short as possible. In this way you can manually pre-route
+certain wires and let \tool{trout} so the rest. Just play around a bit with
+this feature.  Do not press \button{erase wires} in this case because that
+will remove all existing wires prior to routing.
+
+\subsubsection{Verifying a layout}
+\index{design rules!checking connectivity}
+\index{seadali!check nets button}
+\index{check nets}
+If you have created a (partially) manual layout, it is interesting to check
+whether it is correct or not. This can be done simply by pressing \button{check
+nets} in the \button{boxes}-menu. If no window appears, everything is OK. Just
+for fun, make some deliberate errors in the (routed) layout of {\sl
+hotelLogic}. Cut one wire, and make a short circuit between two others (use
+\button {DELETE} and
+\button{APPEND}). If you press \button{check nets} again, a window will warn
+you for the problems. The unconnects and shorts are also indicated in the
+layout. The indicator arrow shows the terminals of the nets which are involved
+in the short-circuit or the unconnect. The shorts are also indicated by the
+white pattern in the\mask{bb}-mask. Unfortunately it impossible to show
+the exact location of the short.
+
+\subsubsection{Automatic capacitors}
+\index{trout!decoupling capacitors}
+Now let's go for the really wild stuff!! \tool{trout} has the capability
+to convert all unused transistors into capacitors which are switched between
+power and ground. In this way, the noise on the power lines can be reduced
+effectively. The best way to try this is on a rather empty layout, for
+instance the one which you made using \tool{madonna} in a big box. Now press
+\button{trout} and \button{Option menu} and select \button{capacitors}. Then
+click \button{- return -} and \button{DO IT} and watch what happens!
+It should look like figure~\ref{capas}. Notice that the power wires are made as
+fat as possible, and that the layout contains many additional vias and wires to
+'nail' the power lines properly together.  Notice also that there is now hardly
+any way left to route additional wires through this module.
+
+\begin{figure}
+\centerline{\psfig{figure=\figdir/capahotel.eps,width=0.85\textwidth}}
+\caption{The same circuit as figure \protect\ref{fishhotel}
+(page~\protect\pageref{fishhotel}), but routed with the option
+\protect\button{capacitors}. This causes~\protect\tool{trout} to connect all
+unused transistors and, if possible, to use them as capacitors. In this
+way the noise on the power lines is reduced considerably.}
+\label{capas}
+\end{figure}
+
+\subsection{Inserting your own nor in the circuit}
+If you finished the example of section~\ref{s-nor3} successfully, you may want
+to edit the files \file{hotel.sls} and \file{hotelLogic.sls}, replacing the
+calls to the library cell {\sl no310} by calls to your own {\sl nor3}. You'll
+have to use the {\tt extern} declaration of the SLS language to declare the
+order of the terminals. For instance, insert the line ``extern network
+nor3 (terminal A, B, C, F, vss, vdd)'' on top of the files \file{hotel.sls} and
+\file{hotelLogic.sls}. See the \smc{sls} manual for more details.
+
+\subsection{Making the hotel switch on a different image}
+\index{image!switch to another image}
+In this tutorial we have been using the {\sl fishbone} image. You can run the
+same tutorial with the other two images. To make a project in the {\sl octagon}
+image, type: \cd{}
+\typeb{setenv OCEANPROCESS octagon}{tutorial hotel} \cd{/hotel}
+\index{OCEANPROCESS@\fname{OCEANPROCESS} environment variable}
+similarly, you can use the {\sl gatearray} image:
+type: \cd{}
+\typeb{setenv OCEANPROCESS gatearray}{tutorial hotel} \cd{/hotel}
+The environment variable \fname{OCEANPROCESS} must be set to the image you're
+working in. Also, make sure that no directory hotel already exists in the
+directory. In the new hotel directory you are able to run the same hotel
+tutorial. Only the
+\tool{spice} simulations will most likely not work properly.
+Figures~\ref{fishhotel}, \ref{octagonhotel} and \ref{gatehotel}
+(page~\pageref{octagonhotel}) show the layout of {\sl hotelLogic} in the {\sl
+fishbone}, {\sl octagon} and {\sl gatearray} image.
+
+For now, let's just use the octagon image and try to make the layout of cell
+{\sl hotelLogic}:
+\typeb{csls hotelLogic.sls}{seadali \&}
+Just click \button{instances} followed by \button{madonna} to place the
+circuit. Have a good look at the image, and try to move some instances.
+Notice that \tool{seadali} is automatically mirroring the instances in the
+proper way.  Notice also that \tool{madonna} is clever enough to overlap
+some gates in the same 'quarter'.
+
+Next, route it using \button{trout}. This is a tree-layer process, which makes
+it sometimes hard to interpret the layout. Use \button{visible} to switch off
+some masks. \cd{/myproject}
+
+\subsection{Plotting your layout}
+\index{plotting layout|see{getepslay}}
+\index{getepslay@\tool{getepslay}}
+It is easy to make a plot of your layout. The program \tool{getepslay} converts
+the layout into a postscript file, which you can directly send to the
+laser printer. For example: 
+\type{getepslay hotelLogic}
+will create the postscript file \fname{hotelLogic.eps}. See the manual page of
+\tool{getepslay} for more details.
+\index{tutorials|)}
+
+\subsection{Removing cells and projects}
+\index{project!removing}
+\index{removing!projects}
+To remove an entire project you can just use the normal \smc{unix} command.
+For example: \cd{}\type{rm -rf hotel} removes the entire project in
+subdirectory
+\fname{hotel}. A less rigorous way is to remove individual cells using
+\tool{rmdb}: \cd{/hotel}\type{rmdb -c hotel layout}
+\index{rmdb@\tool{rmdb}}
+\index{removing!cells|see{\tool{rmdb}}}
+removes the layout of
+cell \fname{hotel} from the database. You must be in a project directory to
+call this command. 
+

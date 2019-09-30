@@ -1,0 +1,434 @@
+.TH XSPECTRE 1ICD "User Commands"
+.UC 4
+.SH NAME
+xspectre - extract Spectre netlist out the database
+.SH SYNOPSIS
+.ta 2c
+.B xspectre
+[-NTdfghikonptuvxy -w width -z name -O name
+.if t .br
+	-C file -D name -F outfile -S stimfile -X lib] cell
+.SH OPTIONS
+.TP
+.B -N
+Do not extract the sub-cell(s), but add a line \fBinclude\fP "\fIcell\fP.spectre"
+.if t .br
+for each sub-cell to the output file
+(when option \fB-h\fP is used).
+.TP
+.B -T
+Tanner output, comments on same line.
+.TP
+.B -d
+Use original database names for instance names.
+.TP
+.B -f
+Send output to file \fIcell\fP.spectre instead of \fIstdout\fP.
+.TP
+.B -g
+Connect a large grounded resistor to each node of the two nodes
+.if t .br
+that are connected by a net statement.
+.TP
+.B -h
+Also extract hierarchy (used local sub-cells).
+.TP
+.B -i
+Also extract imported sub-cells (when option \fB-h\fP is used).
+.TP
+.B -k
+Output all cells as sub-circuits.
+.TP
+.B -o
+Omit model definitions for devices in the output file.
+.TP
+.B -n
+Always add "nbulk" terminals for n-bulk connections.
+.TP
+.B -p
+Always add "pbulk" terminals for p-bulk connections.
+.TP
+.B -t
+Do not output unconnected instances.
+.TP
+.B -u
+Do not automatically add terminals for bulk connections.
+.TP
+.B -v
+Enable verbose mode.
+.TP
+.B -w
+Use \fIwidth\fP for the output listing.
+If zero, infinite width.
+.TP
+.B -x
+Use node number = 0 for nodes whose name start with "gnd" or "GND".
+.TP
+.B -y
+Use node number = 0 for nodes whose name start with "vss" or "VSS".
+.TP
+\fB-z\fP \fIprefix\fP
+Use node number = 0 for nodes whose name start with \fIprefix\fP.
+.TP
+\fB-O\fP \fIname\fP
+Use node number = 0 for the node that has this name.
+.TP
+\fB-C\fP \fIfile\fP
+Use the specified \fIfile\fP as the control file.
+.TP
+\fB-D\fP \fIname\fP
+Define a label \fIname\fP for conditional reading of the control file
+(always converted to uppercase).
+.TP
+\fB-F\fP \fIoutfile\fP
+Send output to the specified \fIfile\fP instead of \fIstdout\fP.
+.TP
+\fB-S\fP \fIstimfile\fP
+Append the file \fIstimfile\fP to the output file. The \fIstimfile\fP
+can contain input stimuli and simulation control statement
+(such as print and plot commands).
+This file is just copied, no checking or interpretation of its contents is done.
+.TP
+\fB-X\fP \fIlib\fP
+Exclude specific certain library cells from the listing
+(when options \fB-hi\fP are used).
+This is very useful if you have a design with your own imported libraries.
+This option may be given several times.
+There are two exclude possibilities:
+(1) all lib's starting with absolute path (for example "-X /usr/ocean");
+(2) the lib with basename (for example "-X primitives").
+.SH DESCRIPTION
+.I Xspectre
+is a program to extract a Spectre netlist (circuit description) out of the database.
+Default, only a netlist of the cell itself is extracted and
+no sub-cells are extracted.
+When using the
+.B -h
+option the program will also extract all (local) sub-cells
+that are not a function (see "SLS: Switch-Level Simulator User's Manual")
+or a device.
+.PP
+Whether or not a cell is a device is determined by
+(1) the contents of the control file,
+(2) the use of the program
+.I xcontrol(1ICD) for new projects
+or
+.I device(1ICD) for old projects
+and/or
+.I putdevmod(1ICD)
+(see the manual pages of these programs),
+or by (3) a set of built-in device names:
+"res" for resistors,
+"cap" for capacitors,
+"d" for diodes,
+"nenh" for n-enhancement transistors,
+"penh" for p-enhancement transistors,
+"ndep" for n-depletion transistors,
+"npn" and "pnp" for bipolar transistors.
+.PP
+When extracting a Spectre circuit descriptions, the program
+.I xspectre
+will automatically
+determine if "nbulk" and/or "pbulk" terminals should be added.
+This is determined from the bulk voltages that are required for
+the different devices that are part of the circuit.
+Under normal circumstances,
+this means that for circuits containing n-enhancement
+and depletion transistors n-bulk connections are added, and that
+for circuits containing p-enhancement transistors (also) p-bulk connections
+are added.
+For each bulk terminal, the program will automatically
+generate an appropriate voltage source, unless the
+.B -u
+option is used.
+.PP
+Default,
+.I xspectre
+will automatically add model descriptions to the network
+for the devices that are part of the network.
+These model descriptions are searched at the following places.
+First, model descriptions are searched in the library files that are specified
+in the control file.
+And second,
+the program will search for model descriptions
+that have been added to the database using the program
+.I putdevmod.
+Note that the device status must be set by
+.I xcontrol
+for new projects.
+For all devices that occur in the network and that have a model
+description available, these model descriptions will be
+added to the end of the network.
+The automatic inclusion of model descriptions can
+be omitted by using the
+.B -o
+option.
+.SH "THE CONTROL FILE"
+For
+.I xspectre
+a control file may be used.
+This control file specifies the models
+that should be used for the devices, the location of the library files
+that contain the descriptions of these models,
+and the bulk voltage for devices.
+The default name of the control file is "xspectrerc".
+First,
+the program tries to read this file from the current working directory.
+Next,
+it tries to open the control file in the process directory.
+.PP
+The format of a specification of a library file in the control file
+is as follows:
+.nf
+
+    include_library \fIfile_name\fP
+
+.fi
+where \fIfile_name\fP is the name of the library file.
+First,
+the program tries to read the library file from the current working directory.
+Otherwise,
+the program tries to open the library file in the process directory.
+.PP
+The format of a specification of a model for a device is as follows:
+.nf
+
+    model \fIname\fP \fIorig_name\fP \fItype_name\fP [( \fIrange_specs\fP )]
+
+.fi
+The \fIorig_name\fP has to be equal to the extracted device name, which is
+equal to the name specified in the element definition file.
+The \fItype_name\fP has to be
+equal to one of the SPICE standard device-model names, such as \fInpn\fP,
+\fIpnp\fP, \fInmos\fP, \fIpmos\fP, \fIc\fP (= cap),
+\fId\fP (= diode), \fIr\fP (= res), or \fIl\fP (= inductor).
+Optional, \fIrange_specs\fP can be specified for device geometries
+for which the model is valid (initial implemented for bipolar models,
+for a description,
+see the Space User's Manual).
+If the \fIrange_specs\fP are left out, then the model is always valid.
+Only the following geometrical parameters can be specified in the \fIrange_specs\fP:
+\fIw\fP, \fIl\fP, \fIv\fP, \fIae\fP, \fIpe\fP and \fIwb\fP.
+.PP
+The format of a specification of a bulk voltage for a device is as follows:
+.nf
+
+   bulk \fIname\fP \fIvalue\fP
+
+.fi
+where \fIname\fP can be the \fIorig_name\fP or the \fItype_name\fP (npn, pnp, nmos, pmos)
+and where \fIvalue\fP is the bulk voltage for the device.
+Up to a maximum of 2 different bulk voltages
+may be specified in the control file.
+Node name "nbulk" is used for the lowest voltage
+and "pbulk" for the highest voltage.
+.PP
+For a device, instance parameters may be specified as follows:
+.nf
+
+   params \fIname\fP [\fImodel_name\fP] { \fIparam_spec1\fP \fIparam_spec2\fP ... }
+
+.fi
+The \fIname\fP can be the \fIorig_name\fP or the \fItype_name\fP and can
+optional be followed by the \fImodel_name\fP.
+A new params-statement overrides a previous specified params-statement.
+With the params-statement the printing order of parameter values (with or
+without parameter name) can be changed.
+Normally invisible parameters can be made visible or used.
+Standard visible parameters can be left out or changed.
+The parameter specifications \fIparam_spec1\fP, \fIparam_spec2\fP etc.
+each must have one of the following forms:
+.nf
+
+   \fIparameter\fP=\fIvalue\fP
+   \fIvalue\fP
+   \fIparameter\fP=\fI$intern_par\fP[<operator><value>]
+   \fI$intern_par\fP[<operator><value>]
+
+.fi
+with \fI$intern_par\fP denoting the actual value of a parameter that is
+internally (in the database) called 'intern_par' (for example $w, $l, $v,
+$area and $perim refer to respectively the width and length of a MOS
+transistor, the value of a resistor or capacitor and the area and
+perimeter of a junction capacitance).
+If the \fI$intern_par\fP  does not exist in the instance attribute-list,
+the parameter specification is left out!
+If the \fI$intern_par\fP is a standard visible parameter, it is not more
+printed on the standard way.
+If the "\fI$intern_par\fP"-forms have a leading '!' sign, they are not printed.
+This is the way to skip a standard visible parameter.
+If the "\fI$intern_par\fP"-forms have two leading '!' signs,
+they are printed in the comment-part.
+The "\fI$intern_par\fP"-forms can optional be followed by an <operator> and a <value>.
+This <value> may also be another internal parameter.
+The operation is only done, if this internal parameter exists and is not zero.
+This <operator> can be a '+', '-', '*' and '/'.
+At last, you can additional use the '@' <operator> with a <string>.
+Denoting that the <string> must be printed after the value.
+.PP
+Other program build-in internal parameters are:
+.TP 8
+\fImname\fP
+the used model name
+.TP
+\fImdl\fP
+the model 'l' subtract value (default 0)
+.TP
+\fImdw\fP
+the model 'w' subtract value (default 0)
+.TP
+\fImsf\fP
+the scale factor for scalable models (default 1)
+.PP
+As an example, the parameters of a junction diode \fBndif\fP that was extracted
+using
+.I space(1ICD),
+and that will be simulated with \fISpectre\fP,
+may be specified as follows:
+.nf
+
+   params \fBndif\fP { area=$area pj=$perim }
+
+.fi
+Further, if the control file contains the keyword:
+.nf
+
+   as_subckt
+
+.fi
+all cells will be listed as sub-circuit (see option \fB-k\fP).
+.PP
+The keyword
+.I name_ground
+may be used to define the ground node name
+(is equivalent to using option \fB-O\fP):
+.nf
+
+   name_ground  \fIstring\fP
+
+.fi
+The following specification is useful with the
+.B -i
+option:
+.nf
+
+   exclude_project  \fIpath_name\fP
+
+.fi
+to exclude specific certain imported projects from the net-listing (see the
+.B -X
+option).
+.PP
+The keyword
+.I rename
+may be used to change the model simulation type name
+and to add some (optional) string:
+.nf
+
+   rename  \fImodeltype\fP  \fInewname\fP  [\fIadd_string\fP]
+
+.fi
+For other keywords, see also the description in the
+.I xspice
+manual page.
+.SH "CONTROL FILE EXAMPLE"
+The following example demonstrates use of above keywords:
+.nf
+
+   include_library spectre.lib
+
+   model dp pdiode d
+   model dw wdiode d
+   model dn ndiode d
+
+   params d { area=$area*1e12 pj=$perim*1e6 }
+
+   rename mos0 mos2
+   rename mos7 bsim3v3
+
+.SH "TANNER OUTPUT"
+When using
+.I xspectre
+you can force instance line comments on the same line with the
+.B -T
+option.
+Such inline comments start with a '//' sign surrounded by space.
+An inline comment continuation is done with a '\\' sign.
+With inline comments it is maybe useful to set very long line width.
+With option
+.B "-w 0"
+you can set infinite line width (no wrapping).
+.br
+When using the
+.B -T
+option twice, you get node(net) coordinates in the inline comment for back-annotation.
+
+.SH "THE LIBRARY FILE"
+The library file contains one or more simulation models according to the
+following format:
+.PP
+   model \fIname\fP \fItype_name\fP ( \fIpar_list\fP )
+.PP
+where \fIpar_list\fP contains the model parameters.
+For a more extended description and examples,
+see the Space User's Manual and the Space Tutorial.
+The \fItype_name\fP may be different to a SPICE \fItype_name\fP
+used in the control file.
+For example:
+\fIcapacitor\fP
+(for \fIc\fP),
+\fIdiode\fP
+(for \fId\fP), or
+\fIresistor\fP
+(for \fIr\fP).
+.br
+For \fInmos\fP and \fIpmos\fP transistors specify for example:
+.PP
+   model nenh bsim4 ( type=n \fIpar_list\fP )
+   model penh bsim4 ( type=p \fIpar_list\fP )
+.PP
+Note that, when \fInmos\fP or \fIpmos\fP is used
+and the first entry in the \fIpar_list\fP is "level=N",
+then \fInmos\fP or \fIpmos\fP is replaced by "mosN type=n|p"
+and level is removed from the \fIpar_list\fP.
+.br
+Note that the \fItype_name\fP \fInpn\fP or \fIpnp\fP
+automatically is replaced by "bjt type=npn|pnp".
+
+.SH "THE SPICEMOD FILE"
+When option
+.B -o
+is not used,
+the
+.I xspectre
+program tries to read the
+.I spicemod
+file from the process directory.
+The contained SPICE models are converted and added to the extracted netlist.
+This file can also contain some control statements
+that should be used for the extracted devices.
+For more detail see the spicemod(4ICD) manual page.
+Note that a device control statement only works and a model is only added,
+when there is no "library model" or "devmod".
+
+.SH EXAMPLE
+.nf
+% xspectre -fhx invert
+.AU "S. de Graaf"
+.SH FILES
+.TP 14
+\fC\fIcell\fP.spectre\fP
+(output file, when option \fB-f\fP is used)
+.TP
+\fCxspectrerc\fP
+(default control file)
+.TP
+\fCspicemod\fP
+(models file for xspice/xspectre/...)
+.SH SEE ALSO
+putdevmod(1ICD),
+space(1ICD),
+spicemod(4ICD),
+xspice(1ICD).
+.br
+Spectre is a trademark of Cadence Design Systems, Inc.

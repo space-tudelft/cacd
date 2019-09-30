@@ -1,0 +1,183 @@
+\documentclass[a4wide,chapterhead,boatheadings]{book}
+
+\thispagestyle{empty}
+
+\newcommand{\smc}[1]{{\sc #1}}
+\newcommand{\ii}{\"{\i}}
+
+\newfont{\sbf}{cmssbx10} % sans font bold, point size = 10
+
+\usepackage{epsfig}
+
+% \input dvips/psfig
+% \psdraft
+% \input{psfig}
+
+% Leave some vertical space between paragraphs; No paragraph indent:
+\setlength{\parskip}{0.6\baselineskip} \setlength{\parindent}{0cm}
+\addtolength{\topmargin}{-1cm}
+% path to the directory of this manual
+\newcommand{\topdir}{.}
+
+% Directory where to look for figures:
+\newcommand{\figdir}{\topdir/figures}
+
+% Leave some vertical space between paragraphs; No paragraph indent:
+\setlength{\parskip}{0.6\baselineskip} \setlength{\parindent}{0cm}
+
+\newcommand{\thedir}{/myproject}
+\newcommand{\cd}[1]{\renewcommand{\thedir}{#1}}
+% this is how the computer displays command lines:
+\newcommand{\type}[1]{\begin{quote}%
+                         {\mbox{\tt /user/hillary\thedir~\%~ #1}}%
+                      \end{quote}}
+% ...and this is how the computer displays two command lines:
+\newcommand{\typeb}[2]{\begin{quote}%
+                         {\mbox{\tt /user/hillary\thedir~\%~ #1}%
+                              \newline%
+                              \mbox{\tt /user/hillary\thedir~\%~ #2}}%
+                       \end{quote}}
+
+% this is for reading figures from directory pictures
+\newcommand{\callpsfig}[2]{\psfig{figure=\topdir/../library/plaatjes/#1,#2}}
+
+% this is how to print terminal names:
+
+% this is how to print terminal names:
+% New 'term' defs made by Rene @ April 22, 1993 to keep compatible with 
+% new \psfig (\term has been defined in psfig.sty).
+\newcommand{\terminal}[1]{{\tt #1}}
+%%% \newcommand{\term}[1]{{\tt #1}}
+
+% this is how to print mask names:
+\newcommand{\mask}[1]{{\sbf #1}}
+
+% this is how to print names of nelsis tools:
+\newcommand{\tool}[1]{{\sl #1\/}}
+
+% this is how to print italic
+\newcommand{\ital}[1]{{\sl #1\/}}
+
+% this is how to print name of a button in an X window:
+%\newcommand{\button}[1]{{\fbox{\small\rule[-0.5ex]{0mm}{2ex}$\!\!\!\!$\sf #1}}}
+%%% \newcommand{\button}[1]{%
+%%%         \fbox{\small\rule[-0.3ex]{0mm}{1.7ex}%
+%%%         $\!\!\!\!$\sf #1}}
+% New 'button' defs made by Rene @ April 22, 1993 to keep compatible with 
+% the times font
+\newlength{\spiff}
+\newcommand{\button}[1]
+{
+  \settowidth{\spiff}{\hspace{2.0mm} {\small\sf #1}}
+  \framebox[\spiff]{\small\sf #1}
+}
+
+% this is how to print file names and cell names:
+\newcommand{\fname}[1]{{\tt #1}}
+
+% this is how to print file names and cell names:
+\newcommand{\file}[1]{{\tt #1}}
+
+% To print an attention message:
+\newcommand{\attention}[2]{\begin{description}\item[{\bf #1}] #2 \end{description}}
+
+% to print a warning
+\newcommand{\warning}[1]{\begin{description}\item[{\bf Warning}:] #1
+\end{description}}
+
+% set fancy headings style
+%% \pagestyle{fancy}
+%\addtolength{\headwidth}{\marginparsep}
+%\addtolength{\headwidth}{\marginparwidth}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{#1}} % remember chapter title
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+                                                % section number and title
+%\lhead[\fancyplain{}{\bf\thepage}]{\fancyplain{}{\small\rightmark}}
+%\rhead[\fancyplain{}{\small\leftmark}]{\fancyplain{}{\bf\thepage}}
+%\cfoot{}
+
+% make lines a little longer
+\addtolength{\oddsidemargin}{-.75cm}
+\addtolength{\evensidemargin}{-.75cm}
+\addtolength{\textwidth}{1.5cm} 
+\addtolength{\textheight}{3.8cm} 
+
+% I have to add this macro for the index stuff
+\newcommand{\see}[2]{$\rightarrow$ {\sl #1}}
+\newcommand{\bold}[1]{{\bf #1}}
+\makeindex
+
+\sloppy
+\begin{document}
+\pagenumbering{roman}
+\vspace*{1cm}
+\centerline{\huge Ocean: the Sea-of-Gates Design System}
+\vspace*{0.5cm}
+\large
+\centerline{Patrick Groeneveld and Paul Stravers}
+\vspace*{0.6cm}
+\centerline{Delft University of Technology, faculty of Electrical Engineering}
+\centerline{Delft, the Netherlands}
+\centerline{e-mail: space-support-ewi@tudelft.nl}
+\centerline{\today}
+\normalsize
+\vspace*{2cm}
+\centerline{\psfig{figure=\figdir/sog11.eps,width=0.9\textwidth}}
+\newpage
+\pagestyle{plain}
+Picture on cover page:\\
+The 11th chip which was made with the \smc{ocean} sea-of-gates design system.
+The 200,000 transistor chip contains is configured as a 'multi-project chip',
+containing a number of independent designs.
+The top quarter contains a few smaller analog circuits and large on-chip
+capacitor. The rest of the chip contains a DCF-77 radio clock receiver circuit. 
+
+\vspace*{\fill}
+%
+%\centerline{\fbox{
+%\psfig{figure=\figdir/tools.eps,width=\linewidth}
+%}}
+%\vspace{1cm}
+%\centerline{The \smc{ocean} sea-of-gates design system}
+\centerline{\psfig{figure=\figdir/patrick.eps,width=3cm,height=4.2cm}
+\hspace{1cm}~\psfig{figure=\figdir/paul.eps,width=3cm,height=4.2cm}}
+\vspace{1cm}
+Copyright \copyright 1994 by P. Groeneveld and P. Stravers.\\
+
+This document was processed with the use of latex.
+\newpage
+\pagestyle{plain} 
+\tableofcontents
+\newpage
+\input \topdir/intro.tex
+
+\input \topdir/image.tex
+
+\input \topdir/tutorial.tex
+
+\input \topdir/programs.tex
+
+\input \topdir/seadali.tex
+
+\input \topdir/madonna.tex
+
+\input \topdir/trout.tex
+
+\input \topdir/tricks.tex
+
+\input \topdir/kissis.tex
+
+\input \topdir/extract.tex
+
+\input \topdir/simeye.tex
+
+\input \topdir/library.tex
+
+\input \topdir/ack.tex
+
+\clearpage              % advance to the page where the index starts
+\addcontentsline{toc}{chapter}{Index}
+
+\input \topdir/index.tex
+
+\end{document} 

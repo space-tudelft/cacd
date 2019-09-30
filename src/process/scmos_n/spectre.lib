@@ -1,0 +1,20 @@
+# process scmos_n
+
+model nenh_0 nmos mos2 type=n (
+                     ld=0.0u       tox=250e-10     nsub=2e16
+                     vto=0.7       uo=600          uexp=0.1
+                     ucrit=10k     delta=0.2       xj=0.5u
+                     vmax=50k      neff=1.0        rsh=0
+                     nfs=0e11      js=2u           cj=100u
+                     cjsw=300p     mj=0.5          mjsw=0.3
+                     pb=0.8        cgdo=300p       cgso=300p)
+
+model penh_0 pmos mos2 type=p (
+                     ld=0.0u       tox=250e-10     nsub=5e16
+                     vto=-1.1      uo=200          uexp=0.1
+                     ucrit=10k     delta=0.2       xj=0.5u
+                     vmax=50k      neff=1.0        rsh=0
+                     nfs=0e11      js=10u          cj=500u
+                     cjsw=600p     mj=0.5          mjsw=0.3
+                     pb=0.8        cgdo=300p       cgso=300p)
+

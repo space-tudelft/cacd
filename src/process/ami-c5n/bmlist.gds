@@ -1,0 +1,15 @@
+# ami-c5n : N-well cmos process
+# (adapted from scmos_n process)
+
+cpg	46
+caa	43
+cmf	49
+cms	51
+cca	48
+ccp	47
+cva	50
+cwn	42
+csn	45
+csp	44
+cog	52
+cx	0

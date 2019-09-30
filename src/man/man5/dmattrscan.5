@@ -1,0 +1,43 @@
+.TH DMATTRSCAN 5ICD "DMI User's Manual"
+.SH NAME
+dmAttrScan - read attribute from attribute string
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+char *dmAttrScan (char *attr, char **par, char **val);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "char *attr"
+is a pointer to the beginning of the attribute string.
+.TP
+.B "char **par"
+is the parameter that is read.
+.TP
+.B "char **val"
+is the value that is read.
+.SH DESCRIPTION
+Function
+.B dmAttrScan
+reads attributes from an attribute string.
+The first argument should be the part of the attribute string
+that is still to be read.
+Because \fBdmAttrScan\fP returns the remaining part of the
+attribute string after the next attribute has been read,
+the return value of a particular call to \fBdmAttrScan\fP
+can be used as first argument for a subsequent call to \fBdmAttrScan\fP.
+The parameter that is found is returned in \fIpar\fP,
+while the value that is found is returned in \fIval\fP
+(the addresses of the pointers are required).
+.SH LIMITATIONS
+.SH DIAGNOSTICS
+\fBdmAttrScan\fP returns NULL when the input is exhausted.
+.SH EXAMPLES
+.SH SEE ALSO
+dmAttrPrint(5ICD)
+.SH NOTE
+The strings denoted by \fIpar\fP and \fIval\fP may not contain
+the characters '=' and ';'.

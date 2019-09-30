@@ -1,0 +1,46 @@
+.TH INITCACDCMAP 5ICD "9/6/88"
+.UC 4
+.SH NAME
+InitCacdCmap - initialize the CACD colormap
+.SH SYNOPSIS
+.nf
+\fB
+InitCacdCmap (display, screen_number)
+Display *display;
+int screen_number;
+\fP
+.fi
+.SH PARAMETERS
+.TP 14
+.B display
+pointer to an Display structure obtained from\fB XOpenDisplay()\fP.
+.TP 14
+.B screen_number
+the number of the screen of the display that is to be used.
+.SH DESCRIPTION
+The function \fBInitCacdCmap()\fP initializes the Nelsis ICD CACD
+colormap.
+First it checks the existence of the property \fBRGB_CACD_MAP\fP
+on the root window, if it does not exist it tries to set this
+property by calling the program \fBsetcmap\fP and does the check again.
+If the property exists it initializes some static data for later use.
+This function must be called before any of the other \fBcacdcmap\fP
+functions are called.
+.SH DIAGNOSTICS
+If the call to \fBInitCacdCmap()\fP is successful \fB1\fP is returned.
+If \fBInitCacdCmap()\fP fails \fB0\fP will be returned
+and \fBcacdcmaperrno\fP will be set to one of the following values:
+.TP 14
+.B NOCMAP
+no CACD colormap exists.
+.TP 14
+.B BADCMAP
+the CACD colormap was found but has a bad format.
+.TP 14
+.B NOCORE
+not enough core could be allocated.
+.SH SEE ALSO
+setcmap(1ICD)
+CacdCmapIntro(5ICD)
+CacdCmapError(5ICD)
+CreateGCforCmap(5ICD)

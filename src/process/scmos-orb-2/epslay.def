@@ -1,0 +1,25 @@
+%% process scmos-orb-2
+%% getepslay prolog for scmos_n process.
+
+%%Include <epslay.pro>
+
+%%Order: cx cwn csn csp caa cpg cmf cca ccp cms cva cog
+
+[  6 14 10 /Helvetica-Bold] plotFont
+
+%% mask   patt   pscale linewidth
+[ (cwn)    p19   1.0    0.1 ] defineStyle
+[ (csn)    p2    1.0    0.1 ] defineStyle
+[ (csp)    p3    1.0    0.1 ] defineStyle
+[ (caa)    p6    1.0    0.1 ] defineStyle
+[ (cpg)    p18   1.0    0.1 ] defineStyle
+[ (cmf)    p16   1.0    0.1 ] defineStyle
+[ (cca)    black 1.0    0.1 ] defineStyle
+[ (ccp)    p13   1.0    0.1 ] defineStyle
+[ (cms)    p15   1.0    0.1 ] defineStyle
+[ (cva)    white 1.0    0.5 ] defineStyle
+[ (cog)    white 1.0    0.5 ] defineStyle
+[ (t_caa)  p6    1.0    0.1 ] defineStyle
+[ (t_cpg)  p18   1.0    0.1 ] defineStyle
+[ (t_cmf)  p16   1.0    0.1 ] defineStyle
+[ (t_cms)  p15   1.0    0.1 ] defineStyle

@@ -1,0 +1,5 @@
+device npnBW
+begin spicemod
+* terminals c b e
+* prefix q
+end

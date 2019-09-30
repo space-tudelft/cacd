@@ -1,0 +1,5 @@
+bbox 6 6
+port in e
+port out f
+port in xi
+port *out xo

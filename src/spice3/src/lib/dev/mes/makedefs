@@ -1,0 +1,12 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+
+COBJS		= mes.o mesacl.o mesask.o mesdel.o mesdest.o mesdisto.o \
+		  mesdset.o mesgetic.o mesload.o mesmask.o mesmdel.o \
+		  mesmpar.o mesnoise.o mesparam.o mespzld.o messetup.o \
+		  mestemp.o mestrunc.o
+
+LIB_TARGET	= ../../dev.a
+INCLUDE		= -I../../../include
+

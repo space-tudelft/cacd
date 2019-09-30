@@ -1,0 +1,127 @@
+.TH DMINTRO 5ICD "DMI User's Manual"
+.UC 4
+.SH NAME
+dmintro - intro design data management interface functions
+.SH SYNOPSIS
+\fB#include "dmincl.h"\fP
+.SH DESCRIPTION
+Section 5 of the ICD (IC Design) manual describes
+functions found in various libraries.
+One key set of library functions are
+the DDM (Design Data Management) Interface functions (the DMI functions).
+The DMI functions must be used by design tools to obtain
+access to the design data stored in the Nelsis framework database.
+To use these functions, the file \fB"dmincl.h"\fP must be included
+in the program sources.
+.PP
+Most of the DMI functions have one or more error returns.
+An error condition is indicated by an otherwise impossible return value.
+This is usually \fB-1\fP for integer functions,
+or \fBNULL\fP for functions returning a pointer to something;
+the individual manual pages give the details.
+.PP
+The external variable
+.B dmerrno
+contains the error number after an error has occurred.
+This variable is not cleared after a successful call.
+Thus, it should only be tested after an error.
+The following is the list of error codes
+as defined in \fB"dmincl.h"\fP:
+.PP
+.nf
+.ie n .ta 16 24
+.el .ta \w'DME_DMIBADNAME      'u \w'DME_DMIBADNAME      22        'u
+Definition:	Errno:	Description:
+
+DME_SYS 	1	/* error in system call */
+DME_DDM	2	/* DDM internal error */
+DME_BADARG  	3	/* bad arguments call */
+DME_MODE	4	/* mode is invalid for key */
+DME_BADPR	5	/* bad project */
+DME_BADVIEW	6	/* bad view */
+DME_NOCELL	7	/* cell does not exist */
+DME_BADKEY      8	/* bad key */
+DME_LOCK        9	/* cell is locked */
+DME_PRIM        10	/* can't open primary file */
+DME_RECUR       11	/* illegal recursion */
+DME_EXIST	12	/* cell already exists */
+DME_TECH	13	/* can't open technology file */
+DME_PUT	14	/* dmPutDesignData write error */
+DME_GET	15	/* dmGetDesignData read error */
+DME_FMT	16	/* bad format */
+DME_PRID	17	/* unknown process id */
+DME_PRDATA	18	/* can't access process data */
+DME_CORE	19	/* no more core */
+DME_PRREAD	20	/* process data read error */
+DME_CVIEW	21	/* bad current view */
+DME_BADNAME	22	/* bad name */
+DME_NOVIEW	23	/* view does not exist */
+DME_EXVIEW	24	/* view already exists */
+DME_PRLOCK	25	/* project is locked */
+DME_FOPEN 	26	/* cannot open file */
+DME_BADENV	27	/* bad DDM environment */
+DME_NOCELLL	28	/* no celllist present */
+DME_INIT	29	/* already initialized */
+DME_NOPRJL	30	/* no project list present */
+DME_NOIMPCL	31	/* no imported celllist present */
+DME_NODMRC 	32	/* cannot open file .dmrc */
+DME_BADREL	33	/* bad release */
+DME_NOINIT	34	/* not yet initialized */
+DME_DMANERR	35	/* design manager error */
+DME_DMANRR	36	/* design manager rejects request */
+DME_NOROOT	37	/* cell is not a root */
+DME_NOFATH	38	/* no father cell */
+DME_NOCELLTYPE	39	/* no/wrong celltype */
+DME_NOINTERFACETYPE 40	/* no/wrong interfacetype */
+DME_NOMASK	41	/* no/wrong mask present */
+.SH SPECIAL CONSIDERATIONS
+In order to prevent name clashes,
+application programs should not use external names beginning
+with "\fBdm\fP" or "\fB_dm\fP",
+since all DMI functions do so.
+.SH FILES
+.nf
+.ta \w'ICDPATH/ICDARCH/lib/libddm.a   'u
+ICDPATH/share/src/libddm	Include file directory.
+ICDPATH/ICDARCH/lib/libddm.a	Library file.
+.fi
+.SH SEE ALSO
+dmError(5ICD).
+.SH "FUNCTIONS AVAILABLE IN THE DMI LIBRARY"
+.nf
+.ta \w'dmGetMetaDesignData 'u
+dmAttrPrint	- concatenate attribute to attribute string
+dmAttrScan	- read attribute from attribute string
+dmCheckIn	- terminate a cell transaction
+dmCheckOut	- initiate a cell transaction
+dmCkinAll	- terminate all cell transactions
+dmCloseCellStreams	- close all streams for cell
+dmCloseProject	- terminate a project transaction
+dmCloseStream	- terminate a stream transaction
+dmError, dmPerror	- error message functions
+dmFindProjKey	- find project key and remote cell name
+dmGetCellStatus	- get extraction status of a cell
+dmGetDesignData	- get data from a database stream
+dmGetMetaDesignData	- get meta design data
+dmGetXData	- get next extraction status entry
+dmInit	- initialize the Nelsis framework environment
+dmOpenProject	- initiate a project transaction
+dmOpenStream	- initiate a stream transaction
+dmOpenXData	- open the xcontrol file
+dmPrintf	- print formatted data into the database
+dmPutCellStatus	- put or modify extraction status of a cell
+dmPutDesignData	- put data to a database stream
+dmPutMetaDesignData	- put meta design data
+dmPutXData	- put next extraction status entry
+dmQuit	- quit all database interaction
+dmRemoveCell	- remove a cell from a project
+dmRenameStream	- rename a certain cell stream
+dmScanf	- scan formatted data from the database
+dmSeek	- reposition a stream pointer in a stream
+dmStat	- get stream status
+dmStatXData	- get the xcontrol file status
+dmTell	- get current position in a stream
+dmTestname	- test a name
+dmUnlink	- unlink secondary data stream
+dmUnlinkXData	- unlink the xcontrol file
+.fi

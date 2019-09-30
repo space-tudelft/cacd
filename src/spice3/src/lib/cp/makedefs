@@ -1,0 +1,11 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+
+COBJS		= alias.o backq.o complete.o cshpar.o front.o glob.o \
+		  history.o input.o lexical.o modify.o output.o quote.o \
+		  unixcom.o variable.o var2.o wlist.o numparse.o
+
+LIB_TARGET	= ../cp.a
+INCLUDE		= -I../../include
+

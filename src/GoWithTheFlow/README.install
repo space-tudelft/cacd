@@ -1,0 +1,3 @@
+To install this tree in another directory then default,
+run the script "install_op" to set internal paths correctly.
+Note that this is also done by "make" (see Makefile).

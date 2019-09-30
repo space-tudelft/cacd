@@ -1,0 +1,57 @@
+/* process : nmos4u700A  TU-Delft
+/* author  : A.J. Schooneveld, TU-Delft
+/* date    : 6 May 1987
+*/
+
+vh=5
+vminh=4
+vmaxl=1
+krise=0.90
+kfall=0.66
+
+nenh
+   loffset=0.625u
+   woffset=0.88u
+   w=6u l=4u : rstat=4.97k rsatu=25.4k cgstat=13.0f cgrise=9.2f
+	       cgfall=12.0f cestat=2.2f cerise=2.4f cefall=2.9f
+   w=15u l=4u : rstat=1.69k rsatu=6.95k cgstat=48.8f cgrise=24.2f
+	        cgfall=38.0f cestat=6.3f cerise=5.6f cefall=8.9f
+   w=30u l=4u : rstat=0.832k rsatu=3.19k cgstat=92.1f cgrise=54.1f
+	        cgfall=82.2f cestat=12.8f cerise=11.8f cefall=15.0f
+   pullup
+      /* not determined */
+      w=6u l=4u : rdyn=22.3k cch=8.7f
+      w=15u l=4u : rdyn=5.3k cch=31.8f
+      w=30u l=4u : rdyn=2.2k cch=53.3f
+   end
+   pulldown
+      w=6u l=4u : rdyn=22.3k cch=8.7f
+      w=15u l=4u : rdyn=5.3k cch=31.8f
+      w=30u l=4u : rdyn=2.2k cch=53.3f
+   end
+   passup
+      w=8u l=4u : rdyn=7.94k cch=4.62f
+   end
+   passdown
+      w=8u l=4u : rdyn=5.24k cch=5.29f
+   end
+end
+
+ndep
+   loffset=0.605u
+   woffset=1.2u
+   w=6u l=4u : rstat=29.2k rsatu=29.2k cgstat=7.8f cgrise=10.7f
+	       cgfall=23.4f cestat=0f cerise=0f cefall=0f
+   w=6u l=10u : rstat=76.5k rsatu=76.5k cgstat=11.7f cgrise=19.8f
+	        cgfall=28.2f cestat=0f cerise=0f cefall=0f
+   w=12u l=4u : rstat=10.2k rsatu=10.2k cgstat=16.4f cgrise=31.7f
+	        cgfall=46.0f cestat=0f cerise=0f cefall=0f
+   load
+      w=6u l=4u : rdyn=25.5k cch=-3.6f
+      w=6u l=10u : rdyn=66.3k cch=-14.9f
+      w=12u l=4u : rdyn=8.7k cch=-15.9f
+   end
+   superload
+      w=12u l=4u : rdyn=3.63k cch=-15.6f
+   end
+end

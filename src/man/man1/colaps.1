@@ -1,0 +1,131 @@
+.ll 77
+.hy
+.TH COLAPS 1SDF "THE SEADIF PROGRAMMERS MANUAL"
+.SH NAME
+colaps - flatten the hierarchy of a cell in the circuit view
+
+.SH SYNOPSIS
+   colaps [...options...] [project] <sdfinputcell>
+
+.SH PARAMETERS
+.TP
+project
+     Name of the (seadif) library project, if not specified
+     local (seadif) library name is taken.
+.TP
+<sdfinputcell>
+     Name of the (seadif) cell of the library project.
+
+.SH OPTIONS
+.na
+.nf
+.fi
+.ad
+
+.TP
+-h Help--- print list of options.
+.TP
+-k <keepfile>
+     Input file containing a list with circuits and/or
+     instances which should not be flattened.
+.TP
+-c
+     Flatten everything as far as the primary cell level,
+     that is, down to the level which consists exclusively
+     of transistors, capacitances or resistances.
+.TP
+-o <sdfoutputcell>
+     Name of the output (seadif) cell to be created in local
+     (seadif) library. The default output cell is <sdfinputcellFlt>
+     for an (seadif) imported cell or <sdfinputcell> for a local
+     cell.
+.TP
+-l
+     Keep track of the flattened paths of the instances.
+.TP
+-f <trackfile>
+     Output file containing the list with flattened paths
+     and their instances. By default the <outputcell.list>
+     is taken.
+.TP
+-q
+     Do not print the state of the program during execution.
+
+.RE
+
+.SH
+.SH DESCRIPTION
+
+COLAPS reads the circuit description of an <sdfinputcell> and
+recursively of all its children. It then removes the model
+calls contained in this circuit tree by expanding them as far
+as a certain optional level. Finally, it writes the flattened
+cell into the <sdfoutputcell> of local (seadif) library. COLAPS
+is operating on the (seadif) description of a cell. Therefore,
+all the cells used must have a correspondent (seadif) description.
+
+By default, COLAPS flattens all the circuits found in the
+<sdfinputcell> to the <sdfoutputcell>. If one or more <childcircuit>
+and/or <childinstance> are specified in <keepfile> then all but
+the specified circuits and/or instances are flattened to the output.
+If -c option is specified then all but primary cells are flattened
+to the output. Mixed options -c and -k <keepfile> are possible.
+
+.SH FILES
+
+To run properly the command requires that a <keepfile> is
+present in your current directory when -k option is specified.
+This file should contain a list with the circuits and/or
+instances which shouldn't be flattened. Each line in this file
+should contain first the circuit name and/or second the instance
+name which belongs to the circuit. If only the circuit name is
+specified then this particular circuit is not flattened. If,
+both a circuit and an instance name are specified then
+this particular instance will not be flattened.
+Everything after these two arguments is treated as comment.
+The lines starting with procent character (%) are also treated
+as comment lines.
+
+An example of such a <keepfile> is:
+
+    %keepfile for my inputcell
+              .
+              .
+              .
+    <sdfinputcell> <childinstance1>    do not flatten <childinstance1>
+                                       %of circuit <sdfinputcell>
+    <childcircuit1>                    %do not flatten <childcircuit1>
+    <childcircuit2> <childinstance1>   do not flatten <childinstance1>
+                                       %of circuit <childcircuit2>
+              .
+              .
+              .
+    %end of the list
+
+.SH EXAMPLE
+Use the program nelsea to convert the cell between nelsis and
+seadif. To flatten all cells of nelsis circuit 'myadder' down
+to the primary cell level, for example, use:
+
+       nelsea -C myadder
+       colaps -c myadder
+       nelsea -rC myadder
+
+To flatten all cells of imported circuit 'impcell_adder'
+from project 'other_proj', exclusively the cells specified
+in 'nonflatfile' and to keep track of flattened instance
+paths use:
+
+  colaps -l -k nonflatfile other_proj impcell_adder
+
+Examples of other possibilities:
+
+  colaps -l -f trackfile_name other_proj impcell_adder
+  colaps -c -o outputcell_name other_proj impcell_adder
+  colaps -c -k nonflatfile -o outputcell_name other_proj impcell_adder
+
+.SH "AUTHOR"
+   Viorica Simion, Delft University of Technology.
+
+.SH "SEE ALSO"
+   nelsea(1SDF)

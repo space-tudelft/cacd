@@ -1,0 +1,31 @@
+# bmlist.gds of DIMES03 process
+# created by Arjan van Genderen 8 feb. 2002
+bn          1
+dp          2
+dn          3
+wp          10
+nwp         11
+cb          12
+co          13
+ic          14
+ic:term     14
+ct          15
+in:term     16
+ct2         17
+in2:term    18
+lp          20
+lb1         21
+lb2         22
+lb3         23
+pc          24
+wn1         31
+wn2         32
+wn3         33
+cap         40
+st          41
+scp         42
+dt          43
+kh1         44
+kh2         45
+ze          49
+bb          50

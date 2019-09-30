@@ -1,0 +1,34 @@
+# directory: demo/FreePDK45/ringosc
+
+conductors 13
+#name   lay  res (ohm)
+cond_nw   0  0
+cond_aa   4  0
+cond_ps   5  7.8
+cond_m1   7  0.38
+cond_m2   9  0.25
+cond_m3  11  0.25
+cond_m4  13  0.21
+cond_m5  15  0.21
+cond_m6  17  0.21
+cond_m7  19  0.075
+cond_m8  21  0.075
+cond_m9  23  0.03
+cond_m10 25  0.03
+
+contacts 13
+#name   lay lay res (ohm lambda^2)
+cont_su  -1  7  1e-180
+cont_nw   0  7  1e-180
+cont_aa   4  7  1e-180
+cont_ps   5  7  0.0338e8
+cont_m1   7  9  0.02535e8
+cont_m2   9 11  0.0245e8
+cont_m3  11 13  0.0245e8
+cont_m4  13 15  0.0588e8
+cont_m5  15 17  0.0588e8
+cont_m6  17 19  0.0588e8
+cont_m7  19 21  0.16e8
+cont_m8  21 23  0.16e8
+cont_m9  23 25  0.32e8
+

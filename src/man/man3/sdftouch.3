@@ -1,0 +1,38 @@
+.ll 77
+.hy
+.TH SDFTOUCH 3SDF "THE SEADIF PROGRAMMERS MANUAL"
+.SH NAME
+sdftouch - functions to set the modification date of a seadif object
+.SH SYNOPSIS
+
+ #include <sealib.h>
+
+ int sdftouchlay(LAYOUTPTR   lay, time_t timestamp);
+ int sdftouchcir(CIRCUITPTR  cir, time_t timestamp);
+ int sdftouchlib(LIBRARYPTR  lib, time_t timestamp);
+ int sdftouchfun(FUNCTIONPTR fun, time_t timestamp);
+
+.SH DESCRIPTION
+If the named seadif object does not yet exist in the database it is created,
+similar to sdfwrite(3SDF), and the modification date in the Status field is
+set to
+.I timestamp .
+
+If the named seadif object already exists in the database, then
+.I sdftouch
+sets the modification date of the object to
+.I timestamp .
+Because of run time efficiency, this modifiction date is not written to the
+seadif database.
+As a consequence, the programmer must call
+.I sdfwrite (3SDF)
+before closing the database, otherwise the call to
+.I sdftouch
+has no effect.
+.SH "RETURN VALUE"
+These functions return TRUE if the date could be set, NIL otherwise.
+.SH AUTHOR
+Paul Stravers, Delft University of Technology.
+
+.SH "SEE ALSO"
+sdfwrite(3SDF), seadif(4SDF)

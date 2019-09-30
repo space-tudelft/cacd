@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# This script changes the default path "/data/public/common/software/opprog"
+# into OPPROGPATH (which is the current directory path).
+# This script needs only to be run if you wants to use another OPPROGPATH.
+
+OPPROGPATH=`pwd`
+echo OPPROGPATH=$OPPROGPATH
+
+for file in \
+	bin/GoWithTheFlow.desktop \
+	bin/op_init \
+	ref_files/bashrc_ref \
+	sim_libs/CellsLib/_info
+do
+if [ -f $file ]
+then
+	sed -e s^/data/public/common/software/opprog^$OPPROGPATH^g $file > tmpOP
+	if diff $file tmpOP > /dev/null
+	then
+	    echo "Warning: file \"$file\" no diffs found"
+	    rm tmpOP
+	else
+	    chmod --reference=$file tmpOP
+	    mv -f tmpOP $file
+	fi
+else
+	echo "Warning: file \"$file\" not found"
+fi
+done
+

@@ -1,0 +1,10 @@
+
+		       About the library "chip"
+		       ========================
+
+This library contains th entire semi-custom 'fishbone' chip, including the
+bonding pads and the other patterns at the border. This is the chip which we
+can process at Delft university or Technology. For more details, see the
+'README'-file in the bonding library.
+
+Patrick Groeneveld 1-1993

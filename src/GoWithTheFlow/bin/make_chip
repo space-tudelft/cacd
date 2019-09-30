@@ -1,0 +1,242 @@
+#!/bin/sh
+# the next line restarts using wish \
+exec wish "$0" "$@"
+
+global env
+
+# The following variables can be specified in the install script.
+#----------------------------------------------------------------
+#InstallGlobals#
+set VWO_PATH /afs/.ewi.tudelft.nl/home/op/o/p/opacc/vwo_data
+#the path to the directory where the sub_directories for the users are made
+
+set ProgName "make_chip"
+
+if {[info exists env(OPPROGPATH)]} {
+   set OPPROGPATH $env(OPPROGPATH)
+} else {
+   puts stderr "env OPPROGPATH not set"
+   exit 1
+}
+
+set TclLibPath $OPPROGPATH/src_libs/make_chip
+#the path to the directory where the sources are kept
+
+set VHD_LIB_PATH $OPPROGPATH/sim_libs/CellsLib
+#the path to the vhdl cells_library of the used cells
+#EndInstallGlobals#
+
+set WORK_DIR     $VWO_PATH/vwo_$env(USER)
+set SOG_DB       test
+set TESTDATA     "NO"
+set SIM_TYPE     "INTERN"
+set env(CWD)     $WORK_DIR
+
+# initialisation of the system
+#
+if {![file exists $WORK_DIR]} {
+   file mkdir $WORK_DIR
+   file copy $TclLibPath/and2.cir $WORK_DIR
+   file copy $TclLibPath/and2.sls $WORK_DIR
+   file copy $TclLibPath/and2.vhd $WORK_DIR
+   file copy $TclLibPath/and2.ldm $WORK_DIR
+   file copy $TclLibPath/fadder.cir $WORK_DIR
+   file copy $TclLibPath/mult3x3.cir $WORK_DIR
+   file copy $TclLibPath/components.def $WORK_DIR
+   cd $WORK_DIR
+   file attributes and2.cir -permissions 0744
+   file attributes and2.sls -permissions 0744
+   file attributes and2.vhd -permissions 0744
+   file attributes and2.ldm -permissions 0744
+   file attributes fadder.cir -permissions 0744
+   file attributes mult3x3.cir -permissions 0744
+   file attributes components.def -permissions 0744
+   exec mkvopr $SOG_DB
+   cd $WORK_DIR/$SOG_DB
+   set env(CWD) $WORK_DIR/$SOG_DB
+   catch {exec csls $WORK_DIR/and2.sls}
+   catch {exec cldm $WORK_DIR/and2.ldm}
+}
+
+cd $WORK_DIR
+set env(CWD) $WORK_DIR
+
+# with the -test argument test output may be shown
+# with the -intern_sim argument simulation will be carried out with the
+# internal simulator and not via the vhdl_simulator
+#
+set sim_idx [lsearch $argv -test]
+if {$sim_idx >= 0} { set TESTDATA "YES" }
+
+set sim_idx [lsearch $argv -intern_sim]
+if {$sim_idx >= 0} { set SIM_TYPE "INTERN" }
+
+set sim_idx [lsearch $argv -vhdl_sim]
+if {$sim_idx >= 0} { set SIM_TYPE "VHDL" }
+
+lappend auto_path $TclLibPath
+
+frame       .fr1 -bg gold -bd 2 -relief raised
+frame       .fr2 -bg gold -bd 2 -relief raised
+canvas      .cv  -bg wheat -bd 2 -relief sunk -width 900 -height 650
+radiobutton .fr1.rb1 -text "connect" -variable cmd -value CONNECT\
+                     -bg gold -indicatoron 0 -selectcolor gold3 -width 10\
+                     -state disabled -command "hide_cells"
+radiobutton .fr1.rb2 -text "move" -variable cmd -value MOVE\
+                     -bg gold -indicatoron 0 -selectcolor gold3 -width 10\
+                     -state disabled -command "hide_cells"
+radiobutton .fr1.rb3 -text "delete" -variable cmd -value DELETE\
+                      -bg gold -indicatoron 0 -selectcolor gold3 -width 10\
+                     -state disabled -command "hide_cells"
+radiobutton .fr1.rb4 -text "add" -variable cmd -value ADD\
+                      -bg gold -indicatoron 0 -selectcolor gold3 -width 10\
+                      -state disabled -command "show_cells"
+radiobutton .fr1.rb5 -text "na210" -variable cmd -value ADD_NA210\
+                     -bg gold -indicatoron 0 -selectcolor gold3 -width 8
+radiobutton .fr1.rb6 -text "no210" -variable cmd -value ADD_NO210\
+                     -bg gold -indicatoron 0 -selectcolor gold3 -width 8
+radiobutton .fr1.rb7 -text "ex210" -variable cmd -value ADD_EX210\
+                     -bg gold -indicatoron 0 -selectcolor gold3 -width 8
+radiobutton .fr1.rb8 -text "iv110" -variable cmd -value ADD_IV110\
+                     -bg gold -indicatoron 0 -selectcolor gold3 -width 8
+radiobutton .fr1.rb9 -text "ground" -variable cmd -value ADD_GND\
+                     -bg gold -indicatoron 0 -selectcolor gold3 -width 8
+radiobutton .fr1.rb10 -text "and2" -variable cmd -value ADD_AND2\
+                      -bg gold -indicatoron 0 -selectcolor gold3 -width 8
+radiobutton .fr1.rb11 -text "fadder" -variable cmd -value ADD_FADDER\
+                      -bg gold -indicatoron 0 -selectcolor gold3 -width 8
+radiobutton .fr2.rb1 -text "edit_mode"   -variable mode -value EDIT\
+                     -bg gold -indicatoron 0 -selectcolor gold3 -width 15\
+                     -state disabled -command {set_edit_mode}
+radiobutton .fr2.rb2 -text "simulate_mode"   -variable mode -value SIMULATE\
+                     -bg gold -indicatoron 0 -selectcolor gold3 -width 15\
+                     -state disabled -command {set_simulation_mode}
+radiobutton .fr2.rb3 -text "layout_mode"   -variable mode -value LAYOUT\
+                     -bg gold -indicatoron 0 -selectcolor gold3 -width 15\
+                     -state disabled -command {set_layout_mode}
+menubutton  .fr2.file -text "File" -menu .fr2.file.cmds -bg gold
+menu .fr2.file.cmds
+     .fr2.file.cmds add cascade -label "Read" -menu .fr2.file.cmds.read
+     .fr2.file.cmds add command -label "Write"       -command write_cir_file -state disabled
+     .fr2.file.cmds add command -label "PrintCircuit" -command print_circuit -state disabled
+     .fr2.file.cmds add command -label "PrintLayout"  -command print_layout  -state disabled
+if {$TESTDATA == "YES"} {
+     .fr2.file.cmds add command -label "show_instances" -command show_instances
+     .fr2.file.cmds add command -label "show_conns"     -command show_conns
+     .fr2.file.cmds add command -label "show_ports"     -command show_ports
+}
+     .fr2.file.cmds add command -label "Quit" -command {destroy .}
+menu .fr2.file.cmds.read
+
+set cir_files [glob -nocomplain "*.cir"];
+foreach i_cir $cir_files {
+   .fr2.file.cmds.read add command -label $i_cir -command {read_cir_file $i_cir}
+}
+
+menubutton  .fr2.utils -text "Utilities" -menu .fr2.utils.cmds -bg gold
+menu	.fr2.utils.cmds
+	.fr2.utils.cmds add command -label "mk_sls"\
+			-command { global cir_name; cir2sls $cir_name }
+	.fr2.utils.cmds add command -label "mk_vhdl"\
+			-command { global cir_name; cir2vhd $cir_name }
+	.fr2.utils.cmds add command -label "compile"\
+			-command { global cir_name; do_compile $cir_name.vhd }
+	.fr2.utils.cmds add command -label "simulate"\
+			-command { global cir_name mode
+				   if {$mode == "SIMULATE"} { do_simulate }
+				 }
+
+pack .fr2       -side top -fill x
+pack .fr1       -side top -fill x
+pack .cv        -side bottom -fill both -expand 1
+pack .fr1.rb1   -side left -padx 2 -pady 2
+pack .fr1.rb2   -side left -padx 2 -pady 2
+pack .fr1.rb3   -side left -padx 2 -pady 2
+pack .fr1.rb4   -side left -padx 2 -pady 2
+pack .fr2.file  -side left
+#pack .fr2.utils -side left
+pack .fr2.rb1   -side right
+pack .fr2.rb2   -side right
+pack .fr2.rb3   -side right
+
+set mode "EDIT"
+set GW       10 ;#distance between the grid_lines
+set CELL_W   70
+set CELL_H   80
+set CELL_NH  15
+set PORT_W   10
+set PORT_H   10
+set CELL_FNT "-*-Courier-Bold-O-Normal--*-120-*"
+set PORT_FNT "-*-Courier-Bold-R-Normal--*-100-*"
+set DXT      5
+set N_CELL  -1
+set N_CONN  -1
+set N_PORT  -1
+set my_wd    [pwd]
+
+array set and2_Y {00 0\
+                  01 0\
+                  10 0\
+                  11 1}
+
+array set na210_Y {00 1\
+                   01 1\
+                   10 1\
+                   11 0}
+
+array set no210_Y {00 1\
+                   01 0\
+                   10 0\
+                   11 0}
+
+array set ex210_Y {00 0\
+                   01 1\
+                   10 1\
+                   11 0}
+
+array set iv110_Y {0 1\
+                   1 0}
+
+array set fadder_S {000 0\
+                    001 1\
+                    010 1\
+                    011 0\
+                    100 1\
+                    101 0\
+                    110 0\
+                    111 1}
+
+array set fadder_CO {000 0\
+                     001 0\
+                     010 0\
+                     011 1\
+                     100 0\
+                     101 1\
+                     110 1\
+                     111 1}
+
+set fsim ""
+set ftmp [open $TclLibPath/components.def "r"]
+
+while {![eof $ftmp]} {
+   set txt [gets $ftmp]
+   if {$txt != ""} {
+      if {[lindex $txt 0] == "ports"} {
+         set nt [llength $txt]
+         for {set i 2} {$i < $nt} {incr i} {
+            lappend SUBTERM_ARR([lindex $txt 1]) [lindex $txt $i]
+         }
+      }
+   }
+}
+
+if {$SIM_TYPE == "VHDL"} {
+   if {[file isdirectory work] == 0} {
+     exec vlib work
+   }
+   exec vmap CellsLib $VHD_LIB_PATH
+}
+
+bind .cv <ButtonPress>    {press_commands %x %y}
+bind .cv <ButtonRelease>  {release_commands %x %y}
+bind .cv <Button1-Motion> {drag_commands %x %y}

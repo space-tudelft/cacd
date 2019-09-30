@@ -1,0 +1,167 @@
+.TH HELIOS 1ICD "User Commands"
+.UC 4
+.SH NAME
+helios - graphical user interface for the space layout verification system
+.SH SYNOPSIS
+\fBhelios\fP  [X options]  [-v]  [project]
+.SH OPTIONS
+Beside the standard X Toolkit options (e.g. to set the display,
+the geometry, and the foreground color of the program),
+the following other option may be specified:
+.TP
+.B -v
+Print version of this program.
+.RE
+.SH DESCRIPTION
+.I Helios
+is an X Windows (OSF/Motif) based graphical user interface
+for the
+.I space(1ICD)
+layout verification system.
+The interface can be used to import layout descriptions
+(e.g. gdsII), extract a circuit description from it,
+retrieve circuit descriptions (e.g. EDIF or SPICE language)
+start simulations etc.
+.SH COMMANDS
+Commands are organized in six PullDown Menu's (i.e. \fIDatabase\fP,
+\fILayout\fP, \fIExtractor\fP, \fICircuit\fP, \fIOptions\fP and \fIHelp\fP).
+This MenuBar buttons can also be activated by typing the <\fBMeta\fP> key
+and the mnemonic character (the mnemonic
+is the character that is underlined).
+Commands in the PullDown Menu's can also be activated by only typing
+a mnemonic character (Note: This mnemonic can be turned off,
+if you are using accelerator keys).
+Default, a "QuikRefWin" window will be shown that gives a short
+explanation to each command that is pointed at.
+.PP
+Below the commands at the left, there is an area where the
+cells are listed that are present is the current project
+and where the selected cell is shown.
+.PP
+Below the commands at the right, there is an area where the
+output of the tools is shown.
+.SH HELIOS SESSIONS
+When started, helios looks in the home directory of the user for a
+file \fB.helios\fP, which has the following format:
+.PP
+.nf
+    OpenedDatabase /home/user1/projects/myIC
+    PrevisDatabase /home/user1/projects/myIC2
+.fi
+.PP
+The first line contains the name of the project database opened last
+time you ran helios, the second line contains the name of a previous
+project database you has not opened last time.  Both types of line can be
+present 0 or more times.  Helios uses the first 'OpenedDatabase' entry
+as the project to start with.  You can force helios to start with
+another project by specifying the absolute or relative path on the
+command line as the last argument.
+.PP
+You can run helios in any directory.  Using the command "Database -> Open"
+you can open an existing project database and with the command "Database
+-> New" you can create a new database.
+.SH X WINDOWS RESOURCES
+For
+.I helios
+various colors, fonts, and other X Windows resources are specified
+in the file \fI$ICDPATH\fP\fB/share/lib/app-defaults/Helios\fP.
+You may override this information by copying the file and
+making appropriate changes, and then by setting your
+X\ Windows resources, e.g. by running the tool
+.I xrdb
+.PP
+.nf
+% cp $ICDPATH/share/lib/app-defaults/Helios .
+(modify the file Helios)
+% xrdb -merge ./Helios
+.fi
+.SH X WINDOWS LIBRARY PATHS
+For
+.I helios
+on Sun systems it may be necessary to set the following environment
+variables in order to notify X\ Windows where it can find certain
+libraries:
+.PP
+For finding the directory with X\ Windows native language support stuff
+.PP
+.nf
+% setenv XNLSPATH /usr/lib/X11/nls
+.fi
+.PP
+For finding a key symbol database
+.PP
+.nf
+% setenv XKEYSYMDB /usr/lib/X11/XKeysymDB
+.fi
+.PP
+The paths may of course be somewhat different on other machines.
+.AU "Xianfeng Ni, U. Geigenmuller, S. de Graaf"
+.SH FILES
+.TP
+\fC\&~/\&.helios\fP
+saved project name
+.TP
+\fChelios.defaults\fP
+saved settings
+.TP
+\fI$ICDPATH\fP\fC/share/lib/helios.message \fP
+explanations to helios commands
+.TP
+\fI$ICDPATH\fP\fC/share/lib/app-defaults/Helios\fP
+X\ Windows resources for helios
+.TP
+\fI$ICDPROCESS\fP (optional)
+default technology directory for a new project
+.TP
+\fI$ICDPATH\fP\fC/share/lib/process/\fIname\fP/default_lambda\fP
+(optional) default lambda for a new project
+.TP
+\fI$ICDPROCESS\fP\fC/default_lambda\fP
+(optional) default lambda (alternative location)
+
+.SH X DEFAULTS
+Examples of "\&.Xdefaults" key binding values are:
+.nf
+helios*ShowCmdLine_Bttn\&.accelerator:       Ctrl<Key>C
+helios*ShowCmdLine_Bttn\&.acceleratorText:   Control+C
+helios*ShowQuickRef_Bttn\&.accelerator:      Ctrl<Key>Q
+helios*ShowQuickRef_Bttn\&.acceleratorText:  Control+Q
+helios*ManualPage_Bttn\&.accelerator:        Ctrl<Key>W
+helios*ManualPage_Bttn\&.acceleratorText:    Control+W
+helios*AboutButton\&.accelerator:            Ctrl<Key>V
+helios*AboutButton\&.acceleratorText:        Control+V
+helios*HelpButton\&.accelerator:             Ctrl<Key>H
+helios*HelpButton\&.acceleratorText:         Control+H
+helios*ShowUsedFiles_Bttn\&.accelerator:     Ctrl<Key>F
+helios*ShowUsedFiles_Bttn\&.acceleratorText: Control+F
+helios*LoadSettings_Bttn\&.accelerator:      Ctrl<Key>B
+helios*LoadSettings_Bttn\&.acceleratorText:  Control+B
+helios*RemoveButton\&.accelerator:           Ctrl<Key>K
+helios*RemoveButton\&.acceleratorText:       Control+K
+helios*NewButton\&.accelerator:              Ctrl<Key>N
+helios*NewButton\&.acceleratorText:          Control+N
+helios*SaveAsButton\&.accelerator:           Ctrl<Key>S
+helios*SaveAsButton\&.acceleratorText:       Control+S
+helios*NewTechButton\&.accelerator:          Ctrl<Key>T
+helios*NewTechButton\&.acceleratorText:      Control+T
+helios*OpenImpButton\&.accelerator:          Ctrl<Key>U
+helios*OpenImpButton\&.acceleratorText:      Control+U
+helios*DeviceModelButton\&.accelerator:      Ctrl<Key>G
+helios*DeviceModelButton\&.acceleratorText:  Control+G
+helios*SimeyeButton\&.accelerator:           Ctrl<Key>Y
+helios*SimeyeButton\&.acceleratorText:       Control+Y
+helios*DaliButton\&.accelerator:             Ctrl<Key>Z
+helios*DaliButton\&.acceleratorText:         Control+Z
+helios*LoadLayout_Bttn\&.accelerator:        Ctrl<Key>J
+helios*LoadLayout_Bttn\&.acceleratorText:    Control+J
+helios*MacroButton\&.accelerator:            Ctrl<Key>M
+helios*MacroButton\&.acceleratorText:        Control+M
+.fi
+.SH SEE ALSO
+space(1ICD),
+.br
+SPACE TUTORIAL - HELIOS VERSION,
+.br
+SPACE USER'S MANUAL,
+.br
+X Window System Documentation.

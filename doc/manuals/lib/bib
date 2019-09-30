@@ -1,0 +1,1863 @@
+
+%T CADRE - A System of Cooperating VLSI Design Experts
+%A B. Ackland
+%A A. Dickenson
+%A R. Ensor
+%A J. Gabbe
+%A P. Kollaritsch
+%A T. London
+%A C. Poirier
+%A P. Subrahmanyam
+%A H. Watanabe
+%J Proc. IEEE ICCD '85
+%P 99-104
+%D 1985
+
+%T An Extensible Object-Oriented Approach to Databases for VLSI/CAD
+%A H. Afsarmanesh
+%A D. McLeod
+%A D. Knapp
+%A A. Parker
+%J Proc. 11th Int. Conf. Very Large Data Bases
+%D 1985
+
+%T A Framework for Semantic Database Models
+%A H. Afsarmanesh
+%A D. McLeod
+%J Proc. NYU Symposium on New Directions for Database Systems
+%C New York, NY
+%D May 1984
+
+%T High-Speed Compact Circuits with CMOS
+%A R.H. Krambeck et al.
+%J IEEE Journal of Solid-State Circuits 
+%V sc-7
+%N 3
+%D June 1982
+
+%T Diktaat CACD I
+%A J. Annevelink
+%A P.M. Dewilde
+%I Delft University of Technology
+%C Delft
+
+%T A Hierarchical Layout to Circuit Extractor using a Finite State Approach
+%A J. Annevelink
+%A P. Dewilde
+%A J. Fokkema
+%J Proc. ICCD 1983: VLSI in Computers
+%C Port Chester, NY
+%D October 1983
+%P 481-484
+
+%T Hierarchical Verification of VLSI Artwork
+%A J. Annevelink
+%A P. Dewilde
+%A T.G.R. van Leuken
+%A J. Fokkema
+%B Proc. IEEE Symp. on Circuits and Systems - ISCAS
+%D 1984
+%P 44-52
+
+%T Object Oriented Data Management for VLSI Design
+%A J. Annevelink
+%R Internal Report
+%D Jan 1986
+%I Delft University of Technology
+%C Delft
+
+%T A design rule database system to support technology-adaptable applications
+%A J.S. Aude
+%A Hilary J. Kahn
+%J Proc. IEEE 23rd Design Automation Conference
+%D 1986
+%P 510-515
+%L Aude@Kahn,@1986-
+
+%T Transactions and Concurrency Control in CAD Databases
+%A F. Bancilhon
+%A Won Kim
+%A H.F. Korth
+%J Proc. IEEE ICCD '85
+%P 86-89
+%D 1985
+
+%T Modeling Concepts for VLSI CAD Objects
+%A D.S. Batory
+%A Won Kim
+%J ACM Trans. on Database Systems
+%V 10
+%N 3
+%P 322-346.
+%D Sept 1985
+
+%T Database Design (in Dutch)
+%A J.H. ter Bekke
+%J Stenfert Kroese
+%C Leiden
+%D 1988
+%O English version: ``Semantic Data Modelling,''  Prentice Hall, ISBN 0-13-806050-9.
+
+%T Database ontwerp
+%A J.H. ter Bekke
+%D 1983
+%I Stenfert Kroese
+%C Leiden, The Netherlands
+%L TerBekke,@1983
+
+%T De Effectiviteit van Relationele Systemen
+%A J.H. ter Bekke
+%J Proc. Conf. Data: Beheer en Controle
+%I NGI, Sectie EDP-Auditing
+%P 19-28
+%D May 1985
+
+%T A Practical Application of Data Modelling to Design System Integration
+%A K.R. Bennett
+%J Proc. IEEE Custom IC Conference
+%P 436-440
+%D 1984
+
+%T B-GEN - A Generalized Application Development System
+%A H. Bense
+%A A.B. Cremers
+%R Report 178
+%I Universitat Dortmund
+%D 1984
+
+%T Learning from AI: New Trends in Database Technology
+%A L. Bic
+%A J.P. Gilbert
+%J IEEE Computer Magazine
+%V 19
+%N 3
+%P 44-54
+%D March 1986
+
+%T KIC: A Graphics Editor for Integrated Circuits
+%A G. Billingsley
+%A K. Keller
+%R User's Manual
+%I University of California at Berkeley
+%D 1983
+
+%T DSUI: Design System User Interface for the Nelsis IC Design System
+%A P. Bingley
+%A P. van der Wolf
+%R The Nelsis IC Design System Documentation
+%D August 1989
+%I Delft University of Technology
+%C Delft
+%K DSUI
+
+%T DSUI: Design System User Interface for the NELSIS IC Design system. User's Manual
+%A P. Bingley
+%A P. van der Wolf
+%A P. van Putte
+%R The Nelsis IC Design System Documentation
+%I Delft University of Technology
+%D April 1990
+%L DSUIUsersMan90
+
+%T DDL and DML for Meta Data Management in the Nelsis CAD Framework
+%A R. van Leuken
+%A M. Sim
+%A C. Schot
+%A P. van der Wolf
+%A P. Bingley
+%R The Nelsis IC Design System Documentation
+%D December 1990
+%I Delft University of Technology
+%C Delft
+%K DDLDDML
+
+%T Knowledge-Based Expert Systems and Their Application
+%A W. Birmingham
+%A R. Joobbani
+%A J. Kim
+%J Proc. 23rd IEEE Design Automation Conference
+%P 531-539
+%D 1986
+
+%T Implementing Remote Procedure Calls
+%A Andrew D. Birrell
+%A Bruce Jay Nelson
+%J ACM Transactions on computer systems
+%D February 1984
+%V 2
+%P 39-59
+%L Birrell@and@Nelson,@1984
+
+%T Formal methods in communication protocol design
+%A Bochmann
+%A Sunshine
+%J IEEE transactions on communications
+%D February 1984
+%V 28
+%P no 4
+%L Bochmann@and@Sunshine,@1980
+
+%T Krypton: A Functional Approach to Knowledge Representation
+%A R.J. Brachman
+%A R.E. Fikes
+%A H.J. Levesque
+%J IEEE Computer Magazine
+%P 67-73
+%D Oct 1983
+
+%T What IS-A Is and Isn't: An Analysis of Taxonomic Links in Semantic Networks
+%A R.J. Brachman
+%J IEEE Computer Magazine
+%P 30-36
+%D Oct 1983
+
+%T On Modelling Behavioural Semantics of Databases
+%A M.L. Brodie
+%J Proc. 7th IEEE Int. Conference on Very Large Databases
+%C Cannes
+%P 32-42
+%D Sept 1981
+
+%T Proc. of Workshop on Data Abstraction, Databases and Conceptual Modelling
+at Pingree Park, June 23-26 1980
+%A M.L. Brodie
+%A S.N. Zilles (Eds)
+%J Sigplan Notices
+%V 16
+%N 1
+%D Jan 1981
+%R Hka 242
+
+%T A switch-level model and simulator for MOS digital systems
+%A R.E. Bryant
+%J IEEE Trans. Computers
+%V vol. C-33
+%P 160-177
+%D Feb. 1984
+
+%T Switch level modeling of MOS Digital Circuits
+%A R.E. Bryant
+%J Proc. ICCC Conf.
+%P 68-71
+%D 1982
+
+%T Current trends in CAD databases
+%A A.P. Buchmann
+%J Computer-Aided Design
+%V 16
+%N 3
+%P 123-126
+%D May 1984
+
+%T VLSI CAD Tool Integration Using the Ulysses Environment
+%A M.L. Bushnell
+%A S.W. Director
+%J Proc. 23rd IEEE Design Automation Conference
+%P 55-61
+%D 1986
+
+%T Attacking The Problem of Minimizing Channel Density
+%A H. Cai
+%A P. Dewilde
+%J Proc.  International Symposium on Circuits And Systems
+%D May 1986
+%P 353-356, San Jose, USA
+
+%T An Automatic/Interactive Placement and Routing System for Custom VLSI Layout Design
+%A H. Cai
+%A A.J. v.d. Hoeven
+%J Proc. CompEuro
+%D May 1987
+%P 625-628 Hamburg, FRG
+
+%T Automatic Routing in a General Cell Environment
+%A H. Cai
+%A P. Dewilde
+%E P. Dewilde
+%B The Intergrated Circuit Design Book
+%I Delft University Press
+%C Delft
+%D Jan. 1986
+%P 3.1-3.24
+
+%T An Automatic Routing System for General Cell VLSI Circuits
+%A H. Cai
+%A H. Th. Verheyen
+%A R. Nouta
+%A P. Dewilde
+%J Proc. Custom Integrated Circuits Conference
+%D May 1985
+%P 68-71, Portland, USA
+
+%T Connectivity Biased Channel Construction and Ordering for Building-Block Layout
+%A H. Cai
+%J Proc. 25th Design Automation Conference
+%D June 1988, Anaheim USA
+
+%T DELFT PLACEMENT AND ROUTING SYSTEM USER'S MANUAL
+%A H. Cai
+%A P. Groeneveld
+%R The Nelsis IC Design System Documentation
+%I Delft University of Technology
+%D 1988
+%K PLAR
+
+%T Distributed Database Design Methodologies
+%A S. Ceri 
+%A B. Pernici
+%A G. Wiederhold
+%J Proceedings of the IEEE
+%L Ceri@Pernici,@1987
+%V 75
+%N 5
+%D May 1987
+
+%T A Database-Driven VLSI Design System
+%A K.C. Chu
+%A J.P. Fishburn
+%A P. Honeyman
+%A Y.E. Lien
+%J IEEE Trans. on CAD of Integrated Circuits and Systems
+%V CAD-5
+%N 1
+%P 180-187
+%D Jan 1986
+
+%T Technology tracking for VLSI layout design tools
+%A Kung-Chao Chu
+%A Y.Edmund Lien
+%J Proc. IEEE 22nd Design Automation Conference
+%D 1985
+%P 279-285
+%L Chu@Lien,@1985-
+
+%T Message/Object Programming: An Evolutionary Change in Programming Technology
+%A B.J. Cox
+%J IEEE Software Magazine
+%P 50-61
+%D Jan 1984
+
+%T The Object Oriented Pre-Compiler: Programming Smalltalk 80 Methods in
+C language
+%A B.J. Cox
+%J ACM Sigplan Notices
+%V 18
+%N 1
+%P 15-22
+%D Jan 1983
+
+%T Object Oriented Programming, An Evolutionary Approach
+%A B.J. Cox
+%I Addison Wesley
+%C Reading MA
+%D 1986
+
+%T CAD Systems for IC Design
+%A M.E. Daniel
+%A C.W. Gwyn
+%J IEEE Trans. on CAD of Integrated Circuits and Systems
+%V CAD-1
+%N 1
+%P 2-12
+%D Jan 1982
+
+%T The Dataserver
+%A M. Darnovsky
+%A S. Emerson
+%D 1987
+%I Sybase Inc
+%C Berkely
+%L Darnovsky,@1987
+
+%T Design of a Distributed Object Manager for the Smalltalk-80 System
+%A D. Decouchant
+%J Special Issue of the SIGPLAN Notices, OOPSLA '86
+%V 22
+%N 12
+%L Decouchant,@1987
+%D December 1987
+
+%T Datamanagement for Hierarchical and Multiview VLSI Design
+%A P. Dewilde
+%A T. Vogel
+%A P. van der Wolf
+%E P. Dewilde
+%B The Integrated Circuit Design Book
+%I Delft University Press
+%C Delft
+%D 1986
+%P 1.1-1.29
+
+%T The Integrated Circuit Design Book: Papers on VLSI Design Methodology from the ICD-NELSIS Project
+%A P. Dewilde, ed.
+%I Delft University Press
+%C Delft, The Netherlands
+%D 1986
+
+%T Intelligent VLSI Data Management
+%A P. Dewilde
+%A J. Annevelink
+%A R. v. Leuken
+%A P. v.d. Wolf
+%J ESPRIT '86: Results and Achievements
+%E D.G. XIII
+%I North-Holland
+%P 527-539
+%D 1987
+
+%T Switch Level Timing Simulation
+%A P.M. Dewilde
+%A A.J. van Genderen
+%A A.C. de Graaf
+%J Proc. ICCAD Conf.
+%P 182-184
+%D Nov. 1985
+
+%T Een Specificatietaal voor Informatiemodellen
+%A J.L.G. Dietz
+%A F.P.H. de Lepper
+%J Informatie
+%V 26
+%N 10
+%P 795-804
+%D Oct 1984
+
+%T PSL/PSA: Een Bijdrage aan de Ontwikkeling van Betere Informatiesystemen
+%A J.L.G. Dietz
+%J Informatie
+%V 26
+%N 9
+%P 722-733
+%D Sept 1984
+
+%T Guarded Commands, nondeterminacy, and formal derivations of programs
+%A E.W. Dijkstra
+%J Comm ACM
+%V 18
+%N 8
+%D August 1975
+%P 453-457
+
+%T A Design Methodology and Computer Aids for Digital VLSI Systems
+%A S.W. Director
+%A A.C. Parker
+%A D.P. Siewiorek
+%A D.E. Thomas, Jr.
+%J IEEE Trans. on Circuits and Systems
+%V CAS-28
+%N 7
+%P 634-644
+%D July 1981
+
+%T Some Experiences with a Distributed Database Testbed System
+%A P.A. Dwyer
+%A J.A. Larson
+%J Proceedings of the IEEE
+%L Dwyer@Larson,@1987
+%V 75
+%N 5
+%D May 1987
+ 
+%T A Retrospective of R*: A Distributed Database Management System
+%A B.G. Lindsay
+%J Proceedings of the IEEE
+%L Lindsay,@1987
+%V 75
+%N 5
+%D May 1987
+
+%T Database Facilities for Engineering Design
+%A C.M. Eastman
+%J Proceedings of the IEEE
+%V 69
+%N 10
+%P 1249-1263
+%D Oct 1981
+
+%T Electronic Design Interchange Format, Version 2 0 0, Reference Manual
+%A EDIF
+%J EDIF Steering Committee
+%I Electronic Industries Association
+%D 1987
+%L EDIF
+
+%T Role of technology design rules in design automation
+%A Gayla J Von Ehr
+%J Proc. IEEE 20th Design Automation Conference
+%D 1983
+%P 395
+%L Ehr,@1983-
+
+%T Process Description - Philips C5th
+%A Philips Eindhoven 
+%R USER's MANUAL
+%I Eindhoven Physics Laboratries
+%C Eindhoven
+%D 1982
+
+%T A Tutorial Introduction to the Electronic Design Interchange Format
+%A J.P. Eurich
+%J Proc. 23rd IEEE Design Automation Conference
+%P 327-333
+%D 1986
+
+%T Lessons from a 'Living In a Database' Graphical Query Interface
+%A D. Fogg
+%J Proc. ACM SIGMOD Conf. Management of Data
+%C Boston, MA
+%P 100-106
+%D June 1984
+
+%T An efficient datastructure and algorithm for VLSI artwork verification
+%A J.T. Fokkema
+%A T.G.R. van Leuken
+%J Proc. IEEE ICCD-83
+%C New York
+%P 350-353
+%D Oct. 1983
+
+%T Principles of an Icons-Based Command Language
+%A C. Frasson
+%A M. Er-radi
+%J Proc. ACM SIGMOD Conf. Management of Data
+%C Washington, D.C.
+%P 144-152
+%D May 1986
+
+%T ARSENIC Silicon Compiler
+%A D.D. Gajski
+%J Proc. ISCAS '85
+%P 399-402
+%D 1985
+
+%T Browsing the Chip Design Database
+%A D. Gedye
+%A R. Katz
+%J 25th ACM/IEEE Design Automation Conference
+%P 269-274
+%D 1988
+
+%T SLS: A Switch-Level Simulator with User-Definable Function Blocks
+%A A.J. van Genderen
+%A A.C. de Graaf
+%R Internal Report
+%D Feb 1986
+%I Delft University of Technology
+%C Delft
+
+%T SLSMENU: USER'S MANUAL
+%A A.J. van Genderen
+%A W.G.H.M. Willems
+%R The Nelsis IC Design System Documentation
+%I Delft University of Technology
+%D 1988
+
+%T Switch Level Timing Simulation
+%A A.J. van Genderen
+%R M.S. Thesis (85-49)
+%I Delft University of Technology
+%D June 1985
+
+%T SLS: An Efficient Switch-Level Timing Simulator Using Min-Max Voltage Wavefroms
+%A A.J. van Genderen
+%J Proc. VLSI 89 Conference
+%D August 1989
+%C Munich
+%P 79-88
+
+%T Xlib - C language X Interface, Protocol Version 10
+%A J. Gettys
+%A R. Newman
+%A T. Della Fera
+%D 1986
+%I MIT
+%C Cambridge, Mass.
+
+%T Xlib - C language X Interface, X Version 11, Release 4
+%A J. Gettys
+%A R.W. Scheifler
+%A R. Newman
+%D 1989
+%I MIT
+%C Cambridge, Mass.
+
+%T C3TU BLUE BOOK, version 1
+%A N.V. Philips' Gloeilampenfabrieken
+%C Eindhoven
+%D 10 mei 1988
+
+%T An Automated Database Design Tool Using the ELKA Conceptual Model
+%A J. Gonzalez-Sustaeta
+%A A.P. Buchmann
+%J Proc. 23rd IEEE Design Automation Conference
+%P 752-759
+%D 1986
+
+%T SLS: SWITCH-LEVEL SIMULATOR USER'S MANUAL
+%A A.C. de Graaf
+%A A.J. van Genderen
+%R The Nelsis IC Design System Documentation
+%I Delft University of Technology
+%D 1988
+
+%T Data Management Interface Application Notes, Release 3
+%A S. de Graaf
+%A P. van der Wolf
+%A N. van der Meijs
+%R Network Theory Section Report nr. 88-1
+%I Delft University of Technology
+%C Delft
+%D April 1988
+
+%T DBM Interface Functions: Applications Notes for Release 2
+%A S. de Graaf
+%A T.G.R. van Leuken, ed.
+%R Network Theory Section Report nr. 86-42
+%I Delft University of Technology
+%C Delft
+%D Aug 1986
+
+%T LDM: Geometrical Mask Layout Language User's Manual
+%A S. de Graaf
+%R The Nelsis IC Design System Documentation
+%I Delft University of Technology
+%D 1987
+
+%T A Contour-Based Variable-Width Gridless Channel Router
+%A P. Groeneveld
+%A H. Cai
+%A P. Dewilde
+%J Proc. ICCAD
+%D november 1987
+%P 374-377 Santa Clara, California USA
+
+%T The Delft Placement and Routing System
+%A P. Groeneveld
+%A H. Cai
+%J Proc. International Workshop on Placement and Routing
+%I Microelectronics Center of North Carolina (MCNC)
+%D may 1988
+%P 6.2 Research Triangle Park, North Carolina, USA
+
+%T GCR: Gridless Channel Router User's Manual
+%A P. Groeneveld
+%J Internal docmentation, Delft University of Technology. Available from the author.
+%D 1987
+
+%T Extending the Relational Database Data Model for Design Applications
+%A M. Hardwick
+%J Proc. 21st IEEE Design Automation Conference
+%P 110-116
+%D 1984
+
+%T Using a Database System and UNIX to Author CAD Applications
+%A M. Hardwick
+%A N. Yakoob
+%J Proc. IEEE ICCAD - 85
+%D 1985
+%P 53-55
+
+%T Data Management and Graphics Editing in the Berkeley Design Environment
+%A D.S. Harrison
+%A P. Moore
+%A R.L. Spickelmier
+%A A.R. Newton
+%J Proc. IEEE ICCAD - 86
+%D 1986
+%P 24-27
+
+%T Enhancing Knowledge Representation in Engineering Databases
+%A D.J. Hartzband
+%A F.J. Maryanski
+%J IEEE Computer Magazine
+%P 39-48
+%D Sept 1985
+
+%T Parallel Bit-level Pipelined VLSI Designs for High-Speed Signal Processing
+%A Mehdi Hatamian
+%A Glenn L. Cash
+%J Proceedings of the IEEE
+%V 75
+%N 9
+%P 1192-1202
+%D September 1987
+
+%T VLSI Design Strategies and Tools
+%A W.J. Haydamack
+%A D.J. Griffin
+%J Hewlett-Packard Journal
+%P 5-12
+%D June 1981
+
+%T The Relational/Network Hybrid Data Model for Design Automation Databases
+%A M.N. Haynie
+%J Proc. 18th IEEE Design Automation Conference
+%P 646-652
+%D 1981
+
+%T Tutorial: The Relational Data Model for Design Automation
+%A M.N. Haynie
+%J Proc. 20th IEEE Design Automation Conference
+%P 599-607
+%D 1983
+
+%T INGRES - A Relational Database Management System
+%A G.D. Held
+%A M. Stonebraker
+%A E. Wong
+%J Proc. 1975 Nat. Computer Conference
+%I AFIPS Press
+%D 1975
+
+%T An Intelligent Librarian for VLSI Cell Databases
+%A W.P.C. Ho
+%A Y.H. Hu
+%A D.Y.Y. Yun
+%J Proc. IEEE ICCD '85
+%P 78-81
+%D 1985
+
+%T Communicating Sequential Processes
+%A C.A.R. Hoare
+%J Comm ACM
+%V 21
+%D August 1978
+%P 666-677
+
+%T Communicating Sequential Processes
+%A C.A.R. Hoare
+%I Prentice-Hall International
+%C Englewood Cliffs, New Jersey
+%D 1985
+
+%T FUNCTIONAL SIMULATION USER'S MANUAL
+%A O. Hol
+%R The Nelsis IC Design System Documentation
+%I Delft University of Technology
+%D 1988
+
+%T The Structure and Operation of a Relational Database System in a Cell-Oriented Integrated Circuit Design System
+%A L. Hollaar
+%A B. Nelson
+%A T. Carter
+%A R.A. Lorie
+%J Proc. 21st IEEE Design Automation Conference
+%P 117-125
+%D 1984
+
+%T Expressing Product Development Information in Application Terms
+%A E.C. van Horn
+%J Proc. IEEE ICCD '85
+%P 82-85
+%D 1985
+
+%T Networking on the Sun Workstation
+%A Sun Microsystems Inc
+%C Mountain View
+%D 1986
+
+%T The Role of Logic in Knowledge Representation
+%A D.J. Israel
+%J IEEE Computer Magazine
+%P 37-41
+%D Oct 1983
+
+%T Can Programming be Liberated from the Von Neumann Style? A Functional Style and its Algebra of Programs
+%A J.Backus
+%J Comm. ACM 
+%V 21
+%D August 1978
+%P 613-641
+
+%T Standard dictionary of electrical and electronics terms
+%A ed. Frank Jay 
+%I IEEE
+%D 1988
+%C New York
+%L IEEE,@1988
+
+%T A Database Interface for an Integrated CAD System
+%A C. Jullien
+%A A. Leblond
+%A J. Lecourvoisier
+%J Proc. 23rd IEEE Design Automation Conference
+%P 760-767
+%D 1986
+
+%T Chip Assemblers: Concepts and Capabilities
+%A R.H. Katz
+%A S. Weiss
+%J Proc. 20th IEEE Design Automation Conference
+%P 25-30
+%D 1983
+
+%T Computer-Aided Design Databases
+%A R.H. Katz
+%J IEEE Design & Test Magazine
+%P 70-74
+%D Feb 1985
+
+%T A Database Approach for Managing VLSI Design Data
+%A R.H. Katz
+%J Proc. 19th IEEE Design Automation Conference
+%C Las Vegas, Nv.
+%D June 1982
+%P 274-282
+
+%T Database Support for Versions and Alternatives of Large Design Files
+%A R.H. Katz
+%A T.J. Lehman
+%J IEEE Trans. on Software Engineering
+%V SE-10
+%N 2
+%P 191-200
+%D March 1984
+
+%T Design Transaction Management
+%A R.H. Katz
+%A S. Weiss
+%J Proc. 21st IEEE Design Automation Conference
+%P 692-693
+%D 1984
+
+%T Information management for engineering design
+%A R.H. Katz
+%D 1985
+%I Springer-Verlag
+%C Berlin
+%L Katz,@1985
+
+%T Managing the Chip Design Database
+%A R.H. Katz
+%J IEEE Computer Magazine
+%P 26-35
+%D Dec 1983
+
+%T A Version Server for Computer-Aided Design Data
+%A R.H. Katz
+%A M. Anwarrudin
+%A E. Chang
+%J Proc. 23rd IEEE Design Automation Conference
+%P 27-33
+%D 1986
+
+%T The Enhanced C Programming Language Reference Manual
+%A J. Katzenelson
+%D March 21, 1985
+%I Technion - Israel Institute of Technology
+%C Haifa 32000, Israel
+
+%T Higher Level Programming and Data Abstractions - A Case Study Using Enhanced C
+%A J. Katzenelson
+%J Software Practice and Experience
+%N 13
+%P 577-595
+%D 1983
+
+%T The C Programming Language
+%A B. Kernighan
+%A D. Ritchie
+%I Prentice Hall
+%D 1978
+
+%T PIC - A Graphics Language for Typesetting: User Manual"
+%A B.W. Kernighan
+%R AT&T Bell Laboratories, Computing Science Technical Report No. 85
+%D March 1982
+
+%T Ski: A Semantics-Knowledgeable Interface
+%A R. King
+%A S. Melville
+%J Proc. 10th Int. Conf. on Very Large Data Bases
+%C Singapore
+%P 30-33
+%D Aug 1984
+
+%T A Design Utility Manager: the ADAM Planning Engine
+%A D.W. Knapp
+%A A.C. Parker
+%J Proc. 23rd IEEE Design Automation Conference
+%P 48-54
+%D 1986
+
+%T Hierarchical Flowgraph Integration for VLSI Array Processors
+%A S.Y. Kung
+%A J. Annevelink
+%A P. Dewilde
+%A S.C. Lo
+%R Internal Report
+%I Delft University of Technology
+%C Delft
+
+%T A Technology Independent Hierarchical Layout to Circuit Extractor Using a Finite State Approach (detailed description)
+%A A.A.J. de Lange
+%A J. Annevelink
+%R The Integrated Design Book
+%P 2.51-2.82
+%D Jan. 1986
+
+%T A Technology Independent Hierarchical Layout to Circuit Extractor Using a Finite State Approach
+%A A.A.J. de Lange
+%A J. Annevelink
+%J Proc. ECCTD Conf.
+%P 459-463
+%D Sept. 1987
+
+%T Extract Technology File: User's Manual
+%A A.A.J de Lange
+%R The Nelsis IC Design System Documentation
+%I Delft University of Technology
+%D 1988
+
+%T A Visual Approach to Browsing in a Database Environment
+%A J.A. Larson
+%P 62-71
+%J IEEE Computer Magazine
+%D June 1986
+
+%T CLIB - A Database Management System Designed for Standard Cell Applications
+%A E. Lechner
+%J Proc. IEEE ICCAD - 85
+%D 1985
+%P 21-23
+
+%T A 4.2BSD Interprocess Communication Primer
+%A Samuel J. Leffler
+%A Robert S. Fabry
+%A William N. Joy
+%D July 1986
+%I Dept. of EE and CS, University of California
+%C Berkeley, California
+%L Leffler,@1986
+
+%T Data management for VLSI design in an open and distributed environment
+%A T.G.R.M. van Leuken
+%R Ph.d. Thesis, Delft University of Technology 
+%D March, 1988
+%C Delft
+%P 44-58
+%L Leuken@1988
+
+%T Cooperative Development of an Integrated, Hierarchical an Multiview VLSI-Design System with Distributed Management on Workstations
+%A T.G.R. van Leuken
+%R ICD Report
+%D June 1986
+%I Delft University of Technology
+%C Delft
+
+%T An Hierarchical and Technology Independent Design Rule Checker
+%A T.G.R. van Leuken
+%A J. Liedorp
+%B The Integrated Circuit Design Book
+%I Delft University Press
+%C Delft
+%D 1986
+%P 2.1-2.50
+
+%T The ICD Design Management System
+%A T.G.R. van Leuken
+%A P. van der Wolf
+%J Proc. IEEE ICCAD - 85
+%D 1985
+%P 18-20
+
+%T The ICD User's Manual
+%A T.G.R. van Leuken
+%A S. de Graaf
+%J ESPRIT project nr. 991. task 3
+%C Delft
+%D 1986
+
+%T State Driven Hierarchical Design Rule Verification.
+%A T.G.R. van Leuken
+%A J.T. Fokkema
+%A J. Liedorp
+%J Proceedings 1986 IEEE International Symposium on Circuit and Systems
+%C San Jose
+%P 556-559
+%D May 5-7, 1986
+
+%T DENSE: User's Manual
+%A J. Liedorp
+%R The Nelsis IC Design System Documentation
+%I Delft University of Technology
+%C Delft
+%D December, 1987
+
+%T A Hierarchical Timing Simulation Model
+%A T.M. Lin
+%A C.A. Mead
+%J IEEE Trans. on CAD of Integrated Circuits and Systems
+%V CAD-5
+%N 1
+%P 188-197
+%D Jan 1986
+
+%T The Eindhoven Schematic Editor
+%A A. Lodder
+%A M. van Stiphout
+%E J.T.J. van Eijndhoven
+%B The Integrated Circuit Design Book
+%I Delft University Press
+%C Delft
+%D 1986
+%P 1.61-1.68
+
+%T ESCHER Reference manual
+%A Arie Lodder
+%A Mart van Stiphout
+%A Jos van Eijndhoven
+%D 1986
+%I Eindhoven University of Technology
+%C Eindhoven
+
+%T Complex Objects and Their Use in Design Transactions
+%A R. Lorie
+%A W. Plouffe
+%J Proc. Databases for Engineering Applications, ACM Database Week
+%C San Jose, Ca.
+%P 115-121
+%D May 1983
+
+%T Information modeling and sharing in highly autonomous database systems
+%A P. Lyngbaek
+%R Phd Thesis
+%D August, 1984
+%I Faculty of the graduate shool, University of southern California
+%C California
+%L Lyngbaek,@1984
+
+%T Approaches to Knowledge Representation
+%A G. McCalla
+%A N. Cercone
+%J IEEE Computer Magazine
+%P 12-18
+%D Oct 1983
+
+%T An Approach to Information Management for CAD/VLSI Applications
+%A D. McLeod
+%A K. Narayanaswamy
+%A K.V. Bapa Rao
+%J Proc. Databases for Engineering Applications, ACM Database Week
+%C San Jose, Ca.
+%P 39-50
+%D May 1983
+
+%T Introduction to VLSI Systems 
+%A C. Mead
+%A L. Conway
+%I Addison Wesley
+%C Reading MA
+%D 1980
+
+%T Ldmc User's Manual
+%A N.P. van der Meijs
+%R The Nelsis IC Design System Documentation
+%I Delft University of Technology
+%D 1987
+
+%T Data Management Interface Definition
+%A N. v.d. Meijs
+%A T.G.R. v. Leuken
+%A P. v.d. Wolf
+%A I. Widya
+%A P. Dewilde
+%J ESPRIT project, code 991, WP1, task 1.
+%D Dec 31, 1986
+
+%T A Data Management Interface to Facilitate CAD/IC Software Exchanges
+%A N. v.d. Meijs
+%A T.G.R. v. Leuken
+%A P. v.d. Wolf
+%A I. Widya
+%A P. Dewilde
+%J Proc. IEEE ICCD '87
+%P 403-406
+%D 1987
+
+%T Procedural Layout Generation and Silicon Assembly in C
+%A N. v.d. Meijs
+%E P. Dewilde
+%B The Integrated Circuit Design Book
+%I Delft University Press
+%P 1.30-1.48
+%C Delft
+%D 1986
+
+%T Data Management Interface Definition, a Proposal
+%A N. van der Meijs
+%A T.G.R. van Leuken
+%A P. van der Wolf
+%A I. Widya
+%A P. Dewilde
+%R EC Esprit 991 Project Deliverable
+%D Dec 1986
+%I Delft University of Technology
+%C Delft
+
+%T DBM Interface Functions: Applications Notes for Release 2
+%A N. van der Meijs
+%A A. van der Hoeven
+%A T. Vogel
+%A P. van der Wolf
+%A S. de Graaf
+%R Internal Report nr. 85-28
+%D 1985
+%I Delft University of Technology
+%C Delft
+
+%T DBM Programmers Manual: A Proposal for an ICD Standard
+%A N. van der Meijs
+%A A. van der Hoeven
+%A T. Vogel
+%A P. van der Wolf
+%A T.G.R. van Leuken
+%A P. Dewilde
+%R ICD Project Deliverable i.08
+%D June 1985
+%I Delft University of Technology
+%C Delft
+
+%T ICD Data Management Interface Standard Definition
+%A N. van der Meijs
+%R ICD Document
+%D Aug 1986
+%I Delft University of Technology
+%C Delft
+
+%T Introduction to nMos an cMos VLSI System Design
+%A Amar Mukherjee 
+%I Prentice-Hall International Inc. 
+%O ISBN 0-13-490939-9 025
+%D 1986
+
+%T Building Knowledge-Based Systems: The PSN Experience
+%A J. Mylopoulos
+%A T. Shibahara
+%A J.K. Tsotsos
+%J IEEE Computer Magazine
+%P 83-89
+%D Oct 1983
+
+%T LAY OUT RULES 3um EN 2.4um CMOS
+%A MIETEC N.V.
+%C Oudenaarde, Belgie
+%R Document 13211
+%D 11 juni 1987
+
+%T Exploitation of Hierarchy in Analysis of Integrated Circuit Artwork
+%A M. Newell
+%A D.T. Fitzpatrick
+%J IEEE Trans. on CAD
+%V CAD-1
+%N 4
+%P 192-200
+%D Oct. 1982.
+
+%T CAD Tools for ASIC Design
+%A A.R. Newton
+%A A. Sangiovanni-Vincentelli
+%J Proceedings of the IEEE
+%V 75
+%N 6
+%P 765-776
+%D June 1987.
+
+%T Computer-Aided Design for VLSI Circuits
+%A A.R. Newton
+%A A.L. Sangiovanni-Vincentelli
+%J IEEE Computer Magazine
+%V 19
+%N 4
+%P 38-59
+%D April 1986
+
+%T Computer-Aided Design of VLSI Circuits
+%A A.R. Newton
+%J Proceedings of the IEEE
+%V 69
+%N 10
+%P 1189-1199
+%D Oct 1981
+
+%T Design Aids for VLSI: The Berkeley Perspective
+%A A.R. Newton
+%A D.O. Pederson
+%A A.L. Sangiovanni-Vincentelli
+%A C.H. Sequin
+%J IEEE Trans. on Circuits and Systems
+%V CAS-28
+%N 7
+%P 666-679
+%D July 1981
+
+%T Electronic Design Interchange Format, Introduction to (EDIFVersion 2 0 0)
+%A A.R. Newton
+%J Proc. IEEE CICC '87
+%P 531-535
+%D 1987
+
+%T Hierarchical Design Methodologies and Tools for VLSI Chips
+%A C. Niessen
+%J Proceedings of the IEEE
+%V 71
+%N 1
+%P 66-75
+%D Jan 1983
+
+%T A storage module for data management in VLSI design
+%A A.P.J. Ouwendijk
+%R Master Thesis
+%D December, 1987
+%I Dept. of EE, Delft University of Technology
+%C Delft, The Netherlands
+%L Ouwendijk,@1987
+
+%T Petri-net Theory and the Modeling of Systems
+%A J.L. Peterson
+%I Prentice-Hall
+%C Englewood Cliffs
+%D 1981
+
+%T A Knowledge-Based System for VLSI Module Selection
+%A Y. Pin
+%A S. Foo
+%A H. Kobayashi
+%J Proc. IEEE ICCD '86
+%P 184-187
+%D 1986
+
+%T Semantics of CAD Objects for Generalized Databases
+%A D. Rieu
+%A G.T. Nguyen
+%J Proc. 23rd IEEE Design Automation Conference
+%P 34-40
+%D 1986
+
+%T A Vertically Organized Computer-Aided Design Data Base
+%A K.A. Roberts
+%A T.E. Baker
+%A D.H. Jerome
+%J Proc. 18th IEEE Design Automation Conference
+%P 595-602
+%D 1981
+
+%T Digraphs Theory and Techniques
+%A D.F Robinson
+%A L.R Foulds
+%I Gordon and Breach Science Publishers
+%C Palmerston North, New Zealand
+%D 1980
+%P 70-81, 232
+
+%T An Adaptable Methodology for Database Design
+%A N. Roussopoulos
+%A R.T. Yeh
+%J IEEE Computer Magazine
+%P 64-80
+%D May 1984
+
+%T A Browser for Directed Graphs
+%A L. Rowe,\0et.\0al.
+%P 61-76
+%J Software-Practise and Experience
+%D Jan 1987
+
+%T Computer Aids for VLSI Design
+%A Steven Rubin 
+%I Addison-Wesley Publishing Company
+%O ISBN 0-201-05824-3
+%D 1987
+
+%T Determination of SLS Transistor Model Parameters
+%A A.J. Schooneveld,
+%R taakverslag 87-84
+%I Delft University of Technology,
+%D April 1987
+
+%T Computer-Aided Design of Microelectronic Circuits and Systems
+%A A.F. Schwarz
+%D 1987
+%I Academic Press
+%C London
+%L Schwarz,@1987
+
+%T An Introduction to the Nelsis IC Design System
+%A Network Theory Section
+%R The Nelsis IC Design System Documentation
+%D August 1988
+%I Delft University of Technology
+%C Delft
+%K GET_START
+
+%T Managing VLSI Complexity: An Outlook
+%A C.H. Sequin
+%J Proceedings of the IEEE
+%V 71
+%N 1
+%P 149-166
+%D Jan 1983
+
+%T The Functional Data Model and the Data Language DAPLEX
+%A D.W. Shipman
+%J ACM Trans. on Database Systems
+%V 6
+%N 1
+%P 140-173
+%D March 1981
+
+%T Weaknesses of Commercial Data Base Management Systems in Engineering Applications
+%A T.W. Sidle
+%J Proc. 17th IEEE Design Automation Conference
+%P 57-61
+%D June 1980
+
+%T Protection and Versioning for OCT
+%A Mario Silva 
+%A David Gedye
+%A Randy Katz
+%A Richard Newton
+%J Proc. IEEE 26th Design Automation Conference
+%D 1989
+%L Silva@Gedye&Katz@Newton,@1988
+
+%T Design Data Management for CAD in a Distributed Hardware Environment
+%A G.W. Sloof
+%R Internal Report
+%D February 1990
+%I Dept. of EE, Delft University of Technology
+%C Delft, The Netherlands
+%L Sloof,@1990
+
+%T Implementation Notes on Logical and Physical Distribution in the Nelsis/ICD Design System
+%A G.W. Sloof
+%R Internal Report
+%D March 1989
+%I Dept. of EE, Delft University of Technology
+%C Delft, The Netherlands
+%L Sloof,@1989
+
+%T Intra DMS Communication Protocol
+%A G.W. Sloof
+%R Internal Report
+%D Juni 1989
+%I Dept. of EE, Delft University of Technology
+%C Delft, The Netherlands
+%L Sloof,@1989
+
+%T Running the Nelsis/ICD software system in a distributed hardware environment
+%A G.W. Sloof
+%R Internal Report
+%D April 1989
+%I Dept. of EE, Delft University of Technology
+%C Delft, The Netherlands
+%L Sloof,@1989
+
+%T A TECHNOLOGY DATABASE, first investigation.
+%A G.W. Sloof
+%R Internal Report
+%D March 1988
+%I Dept. of EE, Delft University of Technology
+%C Delft, The Netherlands
+%L Sloof,@1988
+
+%T The VIVID System Approach to Technology Independence: the Master Technology File System
+%A Phillip Smith
+%A Stephen Daniel
+%J Proc. IEEE 22nd Design Automation Conference
+%D 1985
+%P 76-81
+%L Smith@Daniel,@1985-
+
+%T Software Engineering
+%A I. Sommerville
+%I International Computer Science Series, Addison-Wesley
+%C London
+%D 1982
+
+%T Classes: An Abstract DataType Facility for the C Language
+%A B. Stroustrup
+%J ACM SIGPLAN Notices
+%V 17
+%N 1
+%D Jan. 1982
+%P 44-52.
+
+%T Automatic Graph Drawing and Readability of Diagrams
+%A R. Tamassia
+%A G. di Battista
+%A C. Batini
+%J IEEE Transcactions on Systems, Man, and Cybernetics
+%V 18
+%N 1
+%P 61-79
+%D Jan 1988
+
+%T Defining and Implementing a Multilevel Design Representation with Simulation Applications
+%A D.E. Thomas
+%A J.A. Nestor
+%J IEEE Trans. on CAD of Integrated Circuits and Systems
+%V CAD-2
+%N 3
+%P 135-144
+%D July 1983
+
+%T A Constrained Design Methodology for VLSI
+%A M. Tucker
+%A L. Scheffer
+%J VLSI Design
+%P 60-65
+%D May/June 1982
+
+%T KURSUS INLEIDING TOT I.C. TECHNIEKEN
+%A H.J.M. Veendrick
+%R CONCERN TRAINING REPORT - PHILIPS EINDHOVEN
+%I Eindhoven Physics Laboratries
+%C Eindhoven
+%D 1982
+
+%T SPICE Version 2G User's Guide,
+%A A. Vladimirescu
+%A K. Zhang
+%A A.R. Newton
+%A D.O. Pederson
+%A A. Sangiovanni-Vincentelli
+%I Univ of California, Berkeley
+%D Aug. 1981.
+
+%T Conceptual Database Model ICD
+%A T. Vogel
+%A P. van der Wolf
+%A P. Dewilde
+%R Internal Report
+%D October 1984
+%I Dept. of EE, Delft University of Technology
+%C Delft, The Netherlands
+%L Vogel,@1984
+
+%T Connectivity Verification Based on Netlist Comparison
+%A T. Vogel
+%R Master thesis Delft University of Technology, Department of EE, Networktheory section.
+%D 1986
+
+%T DOSS: A Storage System for Design Data
+%A S. Weiss
+%A K. Rotzell
+%A T. Rhyne
+%A A. Goldfein
+%J Proc. 23rd IEEE Design Automation Conference
+%P 41-47
+%D 1986
+
+%T Principles of CMOS VLSI Design - A Systems Perspective
+%A Neil Weste 
+%A Kamran Eshraghian 
+%I Addison-Wesley Publishing Company
+%O ISBN 0-201-08222-5
+%D 1985
+
+%T Concurrency Control in A VLSI Design Database
+%A I. Widya
+%A T.G.R. van Leuken
+%A P. van der Wolf
+%J Proc. 25th Design Automation Conference
+%D June 1988
+%C Anaheim
+%P 357-362
+
+%T Cooperative development of an integrated, hierarchical and multiview VLSI-design system with distributed management on workstations.
+%A I. Widya 
+%A G.W. Sloof
+%A P. Bingley
+%A T.G.R. van Leuken
+%A P. van der Wolf
+%D Feb 1989
+%R Deliverable Esprit 991 WP1 task3(G)
+%I Dept. of EE, Delft University of Technology
+%C Delft, The Netherlands
+%L Widya@Sloof&Bingley@Leuken,@1988
+
+%T A Database Approach to Communication in VLSI Design
+%A G. Wiederhold
+%A A.F. Beetem
+%A G.E. Short
+%J IEEE Trans. on CAD of Integrated Circuits and Systems
+%V CAD-1
+%N 2
+%P 57-63
+%D April 1982
+
+%T Knowledge and Database Management
+%A G. Wiederhold
+%J IEEE Software Magazine
+%V 1
+%N 1
+%P 63-73
+%D Jan 1984
+
+%T Building distributed systems with remote procedure call
+%A Steve Wilbur
+%A Ben Bacarisse
+%J Software Engineering Journal
+%D September 1987
+%P 148-159
+%L Wilbur@and@Bacarisse,@1987
+
+%T SLSMENU: a graphical way to display signals
+%A W.G.H.M. Willems
+%R taakverslag 86-97
+%I Delft University of Technology
+%D 1986
+
+%T A VLSI Design Manager Based on State Management
+%A W.G.H.M. Willems
+%R MS-Thesis
+%D September 1987
+%I Delft University of Technology
+%C Delft
+
+%T Semantics vs. Graphics -- To Show or Not To Show
+%A G.A. Wilson
+%A C.F. Herot
+%J Proc. 6th Int. Conf. on Very Large Data Bases
+%C Montreal
+%P 183-197
+%D Oct 1980
+
+%T What can we do about the unnecessary diversity of notation for syntactic definitions ?
+%A N. Wirth,
+%R Comm. ACM 20
+%N 11
+%P 822-823
+%D Nov. 1977
+
+%T An Introduction to the Nelsis CAD Framework
+%A J. Wissenburgh
+%A P. van der Wolf
+%A T.G.R. van Leuken
+%A P. Bingley
+%R The Nelsis IC Design System Documentation
+%D May 1990
+%I Delft University of Technology
+%C Delft
+%K FRAME_INTRO
+
+%T Meta Data Management in the NELSIS CAD Framework
+%A P.v.d. Wolf
+%A G.W. Sloof
+%A P. Bingley
+%J Proc. IEEE 27th Design Automation Conference
+%D 1990
+%L Wolf@Sloof@Dewilde,@1990
+
+%T Object Type Oriented Data Modeling for VLSI Data Management
+%A P.v.d. Wolf
+%A T.G.R. v. Leuken
+%J Proc. IEEE 25th Design Automation Conference
+%D 1988
+%L Wolf@Leuken,@1988
+
+%T Conceptual Design of a Design Data Management System for VLSI Design
+%A P. van der Wolf
+%R MS-Thesis
+%D July 1986
+%I Delft University of Technology
+%C Delft
+
+%T DALI USER'S MANUAL
+%A P. van der Wolf
+%A J. Liedorp
+%R The Nelsis IC Design System Documentation
+%I Delft University of Technology
+%D 1988
+
+%T Data Management for VLSI Design: Conceptual Modeling, Tool Integration & User Interface
+%A P. van der Wolf
+%A N. van der Meijs
+%A T.G.R. van  Leuken
+%A I. Widya
+%A P. Dewilde
+%J Proc. IFIP WG 10.2 Workshop on Tool Integration and Design Environments, Nov 1987
+%E F.J. Rammig
+%I North-Holland
+%D 1988
+%C Paderborn, FRG
+
+%T DDL/DML Definition for the semantic storage module
+%A P. van der Wolf
+%A J.J.A. Hegge
+%J Internal Paper
+%I TU-Delft, The Netherlands
+%D October 1987
+%L WolfDDLDML87
+
+%T A Discussion Note
+%A P. van der Wolf
+%R Internal Report
+%D Oct 1986
+%I Delft University of Technology
+%C Delft
+
+%T Implementing the DDMS: A Plan for Future Activities
+%A P. van der Wolf
+%R Internal Report
+%D Sep 1986
+%I Delft University of Technology
+%C Delft
+
+%T On the Architecture of a CAD Framework: The NELSIS Approach
+%A P. van der Wolf
+%A P. Bingley
+%A P. Dewilde
+%J Proc. of the European Design Automation Conference
+%I IEEE Computer Society Press
+%C Washington
+%P 29-33
+%D 1990
+%L Wolf@Bingley@Dewilde,@1990
+
+%T Principles of Open and Distributed Data Management for VLSI Design
+%A P. van der Wolf
+%A N. van der Meijs
+%A T.G.R. van Leuken
+%A I. Widya
+%A P. Dewilde
+%R ICD Project Deliverable WP1
+%D Dec 1987
+%I Delft University of Technology
+%C Delft
+
+%T Principles of Open VLSI Data Management in the NELSIS Design System
+%A P. van der Wolf
+%A N. van der Meijs
+%A T.G.R. van  Leuken
+%A I. Widya
+%A P. Dewilde
+%J Lecture Notes of the NELSIS-Project
+%E O.E. Herrmann
+%E B.J.F. van Beijnum
+%C The Netherlands
+%P 12-36
+%D March 1988
+
+%T State Management: Some Preliminary Ideas
+%A P. van der Wolf
+%R Internal Report
+%D Sep 1986
+%I Delft University of Technology
+%C Delft
+
+%T An Object-Oriented Procedural Database for VLSI Chip Planning
+%A W. Wolf
+%J Proc. 23rd IEEE Design Automation Conference
+%P 744-751
+%D 1986
+
+%T GUIDE: Graphical User Interface for Database Exploration
+%A H.K.T. Wong
+%A I. Kuo
+%J Proc. 8th Int. Conf. on Very Large Data Bases
+%C Mexico City
+%P 22-32
+%D Sep 1982
+
+%T What's Important About Knowledge Representation?
+%A W.A. Woods
+%J IEEE Computer Magazine
+%P 22-27
+%D Oct 1983
+
+%T On Coupling Multi-Systems Through Data Sharing
+%A P. S. Yu 
+%A D.M. Dias
+%A J.T. Robinson
+%A B.R. Iyer
+%A D.W. Cornell
+%J Proceedings of the IEEE
+%L Yu@Dias,@1987
+%V 75
+%N 5
+%D May 1987
+
+%T Building a Layered Database for Design Automation
+%A R.V. Zara
+%A D.R. Henke
+%J Proc. 22nd IEEE Design Automation Conference
+%P 645-651
+%D 1985
+
+%T A Codasyl CAD Data Base System
+%A G. Zintl
+%J Proc. 18th IEEE Design Automation Conference
+%P 589-594
+%D 1981
+
+%T Standardization Concepts in the NELSIS CAD Framework
+%A T.G.R. van  Leuken
+%A P. van der Wolf
+%A P. Bingley
+%J Proc. IFIP WG 10.2 Workshop on Electronic Design Automation Frameworks, Nov 1990
+%E F.J. Rammig
+%I North-Holland
+%D 1990
+%C Charlottesville, Virginia, USA
+
+%T The Nelsis CAD Framework Application Notes, Release 4
+%A R. van Leuken
+%A P. van der Wolf
+%A P. Bingley
+%R The Nelsis IC Design System Documentation
+%D January 1991
+%I Delft University of Technology
+%C Delft
+%K APPLNOTES91
+
+%T SLS USER'S MANUAL
+%A ESE Documentation
+
+%T PUTFUNC USER'S MANUAL
+%A ESE Documentation
+
+%T Design Flow Management in the NELSIS CAD Framework
+%A K.O. ten Bosch
+%A P. Bingley
+%A P. van der Wolf
+%J Proc. 28th ACM/IEEE DAC
+%P 711-716
+%D 1991
+
+%T Incorporating Design Flow Management in a Framework based CAD System
+%A P. Bingley
+%A O. ten Bosch
+%A P. van der Wolf
+%J Proc. 10th IEEE/ACM ICCAD
+%P 538-545
+%D 1992
+
+%T Design Flow Management in the NELSIS IC Design System
+%A K.O. ten Bosch
+%A P. Bingley
+%A P. van der Wolf
+%R User's Manual
+%I Delft University of Technology
+%D 1992
+
+%T Tool Encapsulation Specification
+%A CAD FRAMEWORK INITIATIVE, INC
+%J CFI Pilot Release Document CFI-92-P-10, Version 0.2.6-012292
+%D 1992
+
+%T Space Tutorial
+%A A.J. van Genderen
+%A N.P. van der Meijs
+%D October 2000
+%R Report ET-NT 92.22
+%I Delft University of Technology, Network Theory Section
+%C Delft, the Netherlands
+
+%T Space User's Manual
+%A A.J. van Genderen
+%A N.P. van der Meijs
+%A F. Beeftink
+%A P.J.H. Elias
+%D June 2001
+%R Report ET-NT 92.21
+%I Delft University of Technology, Network Theory Section
+%C Delft, the Netherlands
+
+%T Space 3D Capacitance Extraction User's Manual
+%A A.J. van Genderen
+%A N.P. van der Meijs
+%D July 2002
+%R Report ET-NT 94.37
+%I Delft University of Technology, Network Theory Section
+%C Delft, the Netherlands
+
+%T Space Substrate Resistance Extraction User's Manual
+%A A.J. van Genderen
+%A N.P. van der Meijs
+%A T. Smedes
+%D July 2002
+%R Report ET-NT 96.03
+%I Delft University of Technology, Network Theory Section
+%C Delft, the Netherlands
+
+%T Electromagnetic Fields, Theory and Applications
+%A E. Weber
+%I John Wiley & Sons, Inc.
+%C New York
+%D 1957
+
+%T An Efficient Finite Element Method for Submicron IC Capacitance Extraction
+%A N.P. van der Meijs
+%A A.J. van Genderen
+%J Proc. 26th Design Automation Conference
+%C Las Vegas
+%P 678-681
+%D June 1989
+
+%T Accurate and Efficient Layout Extraction
+%A N.P. van der Meijs
+%D 1992
+%R Ph.D. Thesis
+%I Delft University of Technology, Network Theory Section
+%C Delft, the Netherlands
+
+%T Reduced Models for the Behavior of VLSI Circuits
+%A A.J. van Genderen
+%D October 1991
+%R Ph.D. Thesis
+%I Delft University of Technology, Network Theory Section
+%C Delft, the Netherlands
+
+%T A Boundary-Element Method for Substrate Cross-talk Analysis
+%A T. Smedes
+%J Proc. of th ProRISC/IEEE Benelux Workshop on Circuits, Systems and Signal Processing
+%C Mierlo, the Netherlands
+%P 285-294
+%D Mar. 1995
+
+%T Extraction of Circuit Models for Substrate Cross-talk
+%A T. Smedes
+%A N.P. van der Meijs
+%A A.J. van Genderen
+%J Proc. of the ICCAD
+%C San Jose, CA, USA
+%P 199-206
+%D Nov. 1995
+
+%T Fast Computation of Substrate Resistances in Large Circuits
+%A A. J. van Genderen
+%A N. P. van der Meijs 
+%A T. Smedes
+%J Proc. ED&TC
+%C Paris
+%D March 1996
+
+%T Models For Large Integrated Circuits
+%A P. Dewilde
+%A Z.Q. Ning
+%I Kluwer Academic Publishers
+%D 1990
+%K ISBN 0-7923-9115-2
+%K Series: Kluwer international series in engineering and computer science
+
+%T Capacitance Coefficients for VLSI Multilevel Metallization Lines
+%A Z.Q. Ning
+%A P.M. Dewilde
+%A F.L. Neerhoff
+%J IEEE Trans. on Electron Devices
+%V ED-34
+%N 3
+%P 644-649
+%D March 1987
+
+%T SPIDER: Capacitance Modelling for VLSI Interconnections
+%A Z.Q. Ning
+%A P. Dewilde
+%J IEEE Trans. on Computer-Aided Design
+%N 12
+%V 7
+%P 1221-1228
+%D December 1988
+

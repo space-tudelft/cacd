@@ -1,0 +1,157 @@
+#!/bin/sh
+# the next line restarts using wish \
+exec wish "$0" "$@"
+
+set ProgName "placer"
+
+if {[info exists env(OPPROGPATH)]} {
+   set OPPROGPATH $env(OPPROGPATH)
+} else {
+   puts stderr "env OPPROGPATH not set"
+   exit 1
+}
+
+# The following variables can be specified in the install script.
+#----------------------------------------------------------------
+#InstallGlobals#
+set TclLibPath $OPPROGPATH/src_libs/placer
+#the path to the the tcl_library for this program
+#EndInstallGlobals#
+
+lappend auto_path $TclLibPath
+
+set debugtxt 0
+
+set Fnt       "-*-Courier-Bold-R-Normal--*-120-*"
+set con_list  ""
+set length    0
+set CellName  ""
+set CurCel    ""
+set MovCel    ""
+set RefCel    ""
+set scale     0.2
+set Dx        1
+set Dx0       3
+set Moving    "False"
+set MoveDelay 100
+set InitDelay 200
+set MvIdx     0
+set Xmax      0
+set Ymax      0
+set MessText  ""
+set optRead   0
+
+frame      .menubar       -bg gold2 -borderwidth 2 -relief raised
+label      .message       -bg wheat -borderwidth 2 -relief ridge\
+                          -textvariable MessText -font $Fnt -anchor w -padx 10 -pady 5
+frame      .frc           -bg wheat3  -borderwidth 2 -relief ridge
+canvas     .cv            -width 800 -height 500 -yscrollcommand ".sbv set"\
+                          -xscrollcommand ".sbh set" -bg wheat
+scrollbar  .sbv           -command ".cv yview" -bg wheat
+scrollbar  .sbh           -command ".cv xview" -bg wheat -orient horizontal
+menubutton .menubar.file  -text "File" -bg gold2 -font $Fnt -width 17 -menu .menubar.file.cmds
+menu       .menubar.file.cmds              -font $Fnt -bg wheat3
+         # .menubar.file.cmds add command  -label "Place Rows"    -command com_init_cell
+         # .menubar.file.cmds add command  -label "Place Madonna" -command com_madonna_place
+           .menubar.file.cmds add cascade  -label "Read" -menu .menubar.file.cmds.cells
+         # .menubar.file.cmds add command  -label "Init Place"   -menu .menubar.file.cmds.init
+         # .menubar.file.cmds add cascade  -label "Init Madonna" -menu .menubar.file.cmds.madonna
+         # .menubar.file.cmds add cascade  -label "Read"         -menu .menubar.file.cmds.cells
+           .menubar.file.cmds add command  -label "Write"    -command write_cell
+           .menubar.file.cmds add command  -label "Write As" -command write_as_cell
+           .menubar.file.cmds add command  -label "Redraw"   -command redraw
+         # .menubar.file.cmds add command  -label "Write_Ldm"    -command write_ldm
+         # .menubar.file.cmds add command  -label "Write_As_Ldm" -command write_as_ldm
+         # .menubar.file.cmds add cascade  -label "ToDatabase" -menu .menubar.file.cmds.out
+           .menubar.file.cmds add command  -label "Quit" -command {destroy .}
+menu       .menubar.file.cmds.cells        -font $Fnt -bg wheat3 -postcommand {get_layout_cells}
+# menu     .menubar.file.cmds.init         -font $Fnt -bg wheat3 -postcommand {get_circuit_cells}
+# menu     .menubar.file.cmds.madonna      -font $Fnt -bg wheat3 -postcommand {get_mad_circuit_cells}
+menu       .menubar.file.cmds.out          -font $Fnt -bg wheat3 -postcommand {get_ldm_out_files}
+label      .menubar.slbl                   -font $Fnt -bg gold -text "zoomFactor:"
+tk_optionMenu .menubar.scl   scale 0.8 0.4 0.2 0.1 0.05 0.02 0.01 0.005 0.002
+label      .menubar.rlbl                   -font $Fnt -bg gold -text "NbrOfRows:"
+tk_optionMenu .menubar.rows  nbr_rows 2 4 6 8 10 12 14 16 18 20 22 24
+label      .menubar.dlbl                   -font $Fnt -bg gold -text "Distance:"
+tk_optionMenu .menubar.dx  Dx 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+checkbutton .menubar.distnu -font $Fnt -bg wheat3 -text VaryDistance -variable distanceNotUniform
+checkbutton .menubar.errs  -font $Fnt -bg wheat3 -text ShowErrors   -variable ShowErrs -command show_errors
+checkbutton .menubar.cons  -font $Fnt -bg wheat3 -text ShowConnections -variable ShowCons -command redraw
+label      .menubar.lbl    -textvariable CurCel -bd 2 -relief ridge
+label      .frc.cln        -textvariable CellName -font $Fnt -bg wheat3
+button     .frc.pr         -text place_rows      -font $Fnt -bg gold -command "com_init_cell"
+button     .frc.pm         -text place_madonna   -font $Fnt -bg gold -command "com_madonna_place"
+button     .frc.mrr        -text move_row_right  -font $Fnt -bg gold -command "stop_moving"
+button     .frc.mrl        -text move_row_left   -font $Fnt -bg gold -command "stop_moving"
+button     .frc.mru        -text move_row_up     -font $Fnt -bg gold -command "move_row_up"
+button     .frc.mrd        -text move_row_down   -font $Fnt -bg gold -command "move_row_down"
+button     .frc.mcr        -text move_cell_right -font $Fnt -bg gold -command "stop_moving"
+button     .frc.mcl        -text move_cell_left  -font $Fnt -bg gold -command "stop_moving"
+button     .frc.mcu        -text move_cell_up    -font $Fnt -bg gold -command "move_cell_up"
+button     .frc.mcd        -text move_cell_down  -font $Fnt -bg gold -command "move_cell_down"
+
+pack .menubar        -side top    -fill x
+pack .message        -side bottom -fill x
+pack .menubar.file   -side left
+pack .menubar.slbl   -side left
+pack .menubar.scl    -side left
+pack .menubar.rlbl   -side left
+pack .menubar.rows   -side left
+pack .menubar.dlbl   -side left
+pack .menubar.dx     -side left
+pack .menubar.distnu -side left -padx 10
+pack .menubar.errs   -side left -padx 10
+pack .menubar.cons   -side left -padx 10
+pack .menubar.lbl    -side right -padx 10
+pack .sbh            -side bottom -fill x
+pack .sbv            -side right -fill y
+pack .frc            -side left -fill y
+pack .cv             -side left -fill both -expand 1
+pack .frc.cln        -side top -fill x
+pack .frc.pr         -side top -fill x
+pack .frc.pm         -side top -fill x
+pack .frc.mrr        -side top -fill x
+pack .frc.mrl        -side top -fill x
+pack .frc.mru        -side top -fill x
+pack .frc.mrd        -side top -fill x
+pack .frc.mcr        -side top -fill x
+pack .frc.mcl        -side top -fill x
+pack .frc.mcu        -side top -fill x
+pack .frc.mcd        -side top -fill x
+
+if {$debugtxt} {
+   text      .debtxt -width 40 -height 40 -bg wheat -yscrollcommand ".debsb set"
+   scrollbar .debsb  -command ".debtxt yview" -bg wheat
+   pack .debsb     -side left -fill y
+   pack .debtxt    -side left
+}
+
+bind .frc.mrr <ButtonPress-1> { after $InitDelay; set Moving "True"; move_row_right }
+bind .frc.mrl <ButtonPress-1> { after $InitDelay; set Moving "True"; move_row_left }
+bind .frc.mcr <ButtonPress-1> { after $InitDelay; set Moving "True"; move_cell_right }
+bind .frc.mcl <ButtonPress-1> { after $InitDelay; set Moving "True"; move_cell_left }
+
+set syn_idx [lsearch $argv -r]
+if {$syn_idx >= 0} {
+   set optRead 1
+}
+if {$argc > 0} {
+   set CellName [lindex $argv [expr $argc - 1]]
+}
+
+set_mc_data
+
+.menubar.distnu select
+
+if {$optRead == 1} {
+   read_cell $CellName
+   set MessText "Placement of cell $CellName has been read."
+}
+
+bind .cv <ButtonPress-1> {
+   .cv itemconfigure $CurCel -fill wheat3
+   set CurCel [lindex [.cv gettags [.cv find withtag current]] 0]
+   .cv itemconfigure $CurCel -fill blue
+}
+
+trace variable scale w rescale

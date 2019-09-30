@@ -1,0 +1,9 @@
+# process FreePDK45
+
+include_library Free45nm.lib
+
+model NMOS_VTL nenh nmos ()
+model PMOS_VTL penh pmos ()
+
+bulk nmos 0.0
+bulk pmos 1.1

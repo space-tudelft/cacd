@@ -1,0 +1,67 @@
+\subsubsection{dfr11}
+\index{flipflop!dfr11}
+Functie: D-type positive edge-triggered flipflop with synchronous reset
+
+Terminals: (D, R, CK, Q, vss, vdd)
+
+
+IEC-symbool:
+%figuur dfr11.iec.eps
+\begin{figure}[bth]
+\callpsfig{dfr11.iec.eps}{width=.31\textwidth}
+\end{figure}
+
+Waarheidstabel:
+\begin{table}[bth]
+\begin{tabular}{|c|c|c||c|}
+\hline
+R	&D	&CK		&Q\\
+\hline
+L	&L	&$\uparrow$	&L\\
+L	&H	&$\uparrow$	&H\\
+H	&-	&$\uparrow$	&L\\
+\hline
+\end{tabular}
+\vspace{1cm}
+
+Timing parameters:\\
+
+\begin{tabular}{|c|cc|ccc|c|}
+\hline
+Parameter               &From            &To   &Min	&Typ	&Max    &Unit\\
+\hline
+T$_{PLH}$               &CK     	&Q     &1.4	&2.1	&3.2    &ns\\
+T$_{PHL}$               &CK    		&Q     &1.3	&1.9	&2.9    &ns\\
+\hline
+$\Delta$T$_{PLH}$       &CK          	&Q	&-	&-	&1.1    &ns/pF\\
+$\Delta$T$_{PHL}$       &CK           	&Q    	&-	&-	&0.8    &ns/pF\\
+\hline
+T$_{su}$		&D,R		&CK	&-	&-	&1.4	&ns\\
+T$_{hold}$		&D,R		&CK	&-	&-	&0.9	&ns\\
+\hline
+C$_{in}$                &D,R	    	&vss    &-	&0.12	&0.18   &pF\\
+C$_{in}$                &CK	    	&vss    &-	&0.18	&0.27   &pF\\
+\hline
+\end{tabular}
+\end{table}
+
+Equivalent chip oppervlak: 21
+
+Fanout: 3.0 pF
+
+
+%figuur dfr11.cir.eps
+\begin{figure}[t]
+Circuit:\\
+
+\callpsfig{dfr11.cir.eps}{width=1\textwidth}
+
+%figuur dfr11.lay.eps
+
+Layout:\\
+
+\callpsfig{dfr11.lay.eps}{width=1\textwidth}
+\end{figure}
+
+
+\clearpage

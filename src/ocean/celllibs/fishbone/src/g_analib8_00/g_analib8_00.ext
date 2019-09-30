@@ -1,0 +1,42 @@
+/* * * * * * * * * * * * * * * *
+ *
+ * This is the file 'g_analib8_00.ext'.
+ * Contents: The external sls-declarations of all cells
+ *           in the analog library g_analib8_00. (version aug 2000)
+ * Purpose:  To determine the terminal configuration of the
+ *           library cells and to include in your sls-description file.
+ * Created:  july 18th 1993 by Patrick Groeneveld
+ * Modified: aug 15 2000 by Arjan van Genderen
+ *
+ * This file was copied into this project directory by 'mkopr' or
+ * 'mkepr'
+ */
+
+extern network ln3x3    (terminal g, d, s, vss, vdd)
+extern network lp3x3    (terminal g, d, s, vss, vdd)
+extern network mir_nin  (terminal i, g, vss, vdd)
+extern network mir_nout (terminal i, g, o, vss, vdd)
+extern network mir_pin  (terminal i, g, vss, vdd)
+extern network mir_pout (terminal i, g, o, vss, vdd)
+extern network osc10    (terminal E, F, XI, XO, vss, vdd)
+
+
+/* * * * * * * * * * * * * * * * *
+ *
+ * Start of extracted cells
+ * These cells start with capitals
+ * you probably never want to use these
+ * Therefore they are commented out now.
+ * Remove the momment marks to enable them
+ */
+
+/* commented out (remove this line to enable)
+extern network Iv110    (terminal A, Y, vss, vdd)
+extern network Ln3x3    (terminal g, d, s, vss, vdd)
+extern network Lp3x3    (terminal g, d, s, vss, vdd)
+extern network Mir_nin  (terminal i, g, vss, vdd)
+extern network Mir_nout (terminal i, g, o, vss, vdd)
+extern network Mir_pin  (terminal i, g, vss, vdd)
+extern network Mir_pout (terminal i, g, o, vss, vdd)
+extern network Osc10	(terminal E, F, XI, XO, vss, vdd)
+ end of out commenting (remove this line to enable) */

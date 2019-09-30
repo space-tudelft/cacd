@@ -1,0 +1,54 @@
+.ll 77
+.hy
+.TH MEMMAN 3SDF "THE SEADIF PROGRAMMERS MANUAL"
+.SH NAME
+mnew, mfree - functions for fast allocation of small memory chunks
+.SH SYNOPSIS
+ char *mnew(int size)
+
+ void mfree(char **memblk, int size)
+
+.SH DESCRIPTION
+Mnew() returns a memory block of the requested size. The parameter
+.I size
+is in bytes. All bytes in the block are cleared. Mfree() returns a memory block
+to the free list so that it can be used by mnew() again.
+
+Mnew is much faster than
+.I malloc (3)
+because it obtains large blocks of memory from the system by calling
+.I sbrk (2).
+Each time mnew() is called it just returns a small piece of this large block.
+Only once in many times the large block is exhausted, urging mnew() to call
+sbrk() again.
+
+All the sealib functions call mnew() and mfree() to deal with memory allocation
+for the structures that make up the in-core seadif tree (see
+.I sealib (3SDF)).
+.SH "RETURN VALUE"
+Mnew returns a pointer to the requested block. Alignment of the pointer is
+guaranteed to be suitable for any data type in the C programming language.
+If the requested block size is out of range, mnew() returns NIL.
+.SH LIMITATION
+Mnew() and mfree() do not deal with blocks larger than 256 bytes.
+.SH "EXAMPLE"
+Suppose we have a structure named DTYPE, then the following two #define's
+provide functionality to create new objects of type DTYPE and also to get rid
+of them at will:
+
+ #define NewDtype(dptr) \\
+         { \\
+         (dptr)=(DTYPE *)mnew(sizeof(DTYPE)); \\
+         (dptr)->field=initvalue; \\
+         }
+
+ #define FreeDtype(dptr) \\
+         mfree((char **)dptr,sizeof(DTYPE))
+
+If initvalue is 0 then the initializing statement in the NewDtype macro is
+unnecessary. We don't check if mnew() returns NIL because we know at compile
+time that sizeof(DTYPE) is within the permitted range.
+.SH "AUTHOR"
+Paul Stravers, Delft University of Technology.
+.SH "SEE ALSO"
+malloc(3), sbrk(2), sealib(3SDF).

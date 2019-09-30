@@ -1,0 +1,202 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+# Default definitions
+
+MAKE		= make
+SHELL		= /bin/sh
+REVISION	=
+VERSION		= 3f5
+VERSION_REV	= $(VERSION)$(REVISION)
+NOTICE		=
+
+###  To Edit This File:  The contents of this file are used by the "make"
+###	command, and follow the syntax rules for Unix "make".  Long lines
+###	can be split by placing a '\' at the end of one line and
+###	continuing on the following line.  If you have any quote marks
+###	or other special shell "metacharacters" they should be escaped
+###	via a backslash.  Variables identified below as text strings will be
+###	quoted, so quote marks are not normally required (in fact they
+###	may be confusing).
+###
+###	If you get the error "make: syntax error at line nnn", it is likely
+###	that you made an error in this file or the system specific file.
+###	The most common error is to forget to continue a line with the '\'.
+###
+###	Comments, such as this, start at the beginning of a line with '#'
+###	and stop at the end of a line.  When changing the following values
+###	you should save the original values by inserting '#' at the beginning
+###	of the line.
+###
+###	The definitions below are group in to four areas:
+###
+###		1.  Directory organization.  These definitions tell where
+###			to store the final executables, data files, and
+###			intermediate (".o") files.
+###
+###		2.  X11 options.  These definitions are provided to
+###			accommodate X11 if it is not installed with
+###			the regular system software.
+###
+###		3.  Compiler/System options.  You will want to leave most if
+###			not all of these as they are; any exceptions should
+###			probably be put in a per-system file.
+###
+###		4.  SPICE configuration options.  These definitions indicate
+###			what goes in to your version of spice.
+###
+
+###	Directory Organization
+###
+###
+#       TOP0 was the distribution directory.
+#	TOP0 was normally set during the build with the 'pwd' command.
+#	Note that we don't use this absolute path anymore.
+#	We now only use relative paths in the make procedure.
+#	Also we don't use variables DIST_DIR, SYS_DIR and OBJ_TOP anymore.
+#	Also we keep the ".o" files next to the corresponding ".c" files.
+
+#	"SPICE_LIB_DIR" and "SPICE_EXEC_DIR" are the locations for
+#	data files and executable programs, respectively.
+#
+SPICE_LIB_DIR	= $(ICDPATH)/share/lib/spice3
+SPICE_EXEC_DIR	= $(ICDPATH)/bin
+
+###	Compiler/System options
+###
+###
+#	CC is your C compiler
+CC = gcc
+
+#	CC_OPT: Default compile options (optimization/debug level, other)
+#CC_OPT		= -O2
+CC_OPT		= -O
+#CC_OPT		= -O -Wall
+
+#	CC_OPT_SAFE: Special compile options to override CC_OPT for code
+#	which typically causes problems for most compilers (bsim1 and bsim2).
+#	CC_OPT_SAFE defaults to CC_OPT, so you normally won't have to put
+#	in anything here (unless your compiler gives up on you for
+#	bsim1 or bsim2).  (This should probably be put in the system specific
+#	file but I want to document it here.)
+#
+#	CC_OPT_SAFE	= -g
+#	SYS_CFLAGS	= -DSTATIC
+#
+CC_OPT_SAFE	= $(CC_OPT)
+CFLAGS		= $(CC_OPT) $(SYS_CFLAGS)
+
+#	INCLUDE is used after CFLAGS in the used CC commands.
+#	We like to use a relative path to this spice3 "include" directory.
+#	It is correctly set in each "makedefs" file.
+#	Thus we don't need to set this absolute path here. (SdeG)
+#	See also INTERFACE_OPTS (also used after CFLAGS).
+#
+#INCLUDE	= -I"$(TOP0)/src/include"
+
+#	INTERFACE_OPTS are options to CC (the C compiler) that include
+#	code for X11.
+#
+#INTERFACE_OPTS	= -DWANT_X11
+
+#	LDFLAGS lists the options to the C compiler for linking.
+#	By default, the math library is linked.
+#	You can change LDFLAGS in the system-dependent file.
+#	Add "-static" for static libraries.
+LDFLAGS		= -lm
+
+###	X11 options;  these need to be defined if you want the X11
+###	interface (see above).  Note that they should be blank if you
+###	do not have X11.
+###
+###	The following is configured for X11R4 as distributed by MIT.
+###	Spice3 requires the "Athena Widgets" toolkit.
+#
+#	X_DIR indicates the top of the X11 lib/include hierarchy; it is only
+#	a convenience that is used in the following definitions.
+#X_DIR	= /usr
+
+#	INCX lists the X include directories.  This may be different between
+#	MIT X11R5, X11R4, and your vendor's version of X11, though listing
+#	more doesn't hurt.
+#
+#INCX	= -I$(X_DIR)/include -I$(X_DIR)/include/X11 -I$(X_DIR)/include/X11/Xmu -I$(X_DIR)/include/X11/Xaw
+
+#	LIBX lists the options for linking with the X11 libraries.  Order is
+#	also important.  Note that "-lXext" is an "X extensions" library
+#	which is not available with all versions of X11.  If you do not have
+#	it, then you do not need it (delete the following reference to it).
+#
+#LIBX	= -L$(X_DIR)/lib -lXaw -lXt -lXext -lXmu -lX11
+LDFLAGSX	= $(LIBX) -lm
+
+###	SPICE configuration options.  These affect what variation of spice3
+###	you build.  They may be changed with minimal recompilation.
+###
+#	DEVICES lists the types of devices that you want to use in your
+#	copy of Spice3.  For a smaller binary, reduce the number of devices.
+#	Some systems may have trouble building the "bsim1" and/or "bsim2".
+#	It does not make sense to remove any of cap, cccs, ccvs, ind, isrc,
+#	res, vccs, vcvs, or vsrc.
+#		asrc:	arbitrary voltage/current source
+#		bjt:	bipolar junction transistor
+#		bsim1:	MOS model
+#		bsim2:	MOS model
+#		cap:	capacitor
+#		cccs:	current-controlled current source
+#		ccvs:	current-controlled voltage source
+#		csw:	current controlled switch
+#		dio:	diode
+#		ltra:	lossy transmission line
+#		ind:	inductor
+#		isrc:	current source
+#		jfet:	Junction FET
+#		mes:	MES FET (GaAs)
+#		mos1:	MOS, simplest analytic model
+#		mos2:	MOS, simplest
+#		mos3:	MOS, simplest
+#		mos6: 	MOS, fast analytic, short-channel
+#		res:	resistor
+#		sw:	switch
+#		tra:	lossless transmission line
+#		urc:	uniform RC line
+#		vccs:	voltage-controlled current source
+#		vcvs:	voltage-controlled voltage source
+#		vsrc:	voltage source
+#
+DEVICES = asrc bjt bsim1 bsim2 bsim3 cap cccs ccvs csw dio ind isrc jfet \
+	  ltra mes mos1 mos2 mos3 mos6 res sw tra urc vccs vcvs vsrc
+
+#	ANALYSES list the analysis types that you want to have available in
+#	Spice3.  As with DEVICES, this can reduce the size of the resulting
+#	simulator.  Analyses op, dc, tf, ac, and tran are basic.  Analyses are:
+#		op:	Operating point
+#		dc:	DC transfer curve
+#		tf:	Small signal transfer function
+#		ac:	AC (frequency domain)
+#		tran:	transient
+#		pz:	pole-zero
+#		disto:	distortion
+#		noise:	noise
+#		sense:  ac/dc all-parameter sensitivity
+#
+ANALYSES = op dc tf ac tran pz disto noise sense
+
+#	SPICE_BUGADDR is the e-mail address to send bug reports.  If left blank
+#	the "bug" command in spice will not operate.
+#
+SPICE_BUGADDR = space-support-ewi@tudelft.nl
+
+#	SPICE_EDITOR lists where the default editor used by the "edit"
+#	command is located.
+SPICE_EDITOR = vi
+
+#	SPICE_ASCIIRAWFILE indicates that the default format of the spice3 raw data
+#	file should be in human-readable format ( = 1 ) or in the smaller,
+#	machine-dependent binary format.
+#SPICE_ASCIIRAWFILE = 1
+SPICE_ASCIIRAWFILE = 0
+
+###
+###	The End.   Use the 'build' command in util/ to build spice.
+###

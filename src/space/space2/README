@@ -1,0 +1,51 @@
+SPACE 2 Limitations
+===================
+
+- Currently no 3D (options -3 and -B).
+- No display features (option -X).
+- No scene   features (option -s).
+- No SNE and Moments extraction (options -g and -G).
+- No sensitivity.
+
+- No PLOT_CIR_MODE (optPlotCir)
+- No CORE_MODE (optNoCore)
+- No NET_TERM_MODE (optReadNetTerm, optGenNetTerm)
+- No DMS_TERM_POS (writing of "termpos")
+
+- No "elim_sub_node"
+- No "elim_sub_term_node"
+
+- Outputs always a fine network (has no option -f)
+- Does no heuristics (has no option -n)
+- Capacitance extraction is always -C (has no option -c)
+- Has no option -t (net has always coordinates)
+- Has no option -x (use backannotation parameter)
+   (backannotation output must be post-processed)
+- Option -y (contract "inspector") wiredata must be post-processed
+   (maxres value is not calculated)
+
+- Is intented for a flat extraction?
+- Outputted netlist must be post-processed.
+- No selective res extraction (options -j and -k).??
+
+- Always fixed SUBSTR and GND node names (no merge).
+    (no param "name_ground")
+    (no param "name_substrate")
+
+- No makeMaskXYName (no param "node_pos_name")
+                    (no param "pos_name_prefix")
+  (net name based on <prefix><mask>_<x>_<y>)
+
+- No net names based on groupName (no param "net_node_sep")
+    Net name based on <groupName><sep><grp_node_cnt>.
+    Net which contains the groupName, has <groupName>.
+
+    Default the groupName may only be a LABEL.
+    Thus, if there are no labels, there are no groupNames.
+    Param "term_is_netname" allows also a TERMINAL to be the groupName.
+- Param "term_is_netname" is not used.
+
+- Net coordinate is always coordinate of node (not from label or terminal)
+//- We shall not use labels or terminals as net name.  We use only nummers.
+//- For each terminal or label we shall add the attribute type=(term, label, label2)
+

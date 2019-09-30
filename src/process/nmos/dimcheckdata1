@@ -1,0 +1,5 @@
+# process nmos
+nd_vln NOFILE 2 2 2 10 2 1.1+1.2
+np_vln NOFILE 2 2 2 10 2 3.1+3.2
+nc_vln NOFILE 2 0 2 10 0 4.1+4.4
+nm_vln NOFILE 3 2 1 10 2 4.7+4.8

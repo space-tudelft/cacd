@@ -1,0 +1,3 @@
+sh ../../lib/$*.spc > pen.spc
+rm $*.ana
+spice3 < pen.spc > $*.ana

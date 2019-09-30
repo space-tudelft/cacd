@@ -1,0 +1,72 @@
+.TH ICDMAN 1ICD "User Commands"
+.UC 4
+.SH NAME
+icdman - search for keyword or print ICD manual page
+.SH SYNOPSIS
+.B icdman
+-k keyword
+.br
+.B icdman
+[section] entry
+.SH OPTIONS
+.TP
+.B -k
+Search for \fIkeyword\fP in file 'whatis'.
+.TP
+.I section
+Search only for manual entry in specified section.
+.SH DESCRIPTION
+.I Icdman
+is a program that accesses information from the on-line IC Design manual
+in a man(1)-like fashion.
+.PP
+With the -k option manual information can be searched for by keyword.
+.I Icdman
+prints out a one-line synopsis of each manual entry whose listing
+in the 'whatis' database contains the caseless \fIkeyword\fP.
+.PP
+When the -k option is not specified
+.I icdman
+searches for a manual entry, specified by the title \fIentry\fP,
+and displays it on the terminal screen.
+If a section number is specified
+.I icdman
+looks in that section for \fIentry\fP.
+If section is omitted,
+.I icdman
+searches all sections of the on-line manual.
+.PP
+Help about the following sections is currently available:
+.PP
+.if n .ta 16
+.if t .ta 1.5i
+.nf
+sectionnr:	1. User Commands and Sys. Administration
+	3. Sea-of-Ocean Functions
+	4. File Formats
+	5. DMI and LDMC Functions
+.SH NOTES
+You can set the environment variable PAGER to use another pager program.
+The default pager is
+.I less
+(if found),
+else
+.I more
+is used.
+.SH EXAMPLES
+.nf
+% icdman icdman
+% icdman -k import
+% icdman dsui
+% icdman 4 maskdata
+.fi
+.AU "S. de Graaf" "icdman"
+.SH FILES
+.TP
+\fCICDPATH/share/man/cat[1-5]\fP
+.TP
+\fCICDPATH/share/man/whatis\fP
+.SH SEE ALSO
+less(1),
+man(1),
+more(1).

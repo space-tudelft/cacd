@@ -1,0 +1,139 @@
+.TH SPICEMOD 4ICD "File Formats"
+.UC 4
+.SH NAME
+spicemod - model file for SPICE
+.SH DESCRIPTION
+The file
+.I spicemod
+contains model information for the SPICE simulator.
+This file is used by
+.I xspice
+to prepare simulation input.
+However, the
+.I spicemod
+file can also be used by
+.I xspectre
+for the Spectre simulator.
+.PP
+The
+.I spicemod
+model file has a very simple format:
+.PP
+The lines above the '%' line contain a model index.
+These lines are used to specify device cell names.
+Only models specified in this index can possibly be included in the output.
+The lines can also be used to specify alternate output names and (if appropriate)
+correction values for device "w" and "l" attributes.
+The first argument on a line specify an alternate output name.
+The second and third arguments the "dw" and "dl" values.
+Note that the output name must be used in one of the specified models below
+the '%' line, else no model type is known or it must be a predefined model.
+And also no model lines can be included in the output.
+.PP
+The lines below the '%' line contain the models and possibly lines
+to specify "nbulk" and "pbulk" voltages and resistors.
+Only the used
+.I model
+lines after the '%' line are copied to the
+.I xspice
+output file.
+The comment lines and all other lines are not copied.
+The keywords
+.I vnbulk
+and
+.I vpbulk
+can be used to set the "nbulk" and "pbulk" voltages.
+The keywords
+.I rnbulk
+and
+.I rpbulk
+can be used to set the "nbulk" and "pbulk" resistor values.
+It are
+.I xspice
+control lines, which are used but not outputted.
+Thus the specified node numbers or names are not used.
+.PP
+Some remarks:
+.PP
+Do not use other separator characters than space and tab.
+Place ".model", model_name, model_type and the "level=N"
+parameter all on the same line.
+Use a lowercase modeltype.
+When the
+.I level
+parameter is used, it must be the first ".model" parameter.
+The
+.I xspectre
+program uses this for doing model conversion for the Spectre simulator.
+If needed, the SPICE scale factors are also converted.
+But scale factors 'a' and 'mil' are not supported.
+.PP
+The example below:
+.PP
+The lines above the '%' line contain the
+.I xspice
+or
+.I xspectre
+control information.
+The '#' line is a comment line.
+The "nenh" device must get the output name "nenhs"
+and every "w" must be corrected with a "dw" of "0.88" micrometer.
+The "l" attribute must not be corrected ("dl" is 0).
+Note that a
+.I positive
+value gives a
+.I smaller
+device attribute.
+Note that "nenh" and "ndep" are predefined device names,
+thus the used modeltype of the models must be "nmos".
+.SH EXAMPLE
+For example,
+this is the
+.I spicemod
+file of the NMOS process:
+.PP
+.nf
+nenh   nenhs   0.88e-6   0
+ndep   deps    1.20e-6   0
+%
+
+* parameters for depletion NMOS w/l = 4/4
+\&.model deps nmos level=2
++            vto=-3.971    kp=31.54u    gamma=0.3642
++            phi=0.578     pb=0.84      cgso=430p
++            cgdo=430p     cgbo=130p    rsh=25.3
++            cj=62u        mj=0.73      cjsw=340p
++            mjsw =0.20    js=6.2u      tox=0.07u
++            xj=0.35u      ld=0.605u    uo=640
++            ucrit=534000  uexp=-0.025  utra=0
++            xqc=0.5       fc=0.6       lambda=0.0258
++            vmax=3.5e4    nsub=9.8e14  delta=6.3
+* end deps w/l = 4/4
+
+* parameters for n_enhacement NMOS w/l = 4/4
+\&.model nenhs nmos level=2
++            vto=0.6838    kp=32u       gamma=0.2787
++            phi=0.55      pb=0.84      cgso=440p
++            cgdo=440p     cgbo=100p    rsh=25.3
++            cj=62u        mj=0.73      cjsw=340p
++            mjsw =0.20    js=6.2u      tox=0.07u
++            xj=0.35u      ld=0.625u    uo=650
++            ucrit=143000  uexp=0.154   utra=0
++            xqc=0.5       fc=0.6       lambda=0.02269
++            vmax=6e4      nsub=5.71e14 delta=5.5
+* end nenh w/l = 4/4
+
+vnbulk 1 0 -2.5V
+rnbulk 1 0 100meg
+
+* vdd ? 0 5V
+* rgnd ? 0 1p
+* rvss ? 0 1p
+.fi
+.DE
+.AU "S. de Graaf"
+.SH SEE ALSO
+SPICE2 / SPICE3 User's Guide,
+.br
+xspectre(1ICD),
+xspice(1ICD).

@@ -1,0 +1,79 @@
+.TH LAYFLAT 1ICD "93/02/25"
+.UC 4
+.SH NAME
+layflat - remove the hierarchy from a cell in the layout view
+.SH SYNOPSIS
+.B layflat
+[\fB...options...\fP] <inputcell>
+.SH OPTIONS
+.TP
+.B -h
+Help--- print list of options.
+.TP
+.B -s
+Lift all the terminals from the <inputcell>s children as well. The default is
+to only include the top level terminals with the <outputcell>).
+.TP
+.B -o <outputcell>
+Cell name of the layout to be created. The default output cell is "testflat".
+.TP
+.B -x <mask>
+Exclude all occurrences of <mask> from the output. Multiple -x options are
+allowed.
+.TP
+.B -i <mask>
+Only include <mask> in the output. Multiple -i options are allowed, but -x and
+-i are mutually exclusive.
+.TP
+.B -L <pat>
+Exclude library cells that are imported from a project whose path contains the
+string <pat>.
+.TP
+.B -l
+Equivalent to specifiying the option "-L /celllibs/".
+
+.SH DESCRIPTION
+\fILayflat\fR reads the layout description of the <inputcell> and recursively
+of all its children. It then removes the model calls contained in this layout
+tree by expanding them. Finally, it writes the flattened layout into the
+<outputcell>.
+
+By default, \fIlayflat\fR copies all masks found in the <inputcell> to the
+<outputcell>. If one or more -x<mask> options are specified then all but the
+specified masks are copied to the output. If one or more -i<mask> options are
+specified then only these masks are copied to the <outputcell>.
+
+If the -s options is specified, then a likely consequence of the expansion is
+terminal name collision. \fILayflat\fR remedies this by modifying collided
+names in such a way that for each terminal a new unique name results. Normally
+the modification consists of appending "_%d" to the name, where %d represents a
+small integer. Sometimes, however, this results in too long a name and in such
+cases \fIlayflat\fR comes up with a new unique name that has no similarities to
+the original name. It also prints a message on the terminal to warn you for the
+change of names.
+
+The -l and the -L options prevent \fIlayflat\fR from flattening cells of a
+certain library. If the -l is used, all cells of which the path to the library
+contains the substring "/celllibs/" are excluded from the flattened output.
+The -L option allows for exclusion of cells imported from any other project.
+The options are useful for the final assembly of sea-of-gates chips, where the
+image must be excluded from the final mask set.
+
+.SH EXAMPLE
+The following call flattens the cell dff (in the fishbonec3tu process) and
+writes the result to dff_f, which only contains two levels of metal and 4 types
+of contacts. If dff is a sea-of-gates cell, then dff_f is the equivalent cell
+but without the active area and polysilicon of the sea-of-gates image:
+
+  % layflat -iin -iins -icon -icop -icps -icos -o dff_f dff
+
+.SH BUGS
+Elements of type NOR_CIRCLE and NOR_WIRE are ignored. (\fILayflat\fR issues a
+warning message on the terminal when it encounters such weird elements.)
+
+Multiple -L options should be allowed. The pattern used with -L should be a
+regular expression.
+
+.SH AUTHOR
+Paul Stravers. The -s option was added by Gerben Hekstra and the -L option by
+Patrick Groeneveld.

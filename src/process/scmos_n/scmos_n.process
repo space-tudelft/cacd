@@ -1,0 +1,658 @@
+1 1
+scmos_n
+example double metal N-well cmos process
+maskdata_sheet.name 11
+cpg
+caa
+cmf
+cms
+cca
+ccp
+cva
+cwn
+csn
+cog
+cx
+maskdata_sheet.layertype 11
+interconnect
+interconnect
+interconnect
+interconnect
+normal
+normal
+normal
+normal
+normal
+normal
+symbolic
+maskdata_sheet.dali 11
+1 1
+2 1
+4 1
+3 2
+0 1
+0 1
+7 1
+5 0
+6 2
+6 0
+7 0
+maskdata_sheet.xspace 11
+#ff0000
+#00ff00
+#0000ff
+#fea900
+#000000
+#000000
+#000000
+#000000
+#000000
+#000000
+#000000
+maskdata_sheet.ID 10
+1
+2
+3
+4
+5
+7
+8
+9
+10
+12
+maskdata_sheet.comment 11
+polysilicon
+active area
+metal
+metal2
+contact metal to diffusion
+contact metal to poly
+contact metal to metal2
+n-well
+n-channel implant
+contact to bondpads
+bounding box
+gds2_sheet.mask 15
+cpg
+cpg
+caa
+caa
+cmf
+cmf
+cms
+cms
+cca
+ccp
+cva
+cwn
+csn
+cog
+cx
+gds2_sheet.textmap 15
+<none>
+label
+<none>
+label
+<none>
+label
+<none>
+label
+<none>
+<none>
+<none>
+<none>
+<none>
+<none>
+<none>
+gds2_sheet.gdsnr 15
+46
+46
+43
+43
+49
+49
+51
+51
+48
+47
+50
+42
+45
+52
+0
+gds2_sheet.gdsdtyp 8
+
+9
+
+9
+
+9
+
+9
+units_list.resistance 1
+1
+units_list.c_resistance 1
+1e-12
+units_list.a_capacitance 1
+1e-6
+units_list.e_capacitance 1
+1e-12
+units_list.capacitance 1
+1e-15
+units_list.distance 1
+1e-6
+units_list.resize 1
+1e-6
+units_list.vdimension 1
+1e-6
+units_list.shape 1
+1e-6
+color_sheet.name 1
+@sub
+color_sheet.xspace 1
+#ff07f3
+conductors_sheet.name 6
+cond_mf
+cond_ms
+cond_pg
+cond_pa
+cond_na
+cond_well
+conductors_sheet.cond_list 6
+( cmf )
+( cms )
+( cpg )
+( caa !cpg !csn )
+( caa !cpg csn )
+( cwn )
+conductors_sheet.mask 6
+cmf
+cms
+cpg
+caa
+caa
+cwn
+conductors_sheet.sheet_res 6
+0.045
+0.030
+40
+70
+50
+0
+conductors_sheet.carr_type 6
+metal
+metal
+metal
+p doped conductor
+n doped conductor
+n doped conductor
+conductors_sheet.comment 6
+first metal
+second metal
+poly interconnect
+p+ active area
+n+ active area
+n well
+fets_sheet.name 2
+nenh
+penh
+fets_sheet.cond_list 2
+( cpg caa csn )
+( cpg caa !csn )
+fets_sheet.mask_g 2
+cpg
+cpg
+fets_sheet.mask_ds 2
+caa
+caa
+fets_sheet.mask_b 2
+@sub
+cwn
+fets_sheet.comment 2
+nenh MOS
+penh MOS
+contacts_sheet.name 5
+cont_s
+cont_p
+cont_a
+cont_w
+cont_b
+contacts_sheet.cond_list 5
+( cva cmf cms )
+( ccp cmf cpg )
+( cca cmf caa !cpg cwn !csn | cca cmf caa !cpg !cwn csn )
+( cca cmf cwn csn )
+( cca cmf !cwn !csn )
+contacts_sheet.mask_1 5
+cmf
+cmf
+cmf
+cmf
+cmf
+contacts_sheet.mask_2 5
+cms
+cpg
+caa
+cwn
+@sub
+contacts_sheet.resistivity 5
+1
+100
+100
+80
+80
+contacts_sheet.comment 5
+metal to metal2
+metal to poly
+metal to active area
+metal to well
+metal to subs
+cap_sheet.cap_type 29
+junction
+junction
+junction
+junction
+junction
+junction
+default
+default
+default
+default
+default
+default
+default
+default
+default
+default
+default
+default
+default
+default
+default
+default
+default
+default
+default
+default
+default
+default
+default
+cap_sheet.sub_type 6
+ndif
+ndif
+nwell
+nwell
+pdif
+pdif
+cap_sheet.name 29
+acap_na
+ecap_na
+acap_cw
+ecap_cw
+acap_pa
+ecap_pa
+acap_cpg_sub
+acap_cpg_cwn
+ecap_cpg_sub
+ecap_cpg_cwn
+acap_cmf_sub
+acap_cmf_cwn
+ecap_cmf_sub
+ecap_cmf_cwn
+acap_cmf_caa
+ecap_cmf_caa
+acap_cmf_cpg
+ecap_cmf_cpg
+acap_cms_sub
+acap_cms_cwn
+ecap_cms_sub
+ecap_cms_cwn
+acap_cms_caa
+ecap_cms_caa
+acap_cms_cpg
+ecap_cms_cpg
+acap_cms_cmf
+ecap_cms_cmf
+lcap_cms
+cap_sheet.cond_list 29
+( caa !cpg csn !cwn )
+( !caa -caa !-cpg -csn !-cwn )
+( cwn )
+( !cwn -cwn )
+( caa !cpg !csn cwn )
+( !caa -caa !-cpg !-csn cwn -cwn )
+( cpg !caa !cwn )
+( cpg !caa cwn )
+( !cpg -cpg !cmf !cms !caa !cwn )
+( !cpg -cpg !cmf !cms !caa cwn )
+( cmf !cpg !caa !cwn )
+( cmf !cpg !caa cwn )
+( !cmf -cmf !cms !cpg !caa !cwn )
+( !cmf -cmf !cms !cpg !caa cwn )
+( cmf caa !cpg !cca !cca )
+( !cmf -cmf caa !cms !cpg )
+( cmf cpg !ccp )
+( !cmf -cmf cpg !cms )
+( cms !cmf !cpg !caa !cwn )
+( cms !cmf !cpg !caa cwn )
+( !cms -cms !cmf !cpg !caa !cwn )
+( !cms -cms !cmf !cpg !caa cwn )
+( cms caa !cmf !cpg )
+( !cms -cms caa !cmf !cpg )
+( cms cpg !cmf )
+( !cms -cms cpg !cmf )
+( cms cmf !cva )
+( !cms -cms cmf )
+( !cms -cms =cms )
+cap_sheet.mask_1 29
+caa
+-caa
+cwn
+-cwn
+caa
+-caa
+cpg
+cpg
+-cpg
+-cpg
+cmf
+cmf
+-cmf
+-cmf
+cmf
+-cmf
+cmf
+-cmf
+cms
+cms
+-cms
+-cms
+cms
+-cms
+cms
+-cms
+cms
+-cms
+-cms
+cap_sheet.mask_2 29
+@gnd
+@gnd
+@gnd
+@gnd
+cwn
+cwn
+@gnd
+cwn
+@gnd
+cwn
+@gnd
+cwn
+@gnd
+cwn
+caa
+caa
+cpg
+cpg
+@gnd
+cwn
+@gnd
+cwn
+caa
+caa
+cpg
+cpg
+cmf
+cmf
+=cms
+cap_sheet.capacitivity 29
+100
+300
+100
+800
+500
+600
+49
+49
+52
+52
+25
+25
+52
+52
+49
+59
+49
+59
+16
+16
+51
+51
+25
+54
+25
+54
+49
+61
+0.07
+cap_sheet.comment 6
+n+ bottom
+n+ sidewall
+bottom
+sidewall
+p+ bottom
+p+ sidewall
+vdimensions_sheet.name 5
+v_caa_on_all
+v_cpg_of_caa
+v_cpg_on_caa
+v_cmf
+v_cms
+vdimensions_sheet.cond_list 5
+( caa !cpg )
+( cpg !caa )
+( cpg caa )
+( cmf )
+( cms )
+vdimensions_sheet.mask 5
+caa
+cpg
+cpg
+cmf
+cms
+vdimensions_sheet.bottom 5
+0.30
+0.60
+0.35
+1.70
+2.80
+vdimensions_sheet.thickness 5
+0.00
+0.50
+0.70
+0.70
+0.70
+dielectrics_sheet.name 2
+SiO2
+air
+dielectrics_sheet.permittivity 2
+3.9
+1.0
+dielectrics_sheet.bottom 2
+0.0
+5.0
+sublayers_sheet.name 1
+substrate
+sublayers_sheet.conductivity 1
+6.7
+sublayers_sheet.top 1
+0.0
+selfsubres_sheet.area 3
+1.0
+4.0
+16.0
+selfsubres_sheet.perim 3
+4.0
+8.0
+16.0
+selfsubres_sheet.val 3
+65851
+32937
+16480
+selfsubres_sheet.rest 3
+0.5
+0.5
+0.5
+coupsubres_sheet.area1 4
+1.0
+1.0
+1.0
+1.0
+coupsubres_sheet.area2 4
+1.0
+1.0
+1.0
+1.0
+coupsubres_sheet.dist 4
+1.0
+2.0
+4.0
+8.0
+coupsubres_sheet.val 4
+338990
+529316
+898693
+1628779
+coupsubres_sheet.decr 4
+0.800
+0.872
+0.922
+0.951
+space_params.min_art_degree 1
+3
+space_params.min_degree 1
+4
+space_params.min_res 1
+100
+space_params.min_sep_res 1
+10
+space_params.max_par_res 1
+20
+space_params.no_neg_res 1
+on
+space_params.min_coup_cap 1
+0.05
+space_params2.name 3
+lat_cap_window
+max_obtuse
+equi_line_ratio
+space_params2.value 3
+6.0
+110.0
+1.0
+space_params2.comment 2
+micron
+degrees
+cap3d.name 4
+be_mode
+be_window
+max_be_area
+omit_gate_ds_cap
+cap3d.value 4
+0c
+2.0
+1.0
+on
+sub3d.name 8
+be_shape
+be_mode
+max_be_area
+edge_be_ratio
+edge_be_split
+saw_dist
+edge_dist
+be_window
+sub3d.value 8
+4
+0g
+1
+0.01
+0.2
+0
+0
+10
+getepslay_pl.includefile_nelsis 1
+epslay.pro
+getepslay_pl.mask_order 1
+cx cwn csn caa cpg cmf cca ccp cms cva cog
+getepslay_pl.plotfont 1
+Helvetica-Bold
+getepslay_pl.font_min 1
+6
+getepslay_pl.font_max 1
+14
+getepslay_pl.font_lambda 1
+10
+getepslay_pl.pattern_scale 1
+1
+getepslay_pl.termtxt 1
+Center at
+getepslay_sheet.mask_name 14
+cwn
+csn
+caa
+cpg
+cmf
+cca
+ccp
+cms
+cva
+cog
+t_caa
+t_cpg
+t_cmf
+t_cms
+getepslay_sheet.pattern 14
+p19
+p2
+p6
+p18
+p16
+black
+p13
+p15
+white
+white
+p6
+p18
+p16
+p15
+getepslay_sheet.scale 14
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+getepslay_sheet.linewidth 14
+0.1
+0.1
+0.1
+0.1
+0.1
+0.1
+0.1
+0.1
+0.5
+0.5
+0.1
+0.1
+0.1
+0.1

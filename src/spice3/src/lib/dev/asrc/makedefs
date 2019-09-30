@@ -1,0 +1,10 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+
+COBJS		= asrc.o asrcacld.o asrcask.o asrcconv.o asrcdel.o asrcdest.o \
+		  asrcfbr.o asrcload.o asrcmdel.o asrcpar.o asrcpzld.o asrcset.o
+
+LIB_TARGET	= ../../dev.a
+INCLUDE		= -I../../../include
+

@@ -1,0 +1,180 @@
+.TH BMLIST 4ICD "File Formats"
+.UC 4
+.SH NAME
+bmlist - basic mask list file
+.SH DESCRIPTION
+The basic mask list file "bmlist.gds" as used by
+the programs \fIcgi\fP(1ICD) and \fIcig\fP(1ICD)
+contains the mask names cross reference list for \fIgds2\fP.
+\fIGds2\fP layer numbers, or
+combinations of a \fIgds2\fP layer number and a
+\fIgds2\fP data type, are related
+to mask names as used in the \fImaskdata\fP(4ICD)
+file for the process.
+.PP
+The basic mask list file "bmlist.cmk" as used by
+the programs \fIcmsk\fP(1ICD) and \fIxcmk\fP(1ICD)
+contains the mask names cross reference list
+for \fIcmk\fP (CIRCUITMASK).
+\fICmk\fP mask names are related
+to mask names as used in the \fImaskdata\fP(4ICD)
+file for the process.
+.SH FORMAT GENERAL
+The \fIbmlist\fP file contains one line for each mask.
+Lines that start with a '#' character are treated as comment lines.
+.SH FORMAT GDS
+For "bmlist.gds", on each line that is not a comment line,
+first the standard process mask name
+and second the corresponding layer number for \fIgds2\fP are specified.
+Optionally, the mask name is immediately followed (without space
+characters) by a colon and the word term or label.
+Also optionally, after the layer number,
+a data type or text type number for \fIgds2\fP may be specified.
+.PP
+When \fIcgi\fP(1ICD) converts a \fIgds2\fP record to the project database,
+it will first try to select a mask name in the "bmlist.gds" file
+for which layer number and data type
+match with the layer number and data type of the \fIgds2\fP record.
+If such a mask cannot be found, it will try to select a mask name
+for which the layer number matches with the layer number
+of the \fIgds2\fP record and for which
+no data type is specified.
+When no data type is specified for the \fIgds2\fP record,
+\fIcgi\fP(1ICD) will try to select a mask name that
+has a corresponding layer number and that has no data type
+specification.
+.PP
+In general, when more than one line matches with the \fIgds2\fP
+record, the mask name of the first matching line will be used.
+.PP
+A mask name may immediately be followed
+by a colon and the word term.
+In this case the line specifies that text structures for the
+specified layer number are mapped to terminals on the specified
+mask.
+The optional third value then specifies the text type that is required
+for the text structure.
+.PP
+When a mask name is immediately followed
+by a colon and the word label,
+a text structure for the specified layer number
+is mapped to a label on the specified mask.
+Again, the optional third value then specifies the text type that
+is required for the text structure.
+.PP
+Further, the following property names, followed by a number,
+may be specified on a line in
+the "bmlist.gds" file, to specify
+the property numbers that are used for these properties
+(see \fIcgi\fP(1ICD)):
+prop_instance, prop_termlay, prop_term, prop_labellay, prop_label.
+.PP
+When \fIcig\fP(1ICD) converts a layout polygon from the
+project database to a \fIgds2\fP record, it will use
+the layer number and optional data type that are specified
+on the first line in the file "bmlist.gds" that contains
+the mask name of the polygon.
+In a similar way, terminals and labels
+are converted to \fIgds2\fP text records with
+a layer number and optional text type that are specified
+on the first line in the file that contains the mask name
+followed by a colon and respectively the word term or the
+word label.
+If the latter information is not available, terminals
+and labels are included in the output as a boundary element
+with a property attached to it (see \fIcgi\fP(1ICD)).
+.SH FORMAT CMK
+For "bmlist.cmk", on each line that is not a comment line,
+first the mask name for
+.I cmk
+and second the corresponding standard process mask name are specified.
+Mask names of the used process which are not specified
+are automatically mapped to there own name.
+Thus,
+an empty mask list means that the mask names of the used process are used
+as \fIcmk\fP mask names.
+In "bmlist.cmk"
+each mask name (\fIcmk\fP or standard process)
+can be mapped only once to one other mask name.
+.SH EXAMPLE
+As an example,
+here is the \fIbmlist.gds\fP
+file for an example N-well cmos process:
+
+.nf
+.ta 1.0i
+# scmos_n - N-well cmos example process
+cpg         46
+caa         43
+cmf         49
+cmf:term    49
+cms         51
+cms:term    51
+cca         48
+ccp         47
+cva         50
+cwn         42
+csn         45
+cog         52
+cx          0
+.fi
+
+Here is different version of the \fIbmlist.gds\fP
+file for the same process.
+In this example, all interconnect masks have the
+same gds layer number but different data types
+or text types.
+In addition, labels on "cms" are specified with text
+structures with layer number 46 and text type 4.
+
+.nf
+# scmos_n - N-well cmos example process
+cpg         46   1
+caa         43
+cmf         46   2
+cmf:term    46   2
+cms         46   3
+cms:term    46   3
+cms:label   46   4
+cca         48
+ccp         47
+cva         50
+cwn         42
+csn         45
+cog         52
+cx          0
+.fi
+
+As another example, here is the \fIbmlist.cmk\fP
+file for an nmos process:
+
+.nf
+cb    ng
+co    nc
+cs    nb
+di    ni
+in    nm
+od    nd
+ps    np
+xb    nx
+.fi
+
+At each line we see first the mask name for \fIcmk\fP
+and second the standard process mask name.
+.AU "S. de Graaf, A.J. van Genderen"
+.SH FILES
+.TP
+\fCICDPATH/share/lib/process/\fIprocess\fP/bmlist.gds\fP
+.TP
+\fCICDPATH/share/lib/process/\fIprocess\fP/bmlist.cmk\fP
+.TP
+\fCICDPATH/share/lib/process/\fIprocess\fP/maskdata\fP
+.SH SEE ALSO
+Circuitmask User Manual, Philips, August 1978.
+.br
+cgi(1ICD),
+cig(1ICD),
+cmsk(1ICD),
+getproc(1ICD),
+maskdata(4ICD),
+xcmk(1ICD).

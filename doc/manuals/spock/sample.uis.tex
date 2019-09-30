@@ -1,0 +1,698 @@
+// This is a SPOCK version 1.0 user interface specification...
+//
+//////////////////////////////////////////////////////////////////////////////
+// Please do not "just" change this file. You could seriously break
+// the spock program. Only edit this file if you know what actions
+// will brake compatibility with your saved processes.
+// For more information, please refer to the SPOCK source code documentation
+// or Xander Burgerhout's graduation report.
+//
+// Consider this file as part of the source.
+//
+// !!YOU HAVE BEEN WARNED!!
+//////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////
+// Icon path.
+// The icon (pixmap) path specifies where pixmap(...) properties look for the
+// icons.
+ICONPATH = "$(ICDPATH)/lib/spock"
+
+//////////////////////////////////////////////////////////////////////////////
+// Defines.
+define dropdown layer \{
+    adddatafrom(maskdata_sheet.name);
+\}
+
+define combobox layer_combo \{
+    adddatafrom(maskdata_sheet.name);
+\}
+
+define dropdown layer_gnd \{
+    item atgnd \{ title("@gnd"); \}
+    adddatafrom(maskdata_sheet.name);
+\}
+
+define dropdown layer_sub \{
+    item atsub \{ title("@sub"); \}
+    adddatafrom(maskdata_sheet.name);
+\}
+
+define dropdown layer_gndsub \{
+    item atsub \{ title("@sub"); \}
+    item atgnd \{ title("@gnd"); \}
+    adddatafrom(maskdata_sheet.name);
+\}
+
+// Defines a carrier type
+define combobox def_carr_type \{
+    item n \{ title("n doped conductor"); \}
+    item p \{ title("p doped conductor"); \}
+    item m \{ title("metal"); \}
+    default(m);
+\}
+
+// Defines a transistor type
+define dropdown def_trans_type \{
+    item ver \{ title("vertical"); \}
+    item lat \{ title("lateral"); \}
+    default(ver);
+\}
+
+define dropdown def_layer_type \{
+    item normal \{ title("normal"); \}
+    item interconnect \{ title("interconnect"); \}
+    item symbolic \{ title("symbolic"); \}
+    default(normal);
+\}
+
+define conditionlist condlist_simp \{
+    option("noextended");
+    adddatafrom(maskdata_sheet.name, maskdata_sheet.comment);
+\}
+
+define conditionlist condlist_ext \{
+    option("extended");
+    adddatafrom(maskdata_sheet.name, maskdata_sheet.comment);
+\}
+
+define dropdown capa_types \{
+    item normal \{ title("default"); \}
+    item junction \{ title("junction"); \}
+    default(normal);
+\}
+
+
+//////////////////////////////////////////////////////////////////////////////
+// Element definition user interface specification.
+//
+// This part consists mostly of sections. In the tabpages part of this file,
+// these sections are used to create the element definition tabpage.
+
+section units \{
+    title("Unit specification");
+    hint("Use this to specify a base for the values you enter");
+    pixmap("section_icons/units.xpm");
+
+    paramlist units_list \{
+        real resistance \{
+            title("Sheet resistance unit:");
+            unit("in ohm");
+            hint("You can specify a base for the values you\(\backslash\)n"
+                 "will enter below. Use as follows:\(\backslash\)n"
+                 "If you do not want to type 3e-6, 8e-6 12.5e-6, etc.\(\backslash\)n"
+                 "but 3, 8, 12.5 instead, type 1e-6 here.");
+        \}
+        real c_resistance \{
+            title("Contact resistance unit:");
+            unit("in ohm per squared meter");
+        \}
+        real a_capacitance \{
+            title("Area capacitance unit:");
+            unit("in farad per squared meter");
+        \}
+        real e_capacitance \{
+            title("Edge or lateral capacitance unit:");
+            unit("in farad per meter");
+        \}
+        real distance \{
+            title("Capacitance unit:");
+            unit("in micron");
+        \}
+
+        // This is for Space 3D
+        real vdimension \{
+            title("Vertical dimension unit:");
+            unit("in micron");
+        \}
+
+        real shape \{
+            title("Edge shape list dimension unit:");
+            unit("in micron");
+        \}
+    \}
+\}
+
+section conductors \{
+    title("Conductor list");
+    hint ("Definitions for the conducting layers in the circuit");
+    pixmap("section_icons/conductor.xpm");
+
+    spreadsheet conductors_sheet \{
+        identifier      cond_type \{ title("Conductor type"); \}
+        identifier      name \{ title("Name"); \}
+        condlist_simp   cond_list \{ title("Condtion list"); \}
+        layer           mask \{ title("Mask"); \}
+        real            sheet_res \{
+                            title("Sheet resistivity");
+                            align(right);
+                        \}
+        def_carr_type   carr_type \{ title("Carrier type"); \}
+        string          comment \{ title("Comment"); \}
+    \}
+\}
+
+section fets \{
+    title("Field-effect transistor (FET) list");
+    hint("FET definitions");
+    pixmap("section_icons/fet.xpm");
+
+    spreadsheet fets_sheet \{
+        identifier      name \{ title("Name"); \}
+        condlist_simp   cond_list \{ title("Condtion list"); \}
+        layer           mask_g \{ title("Gate mask"); \}
+        layer           mask_ds \{ title("Drain/source mask"); \}
+        layer_sub       mask_b \{ title("Bulk mask"); \}
+        string          comment \{ title("Comment"); \}
+    \}
+\}
+
+section bjts \{
+    title("Bipolar transistor list");
+    pixmap("section_icons/bipolar.xpm");
+
+    spreadsheet bjts_sheet \{
+        identifier      name \{ title("Name"); \}
+        condlist_ext    cond_list \{ title("Condtion list"); \}
+        def_trans_type  ttype \{ title("Transistor type"); \}
+        layer           mask_em \{ title("Emitter mask"); \}
+        layer           mask_ba \{ title("Base mask"); \}
+        layer           mask_co \{ title("Collector mask"); \}
+        string          comment \{ title("Comment"); \}
+    \}
+\}
+
+section connects \{
+    title("Connect list");
+    pixmap("section_icons/connect.xpm");
+
+    spreadsheet connects_sheet \{
+        identifier      name \{ title("Name"); \}
+        conditionlist   cond_list \{ title("Condtion list"); \}
+        layer           mask_1 \{ title("Mask 1"); \}
+        layer           mask_2 \{ title("Mask 2"); \}
+        string          comment \{ title("Comment"); \}
+    \}
+\}
+
+section contacts \{
+    title("Contact list");
+    pixmap("section_icons/contact.xpm");
+
+    spreadsheet contacts_sheet \{
+        identifier      contact_type \{ title("Contact type"); \}
+        identifier      name \{ title("Name"); \}
+        condlist_simp   cond_list \{ title("Condtion list"); \}
+        layer_sub       mask_1 \{ title("Mask 1"); \}
+        layer_sub       mask_2 \{ title("Mask 2"); \}
+        real            resistivity \{ title("Resistivity"); \}
+        string          comment \{ title("Comment"); \}
+    \}
+\}
+
+section capacitances \{
+    title("Capacitance list");
+    pixmap("section_icons/capacitance.xpm");
+
+    spreadsheet cap_sheet \{
+        capa_types      cap_type \{ title("Type"); \}
+        identifier      subtype \{ title("Sub type"); \}
+        identifier      name \{ title("Name"); \}
+        condlist_ext    cond_list \{ title("Condtion list"); \}
+        layer           mask_1 \{ title("Mask 1"); \}
+        layer           mask_2 \{ title("Mask 2"); \}
+        string          capacitivity \{ title("Capacitivity"); \}
+        string          comment \{ title("Comment"); \}
+    \}
+\}
+
+/////////////////////////////////////////////////
+// Maskdata specification
+
+section maskdata_info \{
+    title("Layers");
+    pixmap("section_icons/layers.xpm");
+
+    spreadsheet maskdata_sheet \{
+        integer[0..10]     ID \{ title("Layer ID"); \}
+        identifier          name \{ title("Layer name"); \}
+        def_layer_type      layertype \{ title("Layer type"); \}
+        dalistyle           dali \{ title("Dali draw style"); \}
+        color               xspace \{ title("XSpace draw color"); \}
+        string              comment \{ title("Comment"); \}
+    \}
+\}
+
+//////////////////////////////////////////////////
+// Space parameters
+section space_params_section \{
+    title("Space parameters");
+
+    paramlist space_params \{
+        integer min_art_degree \{
+            title("Minimal articulation degree");
+            hint("The articulation degree is the number of pieces in which\(\backslash\)n"
+                  "the resistance graph would break if the node and its \(\backslash\)n"
+                  "connected resistances were removed");
+            default("3");
+        \}
+        integer min_degree \{
+            title("Minimal degree");
+            hint("Nodes with a degree >= this value and an articulation\(\backslash\)n"
+                 "degree > 1 will also be retained in the final network.");
+            default("4");
+        \}
+        real min_res \{
+            title("Minimal resistance");
+            unit("ohm");
+            hint("This heuristic deletes small resistances from the network\(\backslash\)n"
+                  "via Gaussian elimination of one of the nodes that is\(\backslash\)n"
+                  "connected to the resistance.");
+            default("100");
+        \}
+        real min_sep_res \{
+            title("Minimal separation resistance");
+            unit(ohm);
+            hint("This heuristic deletes small resistances from the network\(\backslash\)n"
+                 "by joining the two nodes that are connected by the resistance.");
+            default("10");
+        \}
+        real max_par_res \{
+            title("Maximal parallel resistance");
+            unit("ohm");
+            hint("This heuristic prevents the occurance of high-ohmic shunt\(\backslash\)n"
+                 "paths between two nodes.");
+            default("25");
+        \}
+
+        // no_neg_res comes here.
+
+        real min_coup_cap \{
+            title("Minimal coupling capacitance ratio");
+            hint("If, for both nodes a coupling capacitance is connected to,\(\backslash\)n"
+                 "it holds that the ratio between the absolute value of the\(\backslash\)n"
+                 "coupling capacitance and the value of the ground/substrate\(\backslash\)n"
+                 "capacitance of the same type of that node, is less than this\(\backslash\)n"
+                 "parameter, then the value of the coupling capacitance is \(\backslash\)n"
+                 "added to the ground capacitances of the two nodes and the\(\backslash\)n"
+                 "coupling capacitance is removed.");
+            default("0.04");
+        \}
+    \}
+\}
+
+//////////////////////////////////////////////////
+// Getepslay
+
+define dropdown term_text_align \{
+    item al_00   \{ title("Center of text at center of terminal"); \}
+    item al_n10  \{ title("Left-hand of text at center of terminal"); \}
+    item al_10   \{ title("Right-hand of text at center of terminal"); \}
+    item al_01   \{ title("Text centered below center of terminal"); \}
+    item al_0n1  \{ title("Text centered above center of terminal"); \}
+    default(al_00);
+\}
+
+section getepslay_preamble \{
+    title("General settings");
+    paramlist getepslay_pl \{
+        string includefile_nelsis \{
+            title("Include file from nelsis");
+            hint("Includes a postscript prolog file.\(\backslash\)n"
+                 "The filename given must be relative to $NELSISHOME/lib/\(\backslash\)n"
+                 "NOTE: only one level of inclusion is supported.");
+            default("epslay.pro");
+        \}
+        string includefile_home \{
+            title("Include file from home directory");
+            hint("Includes a postscript prolog file.\(\backslash\)n"
+                 "The filename given must be relative to the home directory."
+                 "NOTE: only one level of inclusion is supported.");
+            default("");
+        \}
+        string mask_order \{
+            title("Mask draw order");
+            hint("Specify in which order the masks must be drawn.\(\backslash\)n");
+        \}
+        string plotfont \{
+            title("Font for terminal names");
+            hint("Any available PostScript font is acceptable.");
+            default("Helvetica-Bold");
+        \}
+        integer font_min \{
+            title("Minimum text size");
+            unit("1/72 inch");
+            hint("Minimum size of text in printer's points");
+            default("6");
+        \}
+        integer font_max \{
+            title("Maximum text size");
+            unit("1/72 inch");
+            hint("Maximum size of text in printer's points");
+            default("14");
+        \}
+        integer font_lambda \{
+            title("Preferred size of text in lambda's");
+            unit("lambda's");
+            hint("Based on the scaling of the particular layout in order to\(\backslash\)n"
+                 "fill the drawing region, the text size is first computed\(\backslash\)n"
+                 "according to this value. Then, the min and max values\(\backslash\)n"
+                 "above are applied.\(\backslash\)n"
+                 "A value approximately equal to the size of contact windows\(\backslash\)n"
+                 "is often appropiate.");
+        \}
+        real pattern_scale \{
+            title("Global stipple pattern magnification");
+            unit("x");
+            hint("Globally magnify the scale of the stipple pattern\(\backslash\)n"
+                 "by the factor given here. Integral values work best.\(\backslash\)n"
+                 "Often useful for rendering on low resolution devices.");
+            default("1");
+        \}
+
+        term_text_align termtxt \{
+            title("Terminal name alignment");
+            hint("Specifies the aligment of the terminal names with\(\backslash\)n"
+                 "respect to the center of the terminal");
+        \}
+    \}
+\}
+
+section getepslay_body \{
+    title("Individual mask plotting styles");
+
+    spreadsheet getepslay_sheet \{
+        layer_combo mask_name \{ title("Mask"); \}
+        string      pattern \{ title("Pattern"); \}
+        real        scale \{ title("Scale"); default("1.0"); \}
+        real        linewidth \{ title("Linewidth in lambda's"); \}
+    \}
+\}
+
+
+
+//////////////////////////////////////////////////
+// Tabpages
+tabpage element_def_tab \{
+    title("Element definition");
+    scrollframe element_def \{
+        section maskdata_info;
+        section units;
+        section conductors;
+        section fets;
+        section bjts;
+        section connects;
+        section contacts;
+        section capacitances;
+    \}
+\}
+
+tabpage space_parameters_tab \{
+    title("Space parameters");
+//    multi_section space_param_frame \{
+        section space_params_section;
+//    \}
+\}
+
+tabpage getepslay_tab \{
+    title("Postscript plot settings");
+    scrollframe getepslay_frame \{
+        section getepslay_preamble;
+        section getepslay_body;
+    \}
+\}
+
+//////////////////////////////////////////////////
+// Generators
+
+generator maskdata_gen
+\{
+    filename("maskdata");
+    title("Maskdata file");
+
+    map def_carr_type \{
+        n = "n";
+        p = "p";
+        m = "m";
+    \}
+
+    map def_layer_type \{
+        normal       = "0";
+        interconnect = "1";
+        symbolic     = "2";
+    \}
+
+    generate \{
+        "## This file was generated by SPOCK on " application[date]
+        " at " application[time] ".\(\backslash\)n"
+        "#-----------------------------------------------------------------------------\(\backslash\)n"
+        "#\(\backslash\)n"
+        "#                       M A S K D A T A   I N F O\(\backslash\)n"
+        "#\(\backslash\)n"
+        "#       Layer fields (3):       field  1: layer number\(\backslash\)n"
+        "#                               field  2: layer name\(\backslash\)n"
+        "#                               field  3: layer type\(\backslash\)n"
+        "#                                         type = 0: normal layer\(\backslash\)n"
+        "#                                         type = 1: interconnect layer\(\backslash\)n"
+        "#                                                   (terminals/labels may be\(\backslash\)n"
+        "#                                                    defined for this layer).\(\backslash\)n"
+        "#                                         type = 2: symbolic layer\(\backslash\)n"
+        "#\(\backslash\)n"
+        "#       Pattern-Generate (2):   field  4: job number\(\backslash\)n"
+        "#       Only used by PG-tape    field  5: mask type\(\backslash\)n"
+        "#       programs                          type = 0: negative\(\backslash\)n"
+        "#                                         type = 1: positive\(\backslash\)n"
+        "#\(\backslash\)n"
+        "#       ColorMask Terminals (2) field  6: color number\(\backslash\)n"
+        "#       (Obsolete)              field  7: fill style\(\backslash\)n"
+        "#\(\backslash\)n"
+        "#       (Sea)Dali (2)           field  8: color number\(\backslash\)n"
+        "#                                         0=black, 1=red, 2=green,\(\backslash\)n"
+        "#                                         3=yellow, 4=blue, 5=violet,\(\backslash\)n"
+        "#                                         6=aqua, 7=white\(\backslash\)n"
+        "#                               field  9: fill style\(\backslash\)n"
+        "#                                         0=hashed, 1=solid, 2=hollow\(\backslash\)n"
+        "#                                         3,4,5 = 12,25,50% hash+outline\(\backslash\)n"
+        "#                                         6,7,8 = idem, no outline\(\backslash\)n"
+        "#\(\backslash\)n"
+        "#       Plotter (2)             field 10: pen number\(\backslash\)n"
+        "#       (Obsolete)                        1=black, 2=red, 3=yellow,\(\backslash\)n"
+        "#                                         4=green, 5=brown, 6=violet,\(\backslash\)n"
+        "#                                         7=blue, 8=aqua\(\backslash\)n"
+        "#                               field 11: fill style\(\backslash\)n"
+        "#\(\backslash\)n#\(\backslash\)n"
+
+        maskdata_sheet[numrows]
+        " \(\backslash\)"" application[processname] "\(\backslash\)" \(\backslash\)"" application[processdesc] "\(\backslash\)"\(\backslash\)n"
+        "# ID\(\backslash\)tname\(\backslash\)ttype\(\backslash\)tPG_tape CM\(\backslash\)tDali\(\backslash\)tplot  comment\(\backslash\)n"
+
+        foreach(maskdata_sheet, row) \{
+            ID
+            "\(\backslash\)t" name "\(\backslash\)t"
+            layertype
+            "\(\backslash\)t1 0     1 0\(\backslash\)t"
+            dali[clr] " "
+            dali[style]
+            "\(\backslash\)t1 0   \(\backslash\)""
+            comment
+            "\(\backslash\)"\(\backslash\)n"
+        \}
+    \}
+\}
+
+generator space_def_s_gen
+\{
+    filename("space.def.s");
+    title("SPACE Element definition file");
+
+    map def_carr_type \{
+        n = "n";
+        p = "p";
+        m = "m";
+    \}
+
+    generate \{
+
+        "## This file was generated by SPOCK on " application[date]
+        " at " application[time] ".\(\backslash\)n"
+        "#####\(\backslash\)n"
+        "# " application[processname] " - " application[processdesc] "\(\backslash\)n"
+
+        "#\(\backslash\)n# Masks:\(\backslash\)n"
+        foreach(maskdata_sheet, row) \{
+            "# " name "\(\backslash\)t" comment "\(\backslash\)n"
+        \}
+        "# See also the maskdata file.\(\backslash\)n"
+        "#####\(\backslash\)n"
+
+        "unit resistance    "   units.units_list.resistance "\(\backslash\)t# ohm\(\backslash\)n"
+        "unit c_resistance  "   units.units_list.c_resistance "\(\backslash\)t# ohm/m^2\(\backslash\)n"
+        "unit a_capaictance "   units_list.a_capacitance "\(\backslash\)t# F/m^2\(\backslash\)n"
+        "unit e_capacitance "   units_list.e_capacitance "\(\backslash\)t# F/m\(\backslash\)n"
+        "unit distance      "   units_list.distance "\(\backslash\)t# micron\(\backslash\)n"
+        "unit vdimension    "   units_list.vdimension "\(\backslash\)t# micron\(\backslash\)n"
+        "unit shape         "   units_list.shape "\(\backslash\)t# micron\(\backslash\)n\(\backslash\)n"
+
+        "colors:\(\backslash\)n"
+         foreach(maskdata_sheet, row) \{
+            "\(\backslash\)t" name "\(\backslash\)t" xspace "\(\backslash\)n"
+         \}
+         "\(\backslash\)n"
+
+         foreach $t (conductors_sheet, cond_type) \{
+             "conductors " $t ":\(\backslash\)n"
+             "  # name:condition_list:mask:sheet_resistivity:carrier_type\(\backslash\)n"
+             foreach(conductors_sheet, row) \{
+                if (cond_type == $t) \{
+                    "\(\backslash\)t" name ":" cond_list ":" mask ":" sheet_res ":" carr_type "\(\backslash\)t\(\backslash\)t# " comment "\(\backslash\)n"
+                \}
+             \}
+             "\(\backslash\)n"
+         \}
+
+         "fets:\(\backslash\)n"
+         "#\(\backslash\)tname:condition list:mask_g mask_ds:mask_b\(\backslash\)n"
+         foreach(fets.fets_sheet, row) \{
+            "\(\backslash\)t" name ":" cond_list ":" mask_g " " mask_ds ":" mask_b "\(\backslash\)t\(\backslash\)t# " comment "\(\backslash\)n"
+         \}
+         "\(\backslash\)n"
+
+         "bjts:\(\backslash\)n"
+         "#\(\backslash\)tname:condition_list:type:mask_em mask_ba mask_co\(\backslash\)n"
+         foreach(bjts.bjts_sheet, row) \{
+            "\(\backslash\)t" name ":" cond_list ":" ttype ":" mask_em " " mask_ba " " mask_co "\(\backslash\)t\(\backslash\)t# " comment "\(\backslash\)n"
+         \}
+         "\(\backslash\)n"
+
+         "connects:\(\backslash\)n"
+         "#\(\backslash\)tname:condition_list:type:mask1 mask2\(\backslash\)n"
+         foreach(connects.connects_sheet, row) \{
+            "\(\backslash\)t" name ":" cond_list ":" mask_1 " " mask_2 "\(\backslash\)t\(\backslash\)t# " comment "\(\backslash\)n"
+         \}
+         "\(\backslash\)n"
+
+         foreach $t (contacts_sheet, contact_type) \{
+             "contacts " $t ":\(\backslash\)n"
+             "#\(\backslash\)tname:condition_list:type:mask1 mask2:resitivity\(\backslash\)n"
+             foreach(contacts.contacts_sheet, row) \{
+                if (contact_type == $t) \{
+                    "\(\backslash\)t" name ":" cond_list ":" mask_1 " " mask_2 ":" resistivity "\(\backslash\)t\(\backslash\)t# " comment "\(\backslash\)n"
+                \}
+             \}
+             "\(\backslash\)n"
+         \}
+
+         foreach $t (cap_sheet, cap_type) \{
+            foreach $s (cap_sheet, subtype) \{
+                 $t " capacitances " $s ":\(\backslash\)n"
+                 "#\(\backslash\)tname:condition_list:type:mask1 [mask2]:capacitivity\(\backslash\)n"
+                 foreach(capacitances.cap_sheet, row) \{
+                    if (cap_type == $t) \{
+                        if (subtype == $s) \{
+                            "\(\backslash\)t" name ":" cond_list ":" mask_1 " " mask_2 ":" capacitivity "\(\backslash\)t\(\backslash\)t# " comment "\(\backslash\)n"
+                        \}
+                    \}
+                 \}
+                 "\(\backslash\)n"
+            \}
+         \}
+
+        ////////////////////////////
+        // This is for space3d only
+
+        "vdimensions:\(\backslash\)n"
+         "#\(\backslash\)tname:condition_list:mask:bottom thickness\(\backslash\)n"
+         foreach(vdimensions_sheet, row) \{
+            "\(\backslash\)t" name ":" cond_list ":" mask ":" bottom " " thickness "\(\backslash\)t# " comment "\(\backslash\)n"
+         \}
+         "\(\backslash\)n"
+
+        "eshapes:\(\backslash\)n"
+        "\(\backslash\)t#name:condition_list:mask:dxb dxt\(\backslash\)n"
+        foreach(eshapes_sheet, row) \{
+            "\(\backslash\)t" name ":" cond_list ":" mask ":" dxb " " dxt "\(\backslash\)t# " comment "\(\backslash\)n"
+        \}
+        "\(\backslash\)n"
+
+        "dielectrics:\(\backslash\)n"
+        "\(\backslash\)t#name permittivity bottom\(\backslash\)n"
+        foreach(dielectrics_sheet, row) \{
+            "\(\backslash\)t" name " " permittivity " " bottom "\(\backslash\)t# " comment "\(\backslash\)n"
+        \}
+
+    \}
+\}
+
+generator space_param_gen
+\{
+    filename("space.def.p");
+    title("SPACE parameter file");
+
+    generate \{
+        "## This file was generated by SPOCK on " application[date]
+        " at " application[time] ".\(\backslash\)n"
+        "#####\(\backslash\)n"
+        "# SPACE parameter file for " application[processname] " - " application[processdesc] "\(\backslash\)n"
+        "#####################################################################\(\backslash\)n\(\backslash\)n"
+
+        if (space_params.min_art_degree != "") \{
+            "min_art_degree      " space_params.min_art_degree "\(\backslash\)n"
+        \}
+
+        if (space_params.min_degree != "") \{
+            "min_degree          " space_params.min_degree "\(\backslash\)n"
+        \}
+
+        if (space_params.min_res != "") \{
+            "min_res             " space_params.min_res "\(\backslash\)t# ohm\(\backslash\)n"
+        \}
+
+        if (space_params.min_sep_res != "") \{
+            "min_sep_res         " space_params.min_sep_res "\(\backslash\)t# ohm\(\backslash\)n"
+        \}
+
+        if (space_params.max_par_res != "") \{
+            "min_par_res         " space_params.max_par_res "\(\backslash\)n"
+        \}
+
+        if (space_params.min_coup_cap != "") \{
+            "min_coup_cap      " space_params.min_coup_cap "\(\backslash\)n"
+        \}
+    \}
+\}
+
+generator getepslay_gen \{
+    title("Getepslay PostScript settings");
+    filename("epslay.def");
+
+    map term_text_align \{
+        al_00   = "0 0";
+        al_n10  = "-1 0";
+        al_10   = "1 0";
+        al_01   = "0 1";
+        al_0n1  = "0 -1";
+    \}
+
+    generate \{
+        "%% This file was generated by SPOCK on " application[date] " at " application[time] ".\(\backslash\)n"
+        "%% getepslay customization for the " application[processname] " process.\(\backslash\)n\(\backslash\)n"
+
+        if (getepslay_pl.includefile_nelsis != "") \{
+            "%%Include <" getepslay_pl.includefile_nelsis ">\(\backslash\)n"
+        \}
+        if (getepslay_pl.includefile_home != "") \{
+            "%%Include \(\backslash\)"" getepslay_pl.includefile_nelsis "\(\backslash\)"\(\backslash\)n"
+        \}
+        "\(\backslash\)n"
+        "%%Order: " getepslay_pl.mask_order "\(\backslash\)n"
+        "[ " getepslay_pl.font_min " " getepslay_pl.font_max " " getepslay_pl.font_lambda
+        "/" getepslay_pl.plotfont " ] plotFont\(\backslash\)n"
+        "[ " getepslay_pl.termtxt " ] termTextAlignment\(\backslash\)n\(\backslash\)n"
+
+
+        "% mask\(\backslash\)tpattern\(\backslash\)tscale\(\backslash\)tlinewidth\(\backslash\)n"
+        foreach (getepslay_sheet, row) \{
+            "[ (" mask_name ")\(\backslash\)t" pattern "\(\backslash\)t" scale "\(\backslash\)t" linewidth " ] defineStyle\(\backslash\)n"
+        \}
+    \}
+\}

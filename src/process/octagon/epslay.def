@@ -1,0 +1,32 @@
+%% getepslay prolog for c3tu process, fish variant.
+
+%%Include <epslay.pro>
+
+%%Order: nn pp ps in ins co cos cot cb
+
+[5 14 15 /Helvetica-Bold] plotFont
+[-1 1] termTextAlignment
+
+%% mask   patt      pscale linewidth
+[ (bb)     white    1.0    0.1 ] defineStyle
+[ (sdi)    white    1.0    0.1 ] defineStyle
+[ (sp)     white    1.0    0.1 ] defineStyle
+[ (sn)     white    1.0    0.1 ] defineStyle
+[ (te)     white    1.0    0.1 ] defineStyle
+[ (cb)     white    1.0    0.1 ] defineStyle
+[ (nw)     white    1.0    0.1 ] defineStyle
+[ (od)     white    1.0    0.1 ] defineStyle
+[ (xa)     white    1.0    0.1 ] defineStyle
+[ (xb)     white    1.0    0.1 ] defineStyle
+[ (nn)     dots2    1.0    0.1 ] defineStyle
+[ (pp)     dots2    1.0    0.1 ] defineStyle
+[ (cos)    fcross45 1.0    2.0 ] defineStyle
+[ (cot)    fcross45 1.0    2.0 ] defineStyle
+[ (int)    dots50   1.0    0.1 ] defineStyle
+[ (ins)    dots25   1.0    0.1 ] defineStyle
+[ (in)     dots12   1.0    0.1 ] defineStyle
+[ (co)     black    1.0    0.1 ] defineStyle
+[ (ps)     dots6    1.0    0.1 ] defineStyle
+[ (t_ps)   p18      1.0    0.1 ] defineStyle
+[ (t_in)   p16      1.0    0.1 ] defineStyle
+[ (t_ins)  p15      1.0    0.1 ] defineStyle

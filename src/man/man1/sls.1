@@ -1,0 +1,91 @@
+.TH SLS 1ICD "User Commands"
+.UC 4
+.SH NAME
+sls - switch-level simulation program
+.SH SYNOPSIS
+.B sls
+[-fmnov] cell commandfile
+.SH OPTIONS
+The following options can be specified:
+.TP
+.B -f
+Force network expansion and generation of new binaries.
+.TP
+.B -m
+When the monitoring option is given the program will print run time
+statistics in a file called "sls.mon".
+.TP
+.B -n
+Do not run the network expansion program \fIsls_exp\fP before simulation
+(option \fB-f\fP not specified).
+.TP
+.B -o
+Only create a new \fIcell\fP.out file (no simulation).
+.TP
+.B -v
+Print information about actions taken by the program.
+.SH DESCRIPTION
+.I Sls
+is a switch-level simulator,
+which can simulate the logical and timing behavior of digital MOS circuits.
+The circuit to be simulated can be described at transistor level,
+gate level and functional level.
+.PP
+The invocation of
+.I sls
+requires two program arguments.
+.TP 14
+.I cell
+This name specifies the network to be simulated.
+.TP
+.I commandfile
+This file must contain the input signals for the network and the commands that
+control the simulation and specify the output format.
+.RE
+.PP
+In order to simulate a particular cell,
+a binary format file has to be present for this cell in the database.
+Default,
+sls first calls the network expansion program \fIsls_exp\fP
+to generate such a format binary file.
+.PP
+The
+.I sls
+program will generate a file called
+"\fIcell\fP.out", which contains the simulation results in readable format.
+Another output file, "\fIcell\fP.res",
+will contain descriptions of the output signals that can be used
+as input for a post processor (e.g. \fIsimeye\fP).
+.SH EXAMPLES
+% sls latch latch.cmd
+.AU "A.J. van Genderen, A.C. de Graaf"
+.SH FILES
+.TP 16
+\fC\fIcell\fP.out\fP
+output file
+.TP
+\fC\fIcell\fP.res\fP
+output file
+.TP
+\fC\fIcell\fP.plt\fP
+(opt.) output file
+.TP
+\fC\fIcell\fP.dis\fP
+(opt.) output file
+.TP
+\fCsls.mon\fP
+(opt.) output file
+.SH SEE ALSO
+A.C. de Graaf,
+A.J. van Genderen,
+"SLS: Switch-Level Simulator User's Manual",
+Delft University of Technology.
+.br
+O. Hol,
+"Functional Simulation User's Manual",
+Delft University of Technology.
+.br
+cfun(1ICD),
+csls(1ICD),
+sls_exp(1ICD),
+simeye(1ICD).

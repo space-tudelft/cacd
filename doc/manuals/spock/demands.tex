@@ -1,0 +1,88 @@
+% demands.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Application requirements}
+\label{chap:demands}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Introduction}
+As a first step in the design process, the demands and constraints for the
+application must be charted. In this chapter the most important demands and
+constraints are given.
+
+Firstly, the constraints resulting from the environment in which the
+application must function are enumerated in Section
+\ref{sect:demands:environment}). Secondly, the functional demands are listed in
+Section \ref{sect:demands:functional}. Documentation is also important: demands
+related to documentation can be found in Section
+\ref{sect:demands:documentation}. Some general wishes are mentioned in Section
+\ref{sect:demands:wishes}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Application environment constraints}
+\label{sect:demands:environment}
+\subsection{Platform}
+It must be possible to compile the application on various platforms since SPACE
+can also be compiled on various platforms. The following platforms must be
+supported:
+\begin{itemize}
+\item Solaris
+\item HP UX
+\item Linux
+\end{itemize}
+Any input and/or output files that are read or written by the application must
+also be platform independent. This means for example, that it must be possible
+to read a file saved with the Solaris version into the Linux version and
+vice-versa.
+
+\subsection{Integration}
+The application must integrate correctly with the rest of the SPACE package.
+This mainly means that the application should honor the directory structure and
+the environment settings used by SPACE.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Functional demands}
+\label{sect:demands:functional}
+\subsection{Technology file generation}
+It should be possible to generate technology files with a plain-text file
+format. There must also be a mechanism that will allow the addition (or
+removal) of technology file formats. As a proof of concept the application must
+be able to generate the following subset of technology files:
+\begin{itemize}
+\item \emph{maskdata}, which defines the layers present in the process and the
+colors used to represent them in the programs and their output.
+\item \emph{space.xxx.s}, the element definition files used by SPACE.
+\item \emph{space.xxx.p}, the parameter files used by space.
+\item \emph{bmlist.gds}, which provides a mapping between the GDS layer format and
+the format used by SPACE.
+\item \emph{xspicerc}, a control file that specifies which models are used for
+the devices.
+\end{itemize}
+
+\subsection{Flexibility}
+Flexibility is very important. Recompilations as a result of adding, changing
+or removing a technology file format should be kept to a minimum to decrease
+the maintenance cost of the application.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Documentation demands}
+\label{sect:demands:documentation}
+The following documentation must be created:
+\begin{itemize}
+\item Source code documentation
+\item Installation manual
+\item Programmers manual
+\item Maintainers manual
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Additional wishes}
+\label{sect:demands:wishes}
+The user interface must be consequent and consistent. This means the user
+interface should conform to the currently accepted standard.
+
+A ``help'' facility would be welcomed. It should at least be possible to show
+``tooltips'' (popup hints).
+
+\bigskip \noindent
+If possible, the application will be implemented in C++.

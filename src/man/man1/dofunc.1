@@ -1,0 +1,26 @@
+.TH DOFUNC 1ICD "1/6/90"
+.UC 4
+.SH NAME
+dofunc - front end for cfun that enables symbolic debugging of the functional description
+.SH SYNOPSIS
+dofunc [-C cc_arguments] [-hvsl] func-unit-name[.fun]
+.SH DESCRIPTION
+This front end for the nelsis tool \fIcfun\fP allows debugging of the sls
+executable without the bloody #line statements that \fIcfun\fP generates.
+Most debuggers become confused with the #line's...
+
+It does not remove .c files. (more options: -k -p to be compatible...)
+.SH OPTIONS
+.nf
+   -C ccargs   Pass the cc-arguments to the C compiler (gcc).
+   -l	       just call cfun, do not remove #line statements
+               (that's a lower case "ell").
+   -v	       be verbose about the actions taken.
+   -s	       be silent (this is the default).
+   -h	       Print a help form, then exit
+.SH EXAMPLE
+% dofunc -CI../include icache.fun
+.SH SEE ALSO
+cfun(1ICD), mksls(1ICD).
+.SH AUTHOR
+Paul Stravers

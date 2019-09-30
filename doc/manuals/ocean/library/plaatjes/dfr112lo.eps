@@ -1,0 +1,2309 @@
+%!PS-Adobe-1.0
+%%BoundingBox: 120 308 475 528
+%%Pages: 1
+%%EndComments
+%% getepslay prolog for c3tu process, fish variant.
+
+% aangepaste epslay.pro hier tussengevoegd ->
+
+%
+% Author: N.P. van der Meijs.
+%
+% This is the common part of the eps prolog for getepslay,
+% the process-specific part is still to be added.
+% This is to be done with %%Include directive of getepslay.
+
+% Assumes three pass plotting:
+% pass 1: filled mask layers
+% pass 2: contour of mask layers, and other stroked paths
+% pass 3: text, so it is on top of everyting.
+
+/EPSLayDict 140 dict def EPSLayDict begin
+/Style 40 dict def
+0 setlinewidth
+/Count 0 def
+
+% First, some procedure definitions for defining overal appearance,
+% and setting of defaults.
+
+% [min max lambda fontname] plotFont -
+/plotFont {
+    aload pop
+    /FontName exch def
+    /LambdaFs exch def
+    /MaxFs    exch def
+    /MinFs    exch def
+    % [(FontName) FontName (LambdaFs) LambdaFs (MaxFs) MaxFs (MinFs) MinFs] ==
+    % /FontSize MinFs def % avoid use before define
+} def
+[8 8 1 /Helvetica-Bold] plotFont % default 8 point non-proportional
+
+% [factor] plotPatScale -
+/patternScale {aload pop /Bfreq exch def} def
+[1] patternScale % default
+
+% bool plotRotate
+/plotRotate {/Rotate exch def} def
+false plotRotate % default
+
+% Defaults
+/Tailwd    1 def % width of arrow tails, in points
+/Tipwd     6 def % width of arrow heads, in points
+
+/plotPass {/passnumber exch def} def
+1 plotPass
+
+% Drawing patterns.
+%
+/basketweave  [1 8 <d1e3c5885c3e1d88>] def
+/fishscale    [1 8 <3e418080e3140808>] def
+
+/p2 [2 16 <1010200840048002000100000000000010100820044002800100000000000000>]
+def
+/p4 [2 16 <18000c00040000000004000c00180030006000c0008000008000c00060003000>]
+def
+/p5 [2 16 <c071c00101e001e001e0e001e001e3c103c003c0000f1c0f1c0f1c000070c071>]
+def
+/p6 [2 16 <1000001000000200000040000008010000000000100200000000004000000001>]
+def
+/p7 [2 16 <002100210021ffe1e1e1e1e1e1ffe1ff210021002100e1ffe1e1e1e1ffe1ffe1>]
+def
+/p8 [2 16 <0000000080c0c0c160033006180c0c1806300360c1c0c08000000000cccccccc>]
+def
+/p9 [2 16 <00000000c0c0c0c00000000000c000c000000000cccccccc0000000000c000c0>]
+def
+/p13 [2 16 <00ff00ff00ff00ff00ff00ff00ff00ffff00ff00ff00ff00ff00ff00ff00ff00>]
+def
+/p15 [2 16 <ffff0202040408081010202040408080ffff4040202010100808040402020101>]
+def
+/p16 [2 16 <4040202010100808040402020101808040402020101008080404020201018080>]
+def
+/p17 [2 16 <c0c06060303018180c0c060603038181c0c06060303018180c0c060603038181>]
+def
+/p18 [2 16 <0180024004200810100820044002800180014002200410080810042002400180>]
+def
+/p19 [2 16 <8080808080808080808080808080808080808080808080808080808080808080>]
+def
+
+/lines0    [1 8 <ff000000ff000000>] def % lines 0 degrees inclined (horiz)
+/lines45   [1 8 <0102040810204080>] def % lines 45 degrees inclined (/)
+/lines90   [1 8 <1111111111111111>] def % lines 90 degrees inclined (vert)
+/lines135  [1 8 <8040201008040201>] def % lines 135 degrees inclined (\)
+/flines0   [1 8 <ffff000000000000>] def % fat lines 0 dg. inclined (horiz)
+/flines45  [1 8 <03060C183060C081>] def % fat lines 45 dg. inclined (/)
+/flines90  [1 8 <3333333333333333>] def % fat lines 90 dg. inclined (vert)
+/flines135 [1 8 <81C06030180C0603>] def % fat lines 135 dg. inclined (\)
+/cross0    [1 8 <ff01010101010101>] def % lines 0 and 90
+/cross45   [1 8 <110a040a11a040a0>] def % lines 45 and 135
+/fcross45  [1 8 <331e0c1e33e1c0e1>] def % lines 45 and 135
+/black     [1 8 <ffffffffffffffff>] def % black (or dots 100%)
+/dots50    [1 8 <aa55aa55aa55aa55>] def % dots 50%
+/dots25    [1 8 <8822882288228822>] def % dots 25%
+/dots12    [1 8 <8800220088002200>] def % dots ~12% (1 of 8)
+/dots6     [1 8 <8800000088000000>] def % dots ~ 6% (1 of 16)
+/dots3     [1 8 <8000000080000000>] def % dots ~ 3% (1 of 32)
+/dots2     [1 8 <8000000000000000>] def % dots ~ 2% (1 of 64)
+/white     [1 8 <0000000000000000>] def % white (or dots 0%)
+
+/bitison {
+    /ybit exch def /xbit exch def
+    bstring ybit bwidth mul
+    xbit 8 idiv add get
+    1 7 xbit 8 mod sub bitshift
+    and 0 ne
+} def
+
+/setpattern {
+    /bstring exch def
+    /onbits 0 def /offbits 0 def
+    freq 0 {
+      /y exch def /x exch def
+      /xindex x 1 add 2 div bpside mul cvi def
+      /yindex y 1 add 2 div bpside mul cvi def
+      xindex yindex bitison
+        {/onbits onbits 1 add def 1}
+        {/offbits offbits 1 add def 0}
+        ifelse
+    } setscreen
+    {} settransfer
+    offbits offbits onbits add div setgray
+} def
+
+% Adapted from cookbook example program.
+% x1 y1 x2 y2 Tailwd headwd headlen type arrow
+/arrow {
+    0 begin
+    /ArrowType exch def 
+    /headlength exch def
+    /halfheadthickness exch 2 div def
+    /halfthickness exch 2 div def
+    /tipy exch def /tipx exch def
+    /taily exch def /tailx exch def
+    /dx tipx tailx sub def
+    /dy tipy taily sub def
+    /arrowlength dx dx mul dy dy mul add sqrt def
+    /angle dy dx atan def
+    /base arrowlength headlength sub def
+                                                            
+    /savematrix matrix currentmatrix def
+    tailx taily translate
+    angle rotate
+
+    /Forward false def
+    /Backward false def
+    ArrowType 1 eq {/Forward  true def} if
+    ArrowType 3 eq {/Forward  true def} if
+    ArrowType 2 eq {/Backward true def} if
+    ArrowType 3 eq {/Backward true def} if
+    0 0 moveto
+
+    Backward {
+        headlength halfheadthickness neg lineto
+        headlength halfthickness neg lineto
+    } { 0 halfthickness neg lineto
+    } ifelse
+
+    Forward {
+        base halfthickness neg lineto
+        base halfheadthickness neg lineto
+        arrowlength 0 lineto
+        base halfheadthickness lineto
+        base halfthickness lineto
+    } { arrowlength halfthickness neg lineto
+        arrowlength halfthickness lineto
+    } ifelse
+
+    Backward {
+        headlength halfthickness lineto
+        headlength halfheadthickness lineto
+    } { 0 halfthickness lineto
+    } ifelse
+
+    closepath savematrix setmatrix end
+} def
+/arrow load 0 16 dict put
+
+% x y dx dy text Text -
+% Shows string with (dx,dy) relative to bounding box at (x,y)
+% Dx and dy work same as in mathematica
+% On white background.
+/Text {
+    0 begin
+    /text exch def
+    /dy exch def /dx exch def
+    /Y exch def /X exch def
+    text stringwidth pop /W exch def
+    /H FontSize def
+
+    % center text
+    /Y Y FontSize 2 div sub def
+    /X X W 2 div sub def
+
+    % adjust according to dx,dy
+    /X X dx W mul 2 div sub def
+    /Y Y dy H mul 2 div sub def
+
+    gsave
+	% determine bbox of text.
+	newpath X Y moveto text true charpath pathbbox
+	/st exch def /sr exch def /sb exch def /sl exch def
+
+	% define a margin around bbox of text
+	/Margin st sb sub 0.2 mul def
+	/sb sb Margin sub def
+	/sl sl Margin sub def
+	/sr sr Margin add def
+	/st st Margin add def
+
+	% construct path corresponding to bbox
+	newpath sl sb moveto sr sb lineto sr st lineto sl st lineto
+	closepath
+
+	% make it white.
+	gsave 1 setgray fill grestore
+
+	% stroke outline
+	gsave 0 setlinewidth stroke grestore
+
+    grestore
+
+    % print text.
+    X Y moveto text show
+
+    end
+} def
+/Text load 0 20 dict put
+
+/BeginLayout {
+    /EPSLayGC save def
+    /TForm exch def % TForm ==
+
+    /bbxl TForm 4 get def
+    /bbxr TForm 6 get def
+    /bbyb TForm 5 get def
+    /bbyt TForm 7 get def
+    /Resolution TForm 8 get def
+
+    % Rotate if necessary
+    Rotate {
+        /xl TForm 7 get neg def
+        /xr TForm 5 get neg def
+        /yb TForm 4 get def
+        /yt TForm 6 get def
+
+        TForm 4 xl put
+        TForm 6 xr put
+        TForm 5 yb put
+        TForm 7 yt put
+    } if % TForm ==
+
+    /DrawWd TForm 2 get TForm 0 get sub def
+    /DrawHt TForm 3 get TForm 1 get sub def
+
+    /PicHt TForm 7 get TForm 5 get sub def
+    /PicWd TForm 6 get TForm 4 get sub def   
+
+    /WdScale DrawWd PicWd div def
+    /HtScale DrawHt PicHt div def
+
+    /ScaleFactor
+        WdScale HtScale lt {WdScale} {HtScale} ifelse def
+
+    % now move to center
+    TForm 0 get DrawWd PicWd ScaleFactor mul sub 2 div add
+    TForm 1 get DrawHt PicHt ScaleFactor mul sub 2 div add
+    translate
+
+    % Finally, perform scaling.  [(ScaleFactor) ScaleFactor] ==
+    ScaleFactor ScaleFactor scale
+
+    % but following items should not be scaled, so undo it.
+    /Tailwd Tailwd ScaleFactor div def
+    /Tipwd Tipwd ScaleFactor div def
+
+    % Compute {min,max}fontsize and target fontsize in scaled coordinates.
+    /MinFs MinFs ScaleFactor div def
+    /MaxFs MaxFs ScaleFactor div def
+    /FontSize LambdaFs Resolution mul def
+    % [MinFs MaxFs FontSize] ==
+
+    % Apply min and max, and set font
+    FontSize MinFs lt {/FontSize MinFs def} if
+    FontSize MaxFs gt {/FontSize MaxFs def} if
+    FontName findfont FontSize scalefont setfont
+
+    % set user origin
+    TForm 4 get neg TForm 5 get neg translate
+    Rotate {90 rotate} if
+} def
+
+/SetClipPath {
+    % /l LineWd 2 div def
+    /l 0 def
+    newpath
+    bbxl l sub bbyb l sub moveto
+    bbxr l add bbyb l sub lineto
+    bbxr l add bbyt l add lineto
+    bbxl l sub bbyt l add lineto
+    closepath
+    clip
+} def
+
+/SetLayer {
+    /Layer exch def
+    % gsave
+    passnumber 1 eq {SetClipPath} if
+    SetStyle clear newpath
+} def
+
+/EndLayer {
+    Count 0 gt {DrawPolygons} if
+    % grestore
+} def
+
+% Start a polygon: x0 y0 P -
+/P {moveto /Count Count 1 add def} def
+
+% Continue a polygon: x y T -
+/T {lineto /Count Count 1 add def} def
+
+% Close a polygon: x y L -
+/L {T closepath Count 1000000 gt {DrawPolygons} if} def
+
+% Rectangular box: x0 y0 w h B -
+/B {
+    /dy exch def /dx exch def /yb exch def /xl exch def
+    /xr xl dx add def
+    /yt yb dy add def
+    xl yb P xr yb T xr yt T xl yt L
+} def
+
+/R {
+    /dy exch def /dx exch def /y0 exch def /x0 exch def
+    x0 y0 P dx 0 rlineto 0 dy rlineto
+    /Count Count 2 add def
+} def
+
+/X {
+    exch 0 rlineto 0 exch rlineto
+    /Count Count 2 add def
+} def
+
+/C {
+    exch 0 rlineto 0 exch rlineto
+    % [(current) currentpoint (x0) x0 (y0) y0 ] ==
+    x0 currentpoint pop sub 0 rlineto
+    closepath
+    /Count Count 4 add def
+    Count 1000000 gt {DrawPolygons} if
+} def
+
+/EndLayout {
+    EndLayer showpage
+    % EPSLayDict length =
+    EPSLayGC restore
+    end
+} def
+
+/DrawPolygons {
+    passnumber 1 eq {gsave FillPolygons grestore} if
+    % Always stroke polygon boundaries, because a mask
+    % might be skipped in pass 2.
+    OutlinePolygons 
+    /Count 0 def
+} def
+
+/FillPolygons {FillPattern setpattern fill} def
+
+/OutlinePolygons {
+    /bwidth 1    def
+    /bpside 8    def
+    <ffffffffffffffff> setpattern
+    LineWd setlinewidth
+    0 setgray
+    stroke
+} def
+
+/SetStyle {
+    Style Layer get aload pop
+    /LineWd exch Resolution mul def % in lambda's
+    /Pfreq exch def
+    aload pop
+    /FillPattern exch def
+    /bpside exch def
+    /bwidth exch def
+    /freq 300 bpside div Pfreq div Bfreq div def
+    % [(bpside, bwidth, freq) bpside bwidth freq (FillPattern) FillPattern]==
+} def
+
+% x1 y1 x2 y2 ArrowType plotArrow
+% ArrowType has meaning as defined in dali/comment.h
+/plotArrow {
+    /ArrowType exch def
+    /y2 exch def
+    /x2 exch def
+    /y1 exch def
+    /x1 exch def
+    newpath
+    x1 y1 x2 y2 Tailwd Tipwd Tipwd 2 mul ArrowType arrow
+    fill
+} def
+
+/align false def
+%[dx dy] termTextAlignment
+/termTextAlignment {
+    aload pop
+    /ady exch def
+    /adx exch def
+    /align true def
+} def
+
+% xl xr yb yt dx dy termname plotTerminal
+/plotTerminal {
+    /name exch def
+    /dy exch def /dx exch def
+    /yt exch def /yb exch def /xr exch def /xl exch def
+    passnumber 2 eq {
+	LineWd setlinewidth
+	newpath
+	xl yb moveto xr yb lineto xr yt lineto xl yt lineto
+	closepath stroke
+	newpath xl yb moveto xr yt lineto stroke
+	newpath xr yb moveto xl yt lineto stroke
+    } if
+    passnumber 3 eq {
+	align true eq {/dx adx def /dy ady def} if
+        xl xr add 2 div yb yt add 2 div dx dy name Text
+    } if
+} def
+
+/PlotBBox {
+    passnumber 2 eq {
+	1 setlinewidth newpath
+	bbxl bbyb moveto
+	bbxr bbyb lineto
+	bbxr bbyt lineto
+	bbxl bbyt lineto
+	closepath stroke
+    } if
+} def
+
+% [ (maskname) pattern pfreq linewidth ] defineStyle -
+/defineStyle {
+    /stylearg exch def
+    Style stylearg 0 get stylearg 1 3 getinterval put
+} def
+% <- aangepaste epslay.pro hier tussengevoegd
+
+
+%%Order: od ps in ins con cop cos cps cb
+
+[5 14 15 /Helvetica-Bold] plotFont
+[-1 1] termTextAlignment
+
+%% mask   patt      pscale linewidth
+[ (bb)     white    1.0    0.1 ] defineStyle
+[ (nw)     white    1.0    0.1 ] defineStyle
+[ (sp)     white    1.0    0.1 ] defineStyle
+[ (sn)     white    1.0    0.1 ] defineStyle
+[ (od)     p6       1.0    0.1 ] defineStyle
+[ (od)     dots2    1.0    0.1 ] defineStyle
+[ (ps)     dots6    1.0    0.1 ] defineStyle
+[ (in)     dots12   1.0    0.1 ] defineStyle
+[ (con)    black    1.0    0.1 ] defineStyle
+[ (cop)    black    1.0    0.1 ] defineStyle
+[ (cps)    black    1.0    0.1 ] defineStyle
+[ (ins)    dots25   1.0    0.1 ] defineStyle
+[ (cos)    fcross45 1.0    2.0 ] defineStyle
+[ (cb)     white    1.0    4.0 ] defineStyle
+[ (t_od)   p6       1.0    0.1 ] defineStyle
+[ (t_ps)   p18      1.0    0.1 ] defineStyle
+[ (t_in)   p16      1.0    0.1 ] defineStyle
+[ (t_ins)  p15      1.0    0.1 ] defineStyle
+[120 308 475 528 0 -40 3496 2120 4] BeginLayout
+1 plotPass
+(od) SetLayer
+96 0 3304 136 B
+96 344 3304 464 B
+96 1176 3304 592 B
+96 1976 3312 136 B
+EndLayer
+(ps) SetLayer
+272 838 P
+216 894 T
+216 968 T
+136 968 T
+136 888 T
+176 888 T
+240 824 T
+240 328 T
+222 310 T
+176 264 T
+136 264 T
+136 184 T
+216 184 T
+216 254 T
+272 310 L
+272 1798 P
+216 1854 T
+216 1928 T
+136 1928 T
+136 1848 T
+176 1848 T
+240 1784 T
+240 1160 T
+222 1142 T
+176 1096 T
+136 1096 T
+136 1016 T
+216 1016 T
+216 1086 T
+272 1142 L
+272 2304 P
+240 2304 T
+226 2290 T
+176 2240 T
+136 2240 T
+136 2160 T
+216 2160 T
+216 2234 T
+272 2290 L
+272 2946 P
+216 3002 T
+216 3072 T
+136 3072 T
+136 2992 T
+176 2992 T
+240 2928 T
+272 2928 L
+272 3264 P
+240 3264 T
+226 3250 T
+176 3200 T
+136 3200 T
+136 3120 T
+216 3120 T
+216 3194 T
+272 3250 L
+272 3778 P
+216 3834 T
+216 3904 T
+136 3904 T
+136 3824 T
+176 3824 T
+240 3760 T
+272 3760 L
+432 838 P
+376 894 T
+376 968 T
+296 968 T
+296 888 T
+336 888 T
+400 824 T
+400 328 T
+382 310 T
+336 264 T
+296 264 T
+296 184 T
+376 184 T
+376 254 T
+432 310 L
+432 1798 P
+376 1854 T
+376 1928 T
+296 1928 T
+296 1848 T
+336 1848 T
+400 1784 T
+400 1160 T
+382 1142 T
+336 1096 T
+296 1096 T
+296 1016 T
+376 1016 T
+376 1086 T
+432 1142 L
+432 2304 P
+400 2304 T
+386 2290 T
+336 2240 T
+296 2240 T
+296 2160 T
+376 2160 T
+376 2234 T
+432 2290 L
+432 2946 P
+376 3002 T
+376 3072 T
+296 3072 T
+296 2992 T
+336 2992 T
+400 2928 T
+432 2928 L
+432 3264 P
+400 3264 T
+386 3250 T
+336 3200 T
+296 3200 T
+296 3120 T
+376 3120 T
+376 3194 T
+432 3250 L
+432 3778 P
+376 3834 T
+376 3904 T
+296 3904 T
+296 3824 T
+336 3824 T
+400 3760 T
+432 3760 L
+592 838 P
+536 894 T
+536 968 T
+456 968 T
+456 888 T
+496 888 T
+560 824 T
+560 328 T
+542 310 T
+496 264 T
+456 264 T
+456 184 T
+536 184 T
+536 254 T
+592 310 L
+592 1798 P
+536 1854 T
+536 1928 T
+456 1928 T
+456 1848 T
+496 1848 T
+560 1784 T
+560 1160 T
+542 1142 T
+496 1096 T
+456 1096 T
+456 1016 T
+536 1016 T
+536 1086 T
+592 1142 L
+592 2304 P
+560 2304 T
+546 2290 T
+496 2240 T
+456 2240 T
+456 2160 T
+536 2160 T
+536 2234 T
+592 2290 L
+592 2946 P
+536 3002 T
+536 3072 T
+456 3072 T
+456 2992 T
+496 2992 T
+560 2928 T
+592 2928 L
+592 3264 P
+560 3264 T
+546 3250 T
+496 3200 T
+456 3200 T
+456 3120 T
+536 3120 T
+536 3194 T
+592 3250 L
+592 3778 P
+536 3834 T
+536 3904 T
+456 3904 T
+456 3824 T
+496 3824 T
+560 3760 T
+592 3760 L
+752 838 P
+696 894 T
+696 968 T
+616 968 T
+616 888 T
+656 888 T
+720 824 T
+720 328 T
+702 310 T
+656 264 T
+616 264 T
+616 184 T
+696 184 T
+696 254 T
+752 310 L
+752 1798 P
+696 1854 T
+696 1928 T
+616 1928 T
+616 1848 T
+656 1848 T
+720 1784 T
+720 1160 T
+702 1142 T
+656 1096 T
+616 1096 T
+616 1016 T
+696 1016 T
+696 1086 T
+752 1142 L
+752 2304 P
+720 2304 T
+706 2290 T
+656 2240 T
+616 2240 T
+616 2160 T
+696 2160 T
+696 2234 T
+752 2290 L
+752 2946 P
+696 3002 T
+696 3072 T
+616 3072 T
+616 2992 T
+656 2992 T
+720 2928 T
+752 2928 L
+752 3264 P
+720 3264 T
+706 3250 T
+656 3200 T
+616 3200 T
+616 3120 T
+696 3120 T
+696 3194 T
+752 3250 L
+752 3778 P
+696 3834 T
+696 3904 T
+616 3904 T
+616 3824 T
+656 3824 T
+720 3760 T
+752 3760 L
+912 838 P
+856 894 T
+856 968 T
+776 968 T
+776 888 T
+816 888 T
+880 824 T
+880 328 T
+862 310 T
+816 264 T
+776 264 T
+776 184 T
+856 184 T
+856 254 T
+912 310 L
+912 1798 P
+856 1854 T
+856 1928 T
+776 1928 T
+776 1848 T
+816 1848 T
+880 1784 T
+880 1160 T
+862 1142 T
+816 1096 T
+776 1096 T
+776 1016 T
+856 1016 T
+856 1086 T
+912 1142 L
+912 2304 P
+880 2304 T
+866 2290 T
+816 2240 T
+776 2240 T
+776 2160 T
+856 2160 T
+856 2234 T
+912 2290 L
+912 2946 P
+856 3002 T
+856 3072 T
+776 3072 T
+776 2992 T
+816 2992 T
+880 2928 T
+912 2928 L
+912 3264 P
+880 3264 T
+866 3250 T
+816 3200 T
+776 3200 T
+776 3120 T
+856 3120 T
+856 3194 T
+912 3250 L
+912 3778 P
+856 3834 T
+856 3904 T
+776 3904 T
+776 3824 T
+816 3824 T
+880 3760 T
+912 3760 L
+1072 838 P
+1016 894 T
+1016 968 T
+936 968 T
+936 888 T
+976 888 T
+1040 824 T
+1040 328 T
+1022 310 T
+976 264 T
+936 264 T
+936 184 T
+1016 184 T
+1016 254 T
+1072 310 L
+1072 1798 P
+1016 1854 T
+1016 1928 T
+936 1928 T
+936 1848 T
+976 1848 T
+1040 1784 T
+1040 1160 T
+1022 1142 T
+976 1096 T
+936 1096 T
+936 1016 T
+1016 1016 T
+1016 1086 T
+1072 1142 L
+1072 2304 P
+1040 2304 T
+1026 2290 T
+976 2240 T
+936 2240 T
+936 2160 T
+1016 2160 T
+1016 2234 T
+1072 2290 L
+1072 2946 P
+1016 3002 T
+1016 3072 T
+936 3072 T
+936 2992 T
+976 2992 T
+1040 2928 T
+1072 2928 L
+1072 3264 P
+1040 3264 T
+1026 3250 T
+976 3200 T
+936 3200 T
+936 3120 T
+1016 3120 T
+1016 3194 T
+1072 3250 L
+1072 3778 P
+1016 3834 T
+1016 3904 T
+936 3904 T
+936 3824 T
+976 3824 T
+1040 3760 T
+1072 3760 L
+1232 838 P
+1176 894 T
+1176 968 T
+1096 968 T
+1096 888 T
+1136 888 T
+1200 824 T
+1200 328 T
+1182 310 T
+1136 264 T
+1096 264 T
+1096 184 T
+1176 184 T
+1176 254 T
+1232 310 L
+1232 1798 P
+1176 1854 T
+1176 1928 T
+1096 1928 T
+1096 1848 T
+1136 1848 T
+1200 1784 T
+1200 1160 T
+1182 1142 T
+1136 1096 T
+1096 1096 T
+1096 1016 T
+1176 1016 T
+1176 1086 T
+1232 1142 L
+1232 2304 P
+1200 2304 T
+1186 2290 T
+1136 2240 T
+1096 2240 T
+1096 2160 T
+1176 2160 T
+1176 2234 T
+1232 2290 L
+1232 2946 P
+1176 3002 T
+1176 3072 T
+1096 3072 T
+1096 2992 T
+1136 2992 T
+1200 2928 T
+1232 2928 L
+1232 3264 P
+1200 3264 T
+1186 3250 T
+1136 3200 T
+1096 3200 T
+1096 3120 T
+1176 3120 T
+1176 3194 T
+1232 3250 L
+1232 3778 P
+1176 3834 T
+1176 3904 T
+1096 3904 T
+1096 3824 T
+1136 3824 T
+1200 3760 T
+1232 3760 L
+1392 838 P
+1336 894 T
+1336 968 T
+1256 968 T
+1256 888 T
+1296 888 T
+1360 824 T
+1360 328 T
+1342 310 T
+1296 264 T
+1256 264 T
+1256 184 T
+1336 184 T
+1336 254 T
+1392 310 L
+1392 1798 P
+1336 1854 T
+1336 1928 T
+1256 1928 T
+1256 1848 T
+1296 1848 T
+1360 1784 T
+1360 1160 T
+1342 1142 T
+1296 1096 T
+1256 1096 T
+1256 1016 T
+1336 1016 T
+1336 1086 T
+1392 1142 L
+1392 2304 P
+1360 2304 T
+1346 2290 T
+1296 2240 T
+1256 2240 T
+1256 2160 T
+1336 2160 T
+1336 2234 T
+1392 2290 L
+1392 2946 P
+1336 3002 T
+1336 3072 T
+1256 3072 T
+1256 2992 T
+1296 2992 T
+1360 2928 T
+1392 2928 L
+1392 3264 P
+1360 3264 T
+1346 3250 T
+1296 3200 T
+1256 3200 T
+1256 3120 T
+1336 3120 T
+1336 3194 T
+1392 3250 L
+1392 3778 P
+1336 3834 T
+1336 3904 T
+1256 3904 T
+1256 3824 T
+1296 3824 T
+1360 3760 T
+1392 3760 L
+1552 838 P
+1496 894 T
+1496 968 T
+1416 968 T
+1416 888 T
+1456 888 T
+1520 824 T
+1520 328 T
+1502 310 T
+1456 264 T
+1416 264 T
+1416 184 T
+1496 184 T
+1496 254 T
+1552 310 L
+1552 1798 P
+1496 1854 T
+1496 1928 T
+1416 1928 T
+1416 1848 T
+1456 1848 T
+1520 1784 T
+1520 1160 T
+1502 1142 T
+1456 1096 T
+1416 1096 T
+1416 1016 T
+1496 1016 T
+1496 1086 T
+1552 1142 L
+1552 2304 P
+1520 2304 T
+1506 2290 T
+1456 2240 T
+1416 2240 T
+1416 2160 T
+1496 2160 T
+1496 2234 T
+1552 2290 L
+1552 2946 P
+1496 3002 T
+1496 3072 T
+1416 3072 T
+1416 2992 T
+1456 2992 T
+1520 2928 T
+1552 2928 L
+1552 3264 P
+1520 3264 T
+1506 3250 T
+1456 3200 T
+1416 3200 T
+1416 3120 T
+1496 3120 T
+1496 3194 T
+1552 3250 L
+1552 3778 P
+1496 3834 T
+1496 3904 T
+1416 3904 T
+1416 3824 T
+1456 3824 T
+1520 3760 T
+1552 3760 L
+1712 838 P
+1656 894 T
+1656 968 T
+1576 968 T
+1576 888 T
+1616 888 T
+1680 824 T
+1680 328 T
+1662 310 T
+1616 264 T
+1576 264 T
+1576 184 T
+1656 184 T
+1656 254 T
+1712 310 L
+1712 1798 P
+1656 1854 T
+1656 1928 T
+1576 1928 T
+1576 1848 T
+1616 1848 T
+1680 1784 T
+1680 1160 T
+1662 1142 T
+1616 1096 T
+1576 1096 T
+1576 1016 T
+1656 1016 T
+1656 1086 T
+1712 1142 L
+1712 2304 P
+1680 2304 T
+1666 2290 T
+1616 2240 T
+1576 2240 T
+1576 2160 T
+1656 2160 T
+1656 2234 T
+1712 2290 L
+1712 2946 P
+1656 3002 T
+1656 3072 T
+1576 3072 T
+1576 2992 T
+1616 2992 T
+1680 2928 T
+1712 2928 L
+1712 3264 P
+1680 3264 T
+1666 3250 T
+1616 3200 T
+1576 3200 T
+1576 3120 T
+1656 3120 T
+1656 3194 T
+1712 3250 L
+1712 3778 P
+1656 3834 T
+1656 3904 T
+1576 3904 T
+1576 3824 T
+1616 3824 T
+1680 3760 T
+1712 3760 L
+1872 838 P
+1816 894 T
+1816 968 T
+1736 968 T
+1736 888 T
+1776 888 T
+1840 824 T
+1840 328 T
+1822 310 T
+1776 264 T
+1736 264 T
+1736 184 T
+1816 184 T
+1816 254 T
+1872 310 L
+1872 1798 P
+1816 1854 T
+1816 1928 T
+1736 1928 T
+1736 1848 T
+1776 1848 T
+1840 1784 T
+1840 1160 T
+1822 1142 T
+1776 1096 T
+1736 1096 T
+1736 1016 T
+1816 1016 T
+1816 1086 T
+1872 1142 L
+1872 2304 P
+1840 2304 T
+1826 2290 T
+1776 2240 T
+1736 2240 T
+1736 2160 T
+1816 2160 T
+1816 2234 T
+1872 2290 L
+1872 2946 P
+1816 3002 T
+1816 3072 T
+1736 3072 T
+1736 2992 T
+1776 2992 T
+1840 2928 T
+1872 2928 L
+1872 3264 P
+1840 3264 T
+1826 3250 T
+1776 3200 T
+1736 3200 T
+1736 3120 T
+1816 3120 T
+1816 3194 T
+1872 3250 L
+1872 3778 P
+1816 3834 T
+1816 3904 T
+1736 3904 T
+1736 3824 T
+1776 3824 T
+1840 3760 T
+1872 3760 L
+2032 838 P
+1976 894 T
+1976 968 T
+1896 968 T
+1896 888 T
+1936 888 T
+2000 824 T
+2000 328 T
+1982 310 T
+1936 264 T
+1896 264 T
+1896 184 T
+1976 184 T
+1976 254 T
+2032 310 L
+2032 1798 P
+1976 1854 T
+1976 1928 T
+1896 1928 T
+1896 1848 T
+1936 1848 T
+2000 1784 T
+2000 1160 T
+1982 1142 T
+1936 1096 T
+1896 1096 T
+1896 1016 T
+1976 1016 T
+1976 1086 T
+2032 1142 L
+2032 2304 P
+2000 2304 T
+1986 2290 T
+1936 2240 T
+1896 2240 T
+1896 2160 T
+1976 2160 T
+1976 2234 T
+2032 2290 L
+2032 2946 P
+1976 3002 T
+1976 3072 T
+1896 3072 T
+1896 2992 T
+1936 2992 T
+2000 2928 T
+2032 2928 L
+2032 3264 P
+2000 3264 T
+1986 3250 T
+1936 3200 T
+1896 3200 T
+1896 3120 T
+1976 3120 T
+1976 3194 T
+2032 3250 L
+2032 3778 P
+1976 3834 T
+1976 3904 T
+1896 3904 T
+1896 3824 T
+1936 3824 T
+2000 3760 T
+2032 3760 L
+2192 838 P
+2136 894 T
+2136 968 T
+2056 968 T
+2056 888 T
+2096 888 T
+2160 824 T
+2160 328 T
+2142 310 T
+2096 264 T
+2056 264 T
+2056 184 T
+2136 184 T
+2136 254 T
+2192 310 L
+2192 1798 P
+2136 1854 T
+2136 1928 T
+2056 1928 T
+2056 1848 T
+2096 1848 T
+2160 1784 T
+2160 1160 T
+2142 1142 T
+2096 1096 T
+2056 1096 T
+2056 1016 T
+2136 1016 T
+2136 1086 T
+2192 1142 L
+2192 2304 P
+2160 2304 T
+2146 2290 T
+2096 2240 T
+2056 2240 T
+2056 2160 T
+2136 2160 T
+2136 2234 T
+2192 2290 L
+2192 2946 P
+2136 3002 T
+2136 3072 T
+2056 3072 T
+2056 2992 T
+2096 2992 T
+2160 2928 T
+2192 2928 L
+2192 3264 P
+2160 3264 T
+2146 3250 T
+2096 3200 T
+2056 3200 T
+2056 3120 T
+2136 3120 T
+2136 3194 T
+2192 3250 L
+2192 3778 P
+2136 3834 T
+2136 3904 T
+2056 3904 T
+2056 3824 T
+2096 3824 T
+2160 3760 T
+2192 3760 L
+2352 838 P
+2296 894 T
+2296 968 T
+2216 968 T
+2216 888 T
+2256 888 T
+2320 824 T
+2320 328 T
+2302 310 T
+2256 264 T
+2216 264 T
+2216 184 T
+2296 184 T
+2296 254 T
+2352 310 L
+2352 1798 P
+2296 1854 T
+2296 1928 T
+2216 1928 T
+2216 1848 T
+2256 1848 T
+2320 1784 T
+2320 1160 T
+2302 1142 T
+2256 1096 T
+2216 1096 T
+2216 1016 T
+2296 1016 T
+2296 1086 T
+2352 1142 L
+2352 2304 P
+2320 2304 T
+2306 2290 T
+2256 2240 T
+2216 2240 T
+2216 2160 T
+2296 2160 T
+2296 2234 T
+2352 2290 L
+2352 2946 P
+2296 3002 T
+2296 3072 T
+2216 3072 T
+2216 2992 T
+2256 2992 T
+2320 2928 T
+2352 2928 L
+2352 3264 P
+2320 3264 T
+2306 3250 T
+2256 3200 T
+2216 3200 T
+2216 3120 T
+2296 3120 T
+2296 3194 T
+2352 3250 L
+2352 3778 P
+2296 3834 T
+2296 3904 T
+2216 3904 T
+2216 3824 T
+2256 3824 T
+2320 3760 T
+2352 3760 L
+2512 838 P
+2456 894 T
+2456 968 T
+2376 968 T
+2376 888 T
+2416 888 T
+2480 824 T
+2480 328 T
+2462 310 T
+2416 264 T
+2376 264 T
+2376 184 T
+2456 184 T
+2456 254 T
+2512 310 L
+2512 1798 P
+2456 1854 T
+2456 1928 T
+2376 1928 T
+2376 1848 T
+2416 1848 T
+2480 1784 T
+2480 1160 T
+2462 1142 T
+2416 1096 T
+2376 1096 T
+2376 1016 T
+2456 1016 T
+2456 1086 T
+2512 1142 L
+2512 2304 P
+2480 2304 T
+2466 2290 T
+2416 2240 T
+2376 2240 T
+2376 2160 T
+2456 2160 T
+2456 2234 T
+2512 2290 L
+2512 2946 P
+2456 3002 T
+2456 3072 T
+2376 3072 T
+2376 2992 T
+2416 2992 T
+2480 2928 T
+2512 2928 L
+2512 3264 P
+2480 3264 T
+2466 3250 T
+2416 3200 T
+2376 3200 T
+2376 3120 T
+2456 3120 T
+2456 3194 T
+2512 3250 L
+2512 3778 P
+2456 3834 T
+2456 3904 T
+2376 3904 T
+2376 3824 T
+2416 3824 T
+2480 3760 T
+2512 3760 L
+2672 838 P
+2616 894 T
+2616 968 T
+2536 968 T
+2536 888 T
+2576 888 T
+2640 824 T
+2640 328 T
+2622 310 T
+2576 264 T
+2536 264 T
+2536 184 T
+2616 184 T
+2616 254 T
+2672 310 L
+2672 1798 P
+2616 1854 T
+2616 1928 T
+2536 1928 T
+2536 1848 T
+2576 1848 T
+2640 1784 T
+2640 1160 T
+2622 1142 T
+2576 1096 T
+2536 1096 T
+2536 1016 T
+2616 1016 T
+2616 1086 T
+2672 1142 L
+2672 2304 P
+2640 2304 T
+2626 2290 T
+2576 2240 T
+2536 2240 T
+2536 2160 T
+2616 2160 T
+2616 2234 T
+2672 2290 L
+2672 2946 P
+2616 3002 T
+2616 3072 T
+2536 3072 T
+2536 2992 T
+2576 2992 T
+2640 2928 T
+2672 2928 L
+2672 3264 P
+2640 3264 T
+2626 3250 T
+2576 3200 T
+2536 3200 T
+2536 3120 T
+2616 3120 T
+2616 3194 T
+2672 3250 L
+2672 3778 P
+2616 3834 T
+2616 3904 T
+2536 3904 T
+2536 3824 T
+2576 3824 T
+2640 3760 T
+2672 3760 L
+2832 838 P
+2776 894 T
+2776 968 T
+2696 968 T
+2696 888 T
+2736 888 T
+2800 824 T
+2800 328 T
+2782 310 T
+2736 264 T
+2696 264 T
+2696 184 T
+2776 184 T
+2776 254 T
+2832 310 L
+2832 1798 P
+2776 1854 T
+2776 1928 T
+2696 1928 T
+2696 1848 T
+2736 1848 T
+2800 1784 T
+2800 1160 T
+2782 1142 T
+2736 1096 T
+2696 1096 T
+2696 1016 T
+2776 1016 T
+2776 1086 T
+2832 1142 L
+2832 2304 P
+2800 2304 T
+2786 2290 T
+2736 2240 T
+2696 2240 T
+2696 2160 T
+2776 2160 T
+2776 2234 T
+2832 2290 L
+2832 2946 P
+2776 3002 T
+2776 3072 T
+2696 3072 T
+2696 2992 T
+2736 2992 T
+2800 2928 T
+2832 2928 L
+2832 3264 P
+2800 3264 T
+2786 3250 T
+2736 3200 T
+2696 3200 T
+2696 3120 T
+2776 3120 T
+2776 3194 T
+2832 3250 L
+2832 3778 P
+2776 3834 T
+2776 3904 T
+2696 3904 T
+2696 3824 T
+2736 3824 T
+2800 3760 T
+2832 3760 L
+2992 838 P
+2936 894 T
+2936 968 T
+2856 968 T
+2856 888 T
+2896 888 T
+2960 824 T
+2960 328 T
+2942 310 T
+2896 264 T
+2856 264 T
+2856 184 T
+2936 184 T
+2936 254 T
+2992 310 L
+2992 1798 P
+2936 1854 T
+2936 1928 T
+2856 1928 T
+2856 1848 T
+2896 1848 T
+2960 1784 T
+2960 1160 T
+2942 1142 T
+2896 1096 T
+2856 1096 T
+2856 1016 T
+2936 1016 T
+2936 1086 T
+2992 1142 L
+2992 2304 P
+2960 2304 T
+2946 2290 T
+2896 2240 T
+2856 2240 T
+2856 2160 T
+2936 2160 T
+2936 2234 T
+2992 2290 L
+2992 2946 P
+2936 3002 T
+2936 3072 T
+2856 3072 T
+2856 2992 T
+2896 2992 T
+2960 2928 T
+2992 2928 L
+2992 3264 P
+2960 3264 T
+2946 3250 T
+2896 3200 T
+2856 3200 T
+2856 3120 T
+2936 3120 T
+2936 3194 T
+2992 3250 L
+2992 3778 P
+2936 3834 T
+2936 3904 T
+2856 3904 T
+2856 3824 T
+2896 3824 T
+2960 3760 T
+2992 3760 L
+3152 838 P
+3096 894 T
+3096 968 T
+3016 968 T
+3016 888 T
+3056 888 T
+3120 824 T
+3120 328 T
+3102 310 T
+3056 264 T
+3016 264 T
+3016 184 T
+3096 184 T
+3096 254 T
+3152 310 L
+3152 1798 P
+3096 1854 T
+3096 1928 T
+3016 1928 T
+3016 1848 T
+3056 1848 T
+3120 1784 T
+3120 1160 T
+3102 1142 T
+3056 1096 T
+3016 1096 T
+3016 1016 T
+3096 1016 T
+3096 1086 T
+3152 1142 L
+3152 2304 P
+3120 2304 T
+3106 2290 T
+3056 2240 T
+3016 2240 T
+3016 2160 T
+3096 2160 T
+3096 2234 T
+3152 2290 L
+3152 2946 P
+3096 3002 T
+3096 3072 T
+3016 3072 T
+3016 2992 T
+3056 2992 T
+3120 2928 T
+3152 2928 L
+3152 3264 P
+3120 3264 T
+3106 3250 T
+3056 3200 T
+3016 3200 T
+3016 3120 T
+3096 3120 T
+3096 3194 T
+3152 3250 L
+3152 3778 P
+3096 3834 T
+3096 3904 T
+3016 3904 T
+3016 3824 T
+3056 3824 T
+3120 3760 T
+3152 3760 L
+3312 838 P
+3256 894 T
+3256 968 T
+3176 968 T
+3176 888 T
+3216 888 T
+3280 824 T
+3280 328 T
+3262 310 T
+3216 264 T
+3176 264 T
+3176 184 T
+3256 184 T
+3256 254 T
+3312 310 L
+3312 1798 P
+3256 1854 T
+3256 1928 T
+3176 1928 T
+3176 1848 T
+3216 1848 T
+3280 1784 T
+3280 1160 T
+3262 1142 T
+3216 1096 T
+3176 1096 T
+3176 1016 T
+3256 1016 T
+3256 1086 T
+3312 1142 L
+3312 2304 P
+3280 2304 T
+3266 2290 T
+3216 2240 T
+3176 2240 T
+3176 2160 T
+3256 2160 T
+3256 2234 T
+3312 2290 L
+3312 2946 P
+3256 3002 T
+3256 3072 T
+3176 3072 T
+3176 2992 T
+3216 2992 T
+3280 2928 T
+3312 2928 L
+3312 3264 P
+3280 3264 T
+3266 3250 T
+3216 3200 T
+3176 3200 T
+3176 3120 T
+3256 3120 T
+3256 3194 T
+3312 3250 L
+3312 3778 P
+3256 3834 T
+3256 3904 T
+3176 3904 T
+3176 3824 T
+3216 3824 T
+3280 3760 T
+3312 3760 L
+EndLayer
+(in) SetLayer
+216 1096 -80 -80 R
+16 -48 X
+-16 -80 X
+80 80 X
+-16 48 C
+536 1096 -80 -16 R
+-96 96 X
+16 80 X
+-80 -80 X
+16 -368 X
+-16 -80 X
+80 80 X
+-16 224 X
+96 -16 X
+16 -48 X
+-16 -80 X
+80 80 X
+-16 48 C
+696 1096 -80 -80 R
+16 -48 X
+-16 -80 X
+80 80 X
+-16 48 C
+856 1096 -16 144 R
+-144 16 X
+-80 -80 X
+80 16 X
+96 -96 X
+-16 -80 X
+16 -48 X
+-16 -80 X
+16 -96 X
+-256 16 X
+-80 -80 X
+80 16 X
+304 144 X
+16 80 X
+-16 48 C
+1016 424 -80 -80 R
+16 -80 X
+-16 -80 X
+80 80 X
+-16 80 C
+1016 1256 -80 -80 R
+16 -368 X
+-16 -80 X
+80 80 X
+-16 368 C
+1016 1928 -80 -80 R
+16 -80 X
+-16 -80 X
+80 80 X
+-16 80 C
+1176 424 -80 -80 R
+16 -80 X
+-16 -80 X
+80 80 X
+-16 80 C
+1176 1928 -80 -80 R
+16 -80 X
+-16 -80 X
+80 80 X
+-16 80 C
+1336 552 -80 -80 R
+16 -48 X
+-16 -80 X
+80 80 X
+-16 48 C
+1336 1768 -80 -80 R
+16 -48 X
+-16 -80 X
+80 80 X
+-16 48 C
+1496 1096 -16 144 R
+-304 16 X
+-80 -80 X
+16 -368 X
+-16 -80 X
+80 80 X
+-16 368 X
+16 16 X
+256 -96 X
+-16 -80 X
+16 -48 X
+-16 -80 X
+80 80 X
+-16 48 C
+1656 424 -80 -80 R
+16 -80 X
+-16 -80 X
+80 80 X
+-16 80 C
+1656 1256 -80 -80 R
+16 -368 X
+-16 -16 X
+-256 96 X
+16 80 X
+-16 48 X
+16 80 X
+-80 -80 X
+16 -48 X
+-16 -80 X
+16 -144 X
+304 -16 X
+80 80 X
+-16 368 C
+1656 1928 -80 -80 R
+16 -80 X
+-16 -80 X
+80 80 X
+-16 80 C
+1816 424 -80 -80 R
+16 -80 X
+-16 -80 X
+80 80 X
+-16 80 C
+1816 1928 -80 -80 R
+16 -224 X
+-256 16 X
+-80 -80 X
+80 16 X
+304 272 C
+1976 552 -80 -80 R
+16 -48 X
+-16 -80 X
+80 80 X
+-16 48 C
+1976 1768 -80 -80 R
+16 -48 X
+-16 -80 X
+80 80 X
+-16 48 C
+2136 1256 -80 -16 R
+-240 16 X
+-80 -80 X
+16 -368 X
+-16 -80 X
+80 80 X
+-16 368 X
+16 16 X
+240 -16 X
+16 -80 X
+-16 -80 X
+16 -48 X
+-16 -80 X
+80 80 X
+-16 48 X
+16 80 X
+-16 80 C
+2456 424 -80 -16 R
+-80 16 X
+-80 -80 X
+80 16 X
+80 -16 C
+2456 1096 -80 -80 R
+16 -48 X
+-16 -80 X
+80 80 X
+-16 48 C
+2456 1640 -80 -16 R
+-80 16 X
+-80 -80 X
+80 16 X
+80 -16 C
+2456 1928 -80 -80 R
+16 -96 X
+-96 16 X
+-80 -80 X
+80 16 X
+144 144 C
+2776 1096 -80 -16 R
+-80 16 X
+-16 144 X
+-304 16 X
+-80 -80 X
+16 -368 X
+-16 -16 X
+-256 96 X
+16 80 X
+-16 48 X
+16 80 X
+-80 -80 X
+16 -48 X
+-16 -80 X
+16 -144 X
+304 -16 X
+80 80 X
+-16 368 X
+16 16 X
+256 -96 X
+-16 -80 X
+16 -48 X
+-16 -80 X
+80 80 X
+-16 48 X
+16 16 X
+80 -16 X
+16 -48 X
+-16 -80 X
+80 80 X
+-16 48 C
+2936 808 -80 -16 R
+-80 16 X
+-80 -80 X
+80 16 X
+80 -16 C
+2936 1256 -80 -16 R
+-80 16 X
+-80 -80 X
+80 16 X
+80 -16 C
+3096 264 -16 272 R
+-944 16 X
+-80 -80 X
+80 16 X
+896 -224 X
+-16 -80 C
+3096 1096 -80 -16 R
+-80 16 X
+-80 -80 X
+16 -48 X
+-16 -80 X
+80 80 X
+-16 48 X
+16 16 X
+80 -16 X
+16 -48 X
+-16 -80 X
+80 80 X
+-16 48 C
+3240 1240 -144 16 R
+-80 -80 X
+80 16 X
+96 -400 X
+-96 16 X
+-80 -80 X
+80 16 C
+3400 136 -160 48 R
+16 80 X
+-16 80 X
+16 80 X
+-80 -80 X
+16 -80 X
+-16 -80 X
+16 -48 X
+-272 208 X
+16 80 X
+-80 -80 X
+16 -208 X
+-272 208 X
+16 80 X
+-80 -80 X
+16 -208 X
+-272 48 X
+16 80 X
+-80 -80 X
+16 -48 X
+-112 208 X
+16 80 X
+-80 -80 X
+16 -208 X
+-592 208 X
+16 80 X
+-80 -80 X
+16 -208 X
+-592 208 X
+16 80 X
+-80 -80 X
+16 -208 X
+-432 48 X
+16 80 X
+-80 -80 X
+16 -48 X
+-112 208 X
+16 80 X
+-80 -80 X
+16 -208 X
+-56 -136 C
+3408 2112 -3312 -136 R
+56 -208 X
+-16 -80 X
+80 80 X
+-16 208 X
+112 -48 X
+-16 -80 X
+16 -144 X
+144 -16 X
+80 80 X
+-80 -16 X
+-96 96 X
+16 80 X
+-16 48 X
+432 -208 X
+-16 -80 X
+80 80 X
+-16 208 X
+592 -208 X
+-16 -80 X
+80 80 X
+-16 208 X
+592 -208 X
+-16 -80 X
+80 80 X
+-16 208 X
+112 -48 X
+-16 -80 X
+80 80 X
+-16 48 X
+272 -208 X
+-16 -80 X
+80 80 X
+-16 208 X
+272 -208 X
+-16 -80 X
+80 80 X
+-16 208 X
+272 -48 X
+-16 -80 X
+16 -80 X
+-16 -80 X
+80 80 X
+-16 80 X
+16 80 X
+-16 48 C
+EndLayer
+(ins) SetLayer
+1336 1640 -80 -80 R
+24 -1008 X
+-24 -80 X
+80 80 X
+-24 1008 C
+1976 1640 -80 -80 R
+24 -1008 X
+-24 -80 X
+80 80 X
+-24 1008 C
+2136 1256 -80 -80 R
+24 -624 X
+-24 -80 X
+80 80 X
+-24 624 C
+2296 1640 -80 -80 R
+24 -1136 X
+-24 -24 X
+-400 24 X
+-24 104 X
+-160 1160 X
+24 80 X
+-80 -80 X
+24 -1192 X
+160 -72 X
+-24 -80 X
+24 -104 X
+-768 104 X
+24 80 X
+-24 904 X
+160 360 X
+24 80 X
+-80 -80 X
+24 -328 X
+-160 -936 X
+-24 -80 X
+24 -136 X
+832 136 X
+24 24 X
+400 -24 X
+80 80 X
+-24 1136 C
+2296 1768 -24 136 R
+-1312 -136 X
+-24 -80 X
+80 80 X
+-24 104 X
+448 -232 X
+-24 -80 X
+24 -1160 X
+-264 24 X
+-80 -80 X
+80 24 X
+400 -24 X
+80 80 X
+-80 -24 X
+-104 1160 X
+24 80 X
+-24 232 X
+768 -104 X
+-24 -80 C
+2936 1256 -80 -80 R
+24 -368 X
+-24 -80 X
+80 80 X
+-24 368 C
+EndLayer
+(con) SetLayer
+156 364 40 40 B
+316 748 40 40 B
+476 748 40 40 B
+796 364 40 40 B
+956 748 40 40 B
+1116 748 40 40 B
+1276 364 40 40 B
+1436 364 40 40 B
+1596 748 40 40 B
+1756 748 40 40 B
+1916 364 40 40 B
+2076 364 40 40 B
+2236 748 40 40 B
+2396 364 40 40 B
+2556 364 40 40 B
+2716 748 40 40 B
+2876 364 40 40 B
+3036 748 40 40 B
+3196 364 40 40 B
+EndLayer
+(cop) SetLayer
+156 1708 40 40 B
+316 1196 40 40 B
+476 1708 40 40 B
+636 1196 40 40 B
+796 1708 40 40 B
+956 1196 40 40 B
+1116 1196 40 40 B
+1276 1708 40 40 B
+1436 1708 40 40 B
+1596 1196 40 40 B
+1756 1196 40 40 B
+1916 1708 40 40 B
+2076 1708 40 40 B
+2236 1196 40 40 B
+2396 1580 40 40 B
+2556 1708 40 40 B
+2716 1196 40 40 B
+2876 1708 40 40 B
+3036 1196 40 40 B
+3196 1708 40 40 B
+EndLayer
+(cos) SetLayer
+956 364 40 40 B
+956 1708 40 40 B
+1116 364 40 40 B
+1116 1708 40 40 B
+1276 492 40 40 B
+1276 1580 40 40 B
+1436 1580 40 40 B
+1596 364 40 40 B
+1596 1708 40 40 B
+1756 364 40 40 B
+1916 492 40 40 B
+1916 1580 40 40 B
+2076 492 40 40 B
+2076 1196 40 40 B
+2236 364 40 40 B
+2236 1580 40 40 B
+2236 1708 40 40 B
+2876 748 40 40 B
+2876 1196 40 40 B
+EndLayer
+(cps) SetLayer
+156 908 40 40 B
+156 1036 40 40 B
+316 204 40 40 B
+316 1868 40 40 B
+476 908 40 40 B
+476 1036 40 40 B
+636 908 40 40 B
+636 1036 40 40 B
+796 908 40 40 B
+796 1036 40 40 B
+956 204 40 40 B
+956 1868 40 40 B
+1116 204 40 40 B
+1116 1868 40 40 B
+1276 908 40 40 B
+1276 1036 40 40 B
+1436 908 40 40 B
+1436 1036 40 40 B
+1596 204 40 40 B
+1596 1868 40 40 B
+1756 204 40 40 B
+1756 1868 40 40 B
+1916 908 40 40 B
+1916 1036 40 40 B
+2076 908 40 40 B
+2076 1036 40 40 B
+2236 204 40 40 B
+2236 1868 40 40 B
+2396 908 40 40 B
+2396 1036 40 40 B
+2396 1868 40 40 B
+2556 908 40 40 B
+2556 1036 40 40 B
+2716 908 40 40 B
+2716 1036 40 40 B
+2876 908 40 40 B
+2876 1036 40 40 B
+3036 204 40 40 B
+3036 908 40 40 B
+3036 1036 40 40 B
+3196 204 40 40 B
+3196 1868 40 40 B
+EndLayer
+(cb) SetLayer
+EndLayer
+2 plotPass
+(t_od) SetLayer
+EndLayer
+(t_ps) SetLayer
+EndLayer
+(t_in) SetLayer
+2392 2440 904 952 0 0 (CK) plotTerminal
+2712 2760 1192 1240 0 0 (QN) plotTerminal
+152 200 904 952 0 0 (R) plotTerminal
+632 680 904 952 0 0 (D) plotTerminal
+3192 3240 1192 1240 0 0 (Q) plotTerminal
+152 200 2020 2068 0 0 (vdd) plotTerminal
+152 200 44 92 0 0 (vss) plotTerminal
+EndLayer
+(t_ins) SetLayer
+EndLayer
+3 plotPass
+(t_od) SetLayer
+EndLayer
+(t_ps) SetLayer
+EndLayer
+(t_in) SetLayer
+2392 2440 904 952 0 0 (CK) plotTerminal
+2712 2760 1192 1240 0 0 (QN) plotTerminal
+152 200 904 952 0 0 (R) plotTerminal
+632 680 904 952 0 0 (D) plotTerminal
+3192 3240 1192 1240 0 0 (Q) plotTerminal
+152 200 2020 2068 0 0 (vdd) plotTerminal
+152 200 44 92 0 0 (vss) plotTerminal
+EndLayer
+(t_ins) SetLayer
+EndLayer
+EndLayout

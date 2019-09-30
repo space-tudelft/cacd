@@ -1,0 +1,236 @@
+<HTML>
+<HEAD><TITLE>MOSIS Parametric Test Results</TITLE></HEAD>
+<BODY BGCOLOR=87CEFA>
+<STRONG>
+<PRE>
+
+                           MOSIS PARAMETRIC TEST RESULTS
+
+          RUN: N83R                                         VENDOR: ORBIT
+    TECHNOLOGY: SCNA20                                FEATURE SIZE: 2.0 microns
+
+
+INTRODUCTION: This report contains the lot average results obtained by MOSIS
+              from measurements of MOSIS test structures on each wafer of
+              this fabrication lot. SPICE parameters obtained from similar
+              measurements on a selected wafer are also attached.
+
+COMMENTS: Orbit Semiconductor 2.0 um n-well.
+
+
+TRANSISTOR PARAMETERS   W/L      N-CHANNEL P-CHANNEL  UNITS
+
+ MINIMUM                3/2
+  Vth                                 0.89     -0.88  Volts
+
+ SHORT                  18/2
+  Vth                                 0.78     -0.83  Volts
+  Vpt                                10.0      -9.9   Volts
+  Vbkd                               12.3     -15.0   Volts
+  Idss                              150       -79     uA/um
+
+ WIDE                   120/2
+  Ids0                                0.0      -0.4   pA/um
+
+ LARGE                  50/50
+  Vth                                 0.81     -0.85  Volts
+  Vjbkd                              14.8     -16.1   Volts
+  Ijlk                              -47.9      -6.1   pA
+  Gamma                               0.24      0.68  V^0.5
+
+ Delta length                         0.56      0.69  microns
+  (L_eff = L_drawn-DL)
+ Delta width                          0.57      0.57  microns
+  (W_eff = W_drawn-DW)
+ K' (Uo*Cox/2)                       25.9      -9.5   uA/V^2
+
+POLY2 TRANSISTORS       W/L      N-CHANNEL P-CHANNEL  UNITS
+
+ MINIMUM                6/4
+  Vth                                 0.81     -1.28  Volts
+
+ SHORT                  12/4
+  Vth                                 0.78     -1.26  Volts
+
+ LARGE                  36/36
+  Vth                                 0.77     -1.25  Volts
+
+ Delta length                         0.69      0.85  microns
+  (L_eff = L_drawn-DL)
+ Delta width                          0.69      1.02  microns
+  (W_eff = W_drawn-DW)
+ K' (Uo*Cox/2)                       22.0      -6.6   uA/V^2
+
+FOX TRANSISTORS         GATE      N+ACTIVE  P+ACTIVE  UNITS
+ Vth                    Poly        >17.4     -14.5   Volts
+
+BIPOLAR PARAMETERS      W/L          NPN              UNITS
+
+ 2X1                    2X1
+  Beta                              122
+  V_early                            72.5             Volts
+  Vce,sat                             0.4             Volts
+
+ 2X2                    2X2
+  Beta                              122
+  V_early                            71.9             Volts
+  Vce,sat                             0.2             Volts
+
+ 2X4                    2X4
+  Beta                              122
+  V_early                            71.1             Volts
+  Vce,sat                             0.3             Volts
+
+ 2X8                    2X8
+  Beta                              122
+  V_early                            70.6             Volts
+  Vce,sat                             0.3             Volts
+  BVceo                              13.2             Volts
+  BVcbo                              20.5             Volts
+  BVebo                               8.2             Volts
+
+PROCESS PARAMETERS    N+ACTV P+ACTV  POLY POLY2 MTL1   MTL2   N_WELL  UNITS
+ Sheet Resistance      31.3   61.8  24.5  21.0    0.07   0.03 2813    ohms/sq
+ Width Variation        0.18  -0.08 -0.27 -0.51   0.16   0.97         microns
+  (measured - drawn)
+ Contact Resistance    11.0   36.2   7.4   6.5           0.04         ohms
+ Gate Oxide Thickness 412                                             angstroms
+
+CAPACITANCE PARAMETERS   N+ACTV   P+ACTV   POLY   POLY2   MTL1   MTL2   UNITS
+ Area (substrate)        137      315       54             23     14    aF/um^2
+ Area (N+active)                           838    670      44     22    aF/um^2
+ Area (P+active)                           832    663                   aF/um^2
+ Area (poly)                                      472      41     19    aF/um^2
+ Area (poly2)                                              41           aF/um^2
+ Area (metal1)                                                    33    aF/um^2
+ Fringe (substrate)      480      313                                   aF/um
+
+CIRCUIT PARAMETERS                          UNITS
+ Inverters                   K
+  Vinv                      1.0       2.16  Volts
+  Vinv                      1.5       2.39  Volts
+  Vol (100 uA)              2.0       0.26  Volts
+  Voh (100 uA)              2.0       4.67  Volts
+  Vinv                      2.0       2.55  Volts
+  Gain                      2.0      -9.75
+ Ring Oscillator Freq.
+  MOSIS (31-stage,5V)                37.64  MHz
+ Ring Oscillator Power
+  MOSIS (31-stage,5V)                97.59  uW/MHz/g
+
+ N83R SPICE LEVEL2 PARAMETERS
+
+.MODEL CMOSN NMOS LEVEL=2 PHI=0.700000 TOX=4.1200E-08 XJ=0.200000U TPG=1
++ VTO=0.7339 DELTA=5.4620E+00 LD=2.3560E-07 KP=5.1169E-05
++ UO=610.5 UEXP=1.2020E-01 UCRIT=7.5870E+04 RSH=9.1980E-02
++ GAMMA=0.4823 NSUB=4.9230E+15 NFS=5.9100E+11 VMAX=5.1200E+04
++ LAMBDA=3.1220E-02 CGDO=2.9620E-10 CGSO=2.9620E-10
++ CGBO=3.6589E-10 CJ=1.3611E-04 MJ=6.3320E-01 CJSW=4.9585E-10
++ MJSW=2.5860E-01 PB=4.2381E-01
+* Weff = Wdrawn - Delta_W
+* The suggested Delta_W is 8.2860E-08
+.MODEL CMOSP PMOS LEVEL=2 PHI=0.700000 TOX=4.1200E-08 XJ=0.200000U TPG=-1
++ VTO=-0.7776 DELTA=3.2990E+00 LD=3.3070E-07 KP=1.6528E-05
++ UO=197.2 UEXP=2.6600E-01 UCRIT=1.1100E+05 RSH=9.3690E-02
++ GAMMA=0.6727 NSUB=9.5750E+15 NFS=7.0430E+11 VMAX=9.9990E+05
++ LAMBDA=4.3490E-02 CGDO=4.1576E-10 CGSO=4.1576E-10
++ CGBO=3.7085E-10 CJ=3.1861E-04 MJ=6.0597E-01 CJSW=3.0985E-10
++ MJSW=1.8698E-01 PB=9.0000E-01
+* Weff = Wdrawn - Delta_W
+* The suggested Delta_W is 1.0284E-07
+
+ N83R SPICE BSIM1 (Berkeley Level 4; HSPICE Level 13) PARAMETERS
+
+*
+*PROCESS=ORBIT
+*RUN=n83r
+*WAFER=02
+*Gate-oxide thickness= 412 angstroms
+*DATE=9-Jun-1998
+*
+*NMOS PARAMETERS
+*
+.MODEL PC1_NM1_DU1 NMOS LEVEL=13 VFB0=
++ -9.52053E-01, 3.09754E-01,-2.90042E-01
++  7.61488E-01, 0.00000E+00, 0.00000E+00
++  1.39014E+00,-4.45856E-01, 6.81180E-01
++  2.89611E-01,-6.30567E-02,-1.23498E-02
++ -1.00639E-02, 4.33896E-02,-1.38631E-02
++  6.25492E+02,6.61066E-001,3.55486E-001
++  5.31010E-02, 3.07728E-02,-3.78445E-02
++  4.67028E-02, 1.02339E+00,-7.10990E-01
++  7.66255E+00,-4.29386E+00, 6.33325E+01
++ -2.10460E-03,-8.33750E-03,-4.08386E-03
++  7.86650E-04,-2.75358E-03,-7.99349E-03
++  1.36249E-03,-4.33134E-04, 2.20404E-02
++ -5.22311E-02, 7.66167E-02, 4.64562E-02
++  7.98013E+02, 4.92507E+02,-3.56656E+02
++ -6.07056E+00, 3.35698E+01, 1.30904E+02
++  6.36014E+00, 9.18969E+01,-8.58680E+01
++ -9.64235E-03, 1.04318E-01,-9.96489E-02
++ 4.12000E-002, 2.70000E+01, 5.00000E+00
++ 4.15550E-010,4.15550E-010,4.33574E-010
++ 1.00000E+000,0.00000E+000,0.00000E+000
++ 1.00000E+000,0.00000E+000,0.00000E+000
++ 0.00000E+000,0.00000E+000,0.00000E+000
++ 0.00000E+000,0.00000E+000,0.00000E+000
++ 31.3,    1.361100e-04,    4.958500e-10,    1e-08,    0.42381
++ 0.42381,    0.6332,    0.2586,    0,    0
+*
+* Gate Oxide Thickness is 412 Angstroms
+*
+*
+*PMOS PARAMETERS
+*
+.MODEL PC1_PM1_DU2 PMOS LEVEL=13 VFB0=
++ -3.63272E-01, 1.23277E-01, 4.76372E-03
++  6.76709E-01, 0.00000E+00, 0.00000E+00
++  6.54925E-01,-1.46643E-01, 1.59960E-01
++ -3.60661E-03, 4.25677E-02,-2.66194E-03
++ -1.33179E-02, 6.35318E-02,-3.99366E-03
++  2.13547E+02,9.04938E-001,4.12013E-001
++  1.10154E-01, 4.66882E-02,-7.57936E-02
++  1.87314E-02, 1.92437E-01,-8.25287E-02
++  9.61742E+00,-4.70240E+00, 5.16601E+00
++  1.07426E-06,-4.68539E-03,-3.18683E-03
++  1.05708E-03,-3.48960E-03,-2.53423E-03
++  5.34803E-03,-2.92210E-03, 3.12185E-03
++ -2.35848E-03, 3.10802E-03, 1.19112E-02
++  2.19780E+02, 1.17617E+02,-2.17783E+01
++  7.40832E+00, 5.43904E-01, 1.34420E+01
++  3.63925E-01, 1.46265E+01,-1.76783E+00
++ -1.68680E-03,-7.70387E-04, 1.20730E-03
++ 4.12000E-002, 2.70000E+01, 5.00000E+00
++ 5.68850E-010,5.68850E-010,4.47609E-010
++ 1.00000E+000,0.00000E+000,0.00000E+000
++ 1.00000E+000,0.00000E+000,0.00000E+000
++ 0.00000E+000,0.00000E+000,0.00000E+000
++ 0.00000E+000,0.00000E+000,0.00000E+000
++ 61.8,    3.186100e-04,    3.098500e-10,    1e-08,    0.9
++ 0.9,    0.60597,    0.18698,    0,    0
+*
+*N+ diffusion::
+*
+.MODEL PC1_DU1 R
++ RSH=31.3 COX=0.000136 CAPSW=4.96e-10 W=0 DW=0
+*
+*P+ diffusion::
+*
+.MODEL PC1_DU2 R
++ RSH=61.8 COX=0.000319 CAPSW=3.1e-10 W=0 DW=0
+*
+*METAL LAYER -- 1
+*
+.MODEL PC1_ML1 R
++ RSH=0.07 COX=2.6e-05 CAPSW=0 W=0 DW=0
+*
+*METAL LAYER -- 2
+*
+.MODEL PC1_ML2 R
++ RSH=0.03 COX=1.3e-05 CAPSW=0 W=0 DW=0
+
+</PRE>
+</STRONG>
+</BODY>
+</HTML>
+

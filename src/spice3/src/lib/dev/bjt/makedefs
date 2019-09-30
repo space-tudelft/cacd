@@ -1,0 +1,13 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+
+COBJS		= bjt.o bjtacld.o bjtask.o bjtconv.o bjtdel.o bjtdest.o \
+		  bjtdisto.o bjtdset.o bjtgetic.o bjtload.o bjtmask.o \
+		  bjtmdel.o bjtmpar.o bjtnoise.o bjtparam.o bjtpzld.o \
+		  bjtsacl.o bjtsetup.o bjtsload.o bjtsprt.o bjtsset.o \
+		  bjtsupd.o bjttemp.o bjttrunc.o
+
+LIB_TARGET	= ../../dev.a
+INCLUDE		= -I../../../include
+

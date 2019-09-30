@@ -1,0 +1,704 @@
+\selectlanguage{british}
+\title{Seadali: Your Gateway to Sea-of-Gates Layout}
+\maketitle
+\label{s-seadali}
+\index{seadali@\tool{seadali}|(}
+\index{editing layout|see{\tool{seadali}}}
+\index{creating!layout|see{\tool{seadali}}}
+This appendix deals with \tool{seadali}, the interactive tool at the very heart
+of the \smc{ocean} layout system.  It is worthwhile to read this appendix
+carefully, since it contains many useful hints on how to click the buttons
+efficiently.
+\tool{Seadali} is an interactive program which allows you to:
+\begin{itemize}
+\item
+View or modify any existing layout cell.
+\item
+Create an empty layout cell from scratch with the help of \tool{fish}.
+\item
+Place instances in your layout manually or automatically using \tool{madonna}.
+\item
+Automatically route your layout using \tool{trout}.
+\item
+Verify the correctness of your layout against the design rules and the circuit
+description.
+\end{itemize}
+There are many buttons and options to control this program.  But don't worry:
+you'll get accustomed to them quite soon.  We try to describe only the most
+vital buttons and functions, so you can get started quickly. All trivial or
+less useful buttons are not described.
+
+In all examples of this, and the following description we assume the {\sl fishbone} image.
+Some mask names, design constrains and commands work slightly
+different in the other images. 
+
+\section{Starting \protect\tool{seadali}}
+\label{s-start-seadali}
+\index{seadali!starting|bold}
+The best way to start \tool{seadali} is by typing:
+\type{seadali \&}
+The '\&' instructs the operating system (Linux) to start the program in the background.
+Therefore the prompt returns immediately.
+After starting a window pops up\footnote{If starting \tool{seadali} doesn't
+work and no window appears, remember that you must be in 
+a project directory. You can make a project directory (\smc{nelsis} database) using \tool{mkopr}.
+Also, check whether your \smc{display} environment variable is
+set to the proper screen (the name of your terminal, followed by ':0').},
+which shows the main menu on the left.
+From this menu you can select various sub-menus by clicking the
+appropriate box.
+The bottom-most command of any menu always brings you back
+to the main menu. \tool{Seadali} is also sensitive to keyboard input.
+Table~\ref{keytable} (page~\pageref{keytable}) shows all commands.
+
+\section{Getting on-line help in \protect\tool{seadali}}
+\index{seadali!on-line help}
+In the main menu you'll find the button \button{help}. This will start a
+hypertext on-line help page on \smc{ocean}.
+You need the browser program \tool{mozilla} too for this help facility.
+To use another browser, set the \file{BROWSER} environment variable.
+Initially it will display the hypertextpage \file{\$ICDPATH/share/lib/seadali/help.html}.
+
+\section{Reading and writing layout: \protect\button{database}}
+Pressing \button{database} brings you in a special menu
+for reading and writing cells from/into the database. Let's have a look
+at the buttons:
+\begin{description}
+\item [\button{READ}]
+Load a cell from the database into the editor. The list of all cells
+in your database will be displayed. If this list is empty, your
+database has no cells. Notice that it is not possible to read or
+edit imported cells from libraries. You can only have a look
+at them by loading them as instances in the menu~\button{instances}
+(see~\ref{instances} on page~\pageref{instances}).
+It is possible to start \tool{seadali} with a cell name as argument.
+For instance: \type{seadali adder \&} causes the cell adder
+to be read automatically at startup.
+\item [\button{Expand all}]
+\index{seadali!expanding}
+Set the hierarchical level (that is, the amount of detail) you wish to see of
+the cell. Initially all son-cells are expanded 'to the bottom'.  Alternatively,
+you can just use the keys 1-9 on your keyboard (see table~\ref{keytable} on
+page~\pageref{keytable}).  Initially all son-cells are expanded 'to the
+bottom'. You can set this default expansion level for all cells in the
+\file{.dalirc}-file (see~\ref{dalirc} on page~\pageref{dalirc}).  Initially all
+son-cells are expanded 'to the bottom'.
+\item [\button{Expand instance}]
+Set expansion level of a specific instance.
+This can be useful to prevent long drawing times on large designs.
+\item[\button{show Sub terminals}]
+\index{seadali!sub terminals}
+Show the terminals of the sub-cells. The key 's' on your keyboard is doing the
+same (see table~\ref{keytable} on page~\pageref{keytable}).
+\item[\button{NEW}]
+Erase the current cell in \tool{seadali}'s memory to start with a new cell. 
+This only clears the memory of \tool{seadali}. It doesn't remove the cell
+from the database.
+\item[\button{Fish}]
+If the design is empty (initially, or after pressing \button{NEW}) this button
+creates a $20~\times~1$ array of the fishbone image.  This is useful to start a
+new cell. If the design is not empty, this button will purify your layout (see
+appendix~\ref{fish} on page~\pageref{fish}).
+\item[\button{Fish -i}]
+\index{Fish -i button}
+This button performs the same as \button{Fish}, except that the image
+is removed from the cell. Also, the cell is automatically moved as close as
+possible to the origin. This button can be useful if you want to use the cell
+as a child cell on a higher level of hierarchy.
+\item[\button{WRITE}]
+Write the cell into the database. If necessary, you can write it under 
+a new name.
+\end{description}
+The title bar of \tool{seadali}'s window shows the name of the cell
+which you are editing now, together with the expansion level.
+
+\attention{You can interrupt \tool{seadali} while it is drawing!}{
+Just hit any key to stop the drawing and regain control. This can be especially
+useful for extremely large layouts and/or nervous designers. Hit the key
+\button{r} or \button{next} (on the keyboard) to redraw the screen, 
+in case you want to complete an interrupted drawing. During input activities
+(reading, expansion) \tool{seadali} cannot be interrupted.}
+
+\section{Running other programs: the \protect\button{automatic tools} menu}
+This menu contains all automatic tools which can be run from \tool{seadali}.
+Most of them are dealt with in other sections. 
+In addition, this menu contains the
+\button{Print hardcopy}-button, \index{hardcopy} which
+prints the layout which is currently being edited. See
+section~\ref{hardcopy} (page~\pageref{hardcopy})
+for more details. 
+
+\section{How to import cells from a library: the \protect\button{instances} menu}
+\label{instances}
+\index{instances}
+Hierarchy is the most important way to handle the complexity of any
+circuit. In the \button{instances} menu you can import other cells into
+you design as 'son cells' (also called 'instances').  The son cells can
+be imported from a remote library, which is nothing else than just
+another project. Obviously you can also add son-cells which are in the
+current project. 
+\index{seadali!instance name|bold}
+\tool{Seadali} displays the names of the instances in your design.
+It also displays the cell name of each instance between '@' characters.
+The following buttons are important to play around with instances:
+\begin{description}
+\item[\button{Madonna}]
+\index{madonna@\tool{madonna}}
+Automatically place the instances of a circuit.
+See appendix~\ref{madonna} on page~\pageref{madonna} for 
+all the naked details about \tool{madonna}.
+\item[\button{ADD instance}]
+\index{seadali!adding instances}
+\index{instance}
+Add a local instance to your design. After you have selected the instance
+you must click its left bottom position. It is not necessary
+to align the instances exactly because \tool{seadali} will
+automatically snap them to the grid (if the 'image mode' is on). 
+\index{seadali!image mode}
+\tool{Seadali}
+even performs automatic mirroring of small instances, so that they will
+always match the grid. Also \tool{fish} can take care of the snapping.
+\item[\button{ADD imported instance}]
+Just like the previous command, but this button adds an imported
+instance to your design. Use this button to add library cells. \tool{Seadali}
+shows a list of all imported (library) cells. You can add libraries to your
+project using \tool{mkopr}.
+\item[\button{set instance name}]
+%%\index{seadali!instance name}
+Set the name of a specific instance. Notice that an instance which you
+add by hand using \button{ADD instance} has no name yet. This button can be
+useful to help the automatic router select the correct instance.
+\item[\button{DELETE instance}]
+Does just what you expect it to do: delete a specific instance.
+\item[\button{move}, \button{mirror} and \button{rotate}]
+Use these buttons to put the cell on its right place. In 'image mode',
+%%\index{seadali!image mode}
+\tool{seadali} will shift and/or mirror the cell automatically. 
+On certain places in the fishbone the cells must be mirrored in the
+x-axis.
+\item[\button{Fish}]
+Run the layout purifier, which will shift the instances to
+a proper grid position. See appendix~\ref{fish} on page~\pageref{fish}
+for more details.
+\end{description}
+
+\section{Editing mask layout: the \protect\button{boxes} menu}
+\subsection{Selecting active masks}
+To add a wire or any other mask pattern in \tool{seadali} you first
+have to activate a mask.  
+\index{seadali!active masks}
+The bottom of the window shows the list of
+available masks.  In the sea-of-gates process you must press
+\button{in} to activate the first metal layer and \button{ins}
+to activate the second metal layer. For your convenience 
+the \mask{ins}-mask is automatically activated when 
+\tool{seadali} is started.
+\warning{
+Only activate the \mask{in}, \mask{ins}, \mask{con}, \mask{cop},
+\mask{cps} or \mask{cos} masks. On our sea-of-gates chip it is not
+possible to add or remove patterns in any of the other masks.  If you
+do so, \tool{fish} will complain and remove them automatically.}
+
+\subsection{Making wires using \protect\button{APPEND}}
+\index{creating!wires and boxes}
+To add an arbitrary box in the active layer(s), just press 
+\button{APPEND} and click at the appropriate positions in the 
+layout. You can change the active masks also while this command is activated.
+If \button{image mode} is activated,
+\index{seadali!image mode} the boxes you
+append are automatically snapped on the grid. Using the keyboard keys you can
+zoom or pan the window using the keyboard keys (see table~\ref{keytable} on
+page~\pageref{keytable}).
+
+\subsection{Making wires with \protect\button{wire}}
+\index{seadali!wire button}
+Long, continuous wires can be added more easily with the \button{wire}
+button.  Just enter the corners of the wire. Click \button{next} to
+start a new wire or \button{ready} to return to the boxes menu.
+
+\attention{Huh?! I am adding a wire but nothing is happening!}{
+The answer is simple: you forgot to activate the layer, or you also
+activated another more dominant layer (such as \mask{cps} or other
+contacts). Also it is possible that you are adding layout over an
+existing contact.  Since the contacts are displayed dominant, they hide
+other layout which covers them.  Finally it is possible that you
+accidently made a specific layer invisible in the \button{visible masks} menu
+(see section~\ref{visible}, page~\pageref{visible}).}
+
+\attention{Huh?! Some wires are drawn in a lighter color!}{
+\index{seadali!hashed drawing style}
+You cannot edit the layout of con-cells. To indicate the difference
+between the different hierarchical levels, the layout of son-cells is
+drawn in a {\bf hashed} style. See section~\ref{hashed} on
+page~\pageref{hashed}.}
+
+\subsection{Ensuring design-rule correctness}
+\index{design rules}
+For Sea-of-Gates layout it is useful to select the \button{image mode}
+\index{seadali!image mode}
+in the settings menu or the the \file{.dalirc}-file. If this mode is
+enabled, the boxes you append are automatically snapped to the grid of
+the image. Also, the wires have the proper width, and the vias
+are aligned precisely. This behavior is disabled by switching off the
+image mode. See section~\ref{sogmode} for more details.
+
+Despite the features of image mode, the layout purifier~\tool{fish}
+(see appendix~\ref{fish} on page~\pageref{fish}) should still be used before
+writing anything to back to the database. \tool{Fish} performs more
+elaborate design-rule checks on your layout.
+
+\subsection{How to make contacts between layers?}
+In the {\sl fishbone} sea-of-gates image there are basically only two types of
+contacts: 
+\index{seadali@contacts between layers}
+\index{creating!contacts|bold}
+\begin{enumerate}
+\item
+Between the image (\mask{ps} or \mask{od}) and metal~1 (\mask{in}):
+\mask{con}, \mask{cop} or \mask{cps}
+\item
+Between metal~1 and metal~2 (\mask{ins}): \mask{cos}.
+\end{enumerate}
+To add a contact, use the \button{APPEND} command to make a small box
+at the desired position.  For a contact between the image and metal~1,
+you must activate the mask \mask{con}, \mask{cop} or \mask{cps}. Which
+of these three you use doesn't matter because \tool{fish} takes care of
+that.  For a contact between metal~1 and metal~2 you must use the
+\mask{cos}-mask.
+
+Press \button{Fish} to convert the contact mask into a design rule
+correct pattern.
+
+\warning{
+There are some restrictions in the placement of the contacts. They may
+not be stacked and they are not allowed in certain rows. See
+section~\ref{eisen_metal} on page~\pageref{eisen_metal} for more details.}
+
+In the {\sl octagon} image there are three layers and therefore masks for
+contacts:
+\begin{enumerate}
+\item
+Between the image (\mask{ps}, \mask{nn} or \mask{pp}) and metal~1 (\mask{in}):
+\mask{co}
+\item
+Between metal~1 and metal~2 (\mask{ins}): \mask{cos}.
+\item
+Between metal~2 and metal~3 (\mask{int}): \mask{cot}.
+\end{enumerate}
+In the single-layer {\sl gate-array} image there is only one contact.
+\subsection{Deleting layout: \protect\button{DELETE}}
+\index{removing!wires}
+Deleting is simple. Just activate the appropriate layers and click the
+corners of the box to be deleted. To delete all the wires of you
+current design, activate all masks and drag the box over your entire
+design.
+
+\attention{Huh?! I try to delete but it won't go away!}{
+As usual, you are doing something wrong. First of all, check if you
+have selected the right active layers. Secondly, remember that it is
+NOT possible to edit the mask patterns of the son cells (instances). If
+you want to change that you must edit that particular son cell. It is
+convenient to use the hashed drawing style for instances to see which
+\index{seadali!hashed drawing style}
+wires belong to the son-cells (see section~\ref{hashed} on
+page~\pageref{hashed}).}
+
+\attention{Can I undo a deletion or any other command?}{
+\index{seadali!undo}
+No, unfortunately you cannot undo any action. Therefore you must be
+careful. You should also be careful with the masks you activate.
+Adding a big box in the wrong layer can destroy hours of work.  Save
+your layout regularly to avoid frustration!}
+
+\subsection{Copying layout: \protect\button{yank} and \protect\button{put}}
+Sometimes it is convenient to copy or to move a part of the mask.  Just
+like \button{DELETE}, \button{yank} puts the indicated box in a paste
+buffer. The difference is that \button{yank} doesn't remove the box.
+You can copy the contents of the paste buffer to a certain position by
+pressing \button{put}.
+\attention{Huh?! It doesn't seem to work!}{
+Remember that it is not possible to yank the layout of son cells.  You
+can only yank and put the layout of the (father) cell on which you are
+currently working.}
+
+\subsection{Purifying and checking your layout: \protect\button{Fish}}
+\label{fish1}
+\index{fish@\tool{fish}}
+Pressing \button{Fish} makes your manual design design rule correct.
+All wire segments will be shifted on the grid, and the instances will
+be properly aligned. \tool{Fish} also shifts sufficient repetitions of
+the fishbone image under your design.  A more elaborate description of
+\tool{fish} will be given in appendix~\ref{fish} on page~\pageref{fish}.
+
+\subsection{Automatically routing your design: \protect\button{Trout}}
+\index{seadali!trout}
+\index{trout@\tool{trout}}
+This button will call the automatic router called \tool{trout}.
+This is a rather complicated command. Pressing it without the
+proper preparations will most likely result in an error message.
+See appendix~\ref{routeman} for more details on how to use the router.
+
+\subsection{Verifying layout connectivity: \protect\button{Check nets}}
+\label{verify}
+\index{design rules!checking connectivity|see{check nets}}
+\index{seadali!check nets button}
+\index{check nets|bold}
+Pressing this button will verify your layout by comparing it with the
+netlist in the circuit description. Your layout will be 'fished'
+automatically if your press this button.  The check which is hidden
+behind \button{Check nets} is quite strong. The following errors will
+be detected:
+\begin{itemize}
+\item
+All errors which \tool{fish} detects. In this case the errors of
+\tool{fish} will be logged in the database file \file{seadif/sea.out}.
+In contrast to the button \button{Fish}, no window with errors will pop up.
+\item
+Missing or superfluous instances in your layout. 
+\item
+Unconnected terminals of nets. The unconnects will be indicated in the
+layout by a small box with the name of the net and an arrow.
+The indicator will be placed on top of each terminal that has no
+connection to another terminal of the same net.
+\item
+Short-circuits between different nets.  The program reports the names
+of the nets which form a short-circuit.  These nets will also be
+indicated in the layout in the familiar way: {\sf SHORT\_no} (\_no
+is the number of the short circuit).  Notice that the indicators do not
+indicate the exact spot of the short circuit. The actual short is
+somewhere on the path between two indicators of the same short.
+\end{itemize}
+
+\attention{Huh?! How do I find the indicators in this huge layout?}{
+In some cases the scale of the design is so large that the individual
+indicators are hard to distinguish. One of the ways to find an indicator is by
+zooming in and moving the window around.  For small layouts this is the easiest
+way. For really large designs, however, this is a hell of a job, a bit like
+finding a needle in a haystack.  The following trick will help you to find that
+single stacked contact (or unconnect or whatever is indicated). Go to the main
+menu and press
+\button{visible masks} (see also section~\ref{visible}). Make everything invisible
+except instances. The indicators will now be visible as little
+white boxes (or dots). In this way you'll know where
+to zoom.}
+
+\section{Adding terminals: the \protect\button{terminals} menu}
+\index{seadali!adding terminals|bold}
+\index{creating!terminals in layout|bold}
+\index{terminals!adding to layout|bold}
+For simulation it is required to indicate the positions of the
+terminals in the layout. If you routed the layout automatically using
+\tool{trout} the terminals will also be placed automatically.  In the
+menu \button{terminals} you can modify the terminal placement or make
+one manually.
+
+\subsection{How to add a terminal?}
+Again, you must set the active layer of a terminal by clicking the
+appropriate mask in the bottom row of the window. A terminal can only
+be placed in the \mask{in} and \mask{ins} layer.  Next press
+\button{ADD terminal} and drag a small rectangular box on the grid
+position of the terminal. Next, \tool{seadali} will ask you to give a
+name to this terminal. Enter it using the keyboard. The name must be
+unique. Just give it the same name as in the circuit description you
+made.
+
+\subsection{How can I get rid of a terminal?}
+\index{terminals!removing}
+\index{removing!terminals}
+That is very simple: use \button{DELETE terminal} and point at the terminal you
+wish to delete. You can also delete all terminals within a specific area using
+\button{DELETE terms in box}. Don't forget to set the proper active layer.
+
+\section{Setting the visible layers: \protect\button{visible masks}}
+\label{visible}
+\index{seadali!setting visible masks}
+In many cases it is not so useful to display all the masks of a cell.
+Especially on our sea-of-gates many masks are not so relevant for the
+electrical design, and will only make the picture unclear.  In the
+\button{visible masks} menu you can switch on or of any mask you want. The
+default settings of \tool{seadali} are such that the \mask{ps},
+\mask{in} and \mask{ins} plus the contact masks are visible. All the
+other masks are switched of. You can change the default settings by
+editing the \fname{.dalirc} file in your project directory
+(see~\ref{dalirc}).
+
+\attention{How can I make the grid of the Sea-of-Gates image visible?}{
+You can do this just by clicking \button{show Grid} of by pressing \button{g}
+on the keyboard. The dots indicate the grid
+positions (provided that {\bf image mode} is {\bf on}). The grid will not be drawn if
+there are too many grid points in sight.}
+
+\attention{When does \tool{seadali} display the image?}{
+\index{image!displaying}
+\index{seadali!displaying the image}
+\tool{Seadali} will not draw the image if the scale of the layout is too big.
+In this way long drawing times are prevented. If you zoom in enough
+the image will become visible again. You can set the maximum amount of
+image elements which should be drawn in the file~\file{.dalirc} (see
+section~\ref{dalirc}). You you want to see the image at all times, switch of
+the {\bf image mode}
+%%\index{seadali!image mode}
+in the settings menu (see section~\ref{sogmode}).}
+
+\section{Some other nice features: the \protect\button{settings} menu}
+\label{s-other-nice-features}
+There are a few ways to customize the behavior of \tool{seadali}
+according to your own wishes. In this section we'll list a few of them.
+\subsection{Customizing \protect\tool{seadali}: the \protect\fname{.dalirc}-file}
+\label{dalirc}
+\index{dalirc@\fname{.dalirc} file}
+\index{seadali!customizing}
+Your project directory automatically contains a file called
+\fname{.dalirc}.  This file is read by \tool{seadali} during startup.
+You can edit this file to change various settings. Just have a look at
+it and try change some parameters. Obviously, you must re-start
+\tool{seadali} for the changes to have any effect.\\
+\\
+{\bf Huh?! I don't see any file called \fname{.dalirc} in my project!}\\
+That is normal. In \smc{unix} all files which start with a '.' are not
+visible. You can make them visible by typing:
+\type{ls -a}
+If it is still not there, copy the default file into your project:
+\type{\mbox{cp \$ICDPATH/share/lib/process/fishbone/.dalirc .}}
+
+\subsection{Switching on the Sea-of-Gates mode: \protect\button{image mode}}
+\label{sogmode}
+\index{seadali!image mode|bold}
+\tool{Seadali} has a special {\bf image mode} for working with semi-custom
+layout. This mode should always be turned on if you are working with
+Sea-of-Gates. The {\bf image mode} has the following features:
+\begin{itemize}
+\item
+Layout boxes and instances are snapped to the grid. \tool{Seadali} will
+warn you if you try to place something at the wrong place. Library
+cells are automatically mirrored in the x-axis if necessary or possible. 
+\item
+The position of the tracker is displayed in grid points, rather than in
+lambda's. 
+\item 
+The grid of the image is displayed if you press \button{show Grid}.
+The grid is only displayed if it is useful to do so.
+\item 
+The image is not drawn under your layout if the scale of the picture becomes
+too big. If the {\bf image mode} is switched {\bf off}, the image is drawn
+always\footnote{Provided its present as a instance in your layout.}.
+\end{itemize}
+This mode should generally be turned on if you are working with
+Sea-of-Gates. Only in some exceptional cases (e.g. to force the
+mirroring of a certain instance) you may want to turn it off.
+
+\subsection{Setting drawing style for instances: \protect\button{draw hashed}}
+\label{hashed}
+\index{seadali!hashed drawing style|bold}
+In many cases it is not so clear to which level of hierarchy a certain
+wire belongs. Therefore \tool{seadali} displays the layout of all
+son-cells in a less bright color than the wires at the current level.
+The less bright color is achieved by hashing (45 degree lines). You can
+switch this feature on or off by pressing \button{draw hashed} (also in the
+\fname{.dalirc}-file). 
+
+\subsection{Setting dominant or transparent drawing style:
+\protect\button{Draw dominant}}
+\index{seadali!dominant drawing style}
+There is another drawing mode which can be set by you.  In the
+transparent drawing mode the colors mix. In this way any crossing of
+the masks results in a mix-color.  With many masks this makes the
+picture rather confusing.
+
+With the dominant drawing style, the layers are drawn as if they are
+stacked on top of each other. In this case metal~2 (the top layer)
+obscures any layout below it.  The default drawing mode is dominant.
+You can switch by pressing the button \button{Draw dominant} or by setting
+the parameter in the file \fname{.dalirc}. In the same file you can set the
+order in which the layers should be drawn.
+
+\subsection{Setting the print command for the \protect\button{Print hardcopy}-button}
+\index{hardcopy} \label{hardcopy}
+The button \button{Print hardcopy} in the \button{automatic tools} menu
+causes the current layout to be printed by the laserprinter. 
+It might be necessary to configure the proper print command to
+perform this action. The proper command sequence can be 
+set using the keyword \fname{Print\_command} in the file \fname{.dalirc}. 
+To set the proper command, it is relevant to understand what \tool{seadali}
+is doing after you pressed this command: 
+\begin{enumerate}
+\item
+The current layout is written away in the \smc{nelsis} database 
+using a temporary cell name.
+\item
+Any occurrences of \%s in the print command are 
+replaced by the name of the temporary layout cell.
+\item
+The print command sequence is executed by a shell. 
+\item
+The temporary cell is removed.
+\end{enumerate}
+If no print command is set, \tool{seadali} will run the command \tool{playout}.
+\index{playout@\tool{playout}}
+\tool{Playout}, on its turn, will create a PostScript file using \tool{getepslay},
+print it, and show the printer queue.
+
+\subsection{X-window redrawing strategy: \protect\button{backing store}}
+\index{backing store}
+\tool{Seadali} asks the X-window server (your screen), to maintain a copy of the
+window in its memory. This feature (called {\em backing store}) makes it
+possible to move, obscure, iconify and then re-expose \tool{seadali}'s window
+without redrawing the entire picture. Especially for large layouts this saves a
+considerable amount of drawing time and \smc{cpu} load. The price we have to
+pay for this nice feature is some extra memory consumption by the server. In
+general this is not a problem, but for certain X-terminals without memory
+management the extra (500K to 1M byte) memory load might cause some problems.
+Therefore this feature can be switched off in the settings menu. You can also
+switch it off in the file \fname{.dalirc} by adding the line:
+``\fname{backingstore off}''.
+
+\section{Interrupting \protect\tool{seadali}: keyboard input}
+\index{seadali!keyboard input}
+\index{seadali!interrupting}
+\tool{Seadali} is sensitive for keyboard input. Table~\ref{keytable} shows all
+the keycombinations which can currently be used. They serve as a convenient
+alternative for clicking with the mouse in the menu. If \tool{seadali} is
+drawing the picture, pressing {\em any} key interrupts the
+drawing\footnote{There is one exception: during the reading or expansion
+process \tool{seadali} cannot be interrupted.} within one second. 
+
+\begin{table}
+\begin{center}
+\sf
+\begin{tabular}{|l|l|} \hline  
+key & function \\ \hline\hline
+\button{space}/any key & interrupt (stop) drawing \\
+'i' or '+'      & zoom in by a factor of 2\\
+'o' or '-'      & zoom out by a factor of 2\\
+\button{$\leftarrow$} or 'h'   & pan left \\
+\button{$\rightarrow$} or 'l'  & pan right \\
+\button{$\uparrow$} or 'k'    & pan up \\
+\button{$\downarrow$} or 'j'   & pan down \\
+'c' & center window around current cursor position\\
+'b' & set window to bounding box \\
+'p' & previous window \\
+'r' & redraw screen \\
+'1','2','3',$\ldots$,'9'  & set expansion level\\
+'0'             & expand maximum \\
+'s'             & show sub terminals \\
+'d'             & toggle hashed drawing style\\
+'D'             & toggle dominant drawing style \\
+'g'             & toggle display of grid\\
+'t'             & toggle tracker (cursor position display)\\ \hline
+\end{tabular}
+\rm
+\end{center}
+\caption{
+The key commands for \protect\tool{seadali}.}
+\label{keytable}
+\end{table}
+\index{seadali@\tool{seadali}|)}
+
+\cleardoublepage
+
+\section{Fish: The Layout Purifier and Design Rule Checker}
+\label{fish}
+\index{fish@\tool{fish}|(bold}
+\index{design rules!checking|see{\tool{fish}}}
+In some of the menus of \tool{seadali} you've encountered the button
+\button{Fish}. In this appendix we'll describe a bit more
+about what is behind this button.
+\tool{Fish} is a layout purifying program for sea-of-gates layout.
+It reads a layout, processes it, and produces a new enhanced cell. The
+basic idea is to allow some design-rule errors during the manual design
+of a gate-array cell.
+\tool{Fish} corrects these errors and produces a design rule correct result.
+In this way the process of manual design using \tool{seadali} can be
+speeded up considerably. \tool{Fish} also prints warning messages for a
+variety of design rule errors.  You can call \tool{fish} in two ways:
+\begin{enumerate}
+\item
+By pressing the button \button{Fish} in \tool{seadali}. This is the
+most common way of using it. What is actually happening is that
+\tool{seadali} writes your design as a temporary cell into the
+database, then it calls \tool{fish}. If everything goes well,
+\tool{seadali} re-reads the purified cell. This will take a few
+seconds, depending on the load of the computer.
+\item
+By typing {\tt fish} on the command line: \type{fish <cell\_name>} This
+purifies the cell named {\tt <cell\_name>}. If you want to know more:
+try {\tt fish -h} for a brief list of all options.
+\end{enumerate}
+
+\tool{Fish} needs an image description file. This file is
+called \fname{image.seadif} 
+\index{image.seadif@\fname{image.seadif} file}
+\index{design rules!file|see{\fname{image.seadif}}}
+and should be present in the directory
+\file{seadif} in your project. It
+contains data about the positions of grid points, the way in which the
+image should be repeated, the kind of contact which should be used,
+etc. If you like you can have a look at it.
+
+\section{What errors does \protect\tool{fish} detect?}
+\index{design rules!for contacts}
+\tool{Fish} performs limited design rule checking of your layout.
+It will report errors for:
+\begin{itemize}
+\item
+Stacked contacts. 
+\index{stacked contacts}
+The process design rules of the fishbone image do not
+allow to stack an \mask{in} to \mask{ins} contact (= \mask{cos}) on top
+of another via. The wire would crack at that point.
+\tool{fish} will indicate the error in the layout by a small
+box with an arrow pointing to it. \tool{Fish} 
+does NOT detect a pair of stacked contacts if one of the contacts is in
+a son-cell.
+\item
+\index{design rules!illegal vias}
+Contacts at an illegal position. A \mask{cos} contact is not allowed in
+the rows of the polysilicon gate contacts.  The error is again
+indicated in the layout by a small box with an arrow.
+\item
+Patterns (boxes) in illegal masks. \tool{Fish} removes any patterns in
+\mask{ps}, \mask{od}, etc. because they may not be used on a
+semi-custom chip.
+\item
+Patterns which are not (entirely) in the first quadrant. In our system
+all layout boxes must have positive coordinates, that is, it must be to
+the right-top of the origin. The illegal boxes will be removed.
+\end{itemize}
+
+Anyway, you must keep in mind that \tool{fish} is not too clever.  It
+will not warn you of short-circuits and mis-aligned instances (such as
+forgotten mirroring in the x-axis). For that you must use the button
+\button{Check nets} (see section~\ref{verify} on
+page~\pageref{verify}).  A list of all the errors which were detected by
+\tool{fish} will be displayed in a pop-up window.
+
+\section{How does \protect\tool{fish} handle instances?}
+\tool{Fish} snaps instances to the nearest grid point. To
+perform this snapping, \tool{fish} opens the instance and looks for
+contacts. The first contact it encounters is used for the snapping.
+Notice that in this way \tool{fish} assumes that the instances are on
+grid (that is, fished).  If it can't find any contacts \tool{fish} gets
+angry and it doesn't align the instance.
+
+\section{How to create an empty array of image?}
+\index{image!making an empty array}
+Before editing it is convenient to have an empty array to indicate the
+transistor and grid positions.  This can be done by pressing the button
+\button{Fish} in \tool{seadali} when the design is empty. A $20 \times
+1$ array will be generated.  You can also do the same from the command
+line by creating a new (empty) cell into the database:
+\type{fish -x 20 -y 1 -o nand2}
+The option {\tt -o nand2} instructs \tool{fish} to write the empty
+array into a cell called {\tt nand2}.
+You can now start editing your cell by adding wires.
+\attention{But what should I do if the $20 \times 1$ image doesn't fit anymore?}{
+Should the underlying image become too small, simply hit the button
+\button{Fish} to enlarge it automatically so that it fits the wire pattern.
+Alternatively you can enlarge the basic
+image by pressing press \button{set array parameters} in the \button{instances} menu.
+Set \button{nx} or
+\button{ny} to the new value. Do not touch the dx and dy buttons!}
+
+\index{fish@\tool{fish}|)}
+
+\cleardoublepage

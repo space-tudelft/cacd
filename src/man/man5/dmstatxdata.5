@@ -1,0 +1,35 @@
+.TH DMSTATXDATA 5ICD "DMI User's Manual"
+.SH NAME
+dmStatXData - get the xcontrol file status
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+
+int dmStatXData (DM_PROJECT *dmproject, struct stat *buf);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "DM_PROJECT *dmproject"
+a pointer to a valid \fBDM_PROJECT\fP as obtained from dmOpenProject().
+.TP
+.B "struct stat *buf"
+a pointer of a stat data structure used by stat().
+.SH DESCRIPTION
+Function
+.B dmStatXData
+tests of the xcontrol file of the specified project database exist.
+This file can contain extraction state information of the database cells.
+.SH DIAGNOSTICS
+If \fBdmStatXData()\fP is successful,
+\fB0\fP will be returned.
+The xcontrol file exists and the stat data structure is filled.
+If \fBdmStatXData()\fP fails,
+\fB-1\fP will be returned.
+.SH SEE ALSO
+dmOpenXData(5ICD),
+dmUnlinkXData(5ICD),
+xcontrol(1ICD).

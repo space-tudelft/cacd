@@ -1,0 +1,14 @@
+# process scmos-orb-2
+# scmos_n - N-well cmos example process
+cpg	46
+caa	43
+cmf	49
+cms	51
+cca	48
+ccp	47
+cva	50
+cwn	42
+csn	45
+csp	44
+cog	52
+cx	0

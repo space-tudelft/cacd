@@ -1,0 +1,77 @@
+.TH DMINIT 5ICD "DMI User's Manual"
+.SH NAME
+dmInit - initialize the DMI environment
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+int dmInit (char *progname);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "char *progname"
+name of the invoking tool.
+.SH DESCRIPTION
+Function
+.B dmInit
+initializes the Nelsis framework environment,
+it must be called by the application program
+before any of the other DMI (Data Management Interface)
+functions is called.
+.PP
+Function
+.B dmInit
+will initialize the global variable
+.B icdpath
+with the home directory path
+of an user which is declared to be the owner of the Nelsis IC Design System
+(default: user 'cacd').
+The following environment variables can be set:
+.TP
+.B ICDUSERNAME
+The environment variable
+.B ICDUSERNAME
+can be used to overrule the default username 'cacd'.
+.TP
+.B ICDPATH
+The environment variable
+.B ICDPATH
+can be used to overrule the setting of the home directory
+via user identifications
+and set
+.B icdpath
+to a value.
+.PP
+Function
+.B dmInit
+does also a program license check.
+.SH DIAGNOSTICS
+If the call to
+.B dmInit
+is successful \fB0\fP is returned.
+If
+.B dmInit
+fails \fB-1\fP will be returned.
+The external variable
+.B dmerrno
+will be set to indicate the error,
+and a call to function dmError() will be done.
+.PP
+This may happen in the following cases:
+.TP 14
+.B DME_INIT
+DMI already initialized.
+.TP
+.B DME_DDM
+License expired.
+.SH NOTE
+Function
+.B dmInit
+does not return, when the
+.B icdpath
+cannot be set.
+In that case it gives an error message and calls exit(1).
+.SH SEE ALSO
+dmQuit(5ICD).

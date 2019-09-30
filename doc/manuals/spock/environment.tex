@@ -1,0 +1,111 @@
+% environment.tex
+
+\chapter{Development environment} \label{chap:environment}
+Developing an application is usually done with many tools. Some tools are
+required for the development (like the compiler). Other tools increase the
+programmers productivity.
+
+\bigskip \noindent
+The main goal of this chapter is to present the environment in which the
+application was developed. This means the used tools and their interaction will
+briefly be discussed.
+
+\bigskip \noindent
+First of all, the compiler and the platform will be described. This is followed
+by a section on \verb=Makefile= generation. The \verb=Makefile= can be a major
+headache to developers, especially if multiple platforms are involved. The
+source code has been documented using a tool called Doxygen. A short
+description of doxygen is given in Section \ref{chap:env:doxygen}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Platform and compiler}
+The platforms used most actively during the development of the application are
+Solaris and Linux. A few compilations have been done on HP-UX as well and these
+presented no problems.
+
+The compiler used was \verb=gcc 2.95.2=. The \verb=gcc= compiler is a free
+compiler that is available on practically every platform.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Makefile generation}
+Makefiles are a necessary evil when developing applications on Unix or Linux
+platforms. This is because there is no good integrated development environment
+(like Visual Studio for Windows) available that works on all the platforms that
+need to be supported. This is mainly due to the peculiarities of each platform.
+
+A solution to this problem is \verb=tmake=. \verb=tmake= is a small utility
+written by the creators of Qt, Trolltech \cite{Qt}. This utility uses templates
+and a small input file containing some options and the sources to generate a
+\verb=Makefile=. The templates hide the peculiarities of each platform, thus
+establishing a platform independent interface.
+
+Another possibility is to use \verb=autoconf=. The overhead involved with
+\verb=autoconf= is larger, though.
+
+As was mentioned above, the \verb=tmake= tool uses templates for the generation
+of makefiles. There are templates for recursive makes and projects. It is also
+possible to use custom templates. For the development of the application a
+custom template was created that supports building library and test
+applications in a single run as well as support for lex/flex yacc/bison parser
+compilation.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Doxygen} \label{chap:env:doxygen}
+Source code documentation can be generated with \verb=doxygen= \cite{doxygen}.
+Another candidate for this position was \verb=kdoc=. However, \verb=kdoc=
+forces the documentation completely into the header files, making the header
+files unreadable. \verb=Doxygen= allows documentation virtually everywhere,
+resulting in clean well-readable source files.
+
+\subsection{Possible output formats}
+As an added bonus, \verb=doxygen= can generate the documentation in many
+formats:
+\begin{itemize}
+\item HTML format
+\item \LaTeX
+\item Man page format
+\item Rich Text Format (RTF) which can be read by Microsoft Word
+\item XML
+\end{itemize}
+It can even generate a cgi script that can be used as a search engine to search
+through the HTML documentation.
+
+\subsection{Doxygen options}
+The output of \verb=doxygen=  can be influenced with the many features present.
+It is possible to extract everything, even if the code is undocumented (this
+shows you the structure of the source code). It is also possible to extract
+only the documented code. Private and static members can be ignored if desired.
+
+To keep the printed source code reference a reasonable size and to save some
+trees in general, the documentation was created for documented items only,
+leaving out the private methods and members.
+
+\subsection{Collaboration diagrams}
+If the \verb=graphviz= package is installed, \verb=doxygen= can make use of
+\verb=dot=, which is a part of that package. With \verb=dot= it is possible to
+create collaboration diagrams. Some of the diagrams created by \verb=dot= are
+used in this report, for example Figure \ref{fig:design:guibuilder_partial}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Qt Designer}
+Qt Designer became available near the end of the project. It is a user
+interface editor like X-Designer. It is possible to click together a dialog box
+and generate the source code that builds the dialog box. The technology file
+generation dialog box was created with Qt Designer as an experiment.
+
+To use the generated source a new class has to be derived from the generated
+class. This derived class implements the desired functionality. In the case of
+the technology file generation dialog box this is the \verb=CGenerateDlg=
+class.
+
+\bigskip \noindent
+The ease with which a user interface can be created with Qt Designer is
+remarkable. Qt supports automatic widget layout and with Qt Designer this
+becomes even easier then before.
+
+Functionality can easily be added to the dialog boxes designed with Qt
+Designer. By using inheritance, the only code that needs to be written is the
+code that must provide the needed functionality. This makes Qt Designer a true
+rapid application development tool.
+
+The only downside of Qt Designer is that is (currently) only possible to create
+widgets and dialog boxes. It is not possible to create an application's
+framework.

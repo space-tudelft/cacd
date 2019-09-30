@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=GoWithTheFlow
+Exec=/data/public/common/software/opprog/bin/_GoWithTheFlow
+Icon=/data/public/common/software/opprog/src_libs/gowiththeflow/icon.png
+Type=Application
+Terminal=false
+StartupNotify=false

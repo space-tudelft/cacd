@@ -1,0 +1,40 @@
+
+nenh    nenh   0   0
+penh    penh   0   0
+%
+
+* range: w >= 3u,  3u >= l >= 1.6u
+*        |Vd| <= 5.5v,  |Vg| > 1.5v, |Vb| < 5v
+
+* originally we had rsh=55 (nenh) and rsh=75 (penh) but its influence
+* can be neglected and it spoils the simulations if we use "ghoti -r"
+
+.model nenh nmos        level=2
++                       ld=0.325u       tox=250e-10     nsub=2e16
++                       vto=0.7         uo=510          uexp=0.22
++                       ucrit=24.3k     delta=0.4       xj=0.4u
++                       vmax=54k        neff=4.0        rsh=0
++                       nfs=0e11        js=2u           cj=130u
++                       cjsw=620p       mj=0.53         mjsw=0.53
++                       pb=0.68v        cgdo=320p       cgso=320p
+* end nenh
+
+.model penh pmos        level=2
++                       ld=0.3u         tox=250e-10     nsub=5e16
++                       vto=-1.1        uo=210          uexp=0.33
++                       ucrit=51k       delta=0.4       xj=0.5u
++                       vmax=47k        neff=0.88       rsh=0
++                       nfs=0e11        js=10u          cj=490u
++                       cjsw=590p       mj=0.46         mjsw=0.46
++                       pb=0.78v        cgdo=320p       cgso=320p
+* end penh
+
+vpbulk 1 0 5V
+rpbulk 1 0 100meg
+vnbulk 2 0 0V
+rnbulk 2 0 100meg
+
+* vdd ? 0 5V
+* rgnd ? 0 1p
+* rvss ? 0 1p
+

@@ -1,0 +1,59 @@
+%  P L A C E I N S . S T Y          ver 1.0  Dec 1, 1995
+%  Donald Arseneau                  asnd@reg.triumf.ca
+%  Keep floats `in their place'; don't let them float into another section.
+%  Instructions are below.
+
+\def\@fb@botlist{\@botlist}
+\@ifundefined{DeclareOption}{}%
+{\DeclareOption{below}{\def\@fb@botlist{}}
+ \DeclareOption{section}{\expandafter\renewcommand\expandafter\section
+     \expandafter{\expandafter\FloatBarrier\section}}
+ \ProvidesPackage{placeins}[1995/12/01 \space  v 1.0]
+ \ProcessOptions }
+
+\def\FloatBarrier{\par\begingroup \let\@elt\relax
+ \edef\@tempa{\@fb@botlist\@deferlist\@dbldeferlist}%
+ \ifx\@tempa\@empty \else
+     \ifx\@fltovf\relax % my indicator of recursion
+         \if@firstcolumn %\message{Some floats are stuck.}%
+            \clearpage 
+         \else %\message{Eject a column and check again:}%
+            \null\newpage\FloatBarrier 
+         \fi
+     \else %\message{Must dump some floats.}%
+         \newpage \let\@fltovf\relax %\message{Check again:}%
+         \FloatBarrier % recurse once only
+ \fi \fi \endgroup}
+\endinput
+
+ ==============  I N S T R U C T I O N S ==============
+
+Placeins.sty keeps floats `in their place', preventing them from floating
+past a "\FloatBarrier" command into another section.  To use it, declare
+"\usepackage{placeins}" or "\documentstyle[placeins...", and insert
+"\FloatBarrier" at places that floats should not move past, perhaps before
+every "\section".
+
+A more convenient way to use it is to change the definition of "\section"
+by placing "\FloatBarrier" before "\@startsection" or into the font 
+specification; for example:
+
+    % \makeatletter % Use \makeatletter if you put this in your main document
+    \renewcommand\section{\@startsection {section}{1}{\z@}%
+       {-3.5ex \@plus -1ex \@minus -.2ex}%
+       {2.3ex \@plus.2ex}%
+       {\FloatBarrier\normalfont\Large\bfseries}}
+    % \makeatother % Use \makeatother if you put this in your main document
+
+(See The LaTeX Companion, section 2.3.)  If you specify 
+"\usepackage[section]{placeins}", then "\section" will be redefined 
+with \Floatbarrier" inserted at the beginning.
+
+Something you may not like is that this style is very strict, and will 
+prevent a figure from an old section from appearing below the start of 
+a new section, even though some of the old section may be on the same
+page.  To let the new section start immediately, and the figure to go 
+below it, declare "\usepackage[below]{placeins}".
+
+Test file integrity:  ASCII 32-57, 58-126:  !"#$%&'()*+,-./0123456789
+:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~

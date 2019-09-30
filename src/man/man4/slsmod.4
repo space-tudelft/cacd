@@ -1,0 +1,258 @@
+.TH SLSMOD 4ICD "File Formats"
+.UC 4
+.SH NAME
+slsmod - process file for sls
+.SH DESCRIPTION
+The file
+.I slsmod
+contains the process information for the
+.I sls
+simulator.
+This file is used by
+.I sls
+when a simulation is done at level 2 or level 3.
+.PP
+The following variables are used in an
+.I slsmod
+process file:
+.TP 12
+.I vh
+The positive supply voltage in the circuit (vl = 0 is assumed).
+.TP
+.I vswitch
+Switching voltage for O to I and I to O transitions.
+If this variable is not specified, vswitch = vh/2 is used.
+.TP
+.I vminh
+Minimum stable voltage for a logic I state.
+.TP
+.I vmaxl
+Maximum stable voltage for a logic O state.
+.TP
+.I krise
+Factor with which RC time constants for rising voltages
+are multiplied during timing simulation.
+.TP
+.I kfall
+Factor with which RC time constants for falling voltages
+are multiplied during timing simulation.
+.TP
+.I loffset
+Value which has to be subtracted from the layout-specified length
+of a transistor to gain the effective length of the transistor.
+.TP
+.I woffset
+Value which has to be subtracted from the layout-specified width
+of a transistor to gain the effective width of the transistor.
+.TP
+.I rstat
+The resistance between drain and source used for stable voltage determination.
+.TP
+.I rsatu
+The same resistance but now for the saturated case.
+A transistor is said to be saturated when - after an initial calculation
+with rstat resistances - it appears that Vdrain or Vsource > vswitch (for nenh
+transistors) or Vdrain or Vsource < vswitch (for penh transistors).
+.TP
+.I cgstat
+The gate capacitance of the transistor used for stable voltage determination.
+.TP
+.I cgrise
+The gate capacitance of the transistor used for rise time calculations.
+.TP
+.I cgfall
+The gate capacitance of the transistor used for fall time calculations.
+.TP
+.I cestat
+The drain or source capacitance of the transistor used for stable
+voltage determination.
+.TP
+.I cerise
+The drain or source capacitance of the transistor used for rise
+time calculations.
+.TP
+.I cefall
+The drain or source capacitance of the transistor used for fall
+time calculations.
+.TP
+.I rdyn
+The resistance between source and drain used for rise and fall time
+calculations.
+.TP
+.I cch
+The drain or source capacitance of the transistor which is used
+in addition to \fIcerise\fP or \fIcefall\fP
+during rise and fall time calculations.
+However, this capacitance is only used if the transistor is conducting.
+.RE
+.PP
+First the general simulation parameters
+\fIvh\fP,
+(eventually \fIvswitch\fP),
+\fIvminh\fP,
+\fIvmaxl\fP,
+\fIkrise\fP and
+\fIkkfall\fP
+are specified in the
+.I slsmod
+file.
+Next, the other parameters - which are the transistor
+model parameters - are specified.
+.PP
+Transistor model parameters can be specified
+for a nenh, a penh and a ndep transistor.
+Each of these parameter specifications might be omitted
+but their order is fixed.
+.PP
+For each transistor first a specification of \fIloffset\fP
+and \fIwoffset\fP is done.
+Then the other variables are specified by giving their
+value for some typical transistor dimensions.
+This is done by first specifying the values
+for a minimum width and length and then specifying
+the values for a width and length that only differ from
+the first width and length by that the
+width is larger or that the length is larger.
+.PP
+In order to obtain the parameters for transistors that have
+dimensions that are not enumerated,
+.I sls
+will perform an interpolation.
+.PP
+For each transistor there is one general parameter specification
+list and several mode parameter specification lists.
+The general specification list contains the values for
+\fIrstat\fP,
+\fIcgstat\fP,
+\fIcgrise\fP,
+\fIcgfall\fP,
+\fIcestat\fP,
+\fIcerise\fP and
+\fIcefall\fP,
+and the mode specification lists
+contain the values for
+\fIrdyn\fP and
+\fIcch\fP.
+.PP
+For the nenh transistor and the penh transistor
+\fIrdyn\fP and \fIcch\fP have
+to be specified for the following modes:
+.TP 14
+.I pullup
+A transistor is in the pullup mode when there is static current flow
+through it and when a time constant for a falling voltage is determined.
+.TP
+.I pulldown
+A transistor is in the pulldown mode when there is static current flow
+through it and when a time constant for a falling voltage is determined.
+.TP
+.I passup
+A transistor is in the passup mode when there is no static current flow
+through it and when a time constant for a rising voltage is determined.
+.TP
+.I passdown
+A transistor is in the passdown mode when there is no static current flow
+through it and when a time constant for a falling voltage is determined.
+.RE
+.PP
+Whether or not there is a static current flow through a transistor
+is determined by considering all transistors
+to be "on".
+.PP
+For an ndep transistor
+.I rdyn
+and
+.I cch
+have to be specified for the modes:
+.TP 14
+.I load
+A transistor is in the load mode when its
+gate is connected to its drain or source (via a resistor).
+.TP
+.I superload
+A transistor is in the superload mode when its
+gate is not connected to its drain or source (via a resistor).
+.RE
+.SH EXAMPLE
+Below an example of a slsmod file for a NMOS process is given.
+.PP
+.nf
+/* process : nmos4u700A  TU-Delft
+/* author  : A.J. Schooneveld, TU-Delft
+/* date    : 6 May 1987
+*/
+
+vh=5
+vminh=4
+vmaxl=1
+krise=0.90
+kfall=0.66
+
+nenh
+   loffset=0.625u
+   woffset=0.88u
+   w=6u l=4u : rstat=4.97k rsatu=25.4k
+               cgstat=13.0f cgrise=9.2f
+               cgfall=12.0f cestat=2.2f
+               cerise=2.4f cefall=2.9f
+   w=15u l=4u : rstat=1.69k rsatu=6.95k
+                cgstat=48.8f cgrise=24.2f
+                cgfall=38.0f cestat=6.3f
+                cerise=5.6f cefall=8.9f
+   w=30u l=4u : rstat=0.832k rsatu=3.19k
+                cgstat=92.1f cgrise=54.1f
+                cgfall=82.2f cestat=12.8f
+                cerise=11.8f cefall=15.0f
+   pullup
+      /* not determined */
+      w=6u l=4u : rdyn=22.3k cch=8.7f
+      w=15u l=4u : rdyn=5.3k cch=31.8f
+      w=30u l=4u : rdyn=2.2k cch=53.3f
+   end
+   pulldown
+      w=6u l=4u : rdyn=22.3k cch=8.7f
+      w=15u l=4u : rdyn=5.3k cch=31.8f
+      w=30u l=4u : rdyn=2.2k cch=53.3f
+   end
+   passup
+      w=8u l=4u : rdyn=7.94k cch=4.62f
+   end
+   passdown
+      w=8u l=4u : rdyn=5.24k cch=5.29f
+   end
+end
+
+ndep
+   loffset=0.605u
+   woffset=1.2u
+   w=6u l=4u : rstat=29.2k rsatu=29.2k
+               cgstat=7.8f cgrise=10.7f
+               cgfall=23.4f cestat=0f
+               cerise=0f cefall=0f
+   w=6u l=10u : rstat=76.5k rsatu=76.5k
+                cgstat=11.7f cgrise=19.8f
+                cgfall=28.2f cestat=0f
+                cerise=0f cefall=0f
+   w=12u l=4u : rstat=10.2k rsatu=10.2k
+                cgstat=16.4f cgrise=31.7f
+                cgfall=46.0f cestat=0f
+                cerise=0f cefall=0f
+   load
+      w=6u l=4u : rdyn=25.5k cch=-3.6f
+      w=6u l=10u : rdyn=66.3k cch=-14.9f
+      w=12u l=4u : rdyn=8.7k cch=-15.9f
+   end
+   superload
+      w=12u l=4u : rdyn=3.63k cch=-15.6f
+   end
+end
+
+.fi
+.DE
+.AU "A.J. van Genderen"
+.SH SEE ALSO
+A.J. Schooneveld,
+"Determination of SLS transistor model parameters",
+Delft University of Technology,
+.br
+sls(1ICD).

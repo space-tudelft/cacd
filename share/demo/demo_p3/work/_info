@@ -1,0 +1,166 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 d/home/simon/tmp/testOP/demo_p3
+Ehotel
+Z1 w1544457374
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+R0
+8VHDL/hotel.vhd
+FVHDL/hotel.vhd
+l0
+L6
+VkZ8NIH[nUo3Jg8AWMi9Sg1
+!s100 _fn0f=zDgOi]KJg<[DmCS1
+Z4 OL;C;10.4e;61
+33
+Z5 !s110 1548934537
+!i10b 1
+Z6 !s108 1548934537.000000
+!s90 -2008|-just|E|-lower|-explicit|-work|work|VHDL/hotel.vhd|-quiet|-nologo|
+!s107 VHDL/hotel.vhd|
+!i113 0
+Z7 o-quiet -nologo -2008 -just E -lower -explicit -work work
+Z8 tExplicit 1
+Abehaviour
+Z9 DEx4 work 5 hotel 0 22 kZ8NIH[nUo3Jg8AWMi9Sg1
+R2
+R3
+8VHDL/hotel-behaviour.vhd
+FVHDL/hotel-behaviour.vhd
+l7
+L4
+V5^7nTR>U_]gjPE[XRd@6a1
+!s100 cT<0:7L7a`HS6H<P0WLe:0
+R4
+33
+R5
+!i10b 1
+R6
+!s90 -2008|-just|A|-lower|-explicit|-work|work|VHDL/hotel-behaviour.vhd|-quiet|-nologo|
+!s107 VHDL/hotel-behaviour.vhd|
+!i113 0
+Z10 o-quiet -nologo -2008 -just A -lower -explicit -work work
+R8
+Chotel_behaviour_cfg
+ehotel
+Z11 abehaviour
+DAx4 work 5 hotel 9 behaviour 22 5^7nTR>U_]gjPE[XRd@6a1
+R2
+R3
+R9
+w1543416814
+R0
+8VHDL/hotel_behaviour_cfg.vhd
+FVHDL/hotel_behaviour_cfg.vhd
+l0
+L3
+Ve=iG:YYjURBgBF3nYQ6C[3
+!s100 o[G5[l8ic`@?bQ0I:SY5A1
+R4
+33
+R5
+!i10b 0
+R6
+!s90 -2008|-just|C|-lower|-explicit|-work|work|VHDL/hotel_behaviour_cfg.vhd|-quiet|-nologo|
+!s107 VHDL/hotel_behaviour_cfg.vhd|
+!i113 0
+Z12 o-quiet -nologo -2008 -just C -lower -explicit -work work
+R8
+Photel_pkg
+R2
+R3
+w1545144227
+R0
+8VHDL/hotel_pkg.vhd
+FVHDL/hotel_pkg.vhd
+l0
+L5
+VS[g7M4:]d33D[fOBh:A=V3
+!s100 5H3G<4n`ZghJzWCD<DTf11
+R4
+33
+!s110 1548934536
+!i10b 1
+!s108 1548934536.000000
+!s90 -2008|-just|P|-lower|-explicit|-work|work|VHDL/hotel_pkg.vhd|-quiet|-nologo|
+!s107 VHDL/hotel_pkg.vhd|
+!i113 0
+o-quiet -nologo -2008 -just P -lower -explicit -work work
+R8
+Ehotel_tb
+w1531833075
+R2
+R3
+R0
+8VHDL/hotel_tb.vhd
+FVHDL/hotel_tb.vhd
+l0
+L4
+VKfL@HAHkUX;I@QgzaoY>01
+!s100 h`H2b8=8fc0ALGhjMQ7JE1
+R4
+33
+R5
+!i10b 1
+R6
+!s90 -2008|-just|E|-lower|-explicit|-work|work|VHDL/hotel_tb.vhd|-quiet|-nologo|
+!s107 VHDL/hotel_tb.vhd|
+!i113 0
+R7
+R8
+Abehaviour
+w1545383385
+Z13 DEx4 work 8 hotel_tb 0 22 KfL@HAHkUX;I@QgzaoY>01
+R2
+R3
+8VHDL/hotel_tb-behaviour.vhd
+FVHDL/hotel_tb-behaviour.vhd
+l18
+L4
+VBSIj0E_jNSizWEm9YRhH81
+!s100 0oAIkoP@0n6=imUSka]Sn3
+R4
+33
+R5
+!i10b 1
+R6
+!s90 -2008|-just|A|-lower|-explicit|-work|work|VHDL/hotel_tb-behaviour.vhd|-quiet|-nologo|
+!s107 VHDL/hotel_tb-behaviour.vhd|
+!i113 0
+R10
+R8
+Chotel_tb_behaviour_cfg
+ehotel_tb
+R11
+R9
+DCx4 work 19 hotel_behaviour_cfg 0 22 e=iG:YYjURBgBF3nYQ6C[3
+DAx4 work 8 hotel_tb 9 behaviour 22 BSIj0E_jNSizWEm9YRhH81
+R2
+R3
+R13
+w1543912430
+R0
+8VHDL/hotel_tb_behaviour_cfg.vhd
+FVHDL/hotel_tb_behaviour_cfg.vhd
+l0
+L1
+V0JjC;YL`zhd=njV5Y_GGU3
+!s100 GEcdjRE4Jh[XY]o957YbF3
+R4
+33
+R5
+!i10b 0
+R6
+!s90 -2008|-just|C|-lower|-explicit|-work|work|VHDL/hotel_tb_behaviour_cfg.vhd|-quiet|-nologo|
+!s107 VHDL/hotel_tb_behaviour_cfg.vhd|
+!i113 0
+R12
+R8

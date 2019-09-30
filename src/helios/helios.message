@@ -1,0 +1,2327 @@
+#############################################################################
+#
+# ISC License
+# Copyright (C) 1995-2018 by
+#	Xianfeng Ni
+#	U. Geigenmuller
+#	Simon de Graaf
+# Delft University of Technology
+#
+# This file contains the messages that are displayed in the "QuickReference"
+# window.  The format of an entry is
+#
+# {keyword}
+# {headline}
+# {description text blah blah
+# blah blah}
+#
+# The string  "keyword"  is used by the program to select the proper text.
+# This string appears as argument of the DisplayDescription
+# callback function, and the string therefore must not be changed without
+# adapting the program at the same time.  The  "headline"  appears in
+# bold face in the top text field of the QuickReference window.
+# the "description" text (between the third pair of braces) in the main text field
+# of the QuickReference window.  The "headline" and "description" can be changed
+# without the necessity to also alter the GUI program.
+# Every 'newline' in the "description" text is changed in a 'space' character.
+# You can keep a 'newline' by preceding it with a 'backspace'.
+#
+# Lines of this file starting with '#' are treated as comment.
+#
+#############################################################################
+
+#MANUALS: (Please keep this list sorted)
+#{addproj       (add projects to library list)}
+#{ccif          (convert CIF to layout database)}
+#{cgi           (convert GDS II to layout database)}
+#{cldm          (convert LDM to layout database)}
+#{dali          (an interactive layout editor)}
+#{dbclean       (remove intermediate data from a project)}
+#{dblist        (list contents of project directory)}
+#{device        (list / change the devmod status for a circuit cell)}
+#{helios        (user interface for the space layout verification system)}
+#{highlay       (high-light the layout of conductors and/or devices)}
+#{impcell       (import a cell from a project on the library list)}
+#{macro         (list / change the macro status for a layout cell)}
+#{makeboxl      (expand a cell linearly to boxes)}
+#{makegln       (create a gln representation of a layout)}
+#{makemesh      (auxiliary program for resistance mesh refinement)}
+#{match         (a network comparison program)}
+#{mkpr          (create and initialize a project directory)}
+#{putdevmod     (put a device model description into the circuit database)}
+#{rmdb          (deletes a cell from a project directory)}
+#{rmpr          (remove a project directory)}
+#{simeye        (simulation signal displayer and editor)}
+#{sls           (switch-level simulation program)}
+#{space         (the SPACE layout-to-circuit extractor)}
+#{tecc          (the technology compiler for element-definition source files)}
+#{xcontrol      (set and list extraction state of cells)}
+#{xedif         (retrieve EDIF netlist)}
+#{xnle          (retrieve NLE netlist)}
+#{xpstar        (retrieve PSTAR netlist)}
+#{xsls          (retrieve SLS netlist)}
+#{xspef         (retrieve SPEF netlist)}
+#{xspf          (retrieve SPF netlist)}
+#{xspice        (retrieve SPICE netlist)}
+#{xvhdl         (retrieve VHDL netlist)}
+
+# An empty field, to clear the description display
+{ }
+{ }
+{ }
+
+{Verbose}
+{Verbose Mode}
+{To obtain a little more feedback on the operation of this tool.}
+
+{Stop task}
+{Terminate program button}
+{Kills a program that has been started as a child process
+by sending the `hangup' interrupt signal (SIGHUP = 1).}
+
+#############################################################################
+# Menu Database
+#############################################################################
+{New database}
+{New database}
+{Create and initialize a new project-database.\
+\
+A project-database is contained in a directory that also serves
+as working directory for the extractor.
+The design data is stored in several subdirectories, in the format of the NELSIS IC design system.\
+\
+The new project-database directory created will become the working directory,
+indicated in the title bar of the main window.\
+\
+You can also make create a new project-database using the utility program mkpr.}
+
+{Open}
+{Open database}
+{Open a project-database.
+The current project is indicated in the title of the main window.}
+
+{Open Imported}
+{Open imported database}
+{Open an imported project-database from file "projlist" of current project.
+You can use this also to view only the "projlist" file.
+The current project is indicated in the title of the main window.}
+
+{Open Previous}
+{Open previous database}
+{Open a previous used project-database.}
+
+{List}
+{List database}
+{List in the `Program Output' window the cells contained in the project-database.\
+\
+Utility program used:  dblist}
+
+{Remove}
+{Remove database}
+{Remove a project-database directory (including ALL cells!).\
+\
+You will be asked for explicit confirmation before the removal takes effect.\
+\
+Utility program used:  rmpr}
+
+{Clear}
+{Clean database}
+{Remove redundant and/or derived streams from the specified view and the project-database
+to save space when the design is ready.
+It use utility program dbclean.
+The menu choices are:\
+\
+Clean 'layout' view:
+All streams except the "box", "info", "mc", "nor" and "term"
+streams are removed from the project-database in layout view.\
+\
+Clean 'circuit' view:
+The stream "sls.b" is removed from the project-database in circuit view.\
+\
+Additionally, the following files are removed from the project-database:
+"procesdata1", "procesdata2", "stretchdata", "maskdata" and "nbooldata".}
+
+{Import}
+{Import cells}
+{Add/remove other NELSIS project-databases to the library list of the current project-database,
+and/or import cells from them into the current project.\
+\
+When importing cells only a reference is made;
+the data is not copied from the library project-databases.}
+
+{Delete}
+{Delete cells}
+{Remove cell(s) from project-database.\
+\
+Utility program used:  rmdb}
+
+{Device models}
+{Add device models}
+{Add a device model description into the circuit part of the project-database.\
+\
+The device model can also be edited, and saved to a file.}
+
+{New Technology}
+{New technology...}
+{Compile a technology file, containing information about
+the physical properties of the structures described by the masks.\
+\
+Utility program used:  tecc}
+
+{Save Settings}
+{Save settings}
+{Save the settings, including options and parameters, into the file "helios.defaults"
+in the presently active project-database (see titlebar of main window).
+These default values will be read and set when you later again open that project-database.}
+
+{Save settings...}
+{Save settings...}
+{Save the settings, including options and parameters,
+into the selected helios defaults file (see the `Save settings' command).}
+
+{Load settings}
+{Load settings...}
+{Load settings, including options and parameters,
+from a file written earlier using a `Save settings' menu command.}
+
+{Exit}
+{Exit}
+{Exit helios, killing running extractions etc.\
+\
+You will first be asked if you want to save your settings in the "helios.defaults" file.}
+
+#####################
+# Menu Layout
+#####################
+{Load layout}
+{Import Layout}
+{Lets you import layout files in various formats (CIF, GDSII, LDM),
+convert them to the ICD format used by the extractor, and
+store them in the presently selected project-database.\
+\
+Utility programs used:  ccif, cldm, cgi}
+
+{CIF}
+{Caltech Intermediate Form (CIF)}
+{Text file format to specify layout designs.}
+
+{GDSII}
+{Calma GDS II stream format}
+{Binary interchange format for layout designs.}
+
+{LDM}
+{Delft Layout Description Modified (LDM)}
+{Text file format to specify layout designs.}
+
+{Status}
+{Layout Cell Status}
+{Set the status type for one or more layout cells.\
+\
+When a layout cell is defined as a macro, instances
+of the cell are always flattened during expansion, no matter whether a hierarchical
+expansion or a linear expansion is performed.  When the cell with macro status
+has one or more child-cells itself, the macro status of each of there child-cells
+determines if the instances of these cells are also flattened.\
+\
+When a layout cell is defined as a device, instances
+of the cell are always put in the netlist.
+Device instances are normally not flattened.}
+
+{DALI}
+{Layout editor dali}
+{Dali is the "Delft Advanced Layout Interface", an X-Window program for layout editing
+of integrated circuits.  It can be used for the creation and/or manipulation of
+hierarchical layouts containing orthogonal and 45 degrees mask geometries.}
+
+######################
+# Menu Extractor
+######################
+{EXTRACT}
+{Extract}
+{Perform the extraction with the specified options.\
+\
+N.B: you must have selected the cell to be extracted from the "List of Cells".}
+
+{EXTRACT_OPTIONS}
+{Extraction Options}
+{Specify what you want to extract (interconnect resistance,
+capacitance, ...) and how (fast, accurate, ...).}
+
+{Display Options}
+{Display Options}
+{Specify whether you want a graphical progress display of the extraction, and what you
+want to have drawn on the screen (CAD tiles, finite element meshes, resistors, ...).}
+
+#***********************************************************************
+# Begin of "Options for Extraction"
+#***********************************************************************
+{EXTR_MODE_FLAT}
+{Flat extraction mode}
+{(Hierarchy: flat)\
+\
+In flat mode, the layout will be fully instantiated (flattened)
+before extraction, and the circuit will have no sub-cells.\
+\
+space command line option:  -F}
+
+{EXTR_MODE_HIER_INCR}
+{Hierarchical incremental extraction mode}
+{(Hierarchy: hierarchical incremental)\
+\
+In this mode, the circuit that is produced has the same
+hierarchical structure as the layout from which it is derived. Space will traverse the hierarchy automatically.
+Therefore, one only needs to specify the root(s) of the tree(s) to be extracted.\
+\
+No command line option necessary, standard mode.}
+
+{EXTR_MODE_HIER_NONINCR}
+{Hierarchical non-incremental extraction mode}
+{(Hierarchy: hierarchical non-incremental)\
+\
+It is possible to perform a mixed flat/hierarchical extraction by using Space in hierarchical mode,
+and by defining one or more layout cells to be macros. In that case all instances of macro cells
+- and only these - are flattened before extraction. When a macro cell has one or more child cells itself,
+the macro status of each of these child cells determines if the instances of these cells are also flattened.\
+\
+The use of macros may for example be advantageous when using small sub-cells for which it is cumbersome
+to define terminals, or when extracting sea-of-gates circuits, where the image is a separate cell that
+is instantiated "under" all other cells.\
+\
+space command line option:  -I}
+
+{EXTR_ONLY_TOP}
+{Extract only top cell}
+{With hierarchical extraction, only extract the top cell.\
+\
+space command line option:  -T}
+
+{EXTR_CAP_FAST}
+{Fast capacitance extraction (area/perimeter formulas)}
+{A fast calculation of capacitances is performed by multiplying the
+overlap area (or overlap edge-length) of conductors with values for
+capacitances per area (or length) as specified in the element definition file.\
+\
+space command line options for fast capacitance extraction depend on capacitance type.}
+
+{EXTR_CAP_ACC}
+{Accurate capacitance extraction (3D BE method)}
+{Capacitances are calculated accurately by solving Poisson's equation in
+three dimensions, using a boundary element method.  This is much more
+reliable, but takes longer, than extraction with the `fast' option.\
+\
+space command line options for accurate capacitance extraction depend on capacitance type.}
+
+{CAP_SUBSTR_ONLY}
+{Capacitances to substrate}
+{Extract only capacitances to the substrate (ground capacitances).
+Any vertical coupling capacitance between two conductors
+is added to their ground capacitances.\
+\
+For the `accurate' extraction option, the choice of the type of
+capacitances only influences the netlist, not the execution time
+(internally, for the `accurate' option all coupling capacitances are evaluated).\
+\
+space command line option\
+    for fast extraction:  -c\
+    for accurate extraction:  -c3}
+
+{CAP_SUBSTR_COUPL}
+{Capacitances to substrate and vertical coupling capacitances}
+{Extract both the capacitances to the substrate (ground capacitances), and the coupling
+capacitances to other conductors in vertical direction (perpendicular to the substrate).
+This option is not sensible for accurate capacitance extraction and will then be disabled.\
+\
+space command line option:  -C}
+
+{CAP_SUBSTR_ALL}
+{Capacitances to substrate and all coupling capacitances}
+{Extract the capacitances to the substrate (ground capacitances) and all coupling
+capacitances to other conductors, in vertical as well as in horizontal direction.\
+\
+space command line option\
+    for fast extraction:  -l\
+    for accurate extraction:  -C3}
+
+{EXTR_RES_FAST}
+{Fast interconnect resistance extraction}
+{Resistances are calculated using a finite element technique with
+a rather coarse mesh.  Usually, the accuracy of this method suffices for
+digital circuits. In some cases, the coarse mesh may result in
+negative resistances values - then use the `accurate' extraction option.
+The `accurate' option is also recommended for analog circuits.\
+\
+space command line option:  -r}
+
+{EXTR_RES_ACC}
+{Accurate interconnect resistance extraction}
+{Resistances are calculated using a finite element method with a fine mesh,
+increasing both accurary and execution time as compared to the `fast' option.
+The `accurate' option is recommended for analog circuits.\
+\
+space command line option:  -z}
+
+{EXTR_RES_SELECTIVE}
+{Selective interconnect resistance extraction}
+{The format of each line in the file "sel_con" is as follows:\
+\
+    x position,  y position,  maskname\
+\
+When an interconnect has the specified mask on the specified layout position,
+that interconnect is marked as specified.\
+\
+The file "sel_con" must be located in the project-database directory.\
+\
+space command line option for\
+     only those interconnects specified in the file "sel_con":  -k\
+     all interconnects but those specified in the file "sel_con":  -j}
+
+{EXTR_SUBRES_FAST}
+{Fast substrate resistance extraction}
+{The substrate resistance can be calculated quickly, and for large circuits,
+using an interpolation method. The method is much faster, but less
+precise than the accurate extraction using the boundary-element method.\
+\
+space command line option: -b}
+
+{EXTR_SUBRES_ACC}
+{Accurate substrate resistance extraction}
+{The boundary element (BE) method allows to compute accurate substrate
+resistance values for a (not too large) number of substrate terminals
+on top of a substrate.\
+\
+space command line option: -B}
+
+{EXTR_SUBCAP_FAST}
+{Fast substrate capacitance extraction}
+{The substrate capacitances can be calculated quickly.
+The conductance values of the substrate resistance step are multiplied by
+the value of parameter "sub_rc_const", which must be specified.
+This extraction can be used in combination with substrate resistance
+extraction. Parameter "add_sub_caps=1" is used to enable this mode.\
+\
+space command line option: -Sadd_sub_caps=1}
+
+{EXTR_SUBCAP_ACC}
+{Accurate substrate capacitance extraction}
+{The boundary element (BE) method allows to compute accurate substrate
+capacitance values for the substrate. To use this mode, you must add
+subcaplayers data to the technology file. This extraction can only be
+used in combination with accurate substrate resistance extraction.
+Parameter "add_sub_caps=2" is used to enable this mode.\
+\
+space command line option: -Sadd_sub_caps=2}
+
+{EXTR_FREQ_DEPENDENT}
+{Frequency dependent circuit reduction}
+{With this option, only selected internal nodes are eliminated, and not necessarily
+all such nodes.  This may be necessary for accurate modeling at high frequency.
+Please enter the highest required frequency in the text field to the right.\
+\
+space command line option: -G}
+
+{EXTR_FREQ_MAX}
+{Maximum frequency}
+{Specify here the maximum frequency for which the circuit will be used.\
+\
+Parameter file keyword:  sne.frequency\
+Possible values:  reals >= 0. (default: 1.0 GHz)}
+
+{EXTR_CIRC_RED_HEUR}
+{Apply circuit reduction heuristics}
+{When extracting resistances and capacitances, the extractor can apply
+some heuristics to further reduce the number of elements (resistors,
+capacitors, and nodes) in the final network by neglecting irrelevant
+details.  Here you can switch this circuit reduction on/off.\
+\
+space command line option for reduction heuristics off:  -n}
+
+#***********************************************************
+# Begin of "Additional Extraction Options"
+#***********************************************************
+{MORE_DETAILS}
+{More extraction options}
+{Additional and miscellaneous used extraction options...}
+
+{BACK_ANNO_BASIC}
+{Basic back-annotation}
+{The names of terminals and instances in the extracted circuit are chosen equal
+to the names of the corresponding terminals and instances in the layout.\
+\
+Default mode, no command line option necessary.}
+
+{BACK_ANNO_POSITIONS}
+{Back-annotation: device and instance positions}
+{On top of basic back annotation, the positions of devices and sub-cells are recorded.
+This information is added as comments when netlists are generated (see Circuit menu).
+It can also be retrieved using the "dbcat" utility of the NELSIS IC design system.\
+\
+space command line option:  -t}
+
+{BACK_ANNO_EXTENDED}
+{Extended back-annotation}
+{On top of the information generated with the option "device and instance positions",
+data is generated for highlighting selected conductors and/or devices in the layout,
+using the "highlay" program of the NELSIS IC design system.\
+\
+space command line option:  -x}
+
+{HIER_NAME_SEP}
+{Hierarchical instance name separator}
+{If an instance in an extracted circuit is obtained from more than one level down in
+the hierarchy of that cell, the name of that instance is obtained by concatenating
+the names of all the different instances that contain the instance.
+The different instance names are separated by the "hier_name_sep" character.\
+\
+Parameter file keyword:  hier_name_sep\
+Possible values:  punctuation character (default: '.')}
+
+{INST_TERM_SEP}
+{Instance to terminal separator}
+{The instance name and the label or terminal name are separated
+by the "inst_term_sep" character.\
+\
+Parameter file keyword:  inst_term_sep\
+Possible values:  punctuation character (default: '.')}
+
+{NET_NODE_SEP}
+{Netname to node separator}
+{In some cases, when node names are added to the netnames,
+this names are separated by the "net_node_sep" character.\
+\
+Parameter file keyword:  net_node_sep\
+Possible values:  punctuation character (default: '_')}
+
+{POS_NAME_PREFIX}
+{Position name prefix}
+{The node prefix used, when parameter "node_pos_name" is enabled.\
+\
+Parameter file keyword:  pos_name_prefix\
+Possible values:  character string (default: "")}
+
+{TRUNC_NAME_PREFIX}
+{Truncation name prefix}
+{When too long names are converted to short names,
+the new names get this prefix.\
+\
+Parameter file keyword:  trunc_name_prefix\
+Possible values:  character string (default: "n")}
+
+{NO_LABELS}
+{Do not use labels for netnames}
+{If the parameter "no_labels" is set,
+the labels that are defined for a cell will not be used by the extractor.\
+\
+Parameter file keyword:  no_labels\
+Possible values:  "on", "off"}
+
+{HIER_LABELS}
+{Hierarchical labels netnames}
+{If enabled, use labels of sub-cells (when flattened)
+to generate netnames.\
+\
+Parameter file keyword:  hier_labels\
+Possible values:  "on", "off"}
+
+{HIER_TERMINALS}
+{Hierarchical terminals netnames}
+{If enabled, use terminals of sub-cells (when flattened) to generate netnames.\
+\
+Parameter file keyword:  hier_terminals\
+Possible values:  "on", "off"}
+
+{LEAF_TERMINALS}
+{Leaf terminals netnames}
+{If enabled, use the terminals of the sub-cells on the
+lowest level for netname generation.\
+\
+Parameter file keyword:  leaf_terminals\
+Possible values:  "on", "off"}
+
+{CELL_POS_NAME}
+{Cell and position netnames}
+{If enabled, use the name of the cell where the label or terminal
+comes from and label position for netname generation.\
+\
+Parameter file keyword:  cell_pos_name\
+Possible values:  "on", "off"}
+
+{TERM_IS_NETNAME}
+{Terminal is netname}
+{If enabled, the terminals of the cell are also used as labels to generate netnames.\
+\
+Parameter file keyword:  term_is_netname\
+Possible values:  "on", "off"}
+
+{NODE_POS_NAME}
+{Node and position netnames}
+{If enabled, each node has a name "<prefix><mask>_<xpos>_<ypos>",
+where <prefix> is a prefix that is specified using the parameter "pos_name_prefix".\
+\
+Parameter file keyword:  node_pos_name\
+Possible values:  "on", "off"}
+
+{EXTR_CUSTOM_EL_DEF_FILE}
+{Customized element definition file}
+{Use the customized element definition file specified here.
+Normally the default element definition file "space.def.t" from the process library is used.\
+\
+space command line option:  -Efile_name}
+
+{EXTR_AUTO_RUN_PREPRO}
+{Automatically run preprocessors}
+{Automatically run the preprocessors "makeboxl" and "makegln" of the Nelsis IC Design system,
+which, respectively, expand a cell linearly to boxes and create a gln representation of a layout.\
+\
+space command line option for preprocessors off:  -u}
+
+{Lateral base width}
+{Bipolar lateral base width}
+{Defines the maximum base width of a lateral bipolar transistor.\
+\
+Parameter file keyword:  lat_base_width\
+Possible values:  reals >= 0.}
+
+{EXTR_EXT_PARAM_FRONT}
+{Include in parameter file at the beginning}
+{Here you can specify a file that will be included at the
+beginning of the parameter file "helios.def.p" generated by this user interface.\
+\
+If a keyword appears more than once in a parameter file, the last instance is used.
+Thus, by including an external file at the beginning of the automatically
+generated file, parameters set in the external file are potentially overruled.}
+
+{EXTR_EXT_PARAM_END}
+{Include in parameter file at the end}
+{Here you can specify a file that will be included at the
+end of the parameter file "helios.def.p" generated by this user interface.\
+\
+If a keyword appears more than once in a parameter file, the last instance is used.
+Thus, by including an external file at the end of the automatically generated file,
+parameters set in the external file overrule those set by the user interface.}
+
+#***************************************************************
+# Begin of "Fine Control for Fast Capacitance Extraction"
+#***************************************************************
+{CAP_DETAILS}
+{Detailed options for fast cap. extraction}
+{Options for fine control of fast capacitance extraction.}
+
+{Lateral capacitance window}
+{Lateral capacitance window}
+{No lateral coupling capacitance will be extracted between conductors
+with mutual distance larger than the value specified here.\
+\
+Parameter file keyword:  lat_cap_window\
+Possible values:  reals >= 0.}
+
+{Lateral compensation}
+{Lateral compensation}
+{Space tries to keep the sum of the ground capacitance and coupling
+capacitances constant, by decreasing some value of the other edge
+capacitances that are connected to that conductor.
+This compensation can be controlled by "compensate_lat_part".
+If you specify a value smaller than 1.0 (the default), you get not the full compensation.\
+\
+Parameter file keyword:  compensate_lat_part\
+Possible values:  reals >= 0.}
+
+{Junction capacitances}
+{Extracting junction capacitances}
+{This capacitances will default be extracted as "linear".
+But you can choice another extraction type.
+If the type is set to "area-perimeter" or "separate" the extracted
+capacitances will be represented by instance parameters
+"area" and "perim" in the database.
+By type "separate" followed by the element number.\
+\
+Parameter file keyword:  jun_caps\
+Possible values:\
+       linear\
+       non-linear\
+       area\
+       area-perimeter\
+       separate}
+
+#***************************************************************
+# Begin of "Fine Control for Accurate Capacitance Extraction"
+#***************************************************************
+{CAP3D_DETAILS}
+{Detailed options for accurate cap. extraction}
+{Options for fine control of accurate(3D) capacitance extraction.}
+
+{CAP3D_HIER_EXTRACT}
+{Allow hierarchical extraction}
+{When disabled, the program always performs a flat extraction.\
+\
+Parameter file keyword:  allow_hierarchical_cap3d\
+Possible values:  "on", "off"}
+
+{CAP3D_OMIT_GATE}
+{Omit gate drain/source capacitances}
+{When enabled, do not extract 3D capacitances between
+gates and diffused conductors (drain/source areas).\
+\
+Parameter file keyword:  cap3d.omit_gate_ds_cap\
+Possible values:  "on", "off"}
+
+{CAP3D_WINDOW}
+{Window size}
+{All influences between boundary elements that are within the distance
+specified here are taken into account, and all influences between boundary
+elements that are further apart than twice this distance are discarded.\
+\
+The appropriate choice of the window size is extremely important
+for the performance of the program: memory usage and execution
+time roughly scale with the fourth power of the window size, which suggests
+choosing it as small as possible.  In order not to compromise
+the extraction accuracy, however, the window size should at least be
+one to three times the maximum height of the circuit.\
+\
+Parameter file keyword:  cap3d.be_window\
+Possible values:  reals >= 0.}
+
+{CAP3D_REQ_PREC_INF_MAT}
+{Required relative precision}
+{Specify here the desired precision of the elements of the influence matrix.
+This precision should be chosen somewhat higher than the desired precision
+of the final results for the capacitances.
+Reducing the precision requirement will typically lead to faster program execution.\
+\
+Parameter file keyword:  cap3d.green_eps\
+Possible values:  reals >= 0.}
+
+{CAP3D_MAX_GREEN_TERMS}
+{Maximum number of Green terms used}
+{For dielectrics consisting of more than one layer,
+more than one term (iteration) will in general be necessary to find
+an approximation of the Green's function such that the error in the entries
+in the matrix is within the required relative precision.\
+\
+Parameter file keyword:  cap3d.max_green_terms\
+Possible values:  int <= 500}
+
+{CAP3D_MAX_BE_AREA}
+{Maximum boundary element area}
+{You can here specify an upper limit on the area of boundary elements,
+and in this way enforce the use of a finer mesh of boundary elements,
+resulting in higher precision.  If you demand a very small maximum area,
+however, the price in terms of memory usage and execution time may be high.\
+\
+Typically it is not sensible to aim at a precision better than a couple of percent,
+since manufacturing tolerances are in this range anyway.
+Then the boundary element size following naturally from the topology
+of the layout is sufficiently small in many cases.\
+\
+Parameter file keyword:  cap3d.max_be_area\
+Possible values:  reals >= 0.}
+
+{CAP3D_MAX_COARSE_BE_AREA}
+{Maximum boundary element area for sheet conductors}
+{When this parameter is specified,
+edge elements of sheet conductors are not further refined compared interior elements.
+This parameter can for example be used to model large conductor planes
+with a much coarser element mesh.\
+Specify the value -1 for the default case!\
+\
+Parameter file keyword:  cap3d.max_coarse_be_area\
+Possible values:  reals >= 0. (default: cap3d.max_be_area)}
+
+{CAP3D_BE_METHOD}
+{BE method}
+{For the choices "constant collocation" and "constant Galerkin"
+the charge density is modelled as piece-wise constant,
+with jumps at the borders between boundary elements.\
+\
+For the choice "linear Galerkin" the charge density
+is modelled by a continuous function, linear within BEs.
+For given BE size, the collocation method is faster,
+but less precise than the Galerkin method.
+The same holds for constant vs. linear Galerkin.\
+\
+Parameter file keyword:  cap3d.be_mode\
+Possible values:  0c, 0g, 1g}
+
+{CAP3D_BE_SHAPE}
+{Desired BE shape}
+{Quadrilateral BEs will in general even be rectangular.
+For the constant collocation/Galerkin method, this has the
+advantage that odd-order charge multipoles vanish due
+to symmetry (and need not be calculated), resulting in faster execution.\
+\
+Triangular BEs, on the other hand,
+offer more flexibility for the mesh generation.
+For the linear Galerkin method triangular elements are even required,
+and a preference for quadrilaterals will then be overruled.\
+\
+Parameter file keyword:  cap3d.be_shape\
+Possible values:\
+    1 (no preference)\
+    3 (triangular)\
+    4 (quadrilateral)}
+
+{CAP3D_STEP_SLOPE}
+{Default step slope}
+{Specifies the tangent of the slope of conductors at steps in height above the substrate.\
+\
+Parameter file keyword:  cap3d.default_step_slope\
+Possible values:  reals > 0. (default: 2.0)}
+
+{CAP3D_BE_RATIO}
+{Edge/interior BE area ratio}
+{This parameter specifies the ratio between the maximum size of
+interior elements and the maximum size of edge elements.
+To efficiently compute accurate 3D capacitances
+it is advantageous to use smaller elements near the edges of the conductors,
+i.e. chosing this parameter smaller than unity.\
+\
+Related item: splitting area ratio\
+\
+Parameter file keyword:  cap3d.edge_be_ratio\
+Possible values:  reals > 0.}
+
+{CAP3D_BE_SPLIT}
+{Splitting area ratio}
+{If, during BE mesh refinement, a quadrilateral edge element is split into two elements,
+this parameter determines the ratio between the size of the element that becomes
+an edge element and the size of the element that becomes an interior element.\
+\
+Related item: edge/interior BE area ratio\
+\
+Parameter file keyword:  cap3d.edge_be_split\
+Possible values:  reals > 0.}
+
+{CAP3D_BE_LW}
+{Splitting side ratio}
+{During BE mesh refinement, this parameter is used to determine the split
+direction of a quadrilateral element.
+Interior elements are always split perpendicular to their longest side.
+Edge elements are split in a direction parallel to the edge direction,
+unless the ratio between the longest side and the shortest side of
+the new edge element becomes larger than the value specified here.\
+\
+Parameter file keyword:  cap3d.edge_be_split_lw\
+Possible values:  reals >= 2.}
+
+{CAP3D_MP_MINDIST}
+{Threshold distance for multipole expansion}
+{The numerical integrations required for the evaluation of influence
+matrix elements can be accelerated using a multipole expansion.
+This works the better the farther source- and observation-BE are apart.
+You can here specify the threshold source/observation distance beyond
+which multipole expansion is used.
+It is measured in units of the convergence radius of the expansion,
+so only values >= 1 are acceptable.\
+\
+Parameter file keyword:  cap3d.mp_min_dist\
+Possible values:  reals >= 1.}
+
+{CAP3D_HIGHEST_MP}
+{Highest included multipole}
+{The more multipoles you include, the higher the precision of the calculation.
+High-order multipoles are only important at small distances.
+For a threshold distance ratio of 2,
+it typically suffices to include quadrupoles.\
+\
+Odd ordered multipoles vanish when domain is symmetric,
+which in general is the case for the constant collocation/Galerkin
+method with quadrilateral BEs demanded.
+Such a symmetry is recognized by the program.\
+\
+The computational demand grows with the number of included multipoles:
+adding the octopole can increase the execution time by tens of percent.\
+\
+Parameter file keyword:  cap3d.mp_max_order\
+Possible values:\
+   0 (use monopole only)\
+   1 (use monopole and dipole)\
+   2 (use monopole, dipole, and quadrupole)\
+   3 (use monopole, dipole, quadrupole, and octopole)}
+
+{CAP_GND_NODE_NAME}
+{Name of ground node}
+{If "@gnd" is used as terminal mask in the element definition file,
+ground capacitances are on one side connected to a node with the name specified here.
+If you leave the text field blank, the default name "GND" will be used.\
+\
+Parameter file keyword:  name_ground\
+Possible values:  character string}
+
+{CAP_SUB_NODE_NAME}
+{Name of substrate node}
+{If "@sub" is used as terminal mask in the element definition file,
+substrate capacitances are on one side connected to a node with the name specified here.
+If you leave the text field blank, the default name "SUBSTR" will be used.\
+\
+Parameter file keyword:  name_substrate\
+Possible values:  character string}
+
+#***************************************************************
+# Begin of "Fine Control for Interconnect Resist. Extract."
+#***************************************************************
+{RES_DETAILS}
+{Detailed options for resistance extraction}
+{Options for fine control of fast and accurate(3D) interconnect resistance extraction.}
+
+{MAX_DELAYED}
+{Buffer size for node elimination}
+{The larger this buffer is chosen, the more nodes are kept in memory before elimination,
+and the faster the elimination can be done by choosing an optimal elimination order.
+Reduce this buffer size if you are low on memory.\
+\
+Parameter file keyword:  max_delayed\
+Possible values:  integers >= 0}
+
+{MIN_SHEET_RES}
+{Minimal sheet resistance}
+{The threshold value to determine whether an interconnect is
+high-resistive or low-resistive.\
+\
+Parameter file keyword:  low_sheet_res\
+Possible values:  reals >= 0.}
+
+{MAX_MESH_ANGLE}
+{Maximum mesh angle}
+{Very obtuse triangles in the mesh used for finite-element calculation
+of the resistance can, under certain circumstances,
+lead to extracted resistance values smaller than zero.
+To avoid this, you can here influence the mesh
+generation by specifying the largest admissible angle in the mesh.\
+\
+Parameter file keyword:  max_obtuse\
+Possible values:  reals >= 0.}
+
+#***************************************************************************
+# Begin of "Fine Control for Fast Extraction of Substrate Capacitance"
+#***************************************************************************
+{SUBCAPFAST_DETAILS}
+{Detailed options for fast substrate cap. extraction}
+{Options for fine control of fast substrate capacitance extraction.}
+
+{SUB_RC_CONSTANT}
+{Ratio between conductance and capacitance}
+{Specify here the desired ratio factor between conductance and capacitance
+values.\
+\
+Parameter file keyword:  sub_rc_const\
+Possible values:  reals >= 0.}
+
+#***************************************************************************
+# Begin of "Fine Control for Accurate Extraction of Substrate Capacitance"
+#***************************************************************************
+{SUBCAP3D_DETAILS}
+{Detailed options for accurate substrate cap. extraction}
+{Options for fine control of accurate(3D) substrate capacitance extraction.\
+\
+Default, the parameters for accurate substrate resistance extraction,
+starting with "sub3d." are also used for the capacitance details.
+But, when you want to use a different value, supply the parameter
+starting with "subcap3d." instead.}
+
+#***************************************************************************
+# Begin of "Fine Control for Accurate Extraction of Substrate Resistance"
+#***************************************************************************
+{SUB3D_DETAILS}
+{Detailed options for substrate res. extraction}
+{Options for fine control of accurate(3D) substrate resistance extraction.}
+
+{SUB3D_WINDOW}
+{Window size}
+{All influences between boundary elements that are within the distance
+specified here are taken into account, and all influences between boundary
+elements that are further apart than twice this distance are discarded.\
+\
+The appropriate choice of the window size is extremely important
+for the performance of the program: memory usage and execution
+time roughly scale with the fourth power of the window size, which suggests
+choosing it as small as possible.  In order not to compromise
+the extraction accuracy, however, the window size should at least be
+one to three times the maximum height of the circuit.\
+\
+Parameter file keyword:  sub3d.be_window\
+Possible values:  reals >= 0.}
+
+{SUB3D_REQ_PREC_INF_MAT}
+{Required relative precision}
+{Specify here the desired precision of the elements of the
+influence matrix.  This precision should be chosen somewhat
+higher than the desired precision of the final results for
+the capacitances.  Reducing the precision requirement will
+typically lead to faster program execution.\
+\
+Parameter file keyword:  sub3d.green_eps\
+Possible values:  reals >= 0.}
+
+{SUB3D_MAX_GREEN_TERMS}
+{Maximum number of Green terms used}
+{For dielectrics consisting of more than one layer,
+more than one term (iteration) will in general be necessary to find
+an approximation of the Green's function such that the error in the entries
+in the matrix is within the required relative precision.\
+\
+Parameter file keyword:  sub3d.max_green_terms\
+Possible values:  int <= 500}
+
+{SUB3D_SAWDIST}
+{Minimum distance to saw-lane}
+{This parameter specifies the edge of the substrate (saw-lane).
+When a bounding box is assumed around the layout of the set of
+substrate terminals, the edge of the substrate is defined
+as the rectangle that extends the bounding box "saw_dist" micron.\
+\
+Parameter file keyword:  sub3d.saw_dist\
+Possible values:  reals >= 0.}
+
+{SUB3D_EDGEDIST}
+{Threshold distance for edge effects}
+{Specifies the maximum distance to the saw-lane for an element in
+the layout to be influenced by the saw-lane.
+For elements that are more than "edge_dist" micron away from the
+saw-lane, no edge effects are taken into account.
+Edge effects can generally be neglected for elements that are
+further away from the saw-lane than 2 times the epi-thickness.\
+\
+Parameter file keyword:  sub3d.edge_dist\
+Possible values:  reals >= 0.}
+
+{SUB3D_MAX_BE_AREA}
+{Maximum boundary element area}
+{You can here specify an upper limit on the area of boundary elements,
+and in this way enforce the use of a finer mesh of boundary elements,
+resulting in higher precision.
+If you demand a very small maximum area, however,
+the price in terms of memory usage and execution time may be high.\
+\
+Typically it is not sensible to aim at a precision
+better than a couple of percent,
+since manufacturing tolerances are in this range anyway.
+Then the boundary element size following naturally from the topology
+of the layout is sufficiently small in many cases.\
+\
+Parameter file keyword:  sub3d.max_be_area\
+Possible values:  reals >= 0.}
+
+{SUB3D_BE_METHOD}
+{BE method}
+{For the choices "constant collocation" and "constant Galerkin"
+the charge density is modelled as piece-wise constant,
+with jumps at the borders between boundary elements.\
+\
+When chosing "linear Galerkin" the
+charge density is modelled by a continuous function, linear within BEs.
+For given BE size, the collocation method is faster,
+but less precise than the Galerkin method.
+The same holds for constant vs. linear Galerkin.\
+\
+Parameter file keyword:  sub3d.be_mode\
+Possible values:  0c, 0g, 1g}
+
+{SUB3D_BE_SHAPE}
+{Desired BE shape}
+{Quadrilateral BEs will in general even be rectangular.
+For the constant collocation/Galerkin method, this has the
+advantage that odd-order charge multipoles vanish due
+to symmetry (and need not be calculated), resulting in faster execution.\
+\
+Triangular BEs, on the other hand, offer more flexibility for
+the mesh generation.  For the linear Galerkin method
+triangular elements are even required, and a preference for
+quadrilaterals will then be overruled.\
+\
+Parameter file keyword:  sub3d.be_shape\
+Possible values:\
+    1 (no preference)\
+    3 (triangular)\
+    4 (quadrilateral)}
+
+{SUB3D_BE_RATIO}
+{Edge/interior BE area ratio}
+{This parameter specifies the ratio between the maximum size of
+interior elements and the maximum size of edge elements.
+To efficiently compute accurate 3D capacitances
+it is advantageous to use smaller elements near the edges
+of the conductors, i.e. chosing this parameter smaller than unity.\
+\
+Related item: splitting area ratio\
+\
+Parameter file keyword:  sub3d.edge_be_ratio\
+Possible values:  reals > 0.}
+
+{SUB3D_BE_SPLIT}
+{Splitting area ratio}
+{If, during BE mesh refinement, a quadrilateral edge element is split into
+two elements, this parameter determines the ratio between the size of the
+element that becomes an edge element and the size of the element that
+becomes an interior element.\
+\
+Related item: edge/interior BE area ratio\
+\
+Parameter file keyword:  sub3d.edge_be_split\
+Possible values:  reals > 0.}
+
+{SUB3D_BE_LW}
+{Splitting side ratio}
+{During BE mesh refinement, this parameter is used to determine the split
+direction of a quadrilateral element.
+Interior elements are always split perpendicular to their longest side.
+Edge elements are split in a direction parallel to the edge direction,
+unless the ratio between the longest side and the
+shortest side of the new edge element becomes larger than
+the value specified here.\
+\
+Parameter file keyword:  sub3d.edge_be_split_lw\
+Possible values:  reals >= 2.}
+
+{SUB3D_MP_MINDIST}
+{Threshold distance for multipole expansion}
+{The numerical integrations required for the evaluation of influence
+matrix elements can be accelerated using a multipole expansion.
+This works the better the farther source- and observation-BE are apart.
+You can here specify the threshold source/observation distance beyond which
+multipole expansion is used.
+It is measured in units of the convergence radius of the expansion,
+so only values >= 1 are acceptable.\
+\
+Parameter file keyword:  sub3d.mp_min_dist\
+Possible values:  reals >= 1.}
+
+{SUB3D_HIGHEST_MP}
+{Highest included multipole}
+{The more multipoles you include, the higher the precision of the calculation.
+High-order multipoles are only important at small distances.
+For a threshold distance ratio of 2, it typically suffices to include quadrupoles.\
+\
+Odd ordered multipoles vanish when domain is symmetric,
+which in general is the case for
+the constant collocation/Galerkin method with quadrilateral BEs demanded.
+Such a symmetry is recognized by the program.\
+\
+The computational demand grows with the number of included multipoles:
+adding the octopole can increase the execution time by tens of percent.\
+\
+Parameter file keyword:  sub3d.mp_max_order\
+Possible values:\
+   0 (use monopole only)\
+   1 (use monopole and dipole)\
+   2 (use monopole, dipole, and quadrupole)\
+   3 (use monopole, dipole, quadrupole, and octopole)}
+
+#**********************************************************
+# Begin of "Fine Control for Circuit Reduction Heuristics"
+#**********************************************************
+{REDUC_DETAILS}
+{Detailed options for reduction heuristics}
+{Options for fine control of circuit reduction heuristics.}
+
+{Minimum articulation degree}
+{Retain nodes forming the sole link between many pieces}
+{The articulation degree of a node is the number of pieces into which the
+resistance graph would break if the node and its connected resistances were removed.
+It is advantageous not to eliminate nodes with large articulation degree.
+You can specify here a threshold articulation degree,
+above which no node elimination is performed.\
+\
+Parameter file keyword:  min_art_degree\
+Possible values:  integers > 0}
+
+{Minimum degree}
+{Retain nodes with many connections}
+{The degree of a node is the number of resistances connected to it.
+It is advantageous not to eliminate nodes with large degree.
+You can specify here a threshold degree, above which no node elimination is performed.\
+\
+Parameter file keyword:  min_degree\
+Possible values:  integers > 0}
+
+{Gaussian resistor elimination}
+{Gaussian elimination of resistors}
+{If two (terminal) nodes are connected by a resistor with
+a resistance below the threshold value specified here,
+the resistor is deleted by joining its terminals: this eliminates one node.
+The remaining resistors, however, are adjusted such that the resistance
+between any two remaining nodes is unchanged.\
+\
+If due to the elimination another resistance falls below the threshold value,
+it too will be eliminated.
+This continues until all remaining resistors are above the threshold.\
+\
+The elimination of resistors is suppressed if it would conflict with
+the heuristic on retaining nodes (see top of this form).\
+\
+Parameter file keyword: min_res\
+Possible values:  reals >= 0.}
+
+{MIN_SEP_RES}
+{Short-circuit small resistors}
+{A resistor with resistance smaller than the value specified here will be short-circuited,
+merging the nodes it connects.  In contrast to the Gaussian elimination option above,
+here no adjustment of other resistors is done for compensation:
+the total resistance between the remaining nodes changes.\
+\
+Parameter file keyword: min_sep_res\
+Possible values:  reals >= 0.}
+
+{MAX_PAR_RES}
+{Omit shunts with high resistance ratio}
+{High-ohmic shunts are irrelevant.  If the ratio between the resistance
+of a shunt and that of its minimum parallel resistance path exceeds the
+value specified here, the high-ohmic shunt will be removed.\
+\
+Parameter file keyword:  max_par_res\
+Possible values:  reals >= 0.}
+
+{NO_NEG_RES}
+{Remove negative resistances}
+{Remove all negative resistances.
+These can arise for fast resistance extraction.\
+\
+Parameter file keyword: no_neg_res\
+Possible values:  "on", "off"}
+
+{NO_NEG_CAP}
+{Remove negative capacitances}
+{If heuristic is on,
+all negative capacitances will be removed from the network.\
+\
+Parameter file keyword: no_neg_cap\
+Possible values:  "on", "off"}
+
+{MIN_COUP_CAP}
+{Omit small coupling capacitances}
+{If a coupling capacitance is less than the value specified here
+times the maximum ground capacitance of the nodes it connects,
+then the coupling capacitance is removed, and its value added
+to the ground capacitances of the nodes it connected.\
+\
+Parameter file keyword:  min_coup_cap\
+Possible values: reals}
+
+{MIN_GROUND_CAP}
+{Omit small ground capacitances}
+{If the absolute value of a capacitance to ground is less than
+the value specified here, this capacitance will be removed.\
+\
+Parameter file keyword:  min_ground_cap\
+Possible values:  reals >= 0.}
+
+{FRAG_COUP_CAP}
+{Fragmentation of coupling capacitances}
+{When eliminating a node, and redistributing a coupling capacitance
+connected to it over the adjacent nodes,
+this heuristic decides whether or not an adjacent node receives
+(a part of) the coupling capacitance.  See manual for details.\
+\
+Parameter file keyword:  frag_coup_cap\
+Possible values: reals >= 0.}
+
+{MIN_COUP_AREA}
+{Omit small coupling junction areas}
+{If a coupling capacitance is less than the value specified here
+times the maximum ground capacitance of the nodes it connects,
+then the coupling capacitance is removed, and its value added
+to the ground capacitances of the nodes it connected.\
+\
+Parameter file keyword:  min_coup_area\
+Possible values: reals}
+
+{MIN_GROUND_AREA}
+{Omit small ground junction areas}
+{If the absolute value of a capacitance to ground is less than
+the value specified here, this capacitance will be removed.\
+\
+Parameter file keyword:  min_ground_area\
+Possible values:  reals >= 0.}
+
+{FRAG_COUP_AREA}
+{Fragmentation of coupling junction areas}
+{When eliminating a node, and redistributing a coupling capacitance
+connected to it over the adjacent nodes,
+this heuristic decides whether or not an adjacent node receives
+(a part of) the coupling capacitance.  See manual for details.\
+\
+Parameter file keyword:  frag_coup_area\
+Possible values: reals >= 0.}
+
+{Introduce equipotential line}
+{Introduce equipotential line in long interconnects}
+{If for resistance extraction of a rectangular piece of
+interconnect the ratio length/width exceeds the value specified here,
+an equipotential line is placed at the middle of the rectangle,
+perpendicular to the current flow.
+Especially for metal resistances this can reduce network complexity
+and extraction time considerably.\
+\
+Parameter file keyword:  equi_line_ratio\
+Possible values: reals >= 0.}
+
+#########################################################################
+# Menu Circuit
+#########################################################################
+{Retrieve}
+{Retrieve}
+{Retrieve a netlist from a project.\
+\
+N.B: you must have selected
+the cell whose netlist is to be retrieved from the "List of Cells".}
+
+{Retrieval Options}
+{Retrieval Options}
+{Specify the netlist format (SPICE, PSTAR, SLS, EDIF, ...),
+and customize your netlist.}
+
+{Simeye}
+{Simeye}
+{Start simulation user interface (for SLS and SPICE simulations).}
+
+{Highlay}
+{Highlay}
+{High-light one or more (extracted) conductors
+and/or devices in a layout-editor/viewer.
+In order to use highlay for a particular cell,
+first run space for the cell.
+The conductors (nets/ports) and devices that are high-lighted
+can be specified in two different ways:
+(1) they are specified in a namefile, or
+(2) they are selected from the output of the circuit comparison
+program match (use option -edif).\
+Highlay will generate a new cell that contains (default)
+the high-lighted parts of the specified cell,
+plus a copy of the specified cell as a sub-cell.
+The name of the new cell that is generated is HIGH_OUT.}
+
+{HighLightMode0}
+{High-light with original masks}
+{Default all original masks are used for high-lighting.}
+
+{HighLightMode1}
+{High-light with conductor masks}
+{In place of all original masks,
+only the conductor masks are used for high-lighting.}
+
+{HighLightMode2}
+{High-light with specified mask}
+{In place of all original masks,
+only the specified mask is used for high-lighting.}
+
+{HighLightMask}
+{High-light mask}
+{Specify here the mask used for high-lighting.}
+
+{Highlaynets}
+{Highlay option -n}
+{If enabled: nets are selected for high-lighting.}
+
+{Highlaynetstxt}
+{Highlay option -N n1,n2...}
+{Select only the nets that are part of groups n1,n2....}
+
+{Highlayports}
+{Highlay option -p}
+{If enabled: ports are selected for high-lighting.}
+
+{Highlayportstxt}
+{Highlay option -P p1,p2...}
+{Select only the ports that are part of groups p1,p2....}
+
+{Highlaydevs}
+{Highlay option -e}
+{If enabled: devices (fets and bipolar transistors) are selected for high-lighting.}
+
+{Highlaydevstxt}
+{Highlay option -E e1,e2...}
+{Select only the devices that are part of groups e1,e2....}
+
+{Highlayverbose}
+{Highlay option -v}
+{Verbose mode.
+If enabled: the nets, ports and devices that are selected are printed on standard output.}
+
+{Highlaymatching}
+{Highlay option -m}
+{Select matching items for high-lighting.}
+
+{Highlayinconc}
+{Highlay option -i}
+{Select inconclusive items for high-lighting.}
+
+{Highlaydeficient}
+{Highlay option -d}
+{Select deficient items for high-lighting.}
+
+{Use matchresults}
+{Using match results}
+{Highlay will read the output of the program match for the selected cell.\
+Nets, ports and/or devices are selected according the
+"deficient", "inconclusive" or "matching" items setting.\
+Nets, ports and/or devices are selected for high-lighting according to
+the use of the options:
+select "nets" (-n/-N), select "ports" (-p/-P) and select "devices" (-e/-E).\
+It is also possible to select a number of groups (a comma separated list of numbers)
+for high-lighting.  Consult the -fullbindings output of match.}
+
+{Use namefile}
+{Using a namefile}
+{Highlay will read the names of the conductors (nets/ports) and/or devices
+of the selected cell that must be high-lighted from the specified namefile.\
+The names must be separated by tabs, spaces and/or newline characters.
+For the devices, the database instance names must be used.\
+Nets, ports and/or devices are selected for high-lighting according to
+the use of the options:
+select "nets" (-n), select "ports" (-p) and select "devices" (-e).}
+
+{Match}
+{Match}
+{Match compares two networks from the database.
+A binding table, which specifies which nets (terminals) and devices from both
+network descriptions are to be associated is available as well as
+a list of 'unmatched' nets (terminals) and devices
+in case the two networks are different.}
+
+{Matchnom_bttn}
+{Nominal network button}
+{Click on this button to select the nominal network cell from the "Selected Cell" field.}
+
+{Matchact_bttn}
+{Actual network button}
+{Click on this button to select the actual network cell from the "Selected Cell" field.}
+
+{Matchnom_txt}
+{Nominal network name}
+{Match this nominal network against the actual network.}
+
+{Matchact_txt}
+{Actual network name}
+{Match this actual network against the nominal network.}
+
+{Matchfullbindings}
+{Match option -fullbindings}
+{Print an extended binding table on the stdout.}
+
+{Matchexpand}
+{Match option -expand}
+{Print a listing of both networks on the stdout after they have been expanded.}
+
+{Matchnomap}
+{Match option -nomap}
+{Do not map elements if networks do not match.}
+
+{Matchparameters}
+{Match option -parameters}
+{Print parameter values in binding table.}
+
+{Matchverbose}
+{Match option -verbose}
+{Verbose mode.\
+Print additional process information on stderr.}
+
+{Matchbyname}
+{Match option -byname}
+{Match terminals, nets and devices by name before starting the
+actual network comparison.
+Elements having names starting with an underscore ('_') or a
+number ('0'-'9') are not considered in this stage.
+This option can be used to assert equivalences between network elements via
+their names.}
+
+{Matchedif}
+{Match option -edif}
+{Produce output in an edif-like format that can be used as input for
+the program highlay.}
+
+{Matchcapacitors}
+{Match option -capacitors}
+{Ignore capacitors in both network descriptions.\
+Capacitors are simply removed.}
+
+{Matchresistors}
+{Match option -resistors}
+{Ignore resistors in both network descriptions.\
+Resistors are replaced by a connection.}
+
+#########################################################################
+# Menu Options
+#########################################################################
+{QUICK_REFERENCE}
+{Show quick reference}
+{Display a window with a short explanation of buttons, options, etc.\
+\
+If an explanation of an item is available, it is shown when the respective
+item is armed, i.e. pointed to with the mouse pointer while the left
+mouse button is pressed.  If you do not release the mouse button before
+moving the mouse pointer off the item, the explanation is displayed
+without any change of selection.}
+
+{Show Command Line}
+{Show command line}
+{Offers expert users the possibility to manually edit most commands
+generated by this graphical user interface, before running a program.
+Comes with a command history buffer.\
+\
+For a couple of commands it is necessary to
+perform additional actions after execution, in order to keep the
+information presented by the interface consistent: after deleting a
+cell, for instance, the List of Cells must be updated.  In those cases
+the possibility for manually modifying the command line will not
+be offered, since otherwise the consistency of the information presented
+by the interface cannot be guaranteed.}
+
+{SetDefaultMode}
+{Set user/technology/general default}
+{With this toggle on, the mouse pointer changes from an arrow
+into a bullet, in appropriate windows.
+When selecting an item while the mouse pointer is a bullet,
+the user or technology or general default value is chosen
+(depending on which one you switched on).
+In an option menu, the selection jumps to the default.
+In a text field, the default value is filled in
+when the text field takes the input focus (the cursor blinks), or when
+you press <Control> <Return> while the text field already has the focus.
+Toggle- and radio-buttons jump to the default values.\
+\
+When selecting the "Set Defaults" button, all form values
+are changed to the selected default.
+If no default is switched on, technology default is chosen for all values.}
+
+{DontLoadForms}
+{Do not change open forms}
+{When using the `Load settings' menu command or a change database-project command,
+do not load the new helios (user or technology) defaults in the currently open windows.
+Also don't change the current `quick reference' and `command line' window setup.}
+
+{ChangePrompt}
+{Change the prompt}
+{Changes the prompt used in the `Program Output' (and `Job Control') window.
+Default the maximum length prompt (4) is used.  Choices are:\
+    (0) [1]>\
+    (1) [1]proj_name>\
+    (2) [1]space:proj_name>\
+    (3) [1]/full_path/proj_name>\
+    (4) [1]space:/full_path/proj_name>}
+
+#########################################################################
+# Menu Help
+#########################################################################
+{ABOUT}
+{About}
+{Information about copyright and version of this software.}
+
+{HELP}
+{Help}
+{This is the `helios' interface to SPACE, one of the world's best Submicron Parasitic Artwork
+to Circuit Extractors, as well as to various tools of the NELSIS IC design system.\
+\
+Hopefully, the interface is essentially self-explanatory.
+This window, however, gives a short explanation of buttons, options, etc.
+If an explanation of an item is available, it is shown when the respective
+item is armed, i.e. pointed to with the mouse pointer while the left
+mouse button is pressed.  If you do not release the mouse button before
+moving the mouse pointer off the item, the explanation is displayed
+without any change of selection.\
+\
+The interface only acts as front end (for most actions), and starts
+up the extractor and various utility programs for doing the actual work.
+Command line arguments and parameter files (where applicable) are generated
+by the interface automatically.  In some circumstances, it might be
+desirable to circumvent the interface, and start up the programs directly
+from a command shell.  Therefore, the name of the utility programs used,
+together with command line options etc., are frequently are mentioned
+in the Quick Reference. Space and the accompanying tools are to be stored
+in a directory-structure pointed to by the environment variable ICDPATH
+(this is not mandatory, but the availability of the variable ICDPATH is
+assumed in all the examples). Make sure that this variable is set correctly,
+and that $ICDPATH/share/bin is included in your search path.\
+\
+You can open this window also by selecting
+[Show quick reference] from the Options menu.}
+
+{ShowUsedFiles}
+{Parameters and Files}
+{Gives information about the opened database and other file- and directory paths.
+And about the used default files.}
+
+{ManualPages}
+{Manual Pages}
+{You can select one of the available manual pages of the programs from the index
+and read this manual page.}
+
+########################################################################
+# Message description for Import dialog.
+####
+{Import: Select database}
+{Import: Select project-database}
+{Press this button for a selection box of remote project-databases.}
+
+{Import: Add}
+{Add remote project-database}
+{Add selected project-database to the current library list.\
+\
+Utility program used:  addproj}
+
+{Import: Remove}
+{Remove remote project-database}
+{Remove selected project-database from the current library list.}
+
+{Import: In the circuit view}
+{Import in circuit view}
+{The selected cells are imported only in the circuit view.\
+\
+impcell command line option:  -c}
+
+{Import: In the layout view}
+{Import in layout view}
+{The selected cells are imported only in the layout view.\
+\
+impcell command line option:  -l}
+
+{Import: Unselect}
+{Unselect the selected cells}
+{This button unselects all selected cells for a new import action.}
+
+{Import: All cells}
+{Select all cells for import}
+{This button selects all cells for the import action.}
+
+{Import: All root cells}
+{Select all root cells for import}
+{Root cells are indicated by bold typeface.
+This button select all root cells for the import action.}
+
+{Import: Identical}
+{Local name = remote name}
+{The name of the imported cell in the current project is
+chosen equal to the cell's name in the library project.}
+
+{Import: Use Prefix}
+{Local name = remote name with prefix}
+{Form the local name of the imported cell by prepending to
+its name in the  library project the prefix
+specified in the text field to the right.}
+
+{Import: Specified}
+{Use specified local name}
+{Specify the local name of an imported cell explicitly. When you choose this option,
+only one item at a time can be selected in the above list.}
+
+{Import Select cell}
+{Import of imported cells}
+{You cannot import cells more than once.}
+
+{Import_OK}
+{Import}
+{Utility program used:  impcell}
+
+############################################################################
+# Delete Cell of Database
+####
+{DeleteCircuit_Bttn}
+{Circuit cell list}
+{Displays the cell list of the circuit view of the database.}
+
+{DeleteLayout_Bttn}
+{Layout cell list}
+{Displays the cell list of the layout view of the database.}
+
+{DeleteSelected_Bttn}
+{Delete selected}
+{Remove all cells you have selected.}
+
+{DeleteLocal_Bttn}
+{Delete local}
+{Remove all local cells, but not the imported cells.}
+
+{DeleteImported_Bttn}
+{Delete imported}
+{Remove all imported cells.}
+
+{DeleteAll_Bttn}
+{Delete all}
+{Remove all cells, including imported cells.}
+
+{Delete Select cell}
+{Select cell for deletion}
+{Individually you can only select local root cells.
+These are displayed with bold typeface.}
+
+###########################################################################
+# Load a Layout File into Database
+####
+{Test for 45 degree}
+{Test for 45 degree}
+{With this option on, it will be checked whether all angles
+in the layout are multiples of 45 degrees.\
+\
+ccif/cgi/cldm command line option:  -4}
+
+{No origin mode}
+{No origin mode}
+{With option "origin mode", when there are cell calls, the program translates the sub cell
+until the lower left corner of its bounding box is the origin.  Note that this can
+only work correctly, if the bounding box coordinates are correctly stored in the database.\
+\
+With option "no origin mode" the translation vector is from the origin of the parent cell
+to the origin point (0,0) of the sub cell (the sub cell bounding box is not placed on the
+translation vector).  Note that this is the preferred (savest) mode of operation.\
+\
+ccif/cldm command line option:  -o  (is no-origin mode)\
+ccif/cldm command line option:  -x  (is origin mode)}
+
+{Cell overwrite mode}
+{Cell overwrite mode}
+{Enables cell overwrite (force) mode.\
+\
+ccif/cgi/cldm command line option:  -f}
+
+{Only syntax check}
+{Only syntax check}
+{Only check whether the following two conditions are met:\
+\
+1) a cell may not be redefined, and\
+\
+2) a cell called in a cell description must already exist.\
+\
+ccif/cldm command line option:  -s}
+
+{Mask List}
+{Mask List}
+{You can specify here a mask list to be used instead of the default mask list.\
+\
+cgi command line option:  -m mask_list}
+
+{TerminalWidth}
+{Terminal size}
+{Size of terminals (in lambda) generated by text structures (default 0).\
+\
+cgi command line option:  -w size\
+Possible values of size:  integers >= 0}
+
+{TerminalForText}
+{Terminal for text}
+{Generate a terminal for each GDS text structure.
+This option is obsolete, it is specified in the basic mask list file.\
+\
+cgi command line option:  -t}
+
+{CIF Unit}
+{CIF Unit}
+{The value given here will be used as cifunit of the parameters in the CIF file.\
+\
+ccif command line option:  -u cifunit\
+Possible values of cifunit:  reals > 0.}
+
+{Layout file}
+{Layout file}
+{Specify here the layout input file.}
+
+###########################################################################
+# Shell
+####
+{Save Program Output}
+{Save Program Output}
+{Save the text in the `Program Output' to the specified file.}
+
+{Clear Program Output}
+{Clear Program Output}
+{Clear the `Program Output' window.}
+
+###########################################################################
+# Make New Database
+####
+{HELP_DATABASE}
+{Database selection}
+{If you know the name and location of the project-database to be opened,
+enter it into the "Selection" field and press [OK].\
+\
+If you do not know the name or location of the project-database:\
+\
+1. Type as much of the path as you know into the "Filter" field.
+For example, if you know that the directory containing the project-database
+is in a subdirectory of the "/doc/Project/" directory, enter "/doc/Project/".\
+\
+2. Press [Filter].\
+\
+3. If the file is not in the "Databases" list, select a directory in the "Directories" list and
+choose [Filter].  Repeat this step until the desired project-database is in the "Databases" list.\
+\
+4.  Select the project-database in the "Databases" list.\
+\
+5.  Press [OK].
+}
+
+{HELP_FILE}
+{File selection}
+{If you know the name and location of the file to be opened,
+enter it into the "Selection" field and choose [OK].\
+\
+\
+If you do not know the name or location of the file:\
+\
+1.  Type as much of the path as you know into the "Filter" field.
+For example, if you know the file is in a subdirectory of the "/doc/Project/" directory,
+enter "/doc/Project/" (including the trailing slash).\
+\
+2.  Choose [Filter].\
+\
+3.  If the file is not in the "Files" list, select a directory in the "Directories"
+list and choose [Filter].  Repeat this step until the file is in the "Files" list.\
+\
+4.  Select the file in the "Files" list.\
+\
+5.  Choose [OK].
+}
+
+##########################################################################
+# Retrieve Circuit from Database
+####
+{Retrieve: SPICE}
+{SPICE netlist format}
+{The program xspice is used for netlist retrieval.}
+
+{Retrieve: HSPICE}
+{HSPICE netlist format}
+{The program xspice is used for netlist retrieval.\
+\
+Command line option:  -H}
+
+{Retrieve: ESPICE}
+{ESPICE netlist format}
+{The program xspice is used for netlist retrieval.\
+\
+Command line option:  -E}
+
+{Retrieve: PSTAR}
+{Philips PSTAR netlist format}
+{The program xpstar is used for netlist retrieval.}
+
+{Retrieve: EDIF}
+{EDIF netlist format}
+{EDIF is the Electronic Design Interchange Format.\
+\
+The program xedif is used for netlist retrieval.}
+
+{Retrieve: NLE}
+{NLE netlist format}
+{NLE is a COMPASS netlist format.\
+\
+The program xnle is used for netlist retrieval.}
+
+{Retrieve: SLS}
+{SLS netlist format}
+{SLS is the switch level simulator of the NELSIS IC design system.\
+\
+The program xsls is used for retrieval.}
+
+{Retrieve: VHDL}
+{VHDL netlist format}
+{VHDL is the VHSIC Hardware Description Language.\
+\
+The program xvhdl is used for netlist retrieval.}
+
+{Retrieve: SPF}
+{SPF netlist format}
+{SPF is the Cadence Standard Parasitic Format.\
+\
+The program xspf is used and generates Detailed SPF.}
+
+{Retrieve: SPEF}
+{SPEF netlist format}
+{SPEF is the IEEE Standard Parasitic Exchange Format.\
+\
+The program xspef is used and generates Detailed SPEF.}
+
+{Retrieve - send output to window}
+{Retrieve - send output to window}
+{Display the results of circuit retrieval in the "Progam Output" window.}
+
+{Retrieve - send output to file}
+{Retrieve - send output to file}
+{Redirect the results of circuit retrieval from the "Progam Output" window
+to the file specified here.\
+\
+If no file is specified command line option -f is used!}
+
+{Retrieve: Only top-level cell}
+{Retrieve: Only top-level cell}
+{Do not retrieve any sub-cells.\
+\
+This is the default mode, no command line options are required.}
+
+{Retrieve: Local hierarchy}
+{Retrieve: Local hierarchy}
+{Also retrieve all local sub-cells.\
+\
+Command line option:  -h}
+
+{Retrieve: Full hierarchy}
+{Retrieve: Full hierarchy}
+{Also retrieve all local and all imported sub-cells.\
+\
+Command line option:  -hi}
+
+{Retrieve: Exclude libraries}
+{Retrieve: Exclude libraries}
+{Only used with "full hierarchy" to exclude specific the cells from
+certain imported libraries out of the listing.
+The paths must be given in the text field!\
+\
+Command line option:  -X <libr_path>}
+
+{Retrieve: Exclude library paths}
+{Retrieve: Exclude library paths}
+{Enter in this text field the paths of the excluded libraries.
+No full library paths need to be given.
+You can specify (1) an absolute (unique) begin part of the path
+or (2) the basename of the library path.}
+
+#*************************************************************
+# Begin of "Advanced Options for SPICE/PSTAR/SPF Retrieval"
+#*************************************************************
+{Instance names from database}
+{Use names from project-database for instances}
+{The netlist has the format\
+\
+      instance  net1  net2  value\
+\
+If the toggle [instances] is off, the program xspice used for
+retrieval enumerates instances in its own way, e.g.\
+\
+      c7  2  1  95.83e-18\
+\
+meaning: capacitor instance nr. 7 connects net nr. 2 with net nr. 1,
+and it has a value of 95.83e-18 Farad.  With the toggle on,
+the internal numbering of instances is replaced - where applicable - by
+names from the project-database, e.g.\
+\
+      c_CG1  2  1  95.83e-18\
+\
+Command line option:  -d}
+
+{RETR_NODE0_GND}
+{Identify ground nodes by prefix "gnd" or "GND"}
+{Use node number 0 for all nodes whose name starts with "gnd" or "GND".\
+\
+Command line option:  -x}
+
+{RETR_NODE0_VSS}
+{Identify ground nodes by prefix "vss" or "VSS"}
+{Use node number 0 for all nodes whose name starts with "vss" or "VSS".\
+\
+Command line option:  -y}
+
+{RETR_NODE0_CUSTOM_PREFIX}
+{Identify ground nodes by customized prefix}
+{Use node number 0 for all nodes whose name starts with the
+prefix specified in the text field to the right of this toggle button.\
+\
+Command line option:  -z <prefix>}
+
+{RETR_NODE0_CUSTOM_NAME}
+{Identify ground nodes by this name}
+{Use node number 0 for all nodes whose name is equal to the name
+specified in the text field to the right of this toggle button.\
+\
+Command line option:  -O <name>}
+
+{RETR_ADD_AUTO_BULK}
+{Add bulk terminals automatically}
+{The program will automatically determine if n-bulk and/or p-bulk terminals should be added.
+This is determined from the bulk voltages that are required for the different devices that
+are part of the circuit.\
+\
+Under normal circumstances, this means that n-bulk connections are added
+for circuits containing n-enhancement and depletion transistors,
+and that p-bulk connections are added for circuits containing p-enhancement transistors.
+Use this option to suppress automatic addition!\
+\
+Command line option:  -u}
+
+{RETR_ADD_ALWAYS_BULK_P}
+{Always bulk terminals: always p-bulk}
+{Add terminals for all p-bulk connections.\
+\
+Command line option:  -p}
+
+{RETR_ADD_ALWAYS_BULK_N}
+{Always bulk terminals: always n-bulk}
+{Add terminals for all n-bulk connections.\
+\
+Command line option:  -n}
+
+{RETR_FLOAT_NODE_PATCH}
+{Floating node patch}
+{Connect a large grounded resistor to each member
+of a pair of nodes connected by a net statement.\
+\
+Command line option:  -g}
+
+{RETR_OMIT_UNCONN_INST}
+{Omit unconnected instances}
+{Do not output unconnected cell instances (sub-circuits).\
+\
+Command line option:  -t}
+
+{RETR_OMIT_TITLE_CARD}
+{Omit title card}
+{Output all cells as sub-circuits and do not print a title card.\
+\
+Command line option:  -k}
+
+{Retrieve: Specified control file}
+{Use control file for SPICE/PSTAR/SPF}
+{The control file for retrieval is important in the first place for the specification
+of models for active devices.  Unless you here specify the name of the control file
+explicitly, the program will look for the file "xspicerc", first in the current
+project-database directory, and subsequently in the process directory.\
+\
+Command line option:  -C <file_name>}
+
+{Retrieve: Use control file}
+{Use specified control file for retrieval}
+{Unless you here specify the name of the control file explicitly, the program will look
+for the file "xslsrc", first in the current project-database directory,
+and subsequently in the process directory.\
+\
+Command line option:  -C <file_name>}
+
+{Retrieve: Define label}
+{Enable defined label}
+{Enable the usage of the defined label name for conditional reading of the control file.\
+\
+Command line option:  -D <label_name>}
+
+{Retrieve: Define label name}
+{Define label name}
+{Enter in this field the label name for conditional reading of the control file.}
+
+#*************************************************************
+# Begin of "Advanced Options for SPICE Retrieval"
+#*************************************************************
+{Retrieve: Use database names for nets}
+{Use names from project-database for nets}
+{The netlist has the format\
+\
+    instance  net1  net2  value\
+\
+With toggle [nets] off, the program xspice used for
+retrieval enumerates nets in its own way, e.g.\
+\
+    c7  2  1  95.83e-18\
+\
+meaning: capacitor instance nr. 7 connects nets nrs. 2 and 1, and it has a value
+of 95.83e-18 Farad.  With the toggle on, the internal numbering of nets is replaced
+- where applicable - by names from the project-database, e.g.\
+\
+    c7  term_f  GND  95.83e-18\
+\
+Command line option:  -a}
+
+{RETR_OMIT_MODEL_DEFS}
+{Omit model definitions}
+{Omit model definitions for devices in the output file.\
+\
+Command line option:  -o}
+
+#*************************************************************
+# Begin of "Advanced Options for PSTAR Retrieval"
+#*************************************************************
+{Use llrpd/llrnd models}
+{Use llrpd/llrnd models}
+{Use Philips llrpd/llrnd models for penh/nenh and add "s=1".\
+\
+Command line option:  -P}
+
+{Use p/n models}
+{Use p/n models}
+{Use Philips p/n models for penh/nenh.\
+\
+Command line option:  -Q}
+
+#*******************************************************************
+# Begin of "Advanced Options for NLE Retrieval"
+#*******************************************************************
+{RetrieveNLElong}
+{List all net/node names}
+{Command line option:  -l}
+
+{NLEnbulk}
+{Name for n-bulk connections}
+{Command line option:  -n nbulk_name}
+
+{NLEpbulk}
+{Name for p-bulk connections}
+{Command line option:  -p pbulk_name}
+
+#*******************************************************************
+# Begin of "Advanced Options for VHDL Retrieval"
+#*******************************************************************
+{RetrieveVHDLoption_r}
+{Generate entity definitions for sub-cells}
+{Generate also entity definitions for sub-cells that are not retrieved.\
+\
+Command line option:  -r}
+
+#*******************************************************************
+# Begin of "Advanced Options for SLS (and/or) EDIF Retrieval"
+#*******************************************************************
+{Retrieve: Instance names from database}
+{Use names from project-database for instances}
+{Use original database instance names.\
+\
+Command line option:  -d}
+
+{Retrieve: Expand array names}
+{Expand array names}
+{Expand name arrays into single names.\
+\
+Command line option:  -e}
+
+{Retrieve: Restrain extern network definitions}
+{Restrain extern network definitions}
+{Do not generate extern network definitions for sub-cells that are not retrieved.\
+\
+Command line option:  -r}
+
+{Retrieve: Shift array indices into range 0..N}
+{Shift array indices into range 0..N}
+{Command line option:  -s}
+
+{Retrieve: Create schematic}
+{Create schematic view}
+{Create schematic view instead of netlist view.\
+\
+Command line option:  -I  (implies option -c)}
+
+{Retrieve: Cadence compatible}
+{Cadence compatible EDIF}
+{Generate a Cadence compatible EDIF file.
+This requires the presence of a NELSIS-Cadence translation
+file "nls2cds.lib" in your working directory or in the process directory.\
+\
+Command line option:  -c}
+
+#*******************************************************************
+# Begin of "Make New Database"
+#*******************************************************************
+{Lambda}
+{Design length-unit lambda}
+{All physical dimensions of a design are expressed in the unit lambda.
+Here you can specify the value of lambda in microns.\
+\
+mkpr command line option:  -l lambda}
+
+{NewDatabaseName}
+{New database name}
+{The path name of the new project-database.
+You can click on the 'Name' button to choice an existing path as starting point.
+You must of course modify this existing path to make a new one.}
+
+{NewDbProcess}
+{Process of new project}
+{You must click on the 'Process' button to choice one of the process names from the list.\
+\
+mkpr command line option:  -p process}
+
+#*******************************************************************
+# Put Device Model into Circuit
+#*******************************************************************
+{DevModFromFile_Bttn}
+{File with device model}
+{Select a file containing a device model.}
+
+{DevModFromFile_Txt}
+{Enter a device filename}
+{Press the 'device file' button, a file selection box will popup so that you can select a file.
+Your selection will be put in the right TextField.}
+
+{DevModFromDbase_Bttn}
+{Database for reading device model}
+{Select a database to read device models from.}
+
+{DevModDbase_Txt}
+{Enter a database path}
+{Press the 'database' button, a file selection box will popup so that you can select
+a project database path.  After you have selected a database, you can select a device from it.
+Your selection will be put in the right TextField.}
+
+{DevModSelectDev_Bttn}
+{Device model from database}
+{Select a device from the database list.
+The selected device description is placed in the 'Edit device model' fields.}
+
+{DevModDev_Txt}
+{The selected device name}
+{After you have selected a database, you can select a device from it.
+Press the 'device' button, a list selection box will popup so that you can select a device.
+Your selection will be put in the right TextField.}
+
+{DevModName_Txt}
+{Device name field}
+{The new device name used for saving.}
+
+{DevModPrefix_Txt}
+{SPICE prefix field}
+{A legal SPICE prefix used for netlisting.}
+
+{DevModTerminals_Txt}
+{Terminals field}
+{A list of terminal names of the device.}
+
+{DevModInformal_Txt}
+{Informal description field}
+{A description about what for device this is.}
+
+{DevModFormal_Txt}
+{Formal description field}
+{A SPICE device model description and comment lines.}
+
+{DevModSaveInFile}
+{Save device model in file}
+{Save the device settings into a specified file.
+You will be prompted for the filename when activating this button.}
+
+{DevModSaveInDb}
+{Save device model in database}
+{Put the device model into the circuit part of the database.\
+\
+Utility program used:  putdevmod}
+
+{DevModSaveInDbEquiv}
+{Save device model & make an equivalence}
+{Make an equivalence between the device and an existing cell in the layout-view that has
+an identical name.  The extractor will then skip the cell and use the device model instead.}
+
+####################################################################
+# New Technology Compiler for space
+####
+{NEW_TECHN_COMPRES}
+{Use compressed table format for element definition file}
+{Normally the compressed format should be used.\
+\
+During the development of an element-definition file however, it may be advantageous
+to suppress the use of the compressed format, since that will make tecc
+(Technology Compiler for Space) run faster, and Space somewhat slower.}
+
+{NEW_TECHN_MSKDATA}
+{Mask data file}
+{Specifies the mask data file.
+The default mask data file is obtained from the process directory.}
+
+{NEW_TECHN_PROCESS}
+{Process}
+{Specifies the process.
+The default process is determined by the process used in the current project.}
+
+{NEW_TECHN_DEFAULT}
+{New Technology Defaults}
+{This process and mask data file defaults are used,
+if no process and mask data file are specified.}
+
+{NEW_TECHN_EL_FILE}
+{Element definition source file}
+{The element definition lists the elements that can be recognized from the layout description.
+For each of the elements, at least a name and a condition list has to be specified.\
+\
+The file name must have the extension ".s" else it is illegal!}
+
+###########################################################################
+# Display of mesh, tiles etc. in an X-window
+####
+{Use Display}
+{Use Display}
+{Tiles, meshes, resistors etc. are drawn in a separate window.
+It is possible to watch the progress of the extraction.}
+
+{Use X-Window synchronous mode}
+{Use X-Window synchronous mode}
+{This sometimes gives better pictures.}
+
+{Use Xspace menu}
+{Show Xspace menu}
+{Add a menu bar on the window displaying the drawings.  This allows further control.
+To start the program, chose "extract" from the "Extract"-menu on the new window.}
+
+{Draw tiles}
+{Draw tiles}
+{Draw the tiles from the CAD artwork, as they are recognized while scanning the layout.
+This option is incompatible with the 3d-option for the BE mesh.}
+
+{Draw tile boundaries}
+{Draw tile boundaries}
+{Draw white lines around the boundaries of the tiles from the CAD artwork.
+This option is incompatible with the 3d-option for the BE mesh.}
+
+{Draw input edges}
+{Draw input edges}
+{Draw the edges of the tiles perpendicular to the scanline.
+These edges are important for element recognition and mesh generation.
+This option is incompatible with the 3d-option for the BE mesh.}
+
+{Draw BE mesh}
+{Draw BE mesh}
+{Draw the boundary-element mesh used for 3-dimensional capacitance
+and substrate-resistance extraction.
+Only useful when accurate capacitance and/or substrate resistance is switched on.}
+
+{Draw only, no extraction}
+{Only drawing, no extraction}
+{Three dimensional extraction with the boundary element method
+is rather time-consuming.  This option allows to  suppress the actual
+extraction: only the generated mesh of boundary elements is displayed.
+This can e.g. be useful for verifying that the chosen boundary element size makes sense.}
+
+{Draw 3D picture}
+{3 dimensional picture}
+{Draw a three-dimensional picture of the boundary element mesh.
+This option is incompatible with any of the "Layout" options on the present form,
+and only useful when accurate capacitance and/or substrate resistance is switched on.}
+
+{Draw Green function}
+{Draw Green function}
+{The elements of the influence matrix in the boundary-element
+method for extraction of capacitances and/or substrate resistances
+couple a charge-BE and an observation-BE.  With this option, a white
+line is drawn between the two BEs whose coupling is currently
+evaluated.  It lets you watch the progress of the extractor.
+Only useful when accurate capacitance and/or substrate resistance is enabled.}
+
+{Draw FE mesh}
+{Draw FE mesh}
+{Draw the finite element mesh used for calculation of the interconnect resistance.
+This option is incompatible with the "draw intermediate/output resistor" options,
+and only useful with interconnect resistance extraction enabled.}
+
+{Draw intermediate resistors}
+{Draw intermediate resistors}
+{During resistance extraction resistors are generated, and some are
+eliminated again in the circuit reduction step.  With this option,
+white lines are drawn and erased as resistive couplings are generated
+and eliminated.  It is incompatible with the "draw FE mesh" option,
+and only useful with interconnect resistance extraction enabled.}
+
+{Draw output resistors}
+{Draw output resistors}
+{Mark by white lines the final result of resistive couplings.
+This option is incompatible with the "draw FE mesh" option,
+and only useful with interconnect resistance extraction enabled.}
+
+{Draw equipotential lines}
+{Draw equipotential lines}
+{Draw equipotential lines in the finite-element mesh.
+Only useful with interconnect resistance extraction enabled,
+and with "Apply Circuit Reduction Heuristics" switched on
+(see [details] for "Circuit Reduction" under "Extraction Options").}
+
+{Draw substrate terminals}
+{Draw substrate terminals}
+{Toggle drawing of substrate terminals.
+Only useful with substrate resistance extraction enabled.}
+
+{Draw substrate resistors}
+{Draw substrate resistors}
+{Toggle drawing of substrate resistors between substrate terminals.
+Only useful with substrate resistance extraction enabled.}
+
+{Draw Delaunay-diagrams}
+{Draw Delaunay-diagrams}
+{Toggle drawing of Delaunay-diagrams between substrate terminals.
+Only useful with fast substrate resistance extraction enabled.}
+
+#EOF

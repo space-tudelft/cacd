@@ -1,0 +1,155 @@
+.TH XSLS 1ICD "User Commands"
+.UC 4
+.SH NAME
+xsls - extract SLS network description out of the database
+.SH SYNOPSIS
+.B xsls
+.ie n .ta 3i
+.el .ta 0
+[-defghinrtv -w width -C file -D name
+	-F outfile -X lib] cell
+.SH OPTIONS
+.TP
+.B -d
+Use original database names for instance names.
+.TP
+.B -e
+Expand name arrays into single names.
+.TP
+.B -f
+Send output to a file \fIcell\fP.sls instead of to \fIstdout\fP.
+.TP
+.B -g
+No ground node.
+Use SUBSTR for GND.
+.TP
+.B -h
+Also extract hierarchy (used local sub-cells).
+.TP
+.B -i
+Also extract imported sub-cells (when option \fB-h\fP is used).
+.TP
+.B -n
+Use node numbers.
+.TP
+.B -r
+Do not generate extern network definitions
+for sub-cells that are not retrieved.
+.TP
+.B -t
+Do not output unconnected instances.
+.TP
+.B -v
+Enable verbose mode.
+.TP
+.B -w
+Use \fIwidth\fP for the output listing.
+.TP
+\fB-C\fP \fIfile\fP
+Use the specified \fIfile\fP as the control file.
+.TP
+\fB-D\fP \fIname\fP
+Define label \fIname\fP for conditional reading of the control file.
+.TP
+\fB-F\fP \fIoutfile\fP
+Send output to the specified \fIfile\fP.
+.TP
+\fB-X\fP \fIlib\fP
+Exclude specific certain library cells from the listing
+(when options \fB-hi\fP are used).
+This is very useful if you have a design with your own imported libraries.
+This option may be given several times.
+There are two exclude possibilities:
+(1) all lib's starting with absolute path (for example "-X /usr/ocean");
+(2) the lib with basename (for example "-X primitives").
+.SH DESCRIPTION
+.I Xsls
+is a program to extract an SLS circuit description out of the database.
+Default, only a circuit description of the cell itself is extracted and
+no sub-cells are extracted.
+When using the
+.B -h
+option the program will also extract all (local) sub-cells
+that are not a function (see "SLS: Switch-Level Simulator User's Manual")
+or a device.
+.PP
+Whether or not a cell is a device is determined by
+(1) the use of the program
+.I xcontrol(1ICD) for new projects
+or
+.I device(1ICD) for old projects
+and/or
+.I putdevmod(1ICD)
+(see the manual pages of these programs),
+or by (2) a set of built-in device names:
+"res" for resistor,
+"cap" for capacitor,
+"nenh" for an n-enhancement transistor,
+"penh" for a p\-enhancement transistor,
+"ndep" for an n-depletion transistor,
+"npn" and "pnp" for bipolar transistors and
+"d" for a diode.
+.SH "THE CONTROL FILE"
+For
+.I xsls
+a control file may be used.
+The default name of the control file is "xslsrc".
+First,
+the program tries to read this file from the current working directory.
+Next,
+it tries to open the control file in the process directory.
+Note,
+the control file may also be used for other programs.
+.PP
+The following specification is useful with the
+.B -i
+option:
+.nf
+
+   exclude_project  \fIpath_name\fP
+
+.fi
+to exclude specific certain imported projects from the net-listing (see the
+.B -X
+option).
+.SH "CONTROL FILE CONDITIONALS"
+It is possible to use "#if", "#else" and "#endif" statements,
+to make the reading of the control file depended of the invoking program.
+To be seen, the '#' character must be the first character on a line.
+This conditional statements may not be nested like the C-preprocessor.
+Normally, from the top of the file reading is set to true.
+A "#else" statement changes the state from true to false or false to true.
+A "#endif" statement changes the state always to true.
+A "#if" statement changes only the state to true if one of the specified
+conditions is true for the invoking program (else to false).
+Note that you can also define one condition on the command line with the
+.B -D
+option.
+.br
+The following condition is true for \fIxsls\fP:
+.nf
+
+   #if SLS
+.SH EXAMPLES
+.nf
+% xsls -h latch
+.AU "A.J. van Genderen"
+.SH MODIFIED BY
+.nf
+S. de Graaf
+.SH FILES
+.TP 12
+\fC\fIcell\fP.sls\fP
+(output file, when option \fB-f\fP is used)
+.TP
+\fCxslsrc\fP
+(default control file for xsls/xvhdl/...)
+.SH SEE ALSO
+csls(1ICD),
+putdevmod(1ICD),
+space(1ICD),
+xcontrol(1ICD),
+xedif(1ICD),
+xnle(1ICD),
+xspice(1ICD),
+xvhdl(1ICD).

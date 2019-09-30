@@ -1,0 +1,394 @@
+\section{Introductie Sequenti\"ele Machines}
+\label{intro_seq_machine}
+
+\subsection{Inleiding}
+
+De Hotelschakeling, die in paragraaf \ref{voorbeeld} besproken wordt, is een voorbeeld van
+een {\em sequenti\"ele schakeling\/}: een schakeling met geheugenwerking.
+Bij een sequenti\"ele schakeling hangen de uitgangssignalen niet alleen af van
+de ingangssignalen: de schakeling kan, afhankelijk van de {\em toestand\/}
+waarin hij zich bevindt, verschillende uitgangssignalen produceren bij
+dezelfde ingangssignalen.
+Dit in tegenstelling tot combinatorische logica, waarbij gegeven
+ingangssignalen altijd dezelfde uitgangssignalen zullen opleveren.
+Sequenti\"ele schakelingen onderscheiden zich van combinatorische logica
+doordat ze ge\-heu\-gen\-ele\-men\-ten bevatten.
+Deze geheugenelementen kunnen latches zijn (bij sequenti\"ele schakelingen
+volgens het {\em level mode\/} model), of flipflops ({\em clock mode\/}
+model).
+In de geheugenelementen wordt de toestand
+van de schakeling opgeslagen.
+Sequenti\"ele schakelingen kunnen beschreven worden d.m.v.\ een
+toestandsdiagram.
+
+Bij het practicum zullen we sequenti\"ele schakelingen nodig hebben
+om besturingseenheden te realiseren.
+Om het ontwerpen van deze besturingseenheden gestructureerd te laten verlopen
+en de verificatie van de ontworpen schakelingen te vereenvoudigen
+zullen we een aantal afspraken maken, waaraan de besturingen
+moeten voldoen:
+
+\begin{itemize}
+\item
+We maken gebruik van een \'e\'en-fase kloksignaal. De toestand van de schakeling
+zal bewaard worden in flipflops, die \'e\'en keer per klokperiode inlezen.
+\item
+Alleen schakelingen volgens het {\em Moore model\/} zijn toegestaan.
+Dit betekent, kort gezegd, dat de uitgangssignalen niet onmiddellijk
+af mogen hangen van de ingangssignalen, maar alleen van de toestand
+waarin de schakeling zich bevindt.
+\item
+De schakelingen moeten volledig {\em synchroon\/} zijn. \index{synchroon}
+Dat wil zeggen dat alle geheugenelementen op hetzelfde tijdstip
+inlezen. Het is dus niet toegestaan om logica op te nemen
+in de kloklijnen, omdat dit tot klokverschuiving ({\em clock-skew\/}) \index{clock-skew}
+leidt. Ook het gebruik van ongelijke clock-buffers kan
+clock-skew veroorzaken.
+\item
+Alle ongebruikte toestanden moeten gecodeerd worden. Dit om te voorkomen
+dat de schakeling kan vastlopen in \'e\'en of meerdere ongebruikte
+toestanden.
+\end{itemize}
+
+In de volgende paragrafen zullen we een praktische inleiding geven in het
+beschrijven
+van sequenti\"ele schakelingen.
+Een uitgebreidere en meer formele behandeling
+is te vinden in \cite{DT}.
+
+\subsection{Het Moore model}
+\index{Mealy|(bold}
+\index{Moore|(bold}
+Voordat we kunnen gaan kijken wat het Moore model nu precies inhoudt zullen
+we eerst het algemene wiskundige model van een sequenti\"ele schakeling
+bekijken:
+de {\em sequenti\"ele machine\/}. Deze kan gedefinieerd worden als een
+geordend vijftal:
+
+\begin{equation}
+M = (I,U,Q,\delta,\lambda)
+\end{equation}
+
+\begin{tabbing}
+waarin \= \\
+\> $I$ de verzameling van {\em ingangssymbolen\/} is; \\
+\> $U$ de verzameling van {\em uitgangssymbolen\/} is; \\
+\> $Q$ de verzameling van {\em toestanden\/} is; \\
+\> $\delta$ de {\em toestandsfunctie\/}, een afbeelding van $Q \times I$ in $Q$ is; \\
+\> $\lambda$ de {\em uitgangsfunctie\/}, een afbeelding van $Q \times I$ op $U$ is.
+\end{tabbing}
+
+We zullen hierbij aannemen dat de verzamelingen $I$, $U$ en $Q$
+eindig en niet-leeg zijn.
+Bovenstaande definitie is schematisch weergegeven in figuur
+\ref{figuur:seq_mod}.
+
+\begin{figure}[bth]
+\centerline{\callpsfig{seq_mod.ps}{width=1\textwidth}}
+\caption{Blokschema sequenti\"ele machine (Mealy model).}
+\label{figuur:seq_mod}
+\end{figure}
+
+De blokken die aangeduid zijn met $\delta$ en $\lambda$ stellen combinatorische
+logica voor; het blok dat aangeduid is met $Q$ bevat de geheugenelementen.
+Het model van figuur \ref{figuur:seq_mod}
+staat in de literatuur bekend als het {\em Mealy model\/}.
+In dit model is de $\lambda$-functie gedefinieerd als een functie van (het
+Cartesisch produkt van) de toestandsverzameling $Q$ en
+de ingangsverzameling $I$ op de uitgangsverzameling $U$: 
+
+\begin{equation}
+\lambda : Q \times I \stackrel{op}{\rightarrow} U
+\end{equation}
+
+Het Mealy model staat dus een direct combinatorisch
+verband toe tussen de ingangswaarde en de uitgangswaarde.
+Dit betekent dat bij schakelingen volgens het Mealy model de uitgangen
+direct kunnen veranderen wanneer \'e\'en van de ingangssignalen verandert.
+
+Bij het zogenaamde {\em Moore model\/} is dit directe verband
+van ingang naar uitgang niet toegestaan.
+Het Moore model definieert de $\lambda$-functie als volgt:
+
+\begin{equation}
+\lambda : Q \stackrel{op}{\rightarrow} U
+\end{equation}
+
+Dit is schematisch weergegeven in figuur \ref{figuur:moore_mod}.
+
+\begin{figure}[bth]
+\centerline{\callpsfig{moore_mod.ps}{width=1\textwidth}}
+\caption{Blokschema van het Moore model.}
+\label{figuur:moore_mod}
+\end{figure}
+
+Wiskundig gezien is het Moore model dus een beperking van
+het Mealy model.
+Bij het toepassen van beide modellen op praktische schakelingen blijkt
+dat schakelingen die volgens het Mealy model gespecificeerd zijn in
+het algemeen een kortere reactietijd hebben
+(in aantal klokperioden gerekend) dan schakelingen volgens    
+het Moore model.
+Daarnaast vergt een specificatie volgens het Mealy model meestal
+minder toestanden.
+Een groot nadeel van het Mealy model is echter dat er
+zgn.\ {\em statische lusvorming\/} kan optreden. 
+Dit kan gebeuren
+wanneer twee apart ontworpen schakelingen op elkaar worden aangesloten,
+zoals is weergegeven
+in figuur \ref{figuur:modules}.
+
+Figuur \ref{figuur:modules} toont twee modules die met elkaar communiceren onder
+besturing van een kloksignaal.
+Wanneer beide schakelingen zijn gespecificeerd volgens het Mealy model
+is het mogelijk dat een uitgangssignaal van module 1
+rechtstreeks de uitgang van module 2 be\"{\i}nvloedt.
+Het uitgangssignaal van module 2 gaat naar module 1 en kan zo
+op zijn beurt onmiddellijk het uitgangssignaal van module 1 veranderen.
+Dit kan weer zijn invloed hebben op de uitgang van module 2, enzovoort.
+Er is dan sprake van statische (=~logische) lusvorming tussen 
+module 1 en module 2.
+
+\begin{figure}[bth]
+\centerline{\callpsfig{modules.ps}{width=6cm}}
+\caption{Interactie tussen twee modules.}
+\label{figuur:modules}
+\end{figure}
+
+Het is duidelijk dat er op deze manier een oscillatie kan ontstaan
+in de communicatie tussen beide modules.
+Het is in dat geval onzeker wat voor waarde de in- en uitgangssignalen
+van beide modules zullen hebben op het moment dat de 
+eerstvolgende klokpuls komt.
+Hierdoor kan het gebeuren dat twee modules die elk op het eerste gezicht
+correct gespecificeerd lijken, toch niet goed functioneren
+wanneer ze aan elkaar gekoppeld worden.
+
+Wanneer beide modules daarentegen volgens het Moore model gespecificeerd
+zijn, zal het probleem van statische lusvorming zich niet voordoen.
+Wanneer module 1 zijn uitgang verandert, kan dit pas na de eerstvolgende klokpuls
+van invloed zijn op de uitgang van module 2.
+Hierop kan module 1 pas een klokpuls later reageren.
+De mogelijkheid van oscillaties binnen \'e\'en klokperiode is hier dus niet
+aanwezig.
+Dit maakt de verificatie van schakelingen volgens het Moore model een stuk
+eenvoudiger dan schakelingen volgens het Mealy model.
+Daarom wordt voor het ontwerppracticum ge\"eist dat alle
+sequenti\"ele schakelingen van het Moore-type zijn. 
+\index{Mealy|)} \index{Moore|)}
+\subsection{Toestandsdiagrammen}
+
+Sequenti\"ele schakelingen kunnen worden weergegeven door middel van
+toestandsdiagrammen.
+We zullen ons hier beperken tot sequenti\"ele schakelingen volgens het Moore model.
+
+In een toestandsdiagram geven we iedere toestand weer met een bolletje.
+In het bolletje wordt de naam van de toestand gezet. Ook kan de uitgangscombinatie
+die bij die toestand hoort in het bolletje gezet worden.
+\footnote{Bij het Moore model is de uitgang alleen afhankelijk van de
+toestand waarin de schakeling zich bevindt.
+Bij het Mealy model is de uitgang ook afhankelijk van de huidige
+ingangscombinatie, zodat de uitgangswaarden dan
+bij de pijlen voor de toestandsovergangen komen te staan.}
+Overgangen van de ene toestand naar de andere worden weergegeven met pijlen.
+Bij iedere pijl staat voor welke ingangscombinatie de overgang optreedt.
+De meeste besturingsschakelingen hebben \'e\'en resettoestand
+en een dominant resetsignaal.
+\footnote{Onder een dominant resetsignaal zullen we hier verstaan: een
+signaal dat de schakeling op de eerstvolgende klokpuls in \'e\'en
+gedefinieerde toestand brengt, ongeacht de waarde van de overige 
+ingangssignalen of de toestand waarin de schakeling zich bevindt.}
+Wanneer het resetsignaal geactiveerd wordt, komt de besturing
+altijd in de resettoestand, ongeacht de andere ingangssignalen.
+De resettoestand kan in een toestandsdiagram aangegeven worden
+d.m.v.\ een dubbele pijl.
+De aparte pijlen vanuit iedere toestand naar de resettoestand kunnen
+dan weggelaten worden.
+Dit is weergegeven in figuur \ref{figuur:toestand_vb}.
+
+\begin{figure}[bth]
+\centerline{\callpsfig{toestand_vb.ps}{width=8cm}}
+\caption{Links: voorbeeld van een stukje toestandsdiagram.
+Rechts: aanduiding van een dominant resetsignaal.}
+\label{figuur:toestand_vb}
+\end{figure}
+
+Het is handig om in toestandsdiagrammen symbolische
+namen te geven aan toestanden: een toestandsdiagram
+met namen als 'rusttoestand' en 'wacht op input' is meestal duidelijker
+dan een toestandsdiagram met namen als 'Q0' en 'Q1'.
+Hetzelfde geldt voor de in- en uitgangssignalen: symbolische
+benamingen zijn meestal duidelijker dan rijen bits.
+In een later stadium wordt dan een toestandstabel opgesteld, waarin
+bitcombinaties worden toegekend aan de symbolische namen. 
+Ook is het mogelijk om in eerste instantie een groep toestanden weer te
+geven als \'e\'en enkele toestand, en deze groep pas in een later
+stadium verder uit te werken: zulke toestanden worden {\em meta-toestanden\/}
+genoemd.
+Een andere reden om een toestand op te splitsen in een aantal toestanden
+kan bijvoorbeeld zijn dat bij het uitwerken van een ontwerp blijkt dat een
+gevraagde actie
+niet in \'e\'en klokperiode te realiseren is, en dus verdeeld moet worden
+over meerdere perioden.
+
+\subsection {Voorbeeld: Modeltrein-besturing}
+In deze paragraaf zullen we 
+het ontwerp van een eenvoudige sequenti\"ele
+schakeling uitwerken.
+De opdracht is als volgt:
+
+OPDRACHT \\ 
+{\em Ontwerp de besturing voor een modeltrein. De trein kan
+in twee richtingen rijden en wordt bediend
+d.m.v.\ een druktoets en een schakelaar.
+Met de druktoets kan de trein op gang of tot stilstand gebracht
+worden.
+De schakelaar bepaalt of de trein voor- of achteruit
+rijdt.
+De rijrichting kan alleen veranderd worden door de trein
+eerst tot stilstand te brengen. \\
+De beide ingangssignalen zijn gesynchroniseerd met de klok.
+Het indrukken van de druktoets levert een puls op ter
+lengte van \'e\'en klokperiode.
+Er is een resetsignaal dat
+bij het aanzetten van de modeltrein gedurende enkele
+klokperioden hoog is, en daarna verder laag (power-on reset).
+De besturing heeft twee uitgangssignalen, die aangeven of
+de trein voor- of achteruit rijdt.
+Wanneer beide signalen laag zijn, staat de trein stil.}
+
+UITWERKING\\
+De besturing heeft drie toestanden: rust, vooruit en
+achteruit.
+Overgangen tussen deze toestanden treden op
+wanneer de druktoets wordt ingedrukt.
+De stand van de schakelaar bepaalt of de trein bij
+het indrukken van de druktoets in de rusttoestand, vooruit (schakelaar = 1)
+of achteruit (schakelaar = 0) gaat rijden.
+Het power-on resetsignaal kan gebruikt worden om te voorkomen
+dat de trein meteen begint te rijden, wanneer de modelspoorbaan
+wordt aangezet.
+\footnote{Het is niet bekend wat voor waarde de geheugenelementen aannemen als
+de schakeling wordt aangezet. Daardoor is ook de toestand waarin de schakeling
+bij het aanzetten terecht komt onbekend.}
+Hiertoe wordt de rusttoestand als resettoestand gekozen.
+Het resetsignaal is dominant over de andere ingangssignalen.
+Het toestandsdiagram is weergegeven in figuur \ref{figuur:modeltrein}.
+Merk op dat er in het toestandsdiagram gebruik is gemaakt van
+het gegeven dat de druktoets pulsen afgeeft met een tijdsduur
+van precies \'e\'en klokperiode.
+Wanneer een puls langer aanhoudt, zal de schakeling gaan oscilleren
+tussen de rusttoestand en \'e\'en van de andere twee toestanden,
+afhankelijk van de stand van de schakelaar.
+Dit valt op te lossen door het toestandsdiagram uit te breiden
+met drie extra toestanden.
+De overgangen in het toestandsdiagram lopen dan alle via zo'n
+extra toestand, waarin gewacht wordt op het loslaten van de
+druktoets, alvorens door te gaan naar \'e\'en van de huidige
+toestanden 'rust', 'vooruit' en 'achteruit'.
+
+\begin{figure}[bth]
+\centerline{\callpsfig{modeltrein.ps}{width=10cm}}
+\caption{Toestandsdiagram van de modeltrein-besturing.}
+\label{figuur:modeltrein}
+\end{figure}
+
+
+We kunnen nu dit toestandsdiagram gaan vertalen naar een schakeling.
+De toestand van de schakeling kan bewaard worden in flipflops.
+Omdat er drie toestanden zijn, kunnen we de toestand coderen
+in twee flipflops: $Q_{1}$ en $Q_{0}$.
+Wanneer we flipflops gebruiken met een synchrone reset-ingang,
+kunnen we het resetsignaal hier meteen op aansluiten.
+Daarmee wordt de rusttoestand gecodeerd met $Q_{1} Q_{0} = 00$.
+We kunnen vervolgens bitcombinaties toekennen aan de overige toestanden.
+We kunnen de combinaties $01$ en $10$ gebruiken om de toestanden
+'achteruit' en 'vooruit' te coderen.
+We hebben dan nog \'e\'en combinatie niet gebruikt: $Q_{1} Q_{0} = 11$.
+We moeten zorgen dat, mocht de schakeling in deze toestand terechtkomen,
+hij er niet in vast blijft zitten, en dat de uitgangssignalen 
+in ieder geval 'netjes' zijn 
+gedefinieerd\footnote{We kunnen in principe de toestandsvariabele $Q_{1}$ 
+gebruiken om het uitgangssignaal
+'vooruit' te generen, en $Q_{0}$ voor 'achteruit'.
+Dit heeft als voordeel dat er geen extra logica nodig is om
+de uitgangssignalen te bepalen, behalve een eventuele buffer
+om de flipflops niet te zwaar te belasten.
+Wanneer de schakeling dan in de ongebruikte toestand komt, zullen
+beide uitgangen echter hoog worden. Hier zou de modeltrein kapot van kunnen
+gaan. Daarom is er hier voor gekozen om beide uitgangen in deze
+toestand laag te maken, hetgeen ten koste zal gaan van wat extra logica.}.
+
+\begin{table}[hbt]
+\begin{center}
+\begin{tabular}{cc|l|cc} 
+\hline
+$Q_{1}$ & $Q_{0}$ & toestand & Vooruit & Achteruit\\
+\hline
+\hline
+0 & 0 & rust & 0 & 0\\
+0 & 1 & achteruit & 0 & 1\\
+1 & 0 & vooruit & 1 & 0\\
+\hline
+1 & 1 & ongebruikt & 0 & 0\\
+\hline
+\end{tabular} \\
+\caption{Toestandscodering en uitgangssignalen.
+\label{tabel:codering}
+}
+\end{center}
+\end{table}
+
+De codering van de toestanden met de bijbehorende uitgangssignalen is
+weergegeven in tabel \ref{tabel:codering}.
+Tabel \ref{tabel:toestanden} geeft de bijbehorende functietabel,
+waarin de signalen druktoets, schakelaar,
+vooruit en achteruit zijn afgekort tot resp. D, S, V, A.
+Met de fase $n$ of $n+1$ van een signaal wordt
+de waarde die dat signaal aanneemt na
+de $n^{e}$ resp. $n+1^{e}$ klokpuls aangeduid.
+In de tabel is het resetsignaal weggelaten (dit wordt rechtstreeks aangesloten
+op de flipflops).
+Deze tabel kan worden omgezet naar combinatorische logica,
+om de opvolgertoestanden te bepalen ($\delta$ in figuur
+\ref{figuur:moore_mod}) en de uitgangssignalen te
+genereren ($\lambda$ in figuur
+\ref{figuur:moore_mod}).
+Deze omzetting kan handmatig gedaan worden,
+of m.b.v synthese software.
+Dan kan er een netwerk aangemaakt worden, waarin twee flipflops
+gekoppeld worden aan de logica.
+Daarbij worden de uitgangen voor $Q^{n+1}$ verbonden met de D-ingangen
+van de flipflops.
+De netwerkbeschrijving is dan gereed, en de besturingseenheid kan
+getest worden.
+
+\begin{table}[bth]
+\begin{center}
+\begin{tabular}{cccc|cc|cc} 
+\hline
+$D^{n}$ & $S^{n}$ & $Q_{1}^{n}$ & $Q_{0}^{n}$ & $Q_{1}^{n+1}$ & $Q_{0}^{n+1}$
+& $V^{n}$ & $A^{n}$ \\
+\hline
+\hline
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+1 & 0 & 0 & 0 & 0 & 1 & 0 & 0\\
+1 & 1 & 0 & 0 & 1 & 0 & 0 & 0\\
+0 & - & 0 & 1 & 0 & 1 & 0 & 1\\
+1 & - & 0 & 1 & 0 & 0 & 0 & 1\\
+0 & - & 1 & 0 & 1 & 0 & 1 & 0\\
+1 & - & 1 & 0 & 0 & 0 & 1 & 0\\
+\hline
+- & - & 1 & 1 & 0 & 0 & 0 & 0\\
+\hline
+\end{tabular}
+\caption{Functietabel van de modeltrein-besturing.
+\label{tabel:toestanden}
+}
+\end{center}
+\end{table}
+
+\cleardoublepage
+
+
+

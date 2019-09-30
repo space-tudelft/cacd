@@ -1,0 +1,259 @@
+.ll 77
+.hy
+.TH SEADIF 4SDF "THE SEADIF PROGRAMMERS MANUAL"
+.SH NAME
+seadif - language for sea-of-gates data representation
+.SH DESCRIPTION
+Seadif is a language that is specially suited for data representation in a
+sea-of-gates database. It essentially is a subset of the Edif (Electronic Design
+Interchange Format) language version 2.0.0, but it has a number of enhancements.
+These enhancements mainly deal with convenient layout representation and with
+a so called "meta hierarchy". The meta hierarchy consists of four levels. At the
+top are the
+.I libraries,
+at the second level are the
+.I functions,
+at the third level are the
+.I circuits
+and at the lowest level are the
+.I layouts.
+The main objective of the meta hierarchy is to provide a selection mechanism:
+each function lists a number of functional equivalent circuits and each
+circuit list a number of net-equivalent layouts.
+.PP
+The Seadif language is an "open" language. It can be extended while remaining
+compatibility with the older version. The seadif I/O library
+.I sealib (3SDF)
+skips unknown language elements and processes only the elements that it
+recognizes.
+The following five subsections discuss the Seadif statements currently defined
+and recognized by the Seadif I/O functions mentioned in
+.I sealib (3SDF).
+Meaning of the --rather informal-- syntax used below to describe the syntax of
+the Seadif language is as follows.
+.PP
+  <statement>   is a statement or a terminal symbol like
+                a <string> or a <number>, see below;
+  <statement>?  means zero or one time <statement>;
+  <statement>*  means zero, one or more times <statement>;
+  <aa> | <bb>   means either <aa> or <bb>, not both;
+  { <aa> <bb> } groups two statements <aa> and <bb> to
+                syntacticly form a single statement.
+.PP
+All other symbols represent themselves. Spaces, tabs and newlines are all
+equivalent. Left and right parenthesis do not need surrounding spaces in order
+to be recognized, but other language element need either spaces or parenthesis
+surrounding them.  For most statements the order in which they appear is
+unimportant. This, however, is not true for arguments of the LaySlice statement
+(see below).  It also is not true for terminal symbols of type <string> and
+type <number>.
+.PP
+Terminal symbols of type <number> can be octal, decimal or hex and the format
+corresponds to the C-syntax, that is, leading '0' for octal and leading '0x'
+for hex. For instance, 023 = 19 = 0x13. Terminal symbols of type <string>
+should be quoted with double-quotes (") and they may contain any character
+except double-quote. Strictly alphanumeric strings do not require quotes but
+they do require a leading percent (%) if the first position is numeric. For
+instance, "2towers" is equivalent to %2towers.  (This is all very messy but it
+comes with tradition...)
+.PP
+The following terminal symbols are <strings>s: <libraryname>, <functionname>,
+<circuitname>, <cirportname>, <cirinstname>, <layinstname>, <netname>,
+<busname>, <attributestring> and <layoutname>.
+.PP
+The following terminal symbols are <number>s: <layernumber>, <xposition>,
+<yposition>, <xlength>, <ylength>, <xoffset>, <yoffset>, <mtx0>, <mtx1>,
+<mtx2>, <mtx3>, <mtx4>, <mtx5>, <xleft>, <xright>, <ybottom> and <ytop>.
+.PP
+.I "SEADIF"
+.br
+The Seadif statement is the root of the meta hierarchy. It serves no other
+purpose than grouping a set of libraries and image descriptions. Synopsis:
+
+    <Seadif> ::= (Seadif <string>
+                     <Status>?
+                     <SeadifImage>*
+                     <Library>* )
+.PP
+For a description of <SeadifImage> refer to
+.I sdfimage (4SDF).
+The <Status>, <SeadifImage> and <Library> statements may occur in any order.
+.PP
+.I "LIBRARY"
+.br
+A library groups a set of related functions that are available in a certain
+technology. Synopsis:
+
+    <Library> ::= (Library <libraryname>
+                      <Technology>?
+                      <Status>?
+                      <Function>* )
+
+    <Technology> ::= (Technology <string> )
+.PP
+The <Technology>, <Status> and <Function> statements may occur in any order.
+.PP
+.I "FUNCTION"
+.br
+A function groups a set of functional equivalent circuits.
+Synopsis:
+
+    <Function> ::= (Function <functionname>
+                       <FunSimulate>?
+                       <FunType>?
+                       <Status>?
+                       <Circuit>* )
+
+    <FunType> ::= (FunType <string> )
+
+    <FunSimulate> ::= (FunSimulate <string> )
+.PP
+Normally, FunSimulate refers to a procedure that simulates the behavior of the
+function. FunType provides additional information for logic synthesis.  The
+<FunSimulate>, <FunType>, <Status> and <Circuit> statements may occur in any
+order.
+.PP
+.I "CIRCUIT"
+.br
+A circuit describes a network of (yet other) circuits that implement the
+function.  A circuit also groups layouts that have identical net lists.
+Synopsis:
+
+    <Circuit> ::= (Circuit <circuitname>
+                      <Status>?
+                      <CirPortList>?
+                      <CirInstList>?
+                      <NetList>?
+                      <BusList>?
+                      <Attribute>?
+                      <Layout>* )
+
+    <CirPortList> ::= (CirPortList <CirPort>* )
+
+    <CirPort> ::= (CirPort <cirportname> )
+
+    <CirInstList> ::= (CirInstList <CirInst>* )
+
+    <CirInst> ::= (CirInst <cirinstname> <CirCellRef>
+                           <attributestring>? )
+
+    <CirCellRef> ::= (CirCellRef <circuitname>
+                                 <CirFunRef>? )
+
+    <CirFunRef> ::= (CirFunRef <functionname> <CirLibRef>? )
+
+    <CirLibRef> ::= (CirLibRef <libraryname> )
+
+    <NetList> ::= (NetList <Net>* )
+
+    <Net> ::= (Net <netname> <Joined> )
+
+    <Joined> ::= (Joined <NetPortRef>* )
+
+    <NetPortRef> ::= (NetPortRef <cirportname>
+                                 <NetInstRef>? )
+
+    <NetInstRef> ::= (NetInstRef <cirinstname> )
+
+    <BusList> ::= (BusList <bus>* )
+
+    <Bus> ::= (Bus <busname> <NetRef>* )
+
+    <Attribute> ::= (Attribute <attributestring>? )
+
+    <NetRef> ::= (NetRef <netname> <NetPortRef>* )
+.PP
+The CirPortList is the list of i/o ports ("terminals") through which the
+circuit comunicates with other circuits. The CirInstList names all circuits
+that are one step lower in the hierarchy (note: this is
+.I not
+the meta hierarchy). The NetList specifies the connections between the CirPorts
+on this (parent) circuit and the CirPorts on the child circuits listed in the
+CirInstList. Sometimes it is convenient to think of a set of Nets as a bus. The
+Bus statement provides a means for net grouping. WARNING: the current
+implementation (october 1991) disallows <NetPortRef>s in a <NetRef>.
+The Attribute string specifies miscellaneous information about the circuit. For
+instance, the attributes of a transistor could be "l=1.6 w=23", specifying
+the channel length and width. The attributes of a circuit instance usually
+override the (default) attributes of the instantiated circuit.
+.PP
+.I "LAYOUT"
+.br
+A layout statement describes the geometry of a circuit implementation.
+Synopsis:
+
+    <Layout> ::= (Layout <layoutname>
+                     <Status>?
+                     <LayPortList>?
+                     <LayBbx>?
+                     <LayOffset>?
+                     {<LayInstList> | <LaySlice>}?
+                     <WireList>? )
+
+    <LayPortList> ::= (LayPortList <LayPort>* )
+
+    <LayPort> ::= (LayPort <cirportname>
+                      <PortLayer>? <LayPort>? )
+
+    <PortLayer> ::= (PortLayer <layernumber> )
+
+    <PortPos> ::= (PortPos <xposition> <yposition> )
+
+    <LayBbx> ::= (LayBbx <xlength> <ylength> )
+
+    <LayOffset> ::= (LayOffset <xoffset> <yoffset> )
+
+    <LayInstList> ::= (LayInstList
+                          <LayInst>*
+                          <LaySlice>*
+                          <LayInstList>* )
+
+    <LayInst> ::= (LayInst <layinstname> <LayCellRef>
+                      <Orient>? )
+
+    <Orient> ::= (Orient <mtx0> <mtx1> <mtx2>
+                         <mtx3> <mtx4> <mtx5> )
+
+    <LayCellRef> ::= (LayCellRef <layoutname> <LayCirRef>? )
+
+    <LayCirRef> ::= (LayCirRef <circuitname> <LayFunRef>? )
+
+    <LayFunRef> ::= (LayFunRef <functionname> <LayLibRef>? )
+
+    <LayLibRef> ::= (LayLibRef <libraryname> )
+
+    <LaySlice> ::= (LaySlice {vertical | horizontal | chaos}
+                       <LayInst>*
+                       <LaySlice>*
+                       <layInstList>* )
+
+    <WireList> ::= (WireList <Wire>* )
+
+    <Wire> ::= (Wire <layernumber> <xleft> <xright>
+                   <ybottom> <ytop> )
+.PP
+The LayPortList lists for each CirPort one or more geometrical representations
+(LayPorts). A LayPort occupies exactly one grid point indicated by PortPos. The
+<layernumber> of the PortLayer (and also of the Wire statement) is interpreted
+as follows.  If <layernumber> is positive then the indicated layer is added to
+the position. If <layernumber> is negative then the layer 0 - <layernumber> is
+removed from the position. Currently, the Oceanic sea-of-gates tools interpret
+the layers 1, 2 and 3 as first metal, second metal and third metal. Contacts
+between the image and first metal have <layernumber> 100, contacts between
+first and second metal have <layernumber> 101 and contacts between second and
+third metal have <layernumber> 102.  The LayBbx statement declares the bounding
+box of the layout. The LayOffset specifies a shift with respect to the "basics
+image", refer to
+.I sdfimage (4SDF).
+The LayInstList names the layout instances used. The LaySlice statement does
+exactly the same, but it also specifies a slicing placement for the instances.
+With the modifier "horizontal" the arguments of LaySlice are placed from left
+to right. The modifier "vertical" specifies ordering from bottom to top.  The
+modifier "chaos" does not specify any order at all -- it is equivalent to
+LayInstList.  The WireList lists all the rectangles that make up the layout.
+Interpretation of <layernumber> is as described above.
+.SH "AUTHORS"
+Patrick Groeneveld and Paul Stravers, Delft University of Technology.
+.SH "SEE ALSO"
+sealib(3SDF), sdfread(3SDF), sdfwrite(3SDF), sdfopen(3SDF), sdfclose(3SDF),
+sdfimage(4SDF).

@@ -1,0 +1,59 @@
+Patch File	Patched File:			Problem
+----------	-------------			-------
+spsmp.patch	src/lib/sparse/spsmp.c		Row/Column references need
+						translation to Sparse internal
+						representation
+
+grid.patch	src/lib/fte/grid.c		Overflow of name string on Sun4
+						causes data corruption.
+
+newcoms.patch	src/lib/fte/newcoms.c		Attempt to access null pointer.
+
+-------------
+Patches to bsim3v3.1
+
+BSIM3 fix specific patchs.
+
+b3set.patch     src/lib/dev/bsim3/b3set.c       unsetup code added to meet 3f4's
+                                                methodology.
+bsim3ext.patch  src/lib/dev/bsim3/bsim3ext.h    Declaration for BSIM3unsetup()
+
+bsim3itf.patch  src/lib/dev/bsim3/bsim3itf.h    Updated the interface file to
+                                                reflect the unsetup function 
+                                                performed.
+
+config.patch    src/bin/config.c                Changed referencing of bsim3 to 
+                                                meet the naming conventions of 
+                                                the source code. 
+
+Within the file src/lib/inp/inpdomod.c add the term case 8: 
+immediately beneath the case 7: statement to conform to the coding standards 
+for bsim3 if you're recompiling the bsim3 source code.  Also set the comment on
+the next level step to 9.
+
+defaults.patch  conf/defaults                   Updated the device listing.
+
+bsim3.patch     src/lib/dev/bsim3/b3set.c       Removes redefinition of PI
+                src/lib/dev/bsim3/b3temp.c      Removes redefinition of PI
+                src/lib/dev/bsim3/bsim3itf.h    Adds DEV_DEFAULT to structure
+                src/lib/dev/bsim3/bsim3def.h    Rearranges bsim3states to match bsim2 example.
+
+For your fun, I attach the bsim3.patch file, which you have to 
+apply to the bsim3v3.1 code /after/ applying your b3set.patch, 
+bsim3ext.patch and bsim3itf.patch to it.
+
+A little more testing always leads to a little better results ;-)
+
+Regards from Germany               Fridger
+
+
+
+-----------------------
+
+The Linux build patches have also already been applied.  All patches are
+included here for reference.  The duplicate patches, those from which the 
+Linux patches were made, were stored in the subdirectory old. rdln and 
+glibc were not applied.
+
+Dwayne Jackson
+derj@ix.netcom.com

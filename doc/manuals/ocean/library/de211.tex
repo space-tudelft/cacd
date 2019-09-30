@@ -1,0 +1,67 @@
+\section{de211}
+
+Function: 2-to-4 decoder/demultiplexer
+
+Terminals: (A, B, Y0, Y1, Y2, Y3, vss, vdd)
+
+
+IEC-symbol:
+%figuur de211.iec.eps
+\begin{figure}[bth]
+\callpsfig{de211.iec.eps}{width=.31\textwidth}
+\end{figure}
+
+Function table:
+\begin{table}[bth]
+\begin{tabular}{|cc||cccc|}
+\hline
+B	&A	&Y0	&Y1	&Y2	&Y3\\
+\hline
+L	&L	&H	&L	&L	&L\\
+L	&H	&L	&H	&L	&L\\
+H	&L	&L	&L	&H	&L\\
+H	&H	&L	&L	&L	&H\\	
+\hline
+\end{tabular}
+\vspace{1cm}
+
+
+Propagation and load dependent delays:\\
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Parameter               &From            &To   &Typ    &Unit\\
+\hline
+T$_{PLH}$               &A     		&Y0,Y2  &0.5    &ns\\
+T$_{PHL}$               &A     		&Y0,Y2  &0.3    &ns\\
+T$_{PLH}$               &A     		&Y1,Y3  &0.8    &ns\\
+T$_{PHL}$               &A     		&Y1,Y3  &0.8    &ns\\
+T$_{PLH}$               &B	    	&Y0,Y1  &0.5    &ns\\
+T$_{PHL}$               &B	    	&Y0,Y1  &0.3    &ns\\
+T$_{PLH}$               &B	    	&Y2,Y3  &0.8    &ns\\
+T$_{PHL}$               &B	    	&Y2,Y3  &0.8    &ns\\
+\hline
+$\Delta$T$_{PLH}$       &any           &any   &2.2    &ns/pF\\
+$\Delta$T$_{PHL}$       &any           &any   &1.0    &ns/pF\\
+\hline
+C$_{in}$                &A   		&vss    &0.38   &pF\\
+C$_{in}$                &B             	&vss    &0.37   &pF\\
+\hline
+\end{tabular}
+\end{table}
+
+Equivalent chip area: 14
+
+\begin{figure}[bth]
+circuit:\\
+
+\callpsfig{de211.cir.eps}{width=1\textwidth}
+\end{figure}
+
+\begin{figure}[bth]
+layout:\\
+
+\callpsfig{de211.lay.eps}{height=4in}
+\end{figure}
+
+\clearpage

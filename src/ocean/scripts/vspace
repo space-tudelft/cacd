@@ -1,0 +1,5 @@
+#!/bin/sh
+space -egate -Sexpand_connectivity $*
+# Space for use in projects created with mkvopr and mkropr
+# In these projects, the library cells from g_digilib*, g_analib*
+# and ringlib*, are always instances in the netlist (i.e. not flattened).

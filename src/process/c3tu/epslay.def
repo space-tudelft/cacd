@@ -1,0 +1,25 @@
+%% getepslay prolog for c3tu process.
+
+%%Include <epslay.pro>
+
+%%Order: bb nw sp sn od ps in ins con cop cos cps cb
+
+[ 6 14 10 /Helvetica-Bold] plotFont
+
+%% mask   patt   pscale linewidth
+[ (nw)     p19   1.0    0.1 ] defineStyle
+[ (sp)     p9    1.0    0.1 ] defineStyle
+[ (sn)     p2    1.0    0.1 ] defineStyle
+[ (od)     p6    1.0    0.1 ] defineStyle
+[ (ps)     p18   1.0    0.1 ] defineStyle
+[ (in)     p16   1.0    0.1 ] defineStyle
+[ (con)    black 1.0    0.1 ] defineStyle
+[ (cop)    p7    1.0    0.1 ] defineStyle
+[ (cps)    p13   1.0    0.1 ] defineStyle
+[ (ins)    p15   1.0    0.1 ] defineStyle
+[ (cos)    white 1.0    0.5 ] defineStyle
+[ (cb)     white 1.0    0.5 ] defineStyle
+[ (t_od)   p6    1.0    0.1 ] defineStyle
+[ (t_ps)   p18   1.0    0.1 ] defineStyle
+[ (t_in)   p16   1.0    0.1 ] defineStyle
+[ (t_ins)  p15   1.0    0.1 ] defineStyle

@@ -1,0 +1,25 @@
+# scmos_n - N-well cmos example process
+# When importing a gds file:
+#    Text structures with type 9 are interpreted as labels.
+#    Other text structures are interpreted as terminals.
+#    Records with property 62 are also interpreted as terminals.
+# When generating a gds file:
+#    Labels are translated to text structures with type 9
+#    Termimals are translated to records with a property 62 to
+#    specify their name.
+#
+cpg       46
+cpg:label 46 9
+caa       43
+caa:label 43 9
+cmf       49
+cmf:label 49 9
+cms       51
+cms:label 51 9
+cca       48
+ccp       47
+cva       50
+cwn       42
+csn       45
+cog       52
+cx        0

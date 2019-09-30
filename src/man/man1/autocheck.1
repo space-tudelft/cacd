@@ -1,0 +1,76 @@
+.TH AUTOCHECK 1ICD "User Commands"
+.UC 4
+.SH NAME
+autocheck - do a single layer check
+.SH SYNOPSIS
+.B autocheck [-f] [-g] [-t] [-v]
+[cell_name]
+.SH OPTIONS
+.TP
+.B -f
+Use file 'dimcheckdata1' from the
+current working directory as
+design_rule file instead of the standard one.
+.TP
+.B -g
+Report gap errors between elements of the same group.
+.TP
+.B -t
+Debugging option,
+do not filter or merge error messages
+for a non orthogonal layout.
+.TP
+.B -v
+Verbose mode.
+.SH DESCRIPTION
+.I Autocheck
+checks the layers of a cell definition on design rule errors.
+Width and gap checks are performed.
+.br
+Gap errors between edges of the same group are
+usually suppressed, use the -g option if this is not desired.
+.br
+The errors are reported on the standard output.
+.PP
+The program
+.I autocheck
+can be used after
+.I exp.
+.PP
+The checking is performed by subprogram \fIdimcheck\fP,
+which is called automatically (with option -a).
+.PP
+If no cell_name is specified the cells to be checked
+are read from the file "exp_dat".
+.PP
+The current working directory must be the project directory.
+.AU "T.G.R. van Leuken, J. Fokkema"
+.SH FILES
+.TP
+\fCICDPATH/bin/dimcheck\fP
+executable
+.TP
+\fCICDPATH/share/lib/process/TECHN/dimcheckdata1\fP
+(TECHN=technology directory)
+.TP
+\fCNELSISPROJECT/exp_dat\fP
+names of cells to be checked
+.TP
+\fCNELSISPROJECT/layout/cell/LC_vln\fP
+input files, LC=LayerCode
+.SH SEE ALSO
+T.G.R. van Leuken, J. Liedorp "An Hierarchical and Technology
+Independent Design Rule Checker", Delft University of Technology,
+.br
+dimcheck(1ICD),
+dimdata(4ICD),
+exp(1ICD).
+.SH BUGS
+It is understood that the design rules are consistent.
+Error reporting is rather poor;
+the kind of error (width or gap) is
+reported together with the coordinates
+of the two points between which the error occurred.
+In case of non orthogonal layouts the errors reported
+may be shifted a little from the place where they
+occurred due to rounding errors.

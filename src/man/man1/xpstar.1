@@ -1,0 +1,239 @@
+.TH XPSTAR 1ICD "User Commands"
+.UC 4
+.SH NAME
+xpstar - extract Pstar network description out the database
+.SH SYNOPSIS
+.ta 2c
+.B xpstar
+[-NPQdfghikmnptuvxy -w width -z name -O name
+.br
+	-C file -D name -F outfile -S stimfile -X lib] cell
+.SH OPTIONS
+.TP
+.B -N
+Do not extract the sub-cell(s), but add a
+line \fB#include\fP "\fIcell\fP.pstar" for each sub-cell to the output file
+(when option \fB-h\fP is used).
+.TP
+.B -P
+Use Philips llrpd/llrnd models for penh/nenh/ndep and add "s=1".
+.TP
+.B -Q
+Use Philips p/n models for penh/nenh/ndep.
+.TP
+.B -d
+Use original database names for instance names.
+.TP
+.B -f
+Send output to a file \fIcell\fP.pstar instead of \fIstdout\fP.
+.TP
+.B -g
+Connect a large grounded resistor to each node of the two nodes that
+are connected by a net statement.
+.TP
+.B -h
+Also extract hierarchy (used local sub-cells).
+.TP
+.B -i
+Also extract imported sub-cells (when option \fB-h\fP is used).
+.TP
+.B -k
+Output all cells as sub-circuits and do not print a title card.
+.TP
+.B -m
+Add model definitions for devices in the output file.
+.TP
+.B -n
+Always add terminals for n-bulk connections.
+.TP
+.B -p
+Always add terminals for p-bulk connections.
+.TP
+.B -t
+Do not output unconnected instances.
+.TP
+.B -u
+Do not automatically add terminals for bulk connections.
+.TP
+.B -v
+Enable verbose mode.
+.TP
+.B -w
+Use \fIwidth\fP for the output listing.
+.TP
+.B -x
+Use node number = 0 for nodes whose name start with "gnd" or "GND".
+.TP
+.B -y
+Use node number = 0 for nodes whose name start with "vss" or "VSS".
+.TP
+\fB-z\fP \fIprefix\fP
+Use node number = 0 for nodes whose name start with \fIprefix\fP.
+.TP
+\fB-O\fP \fIname\fP
+Use node number = 0 for the node that has this name.
+.TP
+\fB-C\fP \fIfile\fP
+Use the specified \fIfile\fP as the control file.
+.TP
+\fB-D\fP \fIname\fP
+Define a label \fIname\fP for conditional reading of the control file
+(always converted to uppercase).
+.TP
+\fB-F\fP \fIoutfile\fP
+Send output to the specified file instead of \fIstdout\fP.
+.TP
+\fB-S\fP \fIstimfile\fP
+Append the file \fIstimfile\fP to the output file. The \fIstimfile\fP
+can contain input stimuli and simulation control statement
+(such as print and plot commands and the \fIrun\fP statement).
+This file is just copied, no checking or interpretation of its contents is done.
+.TP
+\fB-X\fP \fIlib\fP
+Exclude specific certain library cells from the listing
+(when options \fB-hi\fP are used).
+This is very useful if you have a design with your own imported libraries.
+This option may be given several times.
+There are two exclude possibilities:
+(1) all lib's starting with absolute path (for example "-X /usr/ocean");
+(2) the lib with basename (for example "-X primitives").
+.SH DESCRIPTION
+.I Xpstar
+is a program to extract a Pstar circuit description out of the database.
+Default, only a circuit description of the cell itself is extracted and
+no sub-cells are extracted.
+When using the
+.B -h
+option the program will also extract all (local) sub-cells
+that are not a function (see "SLS: Switch-Level Simulator User's Manual")
+or a device.
+.PP
+The Pstar circuit description is used by the Philips Pstar analogue simulator.
+.PP
+See also the description in the
+.I xspice
+manual page.
+For example, for the determination whether or not a cell is a device.
+.PP
+When extracting Pstar circuit descriptions,
+the program
+.I xpstar
+will automatically determine bulk terminals
+(see the
+.I xspice
+manual page).
+For each bulk terminal,
+the program will
+.I not
+automatically generate an appropriate voltage source,
+unless the
+.B -m
+option is used.
+Note that for Pstar, the
+.B -m
+option does not include model definitions,
+because these are stored somewhere else.
+.PP
+.I Xpstar
+uses default the Pstar built-in device model names.
+For bipolar npn/pnp transistors respectively "tn" and "tp".
+For MOS transistors nenh(ndep)/penh respectively "mn" and "mp".
+However, with option \fB-P\fP you can use "llrnd" and "llrpd".
+And else, with option \fB-Q\fP you can use "n" and "p" instead.
+Note that a \fBmodel\fP specification in the control file for
+nmos (nenh/ndep) or pmos (penh) overrules above choices.
+
+.SH "THE CONTROL FILE"
+For
+.I xpstar
+a control file may be used.
+The default name of the control file is "xspicerc".
+First,
+the program tries to read this file from the current working directory.
+Next,
+it tries to open the control file in the process directory.
+Note, the control file may also be used for other programs.
+.PP
+See the
+.I xspice
+manual page for a complete description of all possible parameters.
+Only some remarks for
+.I xpstar
+are given here.
+.PP
+Note that by the
+.B -P
+and
+.B -Q
+option
+the following parameters are automatically scaled:
+.PP
+.TP 8
+\fBw,l\fP
+with factor 1e6
+.TP
+\fBps,pd\fP
+with factor 1e6
+.TP
+\fBperi\fP
+with factor 1e6 (parameter starting with...)
+.TP
+\fBas,ad\fP
+with factor 1e12
+.TP
+\fBarea\fP
+with factor 1e12 (parameter starting with...)
+.SH "CONTROL FILE CONDITIONALS"
+See the
+.I xspice
+manual page for more details.
+.br
+For example for \fIxpstar\fP specify the following condition:
+.nf
+
+#if PSTAR
+    no_bulk npn pnp
+#endif
+.SH THE SPICEMOD FILE
+When option \fB-m\fP is used, the
+.I xpstar
+program tries to read the
+.I spicemod
+file from the process directory.
+The contained SPICE models are
+.I not
+used.
+However, this file can contain control statements
+that must be used for the extracted devices.
+For more details see the spicemod(4ICD) manual page.
+Note that these control do not overrule a "model" statement
+of the control file or a specified "devmod" dw/dl.
+.SH EXAMPLE
+.nf
+% xpstar -fhP latch
+.AU "A.J. van Genderen (xspice)"
+.SH MODIFIED BY
+.nf
+.ta 12
+S. de Graaf	(xpstar code, this manual page)
+P. Elias	(xpstar option \fB-Q\fP)
+.SH FILES
+.TP 12
+\fC\fIcell\fP.pstar\fP
+(output file, when option \fB-f\fP is used)
+.TP
+\fCxspicerc\fP
+(default control file for xpstar/xspice/...)
+.TP
+\fCspicemod\fP
+(models file for xpstar/xspice/...)
+.SH SEE ALSO
+csls(1ICD),
+cspice(1ICD),
+putdevmod(1ICD),
+space(1ICD),
+xcontrol(1ICD),
+xsls(1ICD),
+xspice(1ICD).
+.br
+Pstar is a trademark of Philips Electronics N.V.

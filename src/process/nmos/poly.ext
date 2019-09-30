@@ -1,0 +1,19 @@
+# process nmos
+#
+# TECHNOLOGY DESCRIPTION FOR THE EXTRACTION OF ONLY POLY TRACKS
+#
+#################################################################
+# definition of elements for extraction and simulation purposes #
+#################################################################
+elements:
+
+poly:
+polminterm= np;
+
+ignore:
+not_poly= !np;
+
+element_types:
+; # empty, no element types
+
+# EOF

@@ -1,0 +1,71 @@
+This is my (re-)port of Spice3f4 to Linux version 2 (I am not the same
+person who ported it before).  It also wraps in the latest official
+pre-3f5 patches from Berkeley I could find (found in
+sp3f4.patch.tar.Z).  Support for the MFB interface using the Linux
+termcap library and some various Linux features have been ported.
+
+This was not done for the hell of it, but it seemed that something
+broke due to some Linux/system/library changes, so I decided to try
+porting it from scratch.  In fact, if you don't have any problems with
+the previous port, your probably fine then.  However, if you do have
+problems (e.g. exiting Spice leaves you in uppercase mode), or want
+MFB for some reason, then try this.  It seems to work here.
+
+Basically, I started out with sp3f4.kit.tar.Z.  Then, I applied the
+most recent patches contained in sp3f4.patch.tar.Z and wrote new Linux
+build files: "linux" and "os_linux.h" (some minor mods to the source
+were also necessary, protected with linux conditionals).
+
+Since the previous spice3f4.tar.gz port file was generally available,
+there was no point in duplicating source, so I just diffed from the
+spice3f4.tar.gz tree to freshly ported tree and edited or removed a
+few of the diffs.  A few of the changes made in spice3f4.tar.gz have
+been reverted to the distribution defaults, but one notable change is
+that performing the install step will install the necessary files into
+/usr/local/spice.  You'll need to add /usr/local/spice/bin to your
+shell path.  See the file conf/linux to change the installation
+location (this location gets hard-coded in the spice binaries).
+
+This is a patched file of the original readme.Linux from
+spice3f4.tar.gz, and the previous contents by Jeff@EE.Ryerson.Ca is
+given below.  Just follow the below instructions, so you should be
+able to safely do:
+
+        ./util/build linux
+        ./util/build linux install
+
+You should then find the spice binaries and library files
+in e.g. /usr/local/spice.  Example files and the man pages
+are not installed, so you might want to copy them by hand.
+
+Andrew Veliath (veliaa@rpi.edu)
+January 25, 1997
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This is my port of Spice3f4 to Linux.  It required a few more changes
+than the porting document indicated would be necessary, mostly to do
+with supported/unsupported functions in Linux libc & libm.
+
+I've tried to make these changes in as as portable a way as possible,
+so it should build cleanly on other Unicies, however I've removed the 
+MS-DOS support so the tarred and gziped source fits on one disk.
+
+To build spice3, first have a look in the file readme, but you should
+be able to just do...
+
+./util/build linux
+./util/build install linux
+
+Note that there is a modifyer "gcc" you can try if you have trouble, but
+it claims to work around some obscure bug in gcc that I'm positive got 
+fixed eons ago.  To use it anyway, do ./util/build linux gcc.
+
+I found this source through archie, (look for spice3f3.tar.Z, and then
+patched it to 3f4 with patches from ic.berkeley.edu), I assume that the
+ftp site I got it from has read thier license from Berkeley, which if
+it's the same as the 3e2 license states that the holder can distribute 
+copies free of charge provided it does not fall into hands unfriendly 
+to the U.S.  So... I guess if that's you, please destroy all copies of this
+you might have!
+
+Jeff@EE.Ryerson.Ca

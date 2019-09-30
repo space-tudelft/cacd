@@ -1,0 +1,253 @@
+#######################################################################################
+#
+# helios.defaults - options file for the "helios" graphical user interface.
+# Saved automatically by helios on Thu Oct 07 08:23:22 1999 (GMT)
+#
+########################################################################################
+
+##### General settings #####
+############################
+ShowCommandLine          off
+ShowQuickReference       on
+SetUserDefault           off
+SetFactoryDefault        off
+SetGeneralDefault        off
+
+##### Options for Extraction #####
+##################################
+HierarchyLevel           3
+ExtractOnlyTopCell       off
+ExtractVerbose           on
+CapacitanceExtraction    0
+TypeOfCapacitance        3
+InterconnectResExtraction     0
+SelectiveInterconnectResExt   1
+SubstrateResExtraction   0
+FrequencyDependentReduction   0
+sne.frequency            1e+09
+ApplyHeuristics          1
+
+##### Options for fine control of fast capacitance extraction #####
+###################################################################
+lat_cap_window           6
+compensate_lat_part      1
+jun_caps                 linear
+name_ground              GND
+name_substrate           SUBSTR
+
+##### Options for fine control of accurate capacitance extraction #####
+#######################################################################
+allow_hierarchical_cap3d      off
+cap3d.omit_gate_ds_cap   off
+cap3d.be_window          10
+cap3d.green_eps          0.001
+cap3d.max_green_terms    500
+cap3d.max_be_area        1
+cap3d.max_coarse_be_area      -1
+cap3d.be_mode            0c
+cap3d.be_shape           2
+cap3d.default_step_slope      2
+cap3d.edge_be_ratio      1
+cap3d.edge_be_split      0.5
+cap3d.edge_be_split_lw   4
+cap3d.mp_min_dist        2
+cap3d.mp_max_order       2
+name_ground3d            GND
+name_substrate3d         SUBSTR
+
+##### Options for fine control of interconnect resistance extraction #####
+##########################################################################
+low_sheet_res            1
+max_delayed              500
+max_obtuse               110
+
+##### Options for fine control of accurate substrate-resistance extraction #####
+################################################################################
+sub3d.be_window          10
+sub3d.green_eps          0.001
+sub3d.max_green_terms    500
+sub3d.max_be_area        1
+sub3d.saw_dist           inf
+sub3d.edge_dist          0
+sub3d.be_mode            0c
+sub3d.be_shape           4
+sub3d.edge_be_ratio      0.01
+sub3d.edge_be_split      0.2
+sub3d.edge_be_split_lw   4
+sub3d.mp_min_dist        2
+sub3d.mp_max_order       2
+
+##### Options for fine control of circuit reduction #####
+#########################################################
+min_art_degree           3
+min_degree               4
+min_res                  100
+min_sep_res              10
+max_par_res              20
+no_neg_res               on
+no_neg_cap               on
+min_coup_cap             0.05
+min_ground_cap           1e-21
+frag_coup_cap            0.2
+min_coup_area            0.04
+min_ground_area          1e-11
+frag_coup_area           0.2
+equi_line_ratio          0
+
+##### Options for X-Window display of mesh etc. #####
+#####################################################
+UseXDisplay              off
+disp.sync                on
+disp.show_menu           off
+disp.width               800
+disp.height              600
+disp.be_mesh_only        off
+disp.draw_green          off
+disp.draw_be_mesh        off
+disp.3_dimensional       off
+disp.draw_tile           off
+disp.pair_boundary       off
+disp.draw_edge           off
+disp.draw_fe_mesh        off
+disp.draw_sub_term       off
+disp.draw_delaunay       off
+disp.draw_sub_resistor   off
+disp.draw_resistor       off
+disp.draw_out_resistor   off
+disp.draw_equi_lines     off
+
+##### Additional extraction options #####
+#########################################
+BackAnnotationDetail     1
+no_labels                off
+hier_labels              off
+hier_terminals           off
+leaf_terminals           off
+term_is_netname          off
+cell_pos_name            off
+node_pos_name            off
+hier_name_sep            .
+inst_term_sep            .
+net_node_sep             _
+trunc_name_prefix        n
+ElemDefCustom            off
+AutoRunPreprocessors     on
+lat_base_width           3
+
+##### Options for use of external parameter files #####
+#######################################################
+ExtParaFront             off
+ExtParaEnd               off
+
+##### Retrieval options #####
+#############################
+RetrieveFormat           SPICE
+RetrieveToFile           0
+RetrieveLevel            3
+RetrieveUseExclLibs      off
+RetrieveVerbose          off
+
+##### Advanced options for SPICE/PSTAR/SPF/SPEF format #####
+############################################################
+SpiceGndNodeGnd          on
+SpiceGndNodeVss          off
+SpiceGndNodeCustom       off
+SpiceUseGndNodeName      off
+SpiceGndNodeName         GND
+SpiceAutoBulk            on
+SpiceAlwaysPBulk         off
+SpiceAlwaysNBulk         off
+SpiceUseInstNames        on
+SpiceNoUncnnct           off
+SpiceNoTitle             off
+SpiceFloatPatch          off
+SpiceUseCntrlFile        off
+SpiceControlFile         xspicerc
+SpiceUseDefLabel         off
+SpiceUseNetNames         on
+SpiceOmitModDef          off
+SpiceExpandNames         off
+UsePstarLl               off
+UsePstarPn               off
+
+##### Advanced options for SLS format #####
+###########################################
+SlsExpandNames           off
+SlsRestDef               off
+SlsNamesDatabase         on
+SlsNoUncnnct             off
+SlsUseCntrlFile          off
+SlsControlFile           xslsrc
+SlsUseDefLabel           off
+
+##### Advanced options for EDIF format #####
+############################################
+EdifExpandNames          on
+EdifShiftIndices         off
+EdifCadenceCompatible    off
+EdifCadenceSchematic     off
+EdifUseCntrlFile         off
+EdifControlFile          xslsrc
+EdifUseDefLabel          off
+
+##### Advanced options for NLE format #####
+###########################################
+NLELong                  off
+NLEnbulkName             vss
+NLEpbulkName             vdd
+NleUseCntrlFile          off
+NleControlFile           xslsrc
+NleUseDefLabel           off
+
+##### Advanced options for VHDL format #####
+############################################
+VhdlAlsoEntity           off
+VhdlUseCntrlFile         off
+VhdlControlFile          xslsrc
+VhdlUseDefLabel          off
+
+##### Layout loading options #####
+##################################
+LoadFormat               GDS2
+LoadVerbose              off
+Test45                   off
+CellOverwrite            on
+NoOrigin                 off
+OnlySyntaxCheck          off
+MaskList                 off
+TextToTerminal           off
+TerminalWidth            10
+LoadOptionCIFunit        100
+
+##### Highlay options #####
+###########################
+HighlayUseNamefile       0
+HighlayLightMode         0
+HighlaySelectItem        1
+HighlayDevs              off
+HighlayNets              on
+HighlayPorts             off
+HighlayVerbose           off
+
+##### Match options #####
+#########################
+MatchByname              off
+MatchEdif                off
+MatchExpand              off
+MatchFbind               off
+MatchIgCap               off
+MatchIgRes               off
+MatchNomap               off
+MatchParams              off
+MatchVerbose             off
+
+##### Options for cell import #####
+###################################
+ImpCellName              3
+
+##### Options for device model import #####
+###########################################
+DevModInputSource        0
+DevModSaveMode           1
+
+#EOF

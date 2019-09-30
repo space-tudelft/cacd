@@ -1,0 +1,356 @@
+% -*- latex -*-
+
+\chapter{The Sea-of-Gates image}
+\label{s-fishstruct}
+\section{Why Sea-of-Gates?}
+\begin{figure}
+\centerline{\psfig{figure=\figdir/fishhotel.eps,width=0.95\textwidth}}
+\caption{A circuit on the {\em fishbone}
+sea-of-gates image. This image was developed
+at Delft University of Technology. Our chip
+with this image contains 191,312 transistors
+on an area of approx. $10 \times 10 ~ mm^2$. 144
+pins are available.}
+\label{fishhotel}
+\end{figure}
+
+Before we explain how to use the {\sc ocean} layout tools, it is important to
+understand the kind of layout that they produce. {\sc Ocean} tools produce {\sl
+sea-of-gates} layout. This means that they deal with a prefabricated {\sl
+image} \index{image} consisting of {\sc mos} transistors. To implement a
+circuit, the tools (or the designer, for that matter) interconnect these
+transistors with metal wires. The sea-of-gates layout strategy aims at four
+goals:
+\begin{enumerate}
+\item {\sl Minimization of the fabrication time.}
+Because the chips are prefabricated (the transistors are already on the master
+image), the silicon foundry only processes the masks related to metal wires. As
+compared to full custom layout, the number of masks processed by the silicon
+foundry is often reduced by more than 60\%.
+\item {\sl Minimization of the design time.}
+The time involved in designing a cell layout is reduced dramatically (as
+compared to full-custom) because the transistors are preplaced on the image.
+Typically, it takes only a few minutes to layout a flipflop or a combinatorial
+gate, and the designer does not need to know much about the process design
+rules.
+\item {\sl Minimization of the chip cost.}
+The layout design starts with a prefabricated master image. This is a
+semi-manufactured article that can be produced in large quantities.
+Consequently, it can be cheap.
+\item {\sl Full-custom properties on Semi-Custom chips: Efficient implementation 
+of structured logic (RAM, PLA etc.)}. In contrast to the conventional
+Gate-Array, a sea-of-gates image does not have pre-defined routing channels.
+This enables a much more compact and clean implementation of structured
+circuits such as processors.
+\end{enumerate}
+
+\begin{figure}
+\centerline{\psfig{figure=\figdir/octagonhotel.eps,width=0.95\textwidth}}
+\caption{The {\em octagon} image which was developed at Twente University in
+the Netherlands. In the lower left corner the same circuit as
+in figure~\protect\ref{fishhotel} is implemented. This highly symmetrical image
+allows the cells to be rotated.}
+\label{octagonhotel}
+\end{figure}
+
+The {\sc ocean} suite of tools handles a wide variety of sea-of-gates master
+images and process technologies. Three of them are included in the
+distribution:
+\begin{itemize}
+\item[{\em fishbone}]
+\index{image!fishbone}
+\index{fishbone image}
+A gate-isolation image in a $1.6 \mu$ \smc{cmos} process with two layers of metal
+(figures~\ref{fishhotel}, \ref{f-nand2} and \ref{f-fishbone}).
+\item[{\em octagon}]
+\index{image!octagon|bold}
+\index{octagon image}
+A remarkable octagonal image in a $0.8 \mu$ \smc{cmos} process with three layers
+of metal interconnect (figure~\ref{octagonhotel} and \ref{othernand2}).
+\item[{\em gatearray}]
+\index{image!gate array|bold}
+\index{gate array image|bold}
+An old fashioned gate-array in a $4 \mu$ single metal layer \smc{cmos} process
+(figures~\ref{gatehotel} and \ref{othernand2}).
+\end{itemize}
+
+Although the three images differ from each other in many
+respects, the {\sc ocean} tools can take advantage of their specific
+properties.  For instance, the placer \tool{madonna} uses the
+properties of the octagon image to mirror cells with respect to the $45^\circ$
+mirror axis. And the router \tool{trout} takes advantage of the vertical poly
+strips in the gate array image to find the best route for a wire.
+Especially in the single-layer {\em gatearray} image the polysilicon strips are
+an essential feature for the routing.
+
+In figures~\ref{f-nand2} and \ref{othernand2} the implementation of a 2-input
+nand is shown for each of the three images. Notice that the layout style is
+very different, even for such a simple circuit.
+
+Currently, our local foundry {\sc dimes} runs a production line for
+metallization of the {\sl fishbone} master image, designed at Delft University
+of Technology. It therefore makes sense to concentrate on this image and go
+into some of its details. The other images are supplied mainly to demonstrate
+the features of the placer and the router in the {\sc ocean} system.
+
+\begin{figure}
+\centerline{\psfig{figure=\figdir/gatehotel.eps,width=0.95\textwidth}}
+\caption{The single-layer {\em gatearray} image is a traditional row-based
+gate-array. The figure shows the same circuit as in the previous figures.}
+\label{gatehotel}
+\end{figure}
+
+\begin{figure}
+\makebox[0.98\textwidth]{
+  \hfill
+  {\psfig{figure=\figdir/nand2-sch.ps,height=0.4\textheight}}
+  \hfill \hfill
+  {\psfig{figure=\figdir/nand2-flat.eps,height=0.4\textheight}}
+  \hfill
+}
+\caption{A two-input {\sc nand} gate and its layout on the fishbone sea-of-gates
+         image. This is the library cell 'na210'.} 
+\label{f-nand2}
+\end{figure}
+
+\begin{figure}
+\makebox[0.98\textwidth]{
+  \hfill
+  {\psfig{figure=\figdir/octanand2.eps,width=0.44\textwidth}}
+  \hfill \hfill
+  {\psfig{figure=\figdir/gatenand2.eps,width=0.44\textwidth}}
+  \hfill
+}
+\caption{
+The same two-input nand gate on the octagon (left) and the gatearray (right)
+image.}
+\label{othernand2}
+\end{figure}
+
+\section{The TU-Delft fishbone chip}
+\index{image!fishbone|(bold}
+\index{fishbone image|(bold}
+At Delft university of technology we developed a sea-of-gates chip.
+Figure~\ref{f-minimove} (on page~\pageref{f-minimove}) shows one such chip. Its
+core contains 191,312 transistors in the {\sl fishbone} image. Each fishbone
+row is a series connection of 1087 transistors. There are 88
+n-transistor rows and 88 rows with p-transistors. The chip has 144 pins, of
+which 128 are user programmable as input, output, bi-directional or direct
+pins. The remaining 16 pins are for power connections.  Generally we combine a
+number of separate designs on one chip. For this purpose we created a
+multi-project chip concept, in which the chip is partitioned into 4, 3 or 2
+separate 'pseudo-chips', depending on the sizes of the circuits. The pseudo
+chip are isolated from each other and have separate power supply connections.
+
+125 Wafers containing the raw transistor pattern have been pre-produced by a
+commercial foundry. At our own chip production facility ({\sc dimes}) the chips
+are metalized with a very short turn-around time. Each 4-inch wafer contains 46
+usable chips.  In the past year (1992-1993) 12 wafers with different designs
+have been produced. At this moment we (that is, the guys from the \smc{ocean}
+team) are trying to make this cheap production facility available to other than
+university users. Please contact us if you are interested. 
+
+
+\begin{table}
+\begin{center}
+\sf
+\small
+\begin{tabular}{|ll|} \hline  
+process: & C3DM (Philips) $1.6\mu$ double layer \smc{cmos}, $\lambda = 0.2 \mu
+m$ \\
+dimensions: & bruto: $10 \times 10 mm$, {\sl fishbone} core area: $8.7 \times 8.7 mm$ \\
+transistors: & 191,312 transistors in 176 rows of 1087, {\sl fishbone} image.\\
+pins: & 144 bonding pads, 128 user programmable, 16 power\\
+transistor sizes: &
+$1.6 \mu m \times 23.2 \mu m$ (nmos) and $1.6 \mu m \times 29.6 \mu m$ (pmos)\\
+transistor pitch: & $8.0 \mu m$ (horizontal)\\
+metal wire width: & $2.4 \mu m$ (both metal 1 and metal 2)\\
+contact size: & $2.0 \times 2.0 \mu m$ (hole), $4.0 \times 4.0 \mu m$ (incl.
+metal overlap)\\
+poly gate resistance: & $700 Ohm$ (nmos) $950 Ohm$ (pmos)\\
+contact resistance: & $22 Ohm$ (\mask{ps}-\mask{in}), $0.13 Ohm$
+(\mask{in}-\mask{ins})\\
+metal resistance: & $0.056 Ohm/$ (\mask{in}), $0.026 Ohm/$
+(\mask{ins})\\
+threshold: & $V_t = 0.7 V$ (nmos), $V_t = -1.2 V$ (pmos)\\ \hline
+\end{tabular}
+\rm
+\end{center}
+\caption{Summary of the parameters of the TU Delft sea-of-gates chip with the
+{\sl fishbone} image.}
+\end{table}
+
+
+\section{The general structure of the fishbone image}
+Figure~\ref{f-fishbone} on page~\pageref{f-fishbone} shows the structure of the
+fishbone image.  This image is fabricated in the \smc{c3tu} process, the Delft
+derivative of the Philips
+\smc{c3dm} process. The length of a transistor gate is $1.6 \mu$. The designer
+can program two layers of metal and a number of contact layers. Each layer is
+referred to as a 2- or 3 character acronym:
+\begin{enumerate}
+\item
+\mask{in} (metal1, this is the metal layer that is closest to the image)
+\item
+\mask{ins} (metal2, this is the second level metal layer)
+\item
+\mask{con}, \mask{cop} and \mask{cps} (contacts from \mask{in} to n-type
+diffusion, p-type diffusion or poly)\footnote{ For you as a designer, these
+three masks are equivalent. The \smc{ocean} tools (\tool{fish}) take care
+of selecting the proper one of these three.}
+\item
+\mask{cos} (contact between \mask{in} and \mask{ins})
+\end{enumerate}
+
+The fishbone image consists of alternating rows of n-type and p-type
+transistors. Each row is a seemingly endless series connection of transistors.
+
+Wire segments and contacts may only be placed at certain ``grid points''.
+\tool{Seadali} optionally marks these grid points with little white dots. Once
+you have grown accustomed to the image, you will know these positions by heart.
+In figure~\ref{f-fishbone} the gridpoints are indicated with $\times$ marks.
+In the vertical direction they have been numbered 0 \ldots 28.
+
+\begin{figure}
+\centerline{\psfig{figure=\figdir/fishbone.ps,height=0.8\textheight}}
+\caption{The basic structure of the fishbone sea-of-gates image.}
+\label{f-fishbone}
+\end{figure}
+
+\section{Restrictions on placing contacts}
+\label{contacts}
+\index{design rules!for contacts|bold}
+Unfortunately it is not allowed to place a contact at every grid
+position. You have to take the following design rules for contacts
+into account:
+\begin{enumerate}
+\item
+\index{stacked contacts}
+Contacts may not be stacked. It is therefore not allowed to place a \mask{con},
+\mask{cop} or \mask{cps} contact on top of a \mask{cos} contact
+(metal1-metal2).  As a result, all connections between diffusion (or poly) to
+metal2 have to ``dogleg'' in metal1.
+\item
+On top of (poly) gate contacts (grid rows 1, 6, 7, 13 in 
+fig.~\ref{f-fishbone}) \mask{cos}
+contacts (metal1-metal2) are not allowed. 
+All \mask{cos} contacts must be placed
+on the diffusion tracks (2-5 and 8-12) or on the power supply (0 and 14).
+\item
+Substrate contacts can be placed under the power
+rails (rows 0 and 14). As a rule of thumb, place one substrate contact for
+every 3 transistors. The placement of the subtrate contact can be performed
+automatically. 
+\end{enumerate}
+Needless to say that the {\sc ocean} tools take these rules into account.
+
+\section{Transistor layout on fishbone: gate isolation technique}
+The gate of each transistor consist of a polysilicon pattern. Each transistor
+gate can be reached at two grid points using a \mask{cps} contact. In
+figure~\ref{f-fishbone} the n-transistor can be connected in grid rows 1 and 6,
+the p-transistor in rows 7 and 13. Notice that the p-transistor is taller than
+the n-transistor.
+
+The source and drain of the transistors (diffusion) can be connected to grid
+rows 2 through 5 (n-transistor) and 8 through 12 (p-transistor)
+using a \mask{con} or \mask{cop} contact\footnote{If you are using
+\tool{seadali}, just select an arbitrary mask from \mask{cps}, \mask{con} or
+\mask{cop}. The \smc{ocean}-tools will take care of selecting the proper mask}, respectively.
+
+Adjacent transistors (of the same type) share their source/drain connections.
+Therefore, in each row, the transistors are arranged in a seemingly endless
+series connection.  This does not imply, however, that only series connections
+can be programmed on this image.
+
+To isolate circuits from each other, so called ``isolation-transistors'' 
+\index{isolation transistors|bold}
+are
+used.  An n-type isolation transistor is a transistor of which the gate is
+connected to \smc{vss}.  Therefore it is always switched off.  In this way the
+source and drain of this transistor are ``isolated''.  
+\index{gate isolation technique}
+Similarly a p-type
+isolation transistor can be created by connecting its gate to \smc{vdd}.  A
+2-input {\sc nand} gate requires two isolation transistors. This is shown in
+figure~\ref{f-nand2} (page~\pageref{f-nand2}), where the two rightmost
+transistors serve the purpose of isolation. As a consequence we are able to
+place several {\sc nand} gates next to each other, without causing any short
+circuits between the gates.
+
+It is clear that a layout cell only needs isolation transistors on either its
+left or its right side, but not both, as long as this strategy is applied to
+all the cells on the chip. We will always take the right side of a cell to
+accommodate the isolation transistors, like it's done in figure~\ref{f-nand2}.
+Note, however, that we can only do this because the fishbone image does not
+allow to mirror a cell in the y-axis!
+
+\section{Power net strategy}
+The fishbone image consists of alternating rows of n-type and p-type
+transistors. Each row is a series connection of many, many transistors.
+Between the rows there are two power ``rails'' in metal1 which run horizontally
+across the entire with of the chip.  Vertically we use a scheme of alternating
+\smc{vss} and \smc{vdd} power rails.  Next to a \smc{vss}-power rail there are
+two rows of n-type transistors, next to a \smc{vdd}-power rail there are two
+rows of p-type transistors.  This results in a nnppnnppnnpp.... order of
+transistor rows (figure~\ref{f-fishbone}).
+
+Under the power line well contacts (substrate contacts) are placed to keep the
+wells at the appropriate voltage. In our system the well contacts will be added
+automatically at the last stage.
+
+\index{image!fishbone|)}
+\index{fishbone image|)}
+\section{Some practical hints}
+You will soon notice that the wiring space is limited. In order to prevent
+unconnected points it can be useful to follow these guidelines:
+\begin{itemize}
+\item
+Avoid using long horizontal metal2 wires, because they may block future
+vertical metal2 wires. Use metal2 mainly for vertical wires.
+\item
+Use metal1 mainly for horizontal wires. The layout of the power wires almost
+force you to do this.
+\item
+Design each cell such that its ``permeability''\index{permeability of a cell}
+is maximized. That is, leave as much useful free space as possible. Always bear
+in mind that the routing capacity of a cell is desperately needed (by you or an
+automatic router) at a higher level in the hierarchy.
+\item
+Often the routing capacity in the horizontal direction is the bottleneck.
+Leave an unused transistor row if necessary.
+\item
+Ensure that all terminals of a cell can be reached from some point outside that
+cell. Remember that stacked contacts are not allowed, and that a connection to
+metal2 therefore requires at least a contact-less spot on a wire.
+\item
+Take advantage of the fact that the fishbone image contains series connections
+of transistors of the same type (n-mos or p-mos). Try to find chains of
+n-mos transistors in the circuit diagram of your cell and lay these chains out
+on the fishbone image. Isolate the chains from each other with isolation
+transistors. Follow the same procedure for p-transistor chains. If you are very
+lucky, the entire circuit can be implemented with only one n-chain and one
+p-chain. An example of such a circuit is the D-flipflop depicted in
+figure~\ref{f-dff}.
+\item
+Sometimes, when routing area is in short supply, it may be necessary to use a
+poly gate to make a vertical connection. Poly, however, has a high electrical
+resistance. In combination with the parasitic capacitance of a long metal wire,
+this can significantly slow down signal transmission times on such a wire. As a
+rule of thumb, you should only use poly strips on a short distance of signal
+inputs and never in the neighborhood of signal outputs.
+\item
+Do not place substrate contacts. They will be added automatically by the router
+in the last stage of the design.
+\end{itemize}
+
+\begin{figure}
+\makebox[0.98\textwidth]{
+  {\psfig{figure=\figdir/dff-sch.ps,height=0.3\textheight}}
+  \hfill
+  {\psfig{figure=\figdir/dff-lay.eps,height=0.3\textheight}}
+}
+\caption{Circuit diagram of a D-flipflop and its layout on the fishbone image.}
+\label{f-dff}
+\end{figure}
+
+

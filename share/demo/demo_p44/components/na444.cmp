@@ -1,0 +1,6 @@
+bbox 7.0 10
+port in A
+port in B
+port in C
+port in D
+port out Y

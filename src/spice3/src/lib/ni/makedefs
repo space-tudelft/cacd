@@ -1,0 +1,11 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+
+COBJS		= niaciter.o nicomcof.o niconv.o nidest.o niditer.o niinit.o \
+		  niinteg.o niiter.o niniter.o nipred.o nipzmeth.o nireinit.o \
+		  nisenre.o
+
+LIB_TARGET	= ../ni.a
+INCLUDE		= -I../../include
+

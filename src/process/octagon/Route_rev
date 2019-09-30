@@ -1,0 +1,67 @@
+/* * *    ROUTER DESIGN RULES for C3TU process  * * *
+ * Route_rev
+ * This is the design rule file read ONLY by gcr for the
+ * vertical channels in case the '-d' option was specified
+ * to sequ.
+ * The syntax is the same as for Route_rules.
+ *
+ * gcr is 'fooled' by flipping the poly and the metal layer.
+ * terminals may only be present in the vertical layer
+ * specified by the normal 'Route_rules' file.
+ * poly AND metal2 was mapped to metal1
+ * metal1 was mapped to the vertical layer
+ *
+ * Patrick Groeneveld 2-1989
+ */
+
+mask[poly] = in;        /* poly is metal1: same design rules */
+mask[diff] = in;        /* note: diff is not allowed now */
+mask[metal1] = ins;
+mask[metal2] = in;
+
+contactmask[poly] = cos;
+contactmask[diff] = cos;
+contactmask[metal2] = cos;
+
+spacing[diff][diff] = 12;
+spacing[diff][poly] = 4;
+spacing[poly][poly] = 12;
+spacing[metal1][metal1] = 12;
+spacing[metal2][metal2] = 12;
+
+minchanwidth = 40;
+
+width[diff] = 12;
+width[poly] = 12;
+width[metal1] = 12;
+width[metal2] = 12;
+
+contact[diff][poly] = 0;
+contact[diff][metal1] = 10;
+contact[poly][metal1] = 10;
+contact[metal2][metal1] = 10;
+
+contspacing[poly] = 10;
+contspacing[diff] = 10;
+contspacing[metal1] = 16;
+contspacing[metal2] = 10;
+
+overlap[poly][metal1] = 5;
+overlap[metal1][poly] = 5;
+overlap[diff][metal1] = 5;
+overlap[metal1][diff] = 5;
+overlap[metal2][metal1] = 5;
+overlap[metal1][metal2] = 5;
+
+overlap[poly][diff] = 0;
+overlap[diff][poly] = 0;
+
+viafactor[diff] = 0.9;
+viafactor[poly] = 0.9;
+viafactor[metal2] = 0.9;
+
+/* no length constraints */
+
+/* no postprocessing */
+
+/* the global router does not read this file */

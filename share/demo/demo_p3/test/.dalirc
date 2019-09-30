@@ -1,0 +1,129 @@
+# # # # # # # # # # # # # # # # # #
+#
+# This is the file '.dalirc'
+# Contents: Initialisation commands for the layout viewer/editor 'seadali'
+# Purpose:  Initialisation for the semi-custom
+#           'fishbone' image (which is actually the c3dm process).
+# Created:  feb 1992 by Patrick Groeneveld
+# Modified: jan 1993
+#
+# This file was copied into this project directory by 'mkopr'.
+# If necessary, you can customize by editing this file.
+#
+# (c) The OCEAN/NELSIS Sea-of-Gates design system
+# Delft University of Technology
+#
+
+#
+# Welcome message
+print seadali initialisation for 'fishbone' Sea-of-Gates image
+
+#
+# turn off visibility of some nasty masks: od, sn, sp, nw, cb, bb
+visible od off
+visible sn off
+visible sp off
+visible nw off
+visible cb off
+
+#
+# link the contact masks which contact to poly/diffusion
+# in this way these masks will always switch on or off together
+linkmasks cop con cps
+
+#
+# for convenience: turn layer metal1 on
+layer in on
+
+#
+# when reading a new cell: automatically expand until the bottom
+default_expansion 16
+
+#
+# draw all instances hashed, to indicate level
+hashed on
+
+#
+# start drawing dominant (better for SoG structure)
+dominant on
+
+#
+# Turn on image mode:
+# auto-snap all instances to grid during move or add
+imagemode on
+
+#
+# switch the tracker window on
+tracker on
+
+#
+# Display the grid
+grid on
+
+#
+# Do not display the instances of the 'primitives' library
+# during an 'add_inp'
+weedout primitives
+
+#
+# Set drawing order for dominant drawing
+# The layer with the lowest number will be drawn last
+# All missing layers will be drawn transparent, UNDER the dominant layers
+order cos 0
+order ins 1
+order cps 2
+order cop 3
+order con 4
+order bb 5
+order in 6
+order ps 7
+
+#
+# Disable all masks which cannot be edited on a Sea-of-Gates
+disabled_layers od ps nw sn sp cb
+
+#
+# for checking we need flat expansion
+flat_expansion on
+
+#
+# set instance name of the image, for special treatment by
+# seadali (default: IMAGE)
+# imagename IMAGE
+
+# set the maximum number of image cells which should be drawn on the
+# screen, to prevent endless drawing (default: 120)
+# maxdraw 80
+
+# set the cell name, using which seadali can detect whether this is
+# a via. Vianames will not be drawn. Only the first 3 characters are
+# significant. (Default: via)
+# vianame via
+
+#
+# If you like, you can use more commands, or even run a 'slide show'
+# by putting commands in this file
+# The following tokens can be used:
+# label <l>                   set return label (for looping)
+# goto <l>                    goto label l
+# print <text>                print out text in dali
+# sleep <secs>                wait for secs time
+# beep                        beep (^G in output file)
+# read <cell>                 read specified cell
+# redraw                      redraw screen
+# wdw_bbx                     full view
+# zoom <x> <y> <fraction>     zoom with x, y as center and fraction part of cell
+# center <x> <y>              center window on x,y
+# expand <level>              set expansion level
+# default_expansion <level>   set default expansion when reading cell
+# visible <layer> [on/off]    turn layer visible/invisible
+# layer <layer> [on/off]      (de-)activate layer for drawing
+# order <layer> <prio>        set drawing order of layer
+# append <xl> <xr> <yb> <yt>  append in current masks
+# delete <xl> <xr> <yb> <yt>  delete in current masks
+# dominant [on/off]           enable/disable dominant drawing
+# hashed [on/off]             draw instances hashed
+# imagename <inst_name>       set inst name of SoG image
+# vianame <cell_name>         set cell name of vias
+# maxdraw <num>               draw at most num instances of the image
+# and others....

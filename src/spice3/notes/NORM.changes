@@ -1,0 +1,14 @@
+
+
+Problem with type declaration of double logb(double)
+
+Had to rename spice function logb to normslogb in lib/misc/math.c
+and lib/sparse/spsmp.c
+
+conflict with /usr/include/math.h
+
+
+Config changes:
+
+ -O flag out
+ X11R4 libraries and include files in conf/defaults and hpux

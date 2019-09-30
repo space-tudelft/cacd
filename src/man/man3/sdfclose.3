@@ -1,0 +1,22 @@
+.ll 77
+.hy
+.TH SDFCLOSE 3SDF "THE SEADIF PROGRAMMERS MANUAL"
+.SH NAME
+sdfclose - function to close a seadif database
+.SH SYNOPSIS
+ void sdfclose(void)
+
+.SH DESCRIPTION
+This function closes a seadif database.
+If some cells had been written with any of the functions described in
+.I sdfwrite (3SDF)
+then these write actions will only now update the database.
+Consequently, if you forget to call sdfclose
+(or if your program fails to do so because of a crash),
+the database remains unaffected.
+It just stays as it was when you opened it with sdfopen().
+.SH "AUTHOR"
+Paul Stravers, Delft University of Technology.
+.SH "SEE ALSO"
+sealib(3SDF), sdfwrite(3SDF), sdfopen(3SDF), sdfread(3SDF), seadif(4SDF),
+cs(3SDF), sdfattachlib(3SDF), sdfexists(3SDF), memman(3SDF), sdfimage(4SDF).

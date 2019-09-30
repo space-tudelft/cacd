@@ -1,0 +1,171 @@
+.TH CSPICE 1ICD "User Commands"
+.UC 4
+.SH NAME
+cspice - convert SPICE network description into the database
+.SH SYNOPSIS
+.B cspice
+[-psw] networkfile ...
+.SH OPTIONS
+The following options can be specified:
+.TP
+.B -p
+Run the C preprocessor before parsing the input file.
+.TP
+.B -s
+The silent mode suppresses messages about the actions taken by
+.I cspice
+which are usually printed on screen.
+.TP
+.B -w
+Do not print warnings.
+.SH DESCRIPTION
+.I Cspice
+is a program that generates from a
+.I SPICE
+network description a circuit description in database format.
+The database format can serve as input to several application programs,
+e.g.
+the circuit simulator \fIspice\fP,
+the switch-level simulator \fIsls\fP,
+and the network comparison program \fImatch\fP.
+A description of the spice language
+can be found in the SPICE User's Guide.
+The spice description that can be used as input for
+.I cspice
+extends the normal spice network description
+in that numbers as well as identifiers
+may be used for node and terminal specifications.
+.PP
+A network description
+can be hierarchical and may reside in several files.
+However, when one particular network is added to the database,
+network descriptions of the networks that are called in the
+network must have been added to the database before.
+.PP
+In the file "global_nets" one may optionally specify names of nets (terminals)
+that are global.
+Each node or terminal that has a name equal to the name of a global
+net, will be connected to other nodes and terminals that have the same name,
+among other things by possibly defining extra terminals for each network.
+First,
+.I cspice
+will try to find a file "global_nets"
+in the current working directory.
+Second, if the above attempt fails,
+.I cspice
+will try to open a file "global_nets"
+in the corresponding process directory.
+.SH "NUMERIC SUFFIXES"
+.I Cspice
+supports the following scale-factor letter conventions (case is insignificant):
+.sp
+.TP
+.B
+A
+1e-18
+.TP
+.B
+F
+1e-15
+.TP
+.B
+P
+1e-12
+.TP
+.B
+N
+1e-9
+.TP
+.B
+U
+1e-6
+.TP
+.B
+M
+1e-3
+.TP
+.B
+MI
+25.4e-4 (MIL)
+.TP
+.B
+K
+1e+3
+.TP
+.B
+ME
+1e+6 (MEG)
+.TP
+.B
+G
+1e+9
+.TP
+.B
+T
+1e+12
+.SH "CONFIGURATION FILE"
+At start-up of the program,
+.I cspice
+will read some information from a configuration
+file called ".cspicerc".
+First,
+it tries to read this file from the process directory (without leading dot).
+Second, it tries to read this file from the home directory of the user.
+Thirdly, it tries to read this file from the current directory.
+Settings in the second and third configuration file overrule the previous
+settings.
+The configuration file may contain the following keywords, followed
+by a specification on the same line if the keyword ends with ':';
+.TP
+FORBID_FIRST_CAPITAL_ON
+Generate an error message if the name of a network
+that is defined starts with a capital.
+.TP
+FORBID_FIRST_CAPITAL_OFF
+Don't generate an error message (default mode).
+.TP
+RUN_CPP_ON
+Run the C preprocessor before parsing the input file.
+.TP
+RUN_CPP_OFF
+Don't run the C preprocessor (default mode).
+.TP
+CPP_OPTIONS:
+Options for running the C preprocessor (default none).
+.TP
+DEFAULT_INCLUDE:
+Specifies a file that is automatically included at the top of the input file
+if the C preprocessor is run (default: no include).
+.SH EXAMPLES
+.nf
+% cspice latch.spc
+.AU "A.C. de Graaf, A.J. van Genderen, S. de Graaf."
+.SH FILES
+.TP 20
+ICDPATH/share/lib/process/\fIprocess\fP/cspicerc
+(default) configuration file
+.TP
+HOME/.cspicerc
+(1st altern.) configuration file
+.TP
+\&.cspicerc
+(2nd altern.) configuration file
+.TP
+global_nets
+(default) file to specify global nets
+.TP
+ICDPATH/share/lib/process/\fIprocess\fP/global_nets
+(altern.) file to specify global nets
+.TP
+/usr/tmp/x*
+temporary files
+.SH SEE ALSO
+"SPICE 3B1 User's Guide",
+Department of Electrical Engineering and Computer Sciences,
+University of California,
+Berkeley.
+.br
+csls(1ICD),
+sls(1ICD),
+nspice(1ICD),
+xspice(1ICD).

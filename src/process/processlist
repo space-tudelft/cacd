@@ -1,0 +1,14 @@
+# process list
+# proc_id proc_name
+1  nmos      # TUD demo nmos process
+3  scmos_n   # scalable cmos process
+6  gatearray # sea-of-gates gatearray process
+18 c3tu      # 1.6 micron cmos process
+23 dimes01   # first (bipolar) process of DIMES
+40 octagon   # sea-of-gates octagon process (modified c3tu)
+41 fishbone  # sea-of-gates fishbone process (1.6 micron)
+44 scmos-orb-2 # Orbit 2.0 micron cmos process
+45 ami-c5n   # AMI 0.5 micron cmos process
+46 dimes03   # current bipolar process of DIMES, TU Delft
+52 FreePDK45 # Nangate Open Cell Library (45 nm) process
+60 tsmc025   # MOSIS TSMC CMOS025 (0.25u) process

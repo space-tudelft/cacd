@@ -1,0 +1,69 @@
+\section{ex210}
+
+Function: Exclusive or
+
+Terminals: (A, B, Y, vss, vdd)
+
+
+IEC-symbol:
+%figuur ex210.iec.eps
+\begin{figure}[bth]
+\callpsfig{ex210.iec.eps}{width=.31\textwidth}
+\end{figure}
+
+Function table:
+\begin{table}[bth]
+\begin{tabular}{|c|c||c|}
+\hline
+A	&B	&Y\\
+\hline
+L	&L	&L\\
+L	&H	&H\\
+H	&L	&H\\
+H	&H	&L\\
+\hline
+\end{tabular}
+\vspace{1cm}
+
+
+
+Propagation and load dependent delays:\\
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Parameter               &From            &To   &Typ    &Unit\\
+\hline
+T$_{PLH}$               &A     		&Y      &0.7    &ns\\
+T$_{PHL}$               &A    		&Y      &0.3    &ns\\
+T$_{PLH}$               &B     		&Y      &0.6    &ns\\
+T$_{PHL}$               &B    		&Y      &0.2    &ns\\
+\hline
+$\Delta$T$_{PLH}$       &any          	&Y      &7.0    &ns/pF\\
+$\Delta$T$_{PHL}$       &any           	&Y      &5.0    &ns/pF\\
+\hline
+C$_{in}$                &any	    	&vss    &0.12   &pF\\
+\hline
+\end{tabular}
+\end{table}
+
+Equivalent chip area: 7
+
+%figuur ex210.cir.eps
+\begin{figure}[bth]
+circuit:\\
+
+\callpsfig{ex210.cir.eps}{width=.65\textwidth}
+\end{figure}
+
+
+
+
+%figuur ex210.lay.eps
+\begin{figure}[bth]
+layout:\\
+
+\callpsfig{ex210.lay.eps}{height=5in}
+\end{figure}
+
+
+\clearpage

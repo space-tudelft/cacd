@@ -1,0 +1,75 @@
+
+/* process : c3tu
+/* author  : A.J. van Genderen, Delft
+/* date    : April 7, 1989
+*/
+
+vh=5
+vminh=3.3
+vmaxl=1.7
+krise=0.607
+kfall=1.214
+
+nenh
+    loffset=0.650u
+    woffset=0u
+    w=2.4u l=1.6u : rstat=3.16k rsatu=10.61k cgstat=4.44f cgrise=4.58f
+		    cgfall=4.30f cestat=0.83f cerise=0.81f cefall=0.85f
+    w=6u l=1.6u : rstat=1.33k rsatu=4.32k cgstat=11.74f cgrise=12.80f
+		  cgfall=10.68f cestat=2.09f cerise=2.07f cefall=2.11f
+    w=20u l=1.6u : rstat=0.48k rsatu=1.41k cgstat=45.28f cgrise=54.26f
+		   cgfall=36.29f cestat=7.03f cerise=7.20f cefall=6.86f
+    pullup
+        /* derived from pulldown */
+        w=2.4u l=1.6u : rdyn=6.43k cch=1.41f
+        w=6u l=1.6u : rdyn=2.61k cch=3.49f
+        w=20u l=1.6u : rdyn=0.83k cch=9.42f
+    end
+    pulldown
+        w=2.4u l=1.6u : rdyn=6.43k cch=1.41f
+        w=6u l=1.6u : rdyn=2.61k cch=3.49f
+        w=20u l=1.6u : rdyn=0.83k cch=9.42f
+    end
+    passup
+        w=2.4u l=1.6u : rdyn=3.57k cch=1.52f
+        w=6u l=1.6u : rdyn=1.44k cch=3.80f
+        w=20u l=1.6u : rdyn=0.39k cch=12.44f
+    end
+    passdown
+        w=2.4u l=1.6u : rdyn=2.69k cch=1.52f
+        w=6u l=1.6u : rdyn=2.06k cch=3.84f
+        w=20u l=1.6u : rdyn=0.70k cch=12.75f
+    end
+end
+
+penh
+    loffset=0.6u
+    woffset=0u
+    w=2.4u l=1.6u : rstat=9.83k rsatu=32.91k cgstat=4.44f cgrise=4.58f
+		    cgfall=4.30f cestat=0.83f cerise=0.81f cefall=0.85f
+    w=6u l=1.6u : rstat=4.01k rsatu=13.23k cgstat=11.74f cgrise=12.80f
+		  cgfall=10.68f cestat=2.09f cerise=2.07f cefall=2.10f
+    w=20u l=1.6u : rstat=1.31k rsatu=4.17k cgstat=45.28f cgrise=54.26f
+		   cgfall=36.29f cestat=7.03f cerise=7.26f cefall=6.80f
+    pullup
+        w=2.4u l=1.6u : rdyn=20.02k cch=0.51f
+        w=6u l=1.6u : rdyn=8.18k cch=1.26f
+        w=20u l=1.6u : rdyn=2.63k cch=2.64f
+    end
+    pulldown
+        /* derived from pullup */
+        w=2.4u l=1.6u : rdyn=20.02k cch=0.51f
+        w=6u l=1.6u : rdyn=8.18k cch=1.26f
+        w=20u l=1.6u : rdyn=2.63k cch=2.64f
+    end
+    passup
+        w=2.4u l=1.6u : rdyn=2.36k cch=1.60f
+        w=6u l=1.6u : rdyn=1.03k cch=4.04f
+        w=20u l=1.6u : rdyn=0.24k cch=12.84f
+    end
+    passdown
+        w=2.4u l=1.6u : rdyn=3.43k cch=1.60f
+        w=6u l=1.6u : rdyn=1.43k cch=4.00f
+        w=20u l=1.6u : rdyn=0.50k cch=13.31f
+    end
+end

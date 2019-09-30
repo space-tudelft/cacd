@@ -1,0 +1,53 @@
+.TH GETPIXELFROMID 5ICD "9/6/88"
+.UC 4
+.SH NAME
+GetPixelFromId - return the pixel coupled to the Id
+.SH SYNOPSIS
+.nf
+\fB
+GetPixelFromId (Id, ppixel)
+int Id;
+unsigned long *ppixel;
+
+GetPixelFromIds (Ids, n, ppixel)
+int Ids[];
+int n;
+unsigned long *ppixel;
+\fP
+.fi
+.SH PARAMETERS
+.TP 14
+.B Id(s)
+Id's to identify the pixel value by.
+.TP 14
+.B n
+specifies the number of Ids.
+.TP 14
+.B ppixel
+the address of the location where the pixel should be returned in.
+.SH DESCRIPTION
+These functions return the pixel value obtained
+by OR'ing together the pixel values of the specified Id's.
+.SH DIAGNOSTICS
+If a call to these functions is successful \fB1\fP is returned.
+If a call to these functions fails \fB0\fP will be returned
+and \fBcacdcmaperrno\fP will be set to one of the following values:
+.TP 14
+.B NOINIT
+the CACD colormap library was not initialized.
+.TP 14
+.B BADID
+a specified Id did not exist.
+.SH SEE ALSO
+InitCacdCmap(5ICD)
+CoupleIdToColor(5ICD)
+CoupleIdToRGB(5ICD)
+GetAffectedIds(5ICD)
+SetForegroundFromId(5ICD)
+.SH NOTE
+These functions should only be used when strictly necessary (such as
+setting a window background when a window is created)
+and not be used to set the foreground (or background)
+pixel of a graphics context (use \fBSetForegroundFromId\fP to accomplish this),
+since they may not be supported in the future when the library is
+extended with window (or viewport) creation functions.

@@ -1,0 +1,31 @@
+.TH GETPROC 1ICD "3/31/87"
+.UC 4
+.SH NAME
+getproc - list process data from ICD data base
+.SH SYNOPSIS
+\fBgetproc\fP [proc_id | proc_name]
+.SH PARAMETERS
+.TP
+\fIproc_id\fP \fB|\fP \fIproc_name\fP
+.br
+List process data of specified process id or process name.
+.br
+Default process data of current project is listed.
+.SH DESCRIPTION
+.I Getproc
+is a program to list the process data of one of the ICD processes
+on the system.
+It shows which masks are available for the process, together with some
+of their properties.
+.PP
+If no argument is specified the process data of the current
+project is listed.
+.SH AUTHOR
+S. de Graaf
+.SH FILES
+.TP
+\fC\fIproj_dir\fP/.dmrc\fP
+.TP
+\fCICDPATH/share/lib/process/processlist\fP
+.TP
+\fCICDPATH/share/lib/process/\fIprocname\fP/maskdata\fP

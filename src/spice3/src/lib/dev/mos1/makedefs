@@ -1,0 +1,13 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+
+COBJS		= mos1.o mos1acld.o mos1ask.o mos1conv.o mos1del.o mos1dest.o \
+		  mos1dist.o mos1dset.o mos1ic.o mos1load.o mos1mask.o \
+		  mos1mdel.o mos1mpar.o mos1noi.o mos1par.o mos1pzld.o \
+		  mos1sacl.o mos1set.o mos1sld.o mos1sprt.o mos1sset.o \
+		  mos1supd.o mos1temp.o mos1trun.o
+
+LIB_TARGET	= ../../dev.a
+INCLUDE		= -I../../../include
+

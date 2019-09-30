@@ -1,0 +1,180 @@
+.TH PUTDEVMOD 1ICD "User Commands"
+.UC 4
+.SH NAME
+putdevmod - put device model(s) into the circuit database
+.SH SYNOPSIS
+.B putdevmod
+[-v] file [...]
+.SH OPTIONS
+.TP 8
+.B -v
+Verbose mode.
+.SH DESCRIPTION
+.I Putdevmod
+places a device model description into the circuit database.
+One or more filenames may be given as argument,
+each containing exactly one device model description.
+.PP
+For new projects with xcontrol use the program
+.I xcontrol
+to set and list the cell device status.
+In that case,
+the program
+.I putdevmod
+only adds the "devmod" file and does not set the device status.
+.PP
+A device model description contains a description of the name
+of the device, a description of its terminals and (optionally)
+a simulation model for the device
+(currently only SPICE and SPECTRE models are supported).
+The device model description is used by other programs to detect which
+cells are network primitives (e.g. by the layout-to-circuit
+extractor
+.I space(1ICD)
+and by programs that retrieve
+circuit descriptions from the database) and/or to collect
+simulation input.
+.PP
+To remove a device model for a cell, use
+.I device(1ICD)
+with the option \fB-u\fP.
+.PP
+The syntax of an input file for
+.I putdevmod
+is as follows:
+On the first line the keyword "device" is specified followed
+by the name of the device.
+On a next line the keywords "begin" and "spicemod"
+are specified to denote the beginning of the SPICE device information.
+The next lines are
+considered to be SPICE input that can directly be appended
+to a SPICE network description in order to form the model description
+of the device.
+The end of the SPICE model description is denoted by
+a line that contains the keyword "end".
+.PP
+In addition,
+a SPECTRE model may be specified with keywords "begin" and "spectremod" and
+must be ended with a line that contains the keyword "end".
+Note that the terminals must be specified in the SPICE model.
+.PP
+In the header part of the input file that is used as SPICE input,
+the \fIterminal\fP pins, a possible \fIbulk\fP and a \fIprefix\fP for instance
+names for the device, may be included as SPICE comments.
+For MOS transistors also a \fIdw\fP and \fIdl\fP can be specified.
+This is done by specifying them on lines that start with
+the comment character "*".
+.PP
+To specify \fIterminals\fP, use the keyword "terminals"
+followed (on the same line) by the names of the terminals.
+The order in which the terminals are specified
+must agree with the order
+required in the SPICE circuit description (see the SPICE User's Guide).
+The following terminal names are used for the standard devices: "d", "g", "s" and "b"
+for the drain, gate, source and bulk of MOSFET transistors; "c", "b", "e" and "s"
+for the collector, base, emitter and (optional) bulk of BJT transistors;
+and "p" and "n" for capacitors, diodes and resistors.
+.PP
+To specify a \fIbulk\fP (if appropriate) and voltage, use the keyword "bulk"
+followed (optional) by a floating point number for the voltage (default 0).
+It specifies also that a bulk \fIterminal\fP must be added.
+.PP
+To specify a \fIprefix\fP, use the keyword "prefix"
+followed by one of more characters.
+The first character must be conform the SPICE syntax.
+If no prefix is specified the SPICE default is "x".
+The prefix is not only used for instance names of the device,
+but also for device-model \fItype\fP recognition.
+For MOSFETs you can specify the type using "mn" or "mp".
+For BJTs you can specify the type using "qn" or "qp".
+If missing, default the n-type is assumed.
+However, when the \fIspicemod\fP contains a ".model" statement, the \fItype\fP
+of the .model statement is used.
+When the \fIspicemod\fP contains a ".subckt" statement, then
+this statement needs first to be specified, else an incorrect type can be set.
+.br
+Note that the \fItype\fP of a predefined device can also be found
+by specifying a \fImodel\fP statement in the control file for the
+.I xspice
+netlist program.
+.PP
+To specify a \fIdw\fP and/or \fIdl\fP, use respectively the keyword "dw" or "dl"
+followed by a floating point number.
+This can be used to correct respectively the "w" or "l" attribute of MOS transistors.
+Note that a
+.I positive
+value gives a
+.I smaller
+attribute value.
+For example specify "1e-7" for a correction of 0.1 micrometer.
+.PP
+Note that also the keyword "rename" may be specified with two
+node name arguments.
+For example used,
+to connect the "n" node of a p-diffusion capacitor always
+to the "pbulk" node.
+Note that this capacitor must be specified with another name in the technology file.
+.PP
+By using
+.I putdevmod
+the user can easily perform extraction of devices
+that can not be recognized with the built-in device
+extraction algorithms of
+.I space(1ICD).
+A requirement for this is that the layout description
+of the device is stored in separate cell
+in the layout view.
+Using
+.I putdevmod
+a device model is then stored into the database
+that has a same name as the name of the layout cell
+and a list of terminals that is similar as, or a subset of,
+the list of terminals of the corresponding layout cell.
+The layout to circuit extractor
+.I space
+will consider these devices to be leaf-cells whose contents
+should not be extracted,
+but that should be included as primitives in the network description
+instead.
+.SH EXAMPLE
+An example of an input file for
+.I putdevmod
+is:
+.nf
+.if n .sp 1
+.if t .sp 0.5
+device nenh
+begin spicemod
+.ta 12n
+* terminals	d g s
+* bulk      	0
+* prefix   	m
+* parameters for n_enhancement NMOS  w/l = 4/4
+.ta 7n 22n 37n
+\&.model nenh nmos level=2
++	vto=0.6838  	kp=32u    	gamma=0.2787
++	phi=0.55    	pb=0.84   	cgso=440p
++	cgdo=440p   	cgbo=100p 	rsh=25.3
++	cj=62u      	mj=0.73   	cjsw=340p
++	mjsw =0.20  	js=6.2u   	tox=0.07u
++	xj=0.35u    	ld=0.625u 	uo=650
++	ucrit=143000	uexp=0.154	utra=0
++	xqc=0.5     	fc=0.6	lambda=0.02269
++	vmax=6e4    	nsub=5.71e14
++	delta=5.5
+end
+begin spectremod
+model nenh mos2 type=n \\
+ 	vto=0.6838  	kp=32u    	gamma=0.2787 \\
+ 	phi=0.55    	pb=0.84   	cgso=440p \\
+	...
+end
+.sp 0.5
+.fi
+.SH SEE ALSO
+device(1ICD),
+macro(1ICD),
+space(1ICD),
+xspice(1ICD),
+.br
+SPICE2 / SPICE3 User's Guide.

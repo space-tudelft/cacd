@@ -1,0 +1,61 @@
+.ll 77
+.hy
+.TH SDFREADALL 3SDF "THE SEADIF PROGRAMMERS MANUAL"
+.SH NAME
+sdfreadallcir, sdfreadalllay - set of sealib routines to read a hierarchical
+subtree of objects from the seadif database into main memory
+.SH SYNOPSIS
+ #include <sealib.h>
+
+ extern LIBRARYPTR  thislib;
+ extern FUNCTIONPTR thisfun;
+ extern CIRCUITPTR  thiscir;
+ extern LAYOUTPTR   thislay;
+
+
+ int sdfreadallcir(long what, STRING cirname,
+                   STRING funname, STRING libname)
+
+ int sdfreadalllay(long what, STRING layname, STRING cirname,
+                   STRING funname, STRING libname)
+
+.SH DESCRIPTION
+These functions read the named object and recursively all its child cells from
+a seadif database and install the object and its children in an in-core tree.
+The root of the tree is sdfroot, see
+.I sealib (3SDF).
+The database must have been opened with the sealib function
+.I sdfopen (3SDF).
+
+The parameter "what" specifies what attributes of the object must be read.
+Legal values are exactly as described in
+.I sdfread (3SDF).
+In fact, sdfreadall operates by repeatedly calling sdfread. (You could have
+written sdfreadall by yourself, but we provided it for your convenience...)
+
+The value of the global variables
+.I thislib ,
+.I thisfun ,
+.I thiscir
+and
+.I thislay
+refer to the specified parent cell, not to its children.
+See manual page of sdfread for details.
+.SH "RETURN VALUE"
+Both functions return TRUE on succes and NIL on failure.
+.SH "WARNINGS"
+Do not forget to canonicize the cell names before passing them to sdfread.
+See also
+
+Don't you dare to change the name of a cell. This would confuse the sealib
+internal administration and invalidate the hashtables !!!
+.I sealib (3SDF)
+and
+.I cs (3SDF).
+.SH "AUTHOR"
+Paul Stravers, Delft University of Technology.
+
+.SH "SEE ALSO"
+sdfread(3SDF), sealib(3SDF), seadif(4SDF), sdfwrite(3SDF), sdfopen(3SDF),
+sdfclose(3SDF), cs(3SDF), sdfattachlib(3SDF), sdfexists(3SDF), memman(3SDF),
+sdfimage(4SDF).

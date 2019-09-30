@@ -1,0 +1,103 @@
+.TH NELSEA 1SDF "THE SEADIF PROGRAMMERS MANUAL"
+.UC 4
+.SH NAME
+nelsea - nelsis to seadif and seadif to nelsis converter
+.SH SYNOPSIS
+.B nelsea
+[-options] [<cell_name>]
+.SH OPTIONS
+.TP
+.B <cell_name>
+Nelsis cell to be converted.
+.TP
+.B [no argument]
+Convert everything in celllist (implies no \fB-r\fP).
+.SH "options to control the direction of the conversion:"
+.TP
+.B [default]
+Convert from nelsis into seadif.
+.TP
+.B -r
+Reverse conversion: convert from seadif into nelsis.
+.SH "options to control what should be converted:"
+.TP
+.B -L
+Convert layout view only (default: do both).
+.TP
+.B -C
+Convert circuit view only (default: do both).
+.TP
+.B -m <map_file>
+Convert the list in <mapfile> (implies no arguments).
+.TP
+.B -f <sdf_fun>
+Set seadif function name (default: <cell_name>).
+.TP
+.B -c <sdf_cir>
+Set seadif circuit name (default: <cell_name>).
+.TP
+.B -l <sdf_lay>
+Set seadif layout name (default: <cell_name>).
+.TP
+.B -a
+Do not make or use seadif cell Aliases.
+.TP
+.B -H
+Convert <cell_name> only (default: hierarchical).
+.SH "options related to nelsis:"
+.TP
+.B -i
+Make the nelsis cell without the basic image.
+.TP
+.B -v
+Write vias as model calls instead of boxes.
+.TP
+.B -F
+Write placement also in floorplan view.
+.TP
+.B -x <x_size>
+Force horizontal array size to x_size (>= 1).
+.TP
+.B -y <y_size>
+Force vertical array size to y_size (>= 1).
+.TP
+.B -E <list>
+Exclude the objects in <list> from being read.
+Example: -E tmv13  leaves terminals, MC's vias and layers 1 and 3.
+.SH "misc. options:"
+.TP
+.B -p
+Print seadif environment for project and quit.
+.TP
+.B -M
+Create an empty template mapfile only.
+.TP
+.B -d <libname>
+Seadif library name (default: 'Oplib').
+.TP
+.B -V
+Verbose parsing of image file: print all unknown keywords.
+.TP
+.B -h
+Help: print list of options.
+.TP
+.B -q
+Quiet option: print nothing.
+
+.SH DESCRIPTION
+.I Nelsea
+is a program that convert data between the Nelsis and
+the Ocean Sea-of-Gates database.
+
+.SH EXAMPLE
+To produce the nelsis layout of cell nand2 use:
+
+% nelsea -i nand2
+
+.SH AUTHORS
+Paul Stravers,
+Patrick Groeneveld
+
+.SH FILES
+.ta 6c
+proj_dir/image.seadif	(technology file)

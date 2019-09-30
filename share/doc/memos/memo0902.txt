@@ -1,0 +1,54 @@
+Memo: 0902
+From: Simon de Graaf
+Date: Tue Nov 24 14:54:28 CET 2009
+
+Subject: Use of putdevmod for xsls.
+
+Putdevmod is used, to put a device cell in the circuit view of the database.
+In it is only a "spicemod" description allowed?
+
+For example:
+
+device nenh2
+begin spicemod
+* terminals d g s
+* bulk 0
+* prefix m
+end
+
+However, this terminal order is also used for xsls, while intended for xspice.
+There is no possibility to define another order for xsls.
+The order for xsls must be:
+
+* terminals g d s
+
+The only way to map a "nenh2" transistor to a "nenh", is by using the
+xsls control file (xslsrc).
+
+For example:
+
+% cat xslsrc
+model xxx nenh2 nenh ()
+model yyy penh2 penh ()
+
+For xspice, the following control file mapping must be used:
+
+% cat xspicerc
+model xxx nenh2 nmos ()
+model yyy penh2 pmos ()
+
+By xspice, the names "xxx" and "yyy" are used on each device record in the netlist.
+Maybe putdevmod is not needed, because in the control file the following items
+can be defined:
+
+# long_prefix
+prefix nenh2 m
+prefix penh2 m
+params nenh2 { ... }
+params penh2 { ... }
+bulk nmos 0
+bulk pmos 5
+
+No different bulk voltages for each device can be defined and
+maybe also not a good choice by trying that with putdevmod.
+

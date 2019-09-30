@@ -1,0 +1,75 @@
+% conclusion.tex
+
+%% Acceptatie van P.v.E. aantonen.
+\chapter{Conclusion}\label{chap:conclusion}
+In this final chapter we will compare the resulting application with the
+requirements stated in Chapter \ref{chap:demands}.
+
+\subsection*{Platform independence}
+%% Prove platfrom independence
+By using Qt, the STL (standard template library) and the \verb=gcc= compiler we
+have made sure that the tools necessary to compile the application are
+available on all target platforms. Both Qt and \verb=gcc= are freely available
+for all required platforms. All recent versions of \verb=gcc= include a good
+implementation of the STL.
+
+These are not sufficient conditions to \emph{guarantee} platform independence.
+However, the areas covered by these tools are usually the areas where platform
+independcies arise. The application has been successfully tested on both Linux
+and Solaris. Some tests were also performed on HP-UX and no problems were
+encountered.
+
+The \verb=makefile= generator tool \verb=tmake= also takes away the need to
+manually configure the \verb=makefiles= for each target platform.
+
+\subsection*{Integration with SPACE}
+%% Prove integration
+Integration with SPACE is available. The application can read the file
+describing the processes (\verb=processlist=) in the SPACE process tree and the
+user can integrate the generated technology files into the SPACE process tree
+if desired. The \verb=processlist= file describing the available processes is
+automatically updated to reflect the changes that were made.
+
+Unfortunately, the application cannot read the technology files in the SPACE
+process tree, it can only read its own file format.
+
+\subsection*{Technology file generation}
+%% Prove file generation
+The technology files specified in the requirements can all be generated. These
+are:
+\begin{itemize}
+\item \emph{maskdata}, which defines the layers present in the process and the
+colors used to represent them in the programs and their output.
+\item \emph{space.xxx.s}, the element definition files used by SPACE.
+\item \emph{space.xxx.p}, the parameter files used by space.
+\item \emph{bmlist.gds}, which provides a mapping between the GDS layer format and
+the format used by SPACE.
+\item \emph{xspicerc}, a control file that specifies which models are used for
+the devices.
+\end{itemize}
+It should be noted that the space parameter file \verb=space.xxx.p= cannot be
+completely generated yet. Not all of the parameters have been included in the
+first version of the configuration file.
+
+\subsection*{The configuration file language}
+The configuration file language provides the basic functionality needed. The
+language can be made more effective if additional language constructions are
+implemented. The language constructions for ``chopping'' and macro definitions
+can appear mangled to new users. A different syntax could be considered.
+
+\subsection*{Flexibility}
+%% Prove flexibility
+Another requirement is the possibility to add new files to the list above or to
+change the format of these files in a flexible way. This flexibility has been
+achieved by making use of a configuration file. The configuration file contains
+the specification of the user interface and the generators that use this user
+interface to generate the technology files. These files can be changed without
+the need to recompile the application.
+
+Flexibility with regard to the source code has been achieved by using a good
+source code documentation application and by using some well-known design
+patterns that make understanding the code easier.
+
+\bigskip \noindent
+The final conclusion is that the developed application meets the requirements
+specified in Chapter \ref{chap:demands}.

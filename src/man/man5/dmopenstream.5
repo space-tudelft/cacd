@@ -1,0 +1,73 @@
+.TH DMOPENSTREAM 5ICD "DMI User's Manual"
+.SH NAME
+dmOpenStream - open a DMI stream transaction
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+DM_STREAM *dmOpenStream (DM_CELL *cellkey, char *stream, char *mode);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "DM_CELL *cellkey"
+is a pointer to a valid \fBDM_CELL\fP as obtained from
+function dmCheckOut().
+.TP
+.B "char *stream"
+names the stream to be opened.
+.TP
+.B "char *mode"
+specifies the stream access mode as with fopen(3S).
+.SH DESCRIPTION
+Function
+.B dmOpenStream
+opens the stream named by
+.B stream
+and returns a \fBDM_STREAM\fP pointer.
+.PP
+In the current implementation streams are mapped more or less directly
+to UNIX files.
+The (absolute) pathname of the file is obtained from the
+\fBcellkey\fP argument.
+.PP
+Function
+.B dmOpenStream
+checks from the information found in
+.B cellkey
+whether the
+.B mode
+of opening is permitted.
+For example,
+it is not permitted to open a stream for writing if the mode
+used for dmCheckOut() was \fBREADONLY\fP.
+For that case you may only use
+.B mode
+"r" or "r+".
+.SH DIAGNOSTICS
+Function
+.B dmOpenStream
+returns the pointer \fBNULL\fP if the named
+.B stream
+cannot be accessed,
+or the constraints mentioned above are violated.
+External variable
+.B dmerrno
+will be set to indicate the error,
+and a call to function dmError() will be done.
+.PP
+This may happen in the following cases:
+.TP 14
+.B DME_BADKEY
+Illegal cell access key given.
+.TP
+.B DME_MODE
+Illegal stream access mode given.
+.TP
+.B DME_FOPEN
+Cannot open stream with specified mode.
+.SH SEE ALSO
+fopen(3S),
+dmCheckOut(5ICD),
+dmCloseStream(5ICD).

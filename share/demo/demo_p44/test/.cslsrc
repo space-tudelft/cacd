@@ -1,0 +1,29 @@
+# # # # # # # # # # # # # # # # # #
+#
+# This is the file '.sls_mkdbrc'
+# Contents: Initialisation commands for the program 'sls_mkdb' (= 'csls')
+# Purpose:  Initialisation of sls_mkdb, especially tailored for
+#           'fishbone' image
+# Created:  dec 1992 by Arjan van Genderen
+# Modified: jan 1993 by Patrick Groeneveld
+# Modified: aug 1993 by Patrick Groeneveld
+#
+# This file was copied into this project directory by 'mkopr'.
+# If necessary, you can customize by editing this file.
+#
+# (c) The OCEAN Sea-of-Gates design system
+# Delft University of Technology
+#
+# You MUST use extern declarations
+EXTERN_OBLIGATORY_ON
+#
+# Cells which start with a captial are not allowed.
+FORBID_FIRST_CAPITAL_ON
+#
+# run with preprocessor on, such that you can use '#include'
+RUN_CPP_ON
+#
+# Where to find the '.ext' files for inclusion. It reads
+# first the current directory, and then the sls_externals
+# directory.
+CPP_OPTIONS: -I. -I./sls_prototypes

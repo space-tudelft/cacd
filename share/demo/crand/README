@@ -1,0 +1,33 @@
+# directory: demo/crand
+
+Demonstration of (1) extraction of a random counter circuit
+and (2) switch-level simulation of the circuit.
+
+STEPS
+=====
+
+1.  Make project, use scmos_n technology and lambda = 0.2 (micron)
+    % mkpr -p scmos_n -l 0.2 projectname
+
+Rest assumes that you and your files are in the project directory.
+
+2.  Use cgi to put crand layout into the database.
+    % cgi crand.gds
+
+3.  Perform a flat extraction of cell crand, also extract ground 
+    capacitances.
+    % space -vFc crand
+
+4.  Start simeye.
+    % simeye &
+    Click on the "Simulate" menu and choice the "Prepare" item.
+    Select in the "Circuit:" field cell name "crand" and
+    in the "Stimuli:" field file name "crand.cmd" (click on it).
+    To inspect or edit the input signals, click on the "Edit" button.
+
+5.  Running a sls simulation.
+    Go back to the "Simulate -> Prepare" dialog and choice
+    simulation "Type: sls-timing" and for "Read: Analog".
+    Perform a switch-level timing simulation by clicking button
+    "Run" and watch the simulation results.
+

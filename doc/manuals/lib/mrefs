@@ -1,0 +1,160 @@
+.\" REFER macros .... citations
+.\" copied from /usr/lib/mm/npwbmm.mrefs and modified, NvdM
+.\" modifications:
+.\"     [C entry in journal article for conference proceedings added
+.\"     put always square brackets around citation labels
+.\"	Redefinition of >., <., >, and <,.
+.de []
+.][ \\$1
+..
+.de ][
+.if \\$1>5 .tm Bad arg to []
+.[\\$1
+..
+.\" OLD: .if n .ds [. \f1
+.\"      .if t .ds [. \s-2\v'-.4m'\f1
+.\"      .if n .ds .] \fP
+.\"      .if t .ds .] \v'.4m'\s+2\fP
+.ds [. "\f1 [
+.ds .] "]\fP
+.\" end modifications.
+.if n .ds [o ""
+.if n .ds [c ""
+.if t .ds [o ``
+.if t .ds [c ''
+.\" the next lines deal with the problem of .[1] or [1].
+.\" refer will write "linexxx\*(<.[1]\*(>.
+.\" and either "<." or ">." should produce the .;
+.\" similarly for ,
+.\" Next 4 lines commented
+.\" .if n .ds >. .
+.\" .if t .ds <. .
+.\" .if n .ds >, ,
+.\" .if t .ds <, ,
+.\" Next 4 lines added
+.ds >. .
+.ds >, ,
+.rm <.
+.rm <,
+.\" End modifications
+.de [5 \" tm style
+.FS
+.ML "\\*([F.\0" 5
+.LI
+\\*([A, \\f2\\*([T\\f1,
+.ie \\n(TN \\*([M.
+.el Bell Laboratories internal memorandum (\\*([D).
+.LE
+.FE
+..
+.de [0 \" other
+.FS
+.ML "\\*([F.\0" 5
+.LI
+.if !"\\*([A"" \\*([A,
+.	\" next line added, Q-field is for corporate authors
+.if !"\\*([Q"" \\*([Q,
+.if !"\\*([T"" \\f2\\*([T\\f1\c
+.if !"\\*([T"" .if !"\\*([O"" ,\ 
+.ie !"\\*([O"" \\*([O
+.el .if !"\\*([T"" \&.
+.\" NEXT LINE ADDED
+.if !"\\*([C""\\*([C,
+.if !"\\*([D"" (\\*([D).
+.LE
+.FE
+..
+.de [1 \" journal article
+.FS
+.ML "\\*([F.\0" 5
+.LI
+\\*([A,
+.if !"\\*([T"" \\*([o\\*([T,\\*([c
+.if "\\*([V"" \\f2\\*([J\\f1,
+.if !"\\*([V"" \\f2\\*([J\\f1
+.if !"\\*([V"" \{.if n Vol.\&
+\\f3\\*([V\\f1\c\}
+.\" NEXT LINE ADDED
+.if !"\\*([C""\\*([C,\c
+.if !"\\*([N"" (\\*([N)\c
+.if !"\\*([P"" \{\
+.ie \\n([P>0 \ pp.\&
+.el \ p.\&
+\\*([P\}
+.if !"\\*([I"" .if "\\*([R"" \\*([I,
+(\\*([D).
+.if !"\\*([O"" \\*([O
+.LE
+.FE
+..
+.de [2 \" book
+.FS
+.ML "\\*([F.\0" 5
+.LI
+\\*([A, \\f2\\*([T,\\f1
+\\*([I\c
+.if !"\\*([C"" , \\*([C\c
+ (\\*([D).
+.if !"\\*([G"" Gov't. ordering no. \\*([G
+.if !"\\*([O"" \\*([O
+.LE
+.FE
+..
+.de [4 \" report
+.FS
+.ML "\\*([F.\0" 5
+.LI
+\\*([A, \\*([o\\*([T,\\*([c
+\\*([R\c
+.if !"\\*([G"" \& (\\*([G)\c
+.if !"\\*([I"" ,  \\*([I\c
+.if !"\\*([C"" ,  \\*([C\c
+ (\\*([D).
+.if !"\\*([O"" \\*([O
+.LE
+.FE
+..
+.de [3 \" article in book
+.FS
+.ML "\\*([F.\0" 5
+.LI
+\\*([A, \\*([o\\*([T,\\*([c
+.if !"\\*([P"" pp. \\*([P
+in \\f2\\*([B\\f1, \c
+.if !"\\*([E"" ed. \\*([E, \c
+.if !"\\*([I"" \\*([I\c
+.if !"\\*([C"" ,  \\*([C\c
+ (\\*([D).
+.if !"\\*([O"" \\*([O
+.LE
+.FE
+..
+.de [<
+.]<
+..
+.de ]<
+.nr u \\n(Hu
+.nr Hu 1
+.HU "References"
+.nr Hu \\nu
+.rm FS FE
+..
+.de [>
+.]>
+..
+.de ]>
+.sp
+..
+.de [-
+.]-
+..
+.de ]-
+.rm [V [P [A [T [N [C [B [O [R [I [E [D
+..
+.de ]]
+this is never
+executed
+and just
+uses up an end-of-file
+bug.
+..

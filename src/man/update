@@ -1,0 +1,12 @@
+
+case $1 in
+1)echo "The following help on related programs is available:";;
+2)echo "The following help on utility programs is available:";;
+3)echo "The following help on maintenance stuff is available:";;
+4)echo "The following help on file formats is available:";;
+5)echo "The following help on subroutines is available:";;
+*)echo "The following help on section $1 is available:";;
+esac
+echo "================== `date` =================="
+ls -C | expand | sed -e "s/\.$1/  /g"
+echo ""

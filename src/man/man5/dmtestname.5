@@ -1,0 +1,48 @@
+.TH DMTESTNAME 5ICD "DMI User's Manual"
+.SH NAME
+dmTestname - test a name
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+int dmTestname (char *name);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "char *name"
+is the name which has to be tested.
+.SH DESCRIPTION
+Function
+.B dmTestname
+tests the \fBname\fP whether it is
+allowed to become e.g. a cell or terminal name.
+Valid names have to start with a letter and all other characters have to be
+a letter (upper or lower case), a number or an under-score '_'.
+The length of the \fBname\fP will always be
+truncated to \fBDM_MAXNAME\fP characters (if too long).
+In the extended project format (default),
+names may contain all printable ascii characters except filename separators.
+.SH DIAGNOSTICS
+Function dmTestname() returns \fB0\fP if no illegal
+character is detected within the first \fBDM_MAXNAME\fP characters.
+.br
+Function dmTestname() returns \fB1\fP when
+the first \fBDM_MAXNAME\fP characters
+constitute a valid name but
+the string length of \fBname\fP is greater than \fBDM_MAXNAME\fP.
+The \fBname\fP will therefore be truncated.
+.br
+Function dmTestname() returns \fB-1\fP when a bad name is found or another error occurs.
+The external variable
+.B dmerrno
+will be set to indicate the error.
+.PP
+This happens in the following cases:
+.TP 14
+.B DME_BADNAME
+Bad name (an illegal character found).
+.TP 14
+.B DME_DDM
+DMI maxname error.

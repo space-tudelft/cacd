@@ -1,0 +1,28 @@
+# process dimes01
+# When importing a gds file:
+#    Text structures with type 9 are interpreted as labels.
+#    Other text structures are interpreted as terminals.
+#    Records with property 62 are also interpreted as terminals.
+# When generating a gds file:
+#    Labels are translated to text structures with type 9
+#    Termimals are translated to records with a property 62 to
+#    specify their name.
+#
+bn       1
+dp       2
+dn       3
+sp       4
+sn       5
+bs       6
+bi       7
+ci       8
+cw       9
+wp       10
+bw       11
+wn       12
+co       13
+ic       14
+ic:label 14 9
+ct       15
+in       16
+in:label 16 9

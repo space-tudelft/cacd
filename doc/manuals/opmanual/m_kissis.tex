@@ -1,0 +1,182 @@
+\section{Handleiding Kissis: Automatische Generatie van een Circuit uit een Toestandsdiagram of Functietabel} \index{kissis|(bold}
+\label{kissis}
+Met het programma \tool{kissis} is het mogelijk om m.b.v.\ een toestandsdiagram of een functietabel een circuit te genereren wat voldoet aan een van te voren
+gedefinieerde input/outputrelatie. Hieronder wordt van beide toepassingen een
+voorbeeld beschreven. Voor verdere informatie kunt u online de manual page van
+\tool{kissis} opvragen (\tool{icdman kissis}).
+
+\subsection{Automatische generatie vanuit een toestandsdiagram}
+\index{toestandsdiagram!automatische circuitgeneratie}
+Als input voor het maken van een circuit vanuit een toestandsdiagram is een file nodig waarin o.a.\ de toestandsovergangen als functie van de stuursignalen
+beschreven zijn.
+\tool{Kissis} leest de toestandsovergangen in,
+probeert het aantal toestanden te minimaliseren,
+kent aan elke toestand een optimale codering toe,
+synthetiseert het benodigde logische circuit en beeldt dit af op de bibliotheekcellen.
+\tool{kissis} maakt hierbij gebruik van resettable flipflops {\tt dfr11}
+om de toestand te onthouden.
+Van het logische circuit met geheugen wordt een sls-beschrijving gemaakt,
+weggeschreven naar een file en met \tool{csls} toegevoegd aan de database. 
+Uiteraard gebeurt dit alles onder behoud van de gedefinieerde
+input/output relatie.
+Een voorbeeld van zo'n inputfile met bijbehorende toestandsdiagram 
+vindt u hieronder.\\
+\\
+\begin{minipage}[t]{0.4\textwidth}
+\begin{verbatim}
+.model hotel
+.i 2
+.o 1
+.inputs s ov
+.outputs out
+.r uit0
+-1 uit1 uit1 0
+10 uit1 uit1 0
+00 uit1 uit0 0
+-1 uit0 uit0 0
+00 uit0 uit0 0
+10 uit0 aan1 0
+-1 aan1 aan1 1
+10 aan1 aan1 1
+00 aan1 aan0 1
+-1 aan0 aan0 1
+00 aan0 aan0 1
+10 aan0 uit1 1
+\end{verbatim}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.5\textwidth}
+Toestandsdiagram:\\
+\index{toestandsdiagram!voorbeeld}
+\callpsfig{toestand.eps}{width=0.9\textwidth}
+
+\end{minipage}
+\\
+\\
+\\
+{\bf Toelichting op de syntax van de inputfile voor kissis.}
+\begin{itemize}
+\item
+De eerste regel begint met het sleutelwoord {\it .model}. 
+Daarachter komt de naam van het circuit. Onder deze naam wordt het circuit
+opgenomen in de database.
+\item
+Achter de sleutelwoorden {\it .i} en {\it .o} wordt het aantal inputsignalen 
+resp. het aantal outputsignalen opgegeven. Het clocksignaal (CK) en het 
+resetsignaal (R) worden hierbij niet meegeteld.
+\item
+Achter de sleutelwoorden {\it .inputs} en {\it .outputs} worden de namen
+van de inputsignalen (inputterminals) resp. de outputsignalen (outputterminals)
+opgegeven. Indien deze regels achterwege blijven, maakt 
+\tool{kissis} eigen namen.
+\item
+Indien gewenst kan achter het sleutelwoord {\it .r} de resettoestand 
+worden opgeven. Omdat de geheugenwerking (de toestanden) gemaakt wordt 
+met resettable flipflops betekent dit dat de resettoestand de 
+codering 00..0 krijgt.
+\item
+Vervolgens worden de toestandsovergangen beschreven. Allereerst de waarden
+van de inputsignalen. 
+Opgegeven kan worden "1" (hoog), "0" (laag) of "-" (don't care).
+Daarna komt de begintoestand en de onder de opgegeven inputwaarden 
+opvolgertoestand, gevolgd door de waarden van de outputsignalen. Het aantal inputsignalen en outputsignalen moeten overeenkomen met de achter {\it .i} en {\it .o}
+opgegeven waarden. \\
+De regel {\bf "00 uit1 uit0 0"} moet dus als volgt worden gelezen : voor {\bf s} is 0 en {\bf ov} is 0 gaat de toestand {\bf uit1} over in toestand {\bf uit0}. De waarde van het outputsignaal {\bf out} behorend bij de begintoestand {\bf uit1} is 0.\\
+Omdat alleen Moore-machines zijn toegestaan mogen de outputsignalen niet afhangen van de inputsignalen. Dit houdt in dat de outputsignalen bij een bepaalde begintoestand dezelfde waarden moeten hebben \index{Moore}
+(in het voorbeeld is {\bf out} gelijk aan 0 voor de toestanden {\bf uit0} en 
+{\bf uit1} en gelijk aan 1 voor de toestanden {\bf aan0} en {\bf aan1}) .
+\end{itemize}
+Aannemende dat de inputfile {\tt hotel.kiss2} heet,
+wordt de generatie van het circuit
+gestart met: \type{kissis hotel.kiss2}
+De directory test is in dit geval de projectdirectory (aangemaakt met \tool{mkopr}) waarin u het circuit aan de database wil toevoegen.\index{mkopr}\\
+Als resultaat ontstaat er een cel {\tt hotel} in de circuit-database, 
+een file {\tt hotel.sls} met de sls-beschrijving van de cel {\tt hotel} en de 
+codering van de toestanden, en een file {\tt hotel.sta} met een 
+{\tt define}-statement van de toestandsvariabele {\bf State}. 
+Deze variabele is een combinatie van de uitgangen van de flipflops die
+de toestanden coderen.
+De file {\tt hotel.sta} wordt bij het simuleren met \tool{sls} ingelezen als in de 
+commandfile de regel "{\tt option sta\_file = on}" is opgenomen. Hierdoor wordt in de outputfile van \tool{sls} en in \tool{simeye} de toestand afgedrukt.
+\clearpage
+{\bf File hotel.sls} :
+\begin{verbatim}
+/*  This file was automatically created by blif2sls.
+
+    Thu Jul  3 16:42:24 1997
+*/
+
+#include<sls_prototypes/oplib.ext>
+
+/*     Latch order:                                          */
+/*                          LatchOut_v2 ,                    */
+/*                          LatchOut_v3 ,                    */
+
+/*     Code Assignment: uit1  10            */
+/*     Code Assignment: the_RS  00            */
+/*     Code Assignment: aan1  01            */
+/*     Code Assignment: aan0  11            */
+
+network hotel( terminal s, ov, out, R, CK, vss, vdd)
+{
+ {inst0}    dfr11( n_2359_, R, CK, LatchOut_v2, vss, vdd);
+ {inst1}    dfr11( n_2360_, R, CK, LatchOut_v3, vss, vdd);
+ {inst2}    iv110( LatchOut_v2, n_2320_, vss, vdd);
+ {inst3}    iv110( s, n_2318_, vss, vdd);
+ {inst4}    no210( s, ov, n_20_, vss, vdd);
+ {inst5}    mu111( LatchOut_v2, LatchOut_v3, n_20_, n_2359_, vss, vdd);
+ {inst6}    no210( ov, n_2318_, n_21_, vss, vdd);
+ {inst7}    mu111( LatchOut_v3, n_2320_, n_21_, n_2360_, vss, vdd);
+            net{LatchOut_v3,out};
+}
+\end{verbatim}
+
+{\bf File hotel.sta} :
+\begin{verbatim}
+define  LatchOut_v2 LatchOut_v3 : State  \
+            h l : uit1 \
+            l l : the_RS \
+            l h : aan1 \
+            h h : aan0
+print State
+\end{verbatim}
+
+\clearpage
+\subsection{Automatische generatie van combinatoriek m.b.v.\ een functietabel}
+Met \tool{kissis} is het ook mogelijk een stukje combinatoriek te genereren aan
+de hand van een functietabel. Het circuit bevat dan geen geheugenwerking.
+De syntax voor de inputfile is vrijwel gelijk aan hetgeen hierboven is 
+beschreven. Alleen de informatie over de toestanden wordt weggelaten en de extensie van de inputfile is nu ".pla". Het voorbeeld hieronder (het maken van een 4-input and) spreekt voor zich. Het genereren van het circuit wordt 
+opgestart met: \type{kissis and4.pla}
+
+{\bf Inputfile and4.pla} :
+\begin{verbatim}
+.model and4
+.i 4
+.o 1
+.inputs A1 A2 A3 A4
+.outputs Y
+1111 1
+---0 0
+--0- 0
+-0-- 0
+0--- 0
+\end{verbatim}
+
+{\bf Resultaatfile and4.sls} :\index{sls!voorbeeld}
+\begin{verbatim}
+/*  This file was automatically created by blif2sls.
+
+    Thu Jul  3 16:47:01 1997
+*/
+
+#include<sls_prototypes/oplib.ext>
+
+network and4( terminal A1, A2, A3, A4, Y, vss, vdd)
+{
+ {inst0}    na210( A1, A2, n_2282_, vss, vdd);
+ {inst1}    na210( A3, A4, n_2285_, vss, vdd);
+ {inst2}    no210( n_2282_, n_2285_, Y, vss, vdd);
+}
+\end{verbatim} \index{kissis|)}
+\cleardoublepage

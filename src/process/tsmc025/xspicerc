@@ -1,0 +1,9 @@
+# process tsmc025
+
+include_library spice3f5.lib
+
+model cmosn nenh nmos ()
+model cmosp penh pmos ()
+
+bulk nmos 0.0
+bulk pmos 2.5

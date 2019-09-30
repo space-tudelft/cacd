@@ -1,0 +1,77 @@
+.TH CACDCMAPERROR 5ICD "9/6/88"
+.UC 4
+.SH NAME
+CacdCmapError - print an error message describing the last error
+.SH SYNOPSIS
+.nf
+\fB
+CacdCmapError (string, fatal)
+char *string;
+int fatal;
+\fP
+.fi
+.SH PARAMETERS
+.TP 14
+.B string
+an optional string to be printed.
+.TP 14
+.B fatal
+specifies whether the function should exit.
+.SH DESCRIPTION
+\fBCacdCmapError\fP prints (an optional) string on stderr followed
+by a colon and an error message describing the last occurred error
+in the CACD cmap library.
+The error status is retrieved from the global variable \fBcacdcmaperrno\fP.
+If \fBfatal\fP is non zero \fBCacdCmapError\fP  will exit with
+exit status \fBcacdcmaperrno\fP, when \fBfatal\fP is zero the function
+returns normally.
+
+To facilitate writing your own error routines the file "cmaperror.h"
+can be included which provides defines of error codes
+and a string array "cacdcmaperrors" describing error codes.
+The error codes can be used as an index in the array.
+Error codes larger than "CMAPMAXERROR" produce undetermined results.
+
+The following error codes exist:
+.TP 20
+.B NOINIT
+cacd cmap not initialized.
+.TP 20
+.B NOCMAP
+cannot create colormap.
+.TP 20
+.B BADCMAP
+invalid standard colormap.
+.TP 20
+.B NOGC
+cannot create graphics context.
+.TP 20
+.B NOCORE
+no more core.
+.TP 20
+.B BADCOLOR
+invalid color specification.
+.TP 20
+.B BADID
+invalid id specified.
+.TP 20
+.B ARRAYTOSMALL
+affected id array to small.
+.TP 20
+.B BADERROR
+invalid error code.
+.SH DIAGNOSTICS
+If the call to \fBCacdCmapError()\fP is successful \fB1\fP is returned.
+If \fBCacdCmapError()\fP fails \fB0\fP will be returned (only if fatal is zero)
+and \fBcacdcmaperrno\fP will be set to one of the following values:
+.TP 14
+.B BADERROR
+the current error code is illegal.
+.SH SEE ALSO
+InitCacdCmap(5ICD)
+CoupleIdToColor(5ICD)
+CoupleIdToRGB(5ICD)
+SetForegroundFromId(5ICD)
+.SH NOTE
+The variable \fBcacdcmaperrno\fP is set on failure of a CACD cmap library
+function but never reset if anything goes well.

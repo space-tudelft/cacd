@@ -1,0 +1,76 @@
+.TH DALI_DRC 4ICD "File Formats"
+.UC 4
+.SH NAME
+dali_drc - design rule file for the layout editor dali
+.SH DESCRIPTION
+The layout editor \fIdali\fP (1ICD) offers an internal design rule check
+facility to perform single layer checks on the mask-layout being edited.
+The rules that are used by this facility are retrieved
+from the \fIdali_drc\fP file of the process that corresponds to the project
+of the mask-layout being edited.
+For a certain process this file specifies per mask the minimal width and gap
+spacings that the mask geometries should obey.
+.SH FORMAT
+The \fIdali_drc\fP file contains (zero or) one line for each mask,
+as well as optional comment lines.
+The order in which the lines appear is not of interest.
+If a mask-line is missing, no check is performed for that specific mask.
+Comment lines start with a '#' character.
+.PP
+Each non-comment line contains five fields.
+The first field of a line specifies the mask for which the rules
+are defined in that line.
+The mask is specified by its mask number (see also \fImaskdata\fP (4ICD)
+The second field specifies the minimal width (in lambdas)
+allowed for the mask geometries.
+The rule that is applied by dali for gap-checks depends on the length
+of the opposing edges for which a gap check is performed.
+The third field specifies the minimal gap allowed if both edges are
+longer than a given critical length.
+The fourth field specifies the minimal gap allowed if either one of
+the edges is shorter than or equal to this critical length.
+The critical length is specified in the fifth field.
+.SH EXAMPLE
+As an example, here is the
+.I dali_drc
+file for a standard 4u nmos process:
+.PP
+.L{
+.nf
+# Dali design rule file for the standard 4u nmos
+# process.
+# mask  width   gap     sh_gap  crit_length
+0       2       2       2       5
+1       2       2       2       5
+2       3       2       1       5
+3       2       0       0       5
+4       2       0       0       5
+5       2       0       0       5
+6       2       0       0       5
+7       2       0       0       5
+.fi
+.L}
+.PP
+For example, we see that for all masks (except mask 2) a minimal width of 2
+lambda is required.
+For mask 2
+(mask name 'nm', see also \fIgetproc\fP (1ICD) and \fImaskdata\fP (4ICD)
+a minimal width of 3 is required.
+Also, for mask 2
+a minimal gap of 1 is allowed if the length of one of the edges is
+smaller than or equal to 5.
+For the masks 0 and 1 no distinction is made for gap checks.
+No gap constraints are provided for the masks 3 - 7.
+The critical length specification is therefore of no interest for masks 3 - 7,
+just as for the masks 0 and 1.
+.AU "P. van der Wolf"
+.SH FILES
+.TP
+\fCICDPATH/share/lib/process/TECHN/dali_drc\fP
+.SH SEE ALSO
+P. van der Wolf and J. Liedorp,
+"Dali User's Manual",
+Delft University of Technology,
+Dimes Design and Test Centre.
+.br
+dali(1ICD), getproc(1ICD), maskdata(4ICD)

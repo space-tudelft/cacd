@@ -1,0 +1,6 @@
+bool_1  od_vln   NOFILE	 2  0  0  0  0  CO.7.4          (ovlp OD - CO)
+bool_2  ps_vln   NOFILE	 3  0  0  0  0  CO.7.8+CO.7.9   (ovlp PS - CO)
+bool_1  bool_0   NOFILE	 0  4  0  0  0  CO.7.7          (CO&OD - OD&PS)
+bool_2  bool_0   NOFILE	 0  4  0  0  0  CO.7.6          (CO&PS - OD&PS)
+bool_1  in_vln   NOFILE	 2  0  0  0  0  CO.8.4          (ovlp IN - CO&OD)
+bool_2  in_vln   NOFILE	 1  0  0  0  0  CO.8.5          (ovlp IN - CO&PS)

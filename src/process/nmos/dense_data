@@ -1,0 +1,5 @@
+# process nmos
+lay nm cross np nd min_width 3
+lay nd cross nm via np min_width 2
+lay np cross nm via nd min_width 2
+

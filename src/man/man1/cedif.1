@@ -1,0 +1,135 @@
+.TH CEDIF 1ICD "User Commands"
+.UC 4
+.SH NAME
+cedif - compile an EDIF source into the Nelsis database
+.SH SYNOPSIS
+.B cedif
+[options] [edif_source_file]
+.SH OPTIONS
+.TP
+.B -N
+Set the target language to "Nelsis" (default).
+.TP
+.B -S
+Set the target language to "Seadif", see also esea(1SDF).
+.TP
+.B -P
+Set the target language to "Pseudo-Seadif".
+.TP
+.B -b <lib>
+Translate the (explicit) EDIF library named <lib>.
+The default <lib> is the library with the same name as
+the current working directory (sans leading path name).
+.TP
+.B -B <lib>
+Translate the implicit EDIF library named <lib>.
+An implicit library is a library that is not defined in the EDIF source,
+but only referenced through the EDIF libraryRef statement.
+See also the section "Explicit and implicit libraries" in this manual page.
+.TP
+.B -o <outputfile>
+Output goes to <outputfile> (this option is a no-op if the target language is "Nelsis").
+.TP
+.B -m <lib1>,<lib2>
+If the EDIF source references the external library <lib1> then replace this
+with a reference to the external library <lib2>.
+Multiple
+.B -m
+mapping options are allowed.
+.TP
+.B -l
+Only list the (explicit) libraries that appear in the EDIF source.
+Do not translate.
+.TP
+.B -L
+Only list the implicit libraries that appear in the EDIF source.
+Do not translate.
+See also the option \fB-B <lib>\fP.
+.TP
+.B -E
+If the EDIF source contains "external" declarations of external cells, accept
+references to these cells without checking that they really exist.
+This is of course a bad thing,
+but sometimes it may be an acceptable way to deal with messy EDIF sources.
+.TP
+.B -h
+Help, print a list of options.
+
+.SH DESCRIPTION
+.I Cedif
+compiles an EDIF version 2.0.0 source file into the Nelsis database.
+.PP
+The EDIF language contains the notion of a
+.I library
+to group cells.
+The program
+.I cedif
+relates such an EDIF library to a Nelsis
+.I project
+and vice versa.
+To stress this relation, the name of a Nelsis project should match
+the name of the corresponding EDIF library.
+For example, if we want to translate the EDIF library "newlib",
+we create a Nelsis project called "newlib" and call
+.I cedif
+from inside this project directory.
+Suppose that an EDIF
+cell in "newlib" references a cell "nand" in the EDIF library "cmoslib" then
+.I cedif
+translates this into a Nelsis
+.I model call
+to the cell "nand" in project "cmoslib".
+.PP
+You can convince
+.I cedif
+to deviate from this behavior by using the options
+"\fB-b <lib>\fP" and "\fB-m <lib1>,<lib2>\fP".
+For example, the option "\fB-b otherlib\fP" would
+compile the EDIF library "otherlib" into the current project "newlib",
+even though the names do not match.
+.br
+And the option "\fB-m cmoslib,oplib\fP" would generate
+a model call to cell "nand" in project "oplib" whenever the EDIF source
+references a cell "nand" in library "cmoslib".
+.PP
+Note that you must have imported all cells that the EDIF library references
+before attempting to translate the EDIF library.
+.I Cedif
+complains and
+exits if it cannot resolve a reference to an imported cell.
+See also the Nelsis commands \fIaddproj\fR(1ICD) and \fIimpcell\fR(1ICD).
+
+.SH "EXPLICIT AND IMPLICIT LIBRARIES"
+Normally we only deal with libraries that are explicitly defined in the EDIF
+source by means of the EDIF "library" statement.
+If such an explicitly defined
+library references cells in libraries that are not defined by the EDIF source,
+then this can be interpreted as an implicit definition of these undefined libraries.
+For example, if cell "des" in library "newlib" references the cell "nand"
+in library "cmoslib",
+this can be regarded as an implicit definition of "nand" and "cmoslib".
+We can carry this even further:
+if a net in cell "des" references port "F" of "nand",
+then we can regard this as an implicit interface definition of "nand",
+that is: we assume that "nand" has a port named "F".
+.PP
+In this way, it is possible to compile an implicitly defined library into the Nelsis database.
+.br
+The options "\fB-B <lib>\fP" and \fB-L\fP support implicit libraries.
+One example of their usage is when we want to translate the EDIF
+library "newlib" but we do not actually have "cmoslib" hanging around.
+In this case we first translate the implicit library "cmoslib" to Nelsis by creating the
+project "cmoslib" and then typing "cedif -B cmoslib file.edif".
+Following this,
+we create the project "newlib" and import all circuit cells from "cmoslib" into "newlib".
+Finally we can translate newlib by executing "cedif file.edif" from within the project "newlib".
+
+.SH AUTHOR
+Paul Stravers,
+Patrick Groeneveld.
+
+.SH "SEE ALSO"
+addproj(1ICD),
+esea(1SDF),
+impcell(1ICD),
+xedif(1ICD).

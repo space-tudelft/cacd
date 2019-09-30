@@ -1,0 +1,83 @@
+.TH IMPCELL 1ICD "3/30/87"
+.UC 4
+.SH NAME
+impcell - import cell into the current project
+.SH SYNOPSIS
+\fBimpcell\fP \fB-c|f|l\fP \fB-a|i|r\fP [-p prefix] project
+.br
+\fBimpcell\fP \fB-c|f|l\fP project remote [local]
+.SH PARAMETERS
+.TP
+.I project
+Absolute or relative path of the library project.
+.TP
+.I remote
+Name of the cell of the library project.
+.TP
+.I local
+Name of the cell in the current project (alias),
+if not specified remote name is taken.
+.TP
+.I prefix
+Prefix to be prepended to the remote name to generate a local name.
+.SH OPTIONS
+.TP
+.B -c
+Import cell in the circuit view.
+.TP
+.B -f
+Import cell in the floorplan view.
+.TP
+.B -l
+Import cell in the layout view.
+.TP
+.B -a
+Import all cells from \fIproject\fP.
+.TP
+.B -i
+Import cells interactively. This option implies the -a option,
+however, the user is prompted for each cell found in \fIproject\fP.
+Legal replies are 'y', 'n' and 'q', to respectively import or not import
+a cell or to quit the program (default is: not import).
+If 'y' is replied then the user is prompted for an alias name.
+The default name (shown between brackets) is selected
+when just <return> is entered.
+If the cell cannot be imported then the default local name is cleared
+and another local name can be specified,
+or the cell can be skipped by entering just <return>.
+.TP
+.B -r
+Import all root cells from \fIproject\fP.
+.TP
+.B -p
+Specifies that the next argument should be used as a prefix that will be
+prepended to the remote cell name to generate a local name.
+.SH DESCRIPTION
+.I Impcell
+imports cells of library projects into the current project.
+The program checks if this is a legal transaction.
+If no parameters are specified the program reads from stdin.
+Note that the order of the parameters for stdin is reverse
+(i.e. local name, remote name, project).
+The current working directory must be a legal project directory.
+Cells can only be imported from library projects that have previously been
+added to the "projlist".
+.SH EXAMPLES
+.nf
+$ impcell -l ../other_proj flip_flop
+$ impcell -c ../../projects/logic_gates nand7 fast_nand
+$ impcell -l < list_of_cells_to_be_imported
+$ impcell -ir ../other_proj -cf
+$ impcell -al -p fast_ ../other_proj
+.fi
+.SH AUTHOR
+S. de Graaf
+.br
+P. van der Wolf
+.br
+P. Bingley
+.SH FILES
+.TP
+\fCproj_dir/\fIview\fP/impcelllist\fP
+.SH SEE ALSO
+addproj(1ICD).

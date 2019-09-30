@@ -1,0 +1,145 @@
+\subsubsection {ln3x3}
+
+Functie: NMOS compoundtransistor, basiscel voor analoge schakelingen
+
+Terminals: (g, d, s, vss, vdd)
+
+Equivalent chip oppervlak: 10
+
+Beschrijving:
+
+De NMOS compoundtransistor ln3x3 bestaat uit 9 NMOS basistransistoren
+die in een matrix van 3x3 geschakeld zijn.\\
+\\
+\\
+
+Circuit: \hspace{0.5\textwidth} Layout:\\
+
+
+\makebox[0.98\textwidth]{
+%figuur ln3x3.eps
+{\callpsfig{ln3x3.cir.eps}{width=0.4\textwidth}}
+\hfill
+%figuur ln3x3.lay.eps
+{\callpsfig{ln3x3.lay.eps}{width=0.4\textwidth}}
+}
+
+\clearpage
+
+\subsubsection {lp3x3}
+
+Functie: PMOS compoundtransistor, basiscel voor analoge schakelingen
+
+Terminals: (g, d, s, vss, vdd)
+
+Equivalent chip oppervlak: 10
+
+Beschrijving:
+
+De PMOS compoundtransistor lp3x3 bestaat uit 9 PMOS basistransistoren
+die in een matrix van 3x3 geschakeld zijn.\\
+\\
+\\
+
+Circuit: \hspace{0.5\textwidth} Layout:\\
+
+
+\makebox[0.98\textwidth]{
+%figuur lp3x3.eps
+{\callpsfig{lp3x3.cir.eps}{width=0.4\textwidth}}
+\hfill
+%figuur lp3x3.lay.eps
+{\callpsfig{lp3x3.lay.eps}{width=0.4\textwidth}}
+}
+\clearpage
+
+\subsubsection {mir\_nin, mir\_nout}
+\index{stroomspiegel!basiscel}
+Functie: NMOS spiegel, basiscel voor stroomspiegel
+
+Terminals mir\_nin: (i, g, vss, vdd)
+
+Terminals mir\_nout: (i, g, o, vss, vdd)
+
+Equivalent chip oppervlak: 19
+
+Beschrijving:
+
+De NMOS spiegel is een gecascodeerde stroomspiegel. 
+Hij bestaat uit een ingang mir\_nin en een uitgang
+mir\_nout.
+Beide kunnen in een spiegel meerdere keren gerepeteerd
+worden om schaling te verkrijgen.
+De gebruikte transistoren zijn zgn. compound transistoren.\\
+
+Circuit:
+
+(a) mir\_nin \hspace{0.2\textwidth} (b) mir\_nout\\
+
+\medskip
+%figuur mir_n.eps
+\begin{figure}[h]
+{\callpsfig{mir_n.eps}{width=.5\textwidth}}
+%\caption{}
+\end{figure}
+\newpage
+Layout mir\_nin:
+%figuur mir_nin.eps
+\begin{figure}[h]
+\centerline{\callpsfig{mir_nin.eps}{height=3.2in}}
+%\caption{}
+\end{figure}
+
+Layout mir\_nout:
+%figuur mir_nout.eps
+\begin{figure}[h]
+\centerline{\callpsfig{mir_nout.eps}{height=3.2in}}
+%\caption{}
+\end{figure}
+\clearpage
+
+\subsubsection {mir\_pin, mir\_pout}
+\index{stroomspiegel!basiscel}
+Functie: PMOS spiegel, basiscel voor stroomspiegel
+
+Terminals mir\_pin: (i, g, vss, vdd)
+
+Terminals mir\_pout: (i, g, o, vss, vdd)
+
+Equivalent chip oppervlak: 19
+
+Beschrijving:
+
+De PMOS spiegel is een gecascodeerde stroomspiegel. 
+Hij bestaat uit een ingang mir\_pin en een uitgang
+mir\_pout.
+Beide kunnen in een spiegel meerdere keren gerepeteerd
+worden om schaling te verkrijgen.
+De gebruikte transistoren zijn zgn. compound transistoren.\\
+
+Circuit:
+
+(a) mir\_pin \hspace{0.2\textwidth} (b) mir\_pout\\
+
+\medskip
+%figuur mir_p.eps
+\begin{figure}[h]
+{\callpsfig{mir_p.eps}{width=.5\textwidth}}
+%\caption{}
+\end{figure}
+\newpage
+Layout mir\_pin:
+%figuur mir_pin.eps
+\begin{figure}[h]
+\centerline{\callpsfig{mir_pin.eps}{height=3.2in}}
+%\caption{}
+\end{figure}
+
+Layout mir\_pout:
+%figuur mir_pout.eps
+\begin{figure}[h]
+\centerline{\callpsfig{mir_pout.eps}{height=3.2in}}
+%\caption{}
+\end{figure}
+
+\clearpage

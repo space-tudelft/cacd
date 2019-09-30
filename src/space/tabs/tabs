@@ -1,0 +1,2 @@
+#!/bin/sh
+exec tclsh /home/simon/CACD_make/src/space/tabs/tabs.tcl $*

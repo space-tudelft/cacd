@@ -1,0 +1,37 @@
+.ll 77
+.hy
+.TH SDFWRITE 3SDF "THE SEADIF PROGRAMMERS MANUAL"
+.SH NAME
+sdfwritelib, sdfwritefun, sdfwritecir, sdfwritelay - functions for updating
+and creating objects in a seadif database
+.SH SYNOPSIS
+ #include <sealib.h>
+
+ int sdfwritelib(long what, LIBRARYPTR library)
+
+ int sdfwritefun(long what, FUNCTIONPTR function)
+
+ int sdfwritecir(long what, CIRCUITPTR circuit)
+
+ int sdfwritelay(long what, LAYOUTPTR layout)
+
+.SH DESCRIPTION
+These functions write the attributes specified in the parameter "what" to the database.
+If any such attribute already exists it is overwritten.
+The legal values for "what" are described in
+.I sdfread (3SDF).
+
+If you want to write a father cell and all its children, the functions
+sdfwriteallcir() and sdfwritealllay() may be exactly what you are looking for,
+see the manual page
+.I sdfwriteall (3SDF).
+.SH ENVIRONMENT
+SEALIBWRITE, see
+.I sdfopen(3SDF)
+.SH "AUTHOR"
+Paul Stravers, Delft University of Technology.
+
+.SH "SEE ALSO"
+sealib(3SDF), sdfread(3SDF), sdfwriteall(3SDF), seadif(4SDF), sdfopen(3SDF),
+sdfclose(3SDF), cs(3SDF), sdfattachlib(3SDF), sdfexists(3SDF), memman(3SDF),
+sdfimage(4SDF).

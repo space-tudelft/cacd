@@ -1,0 +1,128 @@
+.TH CSLS 1ICD "User Commands"
+.UC 4
+.SH NAME
+csls - convert SLS network description into the database
+.SH SYNOPSIS
+.B csls
+[-psw] networkfile ...
+.SH OPTIONS
+The following options can be specified:
+.TP
+.B -p
+Run the C preprocessor before parsing the input file.
+.TP
+.B -s
+The silent mode suppresses messages about the actions taken by
+.I csls
+which are usually printed on the screen.
+.TP
+.B -w
+Do not print warnings.
+.SH DESCRIPTION
+.I Csls
+is a program that generates from an
+.I SLS
+network description a circuit description in database format.
+The database format can serve as input to several application programs,
+e.g. the switch-level simulator \fIsls\fR.
+A description of the sls language
+can be found in "SLS: Switch-Level Simulator User's Manual".
+.PP
+A network description
+can be hierarchical and may reside in several files.
+However, when one particular network is added to the database,
+network descriptions of the networks that are called in the
+network must have been added to the database before.
+.PP
+In the file "global_nets" one may optionally specify names of nets (terminals)
+that are global.
+Each node or terminal that has a name equal to the name of a global
+net, will be connected to other nodes and terminals that have the same name,
+among other things by possibly defining extra terminals for each network.
+First,
+.I csls
+will try to find a file "global_nets"
+in the current working directory.
+Second, if the above attempt fails,
+.I csls
+will try to open a file "global_nets"
+in the corresponding process directory.
+.SH "CONFIGURATION FILE"
+At start-up of the program,
+.I csls
+will read some information from a configuration
+file called ".cslsrc".
+First,
+it tries to read this file from the process directory (without leading dot).
+Second, it tries to read this file from the home directory of the user.
+Thirdly, it tries to read this file from the current directory.
+Settings in the second and third configuration file overrule the previous
+settings.
+The configuration file may contain the following keywords, followed
+by a specification on the same line if the keyword ends with ':';
+.TP
+EXTERN_OBLIGATORY_ON
+Generate an error message if an extern network declaration
+for a sub-network does not exist.
+.TP
+EXTERN_OBLIGATORY_OFF
+Don't generate an error message (default mode).
+.TP
+FORBID_FIRST_CAPITAL_ON
+Generate an error message if the name of a network
+that is defined starts with a capital.
+.TP
+FORBID_FIRST_CAPITAL_OFF
+Don't generate an error message (default mode).
+.TP
+RUN_CPP_ON
+Run the C preprocessor before parsing the input file.
+.TP
+RUN_CPP_OFF
+Don't run the C preprocessor (default mode).
+.TP
+CPP:
+Specifies the invocation of the C preprocessor.
+Default,
+.I csls
+tries to use "/usr/lib/cpp", "/lib/cpp" or "cpp" (in that order).
+.TP
+CPP_OPTIONS:
+Options for running the C preprocessor (default none).
+.TP
+DEFAULT_INCLUDE:
+Specifies a file that is automatically included at the top of the input file
+if the C preprocessor is run (default: no include).
+.SH EXAMPLES
+.nf
+% csls latch.sls
+.AU "A.C. de Graaf, A.J. van Genderen, S. de Graaf."
+.SH FILES
+.TP 20
+\fCICDPATH/share/lib/process/\fIprocess\fP/cslsrc\fP
+(default) configuration file
+.TP
+\fCHOME/.cslsrc\fP
+(1st altern.) configuration file
+.TP
+\fC\&.cslsrc\fP
+(2nd altern.) configuration file
+.TP
+\fCglobal_nets\fP
+(default) file to specify global nets
+.TP
+\fCICDPATH/share/lib/process/\fIprocess\fP/global_nets\fP
+(altern.) file to specify global nets
+.TP
+\fC/usr/tmp/x*\fP
+temporary files
+.SH SEE ALSO
+A.C. de Graaf, A.J. van Genderen,
+"SLS: Switch-Level Simulator User's Manual",
+Delft University of Technology.
+.br
+sls(1ICD),
+sls_exp(1ICD),
+cfun(1ICD),
+cspice(1ICD),
+xsls(1ICD).

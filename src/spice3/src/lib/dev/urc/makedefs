@@ -1,0 +1,10 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+
+COBJS		= urc.o urcask.o urcdel.o urcdest.o urcmask.o urcmdel.o \
+		  urcmpar.o urcparam.o urcsetup.o
+
+LIB_TARGET	= ../../dev.a
+INCLUDE		= -I../../../include
+

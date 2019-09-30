@@ -1,0 +1,64 @@
+.TH CMAPINTRO 5ICD "9/9/88"
+.UC 4
+.SH NAME
+cmapintro - introduction to CACD colormap Interface Functions
+.SH DESCRIPTION
+Part of section 5 of the ICD (IC Design) manual describes
+the CACD colormap Interface Functions.
+These functions return \fB1\fP on successful returns and \fB0\fP
+on failure.
+An error number is also made available in the external
+variable \fBcacdcmaperrno\fP,
+which is not cleared on successful calls.
+Thus \fBcacdcmaperrno\fP should be tested only after an error has occurred.
+
+The following is a list of the errors and their
+names as given in "cmaperror.h".
+.nf
+.ie n .ta 16 24
+.el .ta \w'ARRAYTOSMALL      'u \w'ARRAYTOSMALL      20          'u
+
+Definition:	Errno:	Description:
+
+NOINIT	0	"cacd cmap not initialized"
+NOCMAP	1	"cannot create colormap"
+BADCMAP	2	"invalid standard colormap"
+NOGC	3	"cannot create graphics context"
+NOCORE	4	"no more core"
+BADCOLOR	5	"invalid color specification"
+BADID	6	"invalid id specified"
+ARRAYTOSMALL	7	"affected id array to small"
+BADERROR	8	"invalid error code"
+.fi
+.SH SPECIAL CONSIDERATIONS
+In order to prevent name clashes,
+application programs should not use external names beginning
+"\fB_\fP".
+.SH FILES
+.nf
+.ta \w'ICDPATH/lib/libcmap.a      'u
+ICDPATH/lib/include	Include file directory.
+ICDPATH/lib/libcmap.a	Library file.
+.fi
+.SH SEE ALSO
+CacdCmapError(5ICD)
+.SH "FUNCTIONS AVAILABLE IN THE CACD COLORMAP LIBRARY"
+.nf
+.ta \w'SetBackgroundFromIds     'u
+CacdCmapError	print an error message describing the last error
+CoupleIdToColor	couple a user specified Id to a color from the CACD colormap
+CoupleIdsToColors	couple user specified Id's to colors from the CACD colormap
+CoupleIdToRGB	couple a user specified Id to a color from the CACD colormap
+CoupleIdsToRGBs	couple user specified Id's to colors from the CACD colormap
+CreateGCforCmap	create a graphics context for use with the CACD colormap
+DecoupleId	decouple a user specified Id from a color from the CACD colormap
+DecoupleIds	decouple user specified Id's from colors from the CACD colormap
+GetAffectedIds	given a set of Id's return a set of Id's affected by an erase operation
+GetPixelFromId	return the pixel coupled to the Id
+GetPixelFromIds	return the combined pixel value given a set of Id's
+InitCacdCmap	initialize the CACD colormap
+SetBackgroundFromId	set the background pixel of a gc to the pixel associated with the Id
+SetBackgroundFromIds	set the background pixel of a gc to the pixel associated with Id's
+SetForegroundFromId	set the foreground pixel of a gc to the pixel associated with the Id
+SetForegroundFromIds	set the foreground pixel of a gc to the pixel associated with Id's
+.fi

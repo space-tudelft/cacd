@@ -1,0 +1,115 @@
+.TH SUBRESGEN 1ICD "User Commands"
+.UC 4
+.SH NAME
+subresgen - generate technology data for substrate resistance extraction
+.SH SYNOPSIS
+.B subresgen
+[-cv]
+.br
+.B subresmkdir
+dirname min_term_size
+.SH OPTIONS
+.TP
+.B -c
+Only generate a file "dospace" that
+contains the commands to run
+.I space3d
+on the terminal configurations.
+.TP
+.B -v
+More verbose.
+.RE
+.SH DESCRIPTION
+The tool
+.I subresgen
+applies
+.I space3d
+with the boundary-element method for
+substrate resistance extraction
+to compute substrate resistances for some standard substrate
+terminal configurations.
+These substrate resistances are then used
+to generate "selfsubres" and "coupsubres"
+entries in a space element definition file
+that can be used with
+.I space3d
+to extract substrate substrate resistances
+using the fast interpolation method.
+The command
+.I subresmkdir
+creates a working project directory for
+.I subresgen.
+
+The application is described in more detail below.
+
+.B STEP 1.
+.br
+Create an element definition file called "space.def.s" for
+.I space3d
+that contains at least an entry "sublayers"
+that describes the profile of the substrate
+that you consider
+(see the "Space Substrate Resistance Extraction User's Manual").
+It is important for
+.I subresgen
+that the keyword "sublayers" starts at the beginning
+of a line, and that the body of the sublayers entry
+does not contain empty lines.
+Further, the body should be followed
+by an empty line.
+The same should hold for possible entries "selfsubres"
+and "coupsubres" that are contained by the file.
+But note that these entries will be overwritten by
+.I subresgen.
+
+.B STEP 2.
+.br
+Run
+.I subresmkdir
+to create a working project directory for
+.I subresgen.
+As a first argument you need to specify
+the name of the working directory.
+As a second argument you need to specify
+(in nm) the minimum size of a substrate terminal.
+Move the file "space.def.s" to the working directory
+that you created with
+.I subresmkdir.
+
+.B STEP 3.
+.br
+Run
+.I subresgen
+in the working project directory
+that you created with
+.I subresmkdir.
+You will see that messages appear about the
+.I space3d
+runs that are performed to compute the substrate resistances.
+At the end, the element definition file "space.def.s"
+will be modified to contain the "selfsubres" and "coupsubres" entries.
+.SH EXAMPLES
+.nf
+% vi space.def.s
+% subresmkdir bicmos 180
+% cd bicmos
+% mv ../space.def.s .
+% subresgen
+.SH AUTHOR
+Arjan van Genderen
+.br
+
+Copyright (C) 2003, Delft University of Technology, The Space Team.
+.SH FILES
+.TP
+\fIdirname\fP
+project directory with terminal configurations
+.TP
+\fC\fIdirname\fP/.min_term_size\fP
+minimum substrate terminal size
+.TP
+\fC\fIdirname\fP/process\fP
+process directory for \fIspace3d\fP runs
+.TP
+\fC\fIdirname\fP/space.def.s\fP
+input and output element definition file

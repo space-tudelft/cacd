@@ -1,0 +1,51 @@
+.TH MAKEGLN 1ICD "User Commands"
+.UC 4
+.SH NAME
+makesize - resizes the mask gln representations of a cell
+.SH SYNOPSIS
+.B makesize
+[-vc] [-E file] [-m maxmem] cell [...]
+.SH OPTIONS
+.TP
+.B -v
+verbose mode.
+.TP
+.B "-c"
+do not compress the temporary files (less cpu time, more disk space).
+.TP
+.B "-E\fIfile\fR"
+use \fIfile\fP as the element definition file
+(default space.def.t in the ICD process library).
+.TP
+.B "-m\fImaxmem\fR"
+use \fImaxmem\fR (default 1) MByte of main memory for sorting of gln edges.
+.SH DESCRIPTION
+.I Makesize
+resizes the mask gln descriptions of a cell
+according to as specified by the "resize" statements
+in the element definition file.
+Mask gln descriptions of the layout of a cell are used
+as input for the programs
+.I space (1ICD),
+.I mplot (1ICD)
+and
+.I getepslay (1ICD).
+.I Makesize
+is typically called by the program
+.I space (1ICD)
+as a preprocessor.
+.PP
+In order to sort the output,
+.I makesize
+uses a directory where it stores temporary data.
+The default directory for this is selected from the
+list of directories /tmp and /usr/tmp, whichever has more space available.
+Using the environment variable SPACE_TMPDIR it is possible
+to specify an alternative list of directories,
+separated by the character ':' (e.g. /tmp:/usr/tmp:/user/john/tmp).
+.SH LIMITATIONS
+The current version of makesize can only handle 45-degree layout.
+.AU "E. Matthijssen, A.J. van Genderen, N.P. van der Meijs"
+.SH SEE ALSO
+makegln (1ICD),
+space (1ICD).

@@ -1,0 +1,314 @@
+
+%===============================================================================
+%
+%  Packages.
+%
+%===============================================================================
+
+\usepackage{alltt}
+\usepackage{fancyhdr}
+\usepackage{graphics}
+\usepackage{calc}
+\usepackage{example}
+\usepackage{chngpage}
+\usepackage{ifmtarg}
+\usepackage{graphicx}
+
+%===============================================================================
+%
+%  Style changes.
+%
+%===============================================================================
+
+\bibliographystyle{plain}
+\clubpenalty=450
+\widowpenalty=450
+\displaywidowpenalty=150
+\setlength{\textwidth}{152mm}
+\setlength{\oddsidemargin}{4mm}
+\setlength{\evensidemargin}{4mm}
+\setlength{\textheight}{220mm}
+\setlength{\topmargin}{14pt}
+\setlength{\headsep}{12mm}
+
+%===============================================================================
+%
+%  Shortcuts.
+%
+%===============================================================================
+
+% Shortcut for a back-slash.
+%
+\newcommand{\bs}{\ensuremath{\backslash}}
+
+% Shortcut for a dollar symbol.
+%
+\newcommand{\dollarsym}{\symbol{"24}}
+
+
+%===============================================================================
+%
+%  \begin{notindented}
+%  ...
+%  \end{notindented}
+%
+%  Create a piece of text in which there is no paragraph-indentation (i.e., in 
+%  which \parindent is zero).
+%
+%===============================================================================
+
+\newenvironment{notindented}{\setlength{\parindent}{0mm}}{}
+
+
+%===============================================================================
+%
+%  \begin{parskip}
+%  ...
+%  \end{parskip}
+%
+%  Create a piece of text in which there is no inter-paragraph skip (i.e., in
+%  which \parskip is zero).
+%
+%===============================================================================
+
+\newenvironment{fixedskip}[1]{\setlength{\parskip}{#1}}{}
+
+
+%===============================================================================
+%
+%  \begin{tclprocs}
+%  \tclproc{...}{...}
+%  \tclproc{...}{...}
+%  ...
+%  \end{tclprocs}
+%
+%  Describe a collection of Tcl procedures.
+%
+%===============================================================================
+
+\newenvironment{tclprocs}{\begin{notindented}\begin{fixedskip}{1mm}}{\end{fixedskip}\end{notindented}}
+\newcommand{\tclproc}[2]{\framebox{\parbox{\linewidth}{\parbox{\linewidth}{\texttt{#1}}\\\
+                         \parbox{\linewidth}{#2}}}\par}
+
+
+%===============================================================================
+%
+%  \doxycommand{...}{...}
+%
+%  Descibe a doxygen command.
+%
+%===============================================================================
+
+\newcommand{\doxycommand}[2]{\noindent\parbox{\linewidth}{\textnormal{#1}\\\
+                               #2}\\[1em]}
+
+
+%===============================================================================
+%
+%  \linedescription{...}{...}
+%
+%  Create a description. First argument will be typeset in teletype font, the
+%  second argument is the description and will be typeset using the normal
+%  style.
+%
+%===============================================================================
+
+\newcommand{\linedescription}[2]{\noindent\parbox{\linewidth}{\textnormal{#1}\\\
+                               #2}\\[1em]}
+
+
+%===============================================================================
+%
+%  \whole{...}
+%
+%  Keep a block as a ``whole'', i.e., don't allow a page break in the middle
+%  of the block. Line breaks are still allowed, though.
+%
+%===============================================================================
+
+\newcommand{\whole}[1]{\parbox{\linewidth}{#1}}
+
+
+%===============================================================================
+%
+%  \boxedsource{...}
+%
+%  Put a frame around a block, and typeset in teletype font (smaller size).
+%
+%===============================================================================
+
+\newcommand{\boxedsource}[1]{\framebox[\linewidth]{\parbox{.95\linewidth}{\vspace{3mm}\scriptsize{#1}\vspace{5mm}}}}
+
+
+
+%===============================================================================
+%
+%  Miscellaneous.
+%
+%===============================================================================
+
+\newcommand{\manpage}[2]{\texttt{#1}(\texttt{#2})}
+
+
+%===============================================================================
+%
+%  Title page.
+%
+%===============================================================================
+
+% Usage example:
+%
+%   \cacdreport{ET-NT 02.01}
+%   \cacdauthors{Clark Kent,\\Lois Lane}
+%   \cacdstatusdraft
+%   \cacddate{November 7, 2002}
+%   \cacdcirculationinternal
+%   \cacdyears{2001, 2002}
+%   \cacdtitle{The New Adventures\\of\\Superman}
+%   \cacdmaketitle
+%
+
+\newcommand{\@cacdreport}{No number assigned yet}
+\newcommand{\@cacdauthors}{The SPACE team}
+\newcommand{\@cacdstatus}{Draft}
+\newcommand{\@cacddate}{\today}
+\newcommand{\@cacdcirculation}{\textbf{Internal} (SPACE project members only)}
+\newcommand{\@cacdyears}{2002}
+\newcommand{\@cacdtitle}{This Document Has No Title}
+\newcommand{\@cacdheadertitle}{This Document Has No Header Title}
+
+\newcommand{\cacdauthors}[1]{\renewcommand{\@cacdauthors}{#1}}
+\newcommand{\cacdreport}[1]{\renewcommand{\@cacdreport}{#1}}
+\newcommand{\cacddate}[1]{\renewcommand{\@cacddate}{#1}}
+\newcommand{\cacdstatus}[1]{\renewcommand{\@cacdstatus}{#1}}
+\newcommand{\cacdcirculation}[1]{\renewcommand{\@cacdcirculation}{#1}}
+\newcommand{\cacdyears}[1]{\renewcommand{\@cacdyears}{#1}}
+\newcommand{\cacdtitle}[1]{\renewcommand{\@cacdtitle}{#1}}
+\newcommand{\cacdheadertitle}[1]{\renewcommand{\@cacdheadertitle}{#1}}
+
+\newcommand{\cacdstatusdraft}{\renewcommand{\@cacdstatus}{Draft}}
+\newcommand{\cacdstatusopen}{\renewcommand{\@cacdstatus}{Final/open}}
+\newcommand{\cacdstatusfinal}{\renewcommand{\@cacdstatus}{Final}}
+
+\newcommand{\cacdcirculationpublic}{\renewcommand{\@cacdcirculation}{\textbf{Public}}}
+\newcommand{\cacdcirculationinternal}{\renewcommand{\@cacdcirculation}{\textbf{Internal} (SPACE project members only)}}
+
+\newcommand{\cacdmaketitle}{{
+
+    \newlength{\@titlemarginleft}
+    \newlength{\@titlemarginright}
+    \newlength{\@titlemargintop}
+    \newlength{\@titlemarginbottom}
+
+    \setlength{\@titlemarginleft}{1in}
+    \setlength{\@titlemarginright}{1in}
+    \setlength{\@titlemargintop}{1in}
+    \setlength{\@titlemarginbottom}{3.4cm}
+
+    \changepage{29.73cm-\textheight-\@titlemargintop-\@titlemarginbottom}% textheight
+        {21.02cm-\textwidth-\@titlemarginleft-\@titlemarginright}% textwidth
+        {-\evensidemargin-1in+\@titlemarginleft}% evensidemargin
+        {-\oddsidemargin-1in+\@titlemarginleft}% oddsidemargin
+        {}% columnsep
+        {-\topmargin-1in+\@titlemargintop}% topmargin
+        {-\headheight}% headheight
+        {-\headsep}% headsep
+        {-\footskip}% footskip
+
+    \begin{titlepage}
+    \begin{sf}
+
+    \noindent
+    \begin{tabular}{@{}lr@{}}
+    % \parbox[b]{9cm}{\noindent Department of Electrical Engineering\\Delft University of Technology\\The Netherlands} & 
+    %\includegraphics[width=2.5in]{doc/common/spacelogo}
+    \end{tabular}
+    \vspace{1em}
+
+    \vspace{3cm}
+
+    \noindent
+    \rule{\textwidth}{0pt}
+    \vspace{0.5em}
+    \begin{center}
+    {\Large
+    \begin{center}
+    \setlength{\baselineskip}{1.2\baselineskip}
+    \textbf{\@cacdtitle}
+    \end{center}
+    }
+    {\normalsize
+    \begin{center}
+    \textit{\@cacdauthors} \\
+    ~ \\
+    Circuits and Systems Group \\
+    Department of Electrical Engineering \\
+    Delft University of Technology \\
+    The Netherlands \\
+    ~ \\
+    ~ \\
+    ~ \\
+    Report \@cacdreport \\
+    \end{center}
+    }
+    \end{center}
+    \vspace{0.5em}
+    \rule{\textwidth}{0pt}
+
+    \vfill
+
+    \noindent
+    Copyright \textbf{\copyright}\ \@cacdyears\ by the SPACE team. \\
+    ~ \\
+    \begin{tabular}{@{}ll}
+    % Report: & \texttt{\@cacdreport} \\
+    % Author(s): & \begin{tabular}[t]{@{}l}\@cacdauthors\end{tabular} \\
+    % Status: & \@cacdstatus \\
+    Last revision: \@cacddate \\
+    % Circulation: & \@cacdcirculation
+    \end{tabular}
+    \vspace{1.5em}
+
+    \noindent
+
+    \end{sf}
+    \end{titlepage}
+    \newpage
+    \thispagestyle{empty}
+
+}}
+
+% orginal definition from book.cls
+% \def\@makechapterhead#1{%
+%   \vspace*{50\p@}%
+%   {\parindent \z@ \raggedright \normalfont
+%     \ifnum \c@secnumdepth >\m@ne
+%       \if@mainmatter
+%         \huge\bfseries \@chapapp\space \thechapter
+%         \par\nobreak
+%         \vskip 20\p@
+%       \fi
+%     \fi
+%     \interlinepenalty\@M
+%     \Huge \bfseries #1\par\nobreak
+%     \vskip 40\p@
+%   }}
+
+\def\@makechapterhead#1{%
+  \vspace*{5\p@}%
+  {\parindent \z@ \raggedright \normalfont
+    \interlinepenalty\@M
+    \Huge\bfseries \thechapter \space \Huge \bfseries #1\par\nobreak
+    \vskip 40\p@
+  }}
+
+
+\newcommand{\ps@cacd}{%
+   \renewcommand{\@evenhead}{\textrm{\@cacdheadertitle}\hfill\textrm{\thepage} \put(-433,-8){\line(1,0){434}} }%     
+   \renewcommand{\@oddhead}{\textrm{\@cacdheadertitle}\hfill\textrm{\thepage} \put(-433,-8){\line(1,0){434}} }%     
+   \renewcommand{\@evenfoot}{\hfill\texttt{The Nelsis IC Design System}\hfill}}
+   \renewcommand{\@oddfoot}{\hfill\texttt{The Nelsis IC Design System}\hfill}%
+\let\ps@plain=\ps@cacd
+\pagestyle{cacd}
+
+

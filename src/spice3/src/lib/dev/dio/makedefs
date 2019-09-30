@@ -1,0 +1,13 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+
+COBJS		= dio.o dioacld.o dioask.o dioconv.o diodel.o diodest.o \
+		  diodisto.o diodset.o diogetic.o dioload.o diomask.o \
+		  diomdel.o diompar.o dionoise.o dioparam.o diopzld.o \
+		  diosacl.o diosetup.o diosload.o diosprt.o diosset.o \
+		  diosupd.o diotemp.o diotrunc.o
+
+LIB_TARGET	= ../../dev.a
+INCLUDE		= -I../../../include
+

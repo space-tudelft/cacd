@@ -1,0 +1,85 @@
+.TH DEVICE 1ICD "User Commands"
+.UC 4
+.SH NAME
+device - set or unset a device status for a circuit cell
+.SH SYNOPSIS
+.B device
+[-s | -u] [ cell ... ]
+.SH OPTIONS
+.TP 8
+.B -s
+Set the device status.
+.TP
+.B -u
+Unset the device status.
+.SH DESCRIPTION
+.I Device
+sets or unsets the device status for one or more circuit cells and prints
+the new status(es).
+If no option is specified, only the current status of the cell is printed.
+.PP
+For new projects with xcontrol use the program
+.I xcontrol
+to change and list the cell device status.
+In that case,
+the program
+.I device
+can only change and list the "devmod" file status.
+.PP
+If no cell is specified,
+all device cells in the current project circuit view are listed.
+The program also reads the imported circuit celllist and tries to find
+. \"device status for aliases in the current project or tries to find
+device status for imported cells in the remote projects.
+A printed device status for a remote cell is flagged with an '*' sign.
+.PP
+When setting the device status for a cell that doesn't exist yet as a
+circuit cell, a corresponding layout cell with the same name
+has to be present (and its "term" stream).
+In that case also the streams "mc", "net" and "term" are created,
+and the celllist is updated.
+.PP
+When a cell is defined as a device,
+.I space(1ICD)
+will not extract this cell but it will include
+it as a network primitive in the extracted circuit.
+This will work both with hierarchical extraction
+and flat extraction.
+Moreover, circuit retrieval tools like
+.I xsls(1ICD),
+.I xspice(1ICD),
+and
+.I xvhdl(1ICD)
+will also interpret cells that are devices
+as network primitives.
+.PP
+When it is necessary to specify the order of the
+terminals of the device cell or when it is necessary
+to add a simulation model to the device, please use the tool
+.I putdevmod(1ICD).
+.PP
+During extraction,
+when a device cell is also a macro (see \fImacro(1ICD)\fP),
+the layout of the cell will be expanded in each cell
+where it is used as an instance.
+.SH EXAMPLES
+.nf
+device
+device -s nan2 nor2
+device -u nan2
+.SH FILES
+.nf
+NELSISPROJECT/layout/\fIcell\fP/term
+NELSISPROJECT/circuit/celllist
+NELSISPROJECT/circuit/impcelllist
+NELSISPROJECT/circuit/\fIcell\fP/devmod
+NELSISPROJECT/circuit/\fIcell\fP/mc
+NELSISPROJECT/circuit/\fIcell\fP/net
+NELSISPROJECT/circuit/\fIcell\fP/term
+.SH LIMITATIONS
+The program lists only cells which are in the circuit celllist(s).
+. \"The program checks only the status remotely for an imported cell,
+. \"when there is no local cell directory.
+The program is not checking the celllist(s) when setting device status.
+.SH SEE ALSO
+macro(1ICD), putdevmod(1ICD), space(1ICD), xcontrol(1ICD).

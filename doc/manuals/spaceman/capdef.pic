@@ -1,0 +1,65 @@
+.PS 2i
+d=0.25
+define vcap %
+line from (0,0) to (1,0)
+line from (0,d) to (1,d)
+%
+define hcap %
+line from (0,0) to (0,1)
+line from (d,0) to (d,1)
+%
+define dualPlate {
+   Bottom:[
+       line from (0,0) to (15,0)
+       line from (0,2) to (15,2)
+   ] with .sw at (0,0)
+   Left : [
+       line from (0,4) to (5,4)
+       line from (0,6) to (5,6)
+       line from (5,4) to (5,6)
+   ] with .sw at (0,4)
+   Right : [
+       line from (0,4) to ( 5,4)
+       line from (0,6) to (5,6)
+       line from (0,4) to (0,6)
+   ] with .sw at (10,4)
+}
+TriplePlate :[
+   dualPlate
+   Top:[
+       line from (0,0) to (15,0)
+       line from (0,2) to (15,2)
+   ] with .sw at (0,8)
+   "top plate" at Top.w rjust
+   "middle plate" at Left.w rjust
+   "bottom plate" at Bottom.w rjust
+   "neighbor plate" at Right.e ljust
+
+   Vcap1 :[ vcap ] with .c at (2.5,3)
+   "$Cppb$" at Vcap1.w rjust
+   line from (2.5,2) to Vcap1.s
+   line from (2.5,4) to Vcap1.n
+
+   Vcap1t :[ vcap ] with .c at (2.5,7)
+   "$Cppt$" at Vcap1t.w rjust
+   line from (2.5,8) to Vcap1t.n
+   line from (2.5,6) to Vcap1t.s
+
+   Hcap: [ hcap] with .c at (7.5, 5)
+   "$Cl$" at Hcap.n above
+   line from Left.e to Hcap.w
+   line from Hcap.e to Right.w
+
+   x=6.5
+   Vcap3 :[ vcap ] with .c at (x,3)
+   "$Ceb$" at Vcap3.w rjust
+   line from (x,2) to Vcap3.s
+   spline from Left.e - (0,0.25) to Vcap3.n + (0,1) to Vcap3.n
+
+   x=6.5
+   Vcap3 :[ vcap ] with .c at (x,7)
+   "$Cet$" at Vcap3.w rjust
+   line from (x,8) to Vcap3.n
+   spline from Left.e + (0,0.25) to Vcap3.s - (0,1) to Vcap3.s
+]
+.PE

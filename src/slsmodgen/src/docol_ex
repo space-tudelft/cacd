@@ -1,0 +1,5 @@
+collect \
+2.4_1.6/solved \
+6_1.6/solved \
+20_1.6/solved \
+ > slsmod

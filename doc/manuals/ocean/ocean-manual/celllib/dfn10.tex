@@ -1,0 +1,64 @@
+\subsection{dfn10}
+\index{flipflop!dfn10}
+Function: D-type positive edge triggered flipflop
+
+Terminals: (D, CK, Q, vss, vdd)
+
+
+IEC-symbol:
+%figuur dfn10.iec.eps
+\begin{figure}[h]
+\callpsfig{dfn10.iec.eps}{width=.31\textwidth}
+\end{figure}
+
+Function table:
+\begin{table}[h]
+\begin{tabular}{|c|c||c|}
+\hline
+D	&CK	&Q\\
+\hline
+L	&$\uparrow$	&L\\
+H	&$\uparrow$	&H\\
+\hline
+\end{tabular}
+\vspace{1cm}
+
+Timing parameters:\\
+
+\begin{tabular}{|c|cc|ccc|c|}
+\hline
+Parameter               &From            &To   &Min	&Typ	&Max    &Unit\\
+\hline
+T$_{PLH}$               &CK     	&Q     &1.4	&2.1	&3.2    &ns\\
+T$_{PHL}$               &CK    		&Q     &1.3	&1.9	&2.9    &ns\\
+\hline
+$\Delta$T$_{PLH}$       &CK          	&Q	&-	&-	&1.1    &ns/pF\\
+$\Delta$T$_{PHL}$       &CK           	&Q    	&-	&-	&0.8    &ns/pF\\
+\hline
+T$_{su}$		&D		&CK	&-	&-	&1.4	&ns\\
+T$_{hold}$		&D		&CK	&-	&-	&0.9	&ns\\
+\hline
+C$_{in}$                &D	    	&vss    &-	&0.12	&0.18   &pF\\
+C$_{in}$                &CK	    	&vss    &-	&0.18	&0.27   &pF\\
+\hline
+\end{tabular}
+\end{table}
+
+Equivalent chip area: 17
+
+Fanout:	3.0pF
+
+\begin{figure}[bth]
+circuit:\\
+
+\callpsfig{dfn10.cir.eps}{height=4in}
+\end{figure}
+
+\begin{figure}[bth]
+layout:\\
+
+\callpsfig{dfn10.lay.eps}{height=3.7in}
+\end{figure}
+
+
+\clearpage

@@ -1,0 +1,32 @@
+#####
+# FreePDK45 - FreePDK 45nm
+# encounter - import
+metal1		49
+metal1:term	49
+via1		50
+metal2		51
+metal2:term	51
+via2		61
+metal3		62
+metal3:term	62
+via3		30
+metal4		31
+metal4:term	31
+via4		32
+metal5		33
+metal5:term	33
+via5		36
+metal6		37
+metal6:term	37
+via6		38
+metal7		39
+metal7:term	39
+via7		40
+metal8		41
+metal8:term	41
+via8		42
+metal9		43
+metal9:term	43
+via9		44
+metal10		45
+metal10:term	45

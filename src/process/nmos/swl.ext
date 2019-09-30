@@ -1,0 +1,36 @@
+#################################################################
+# definition of elements for extraction and simulation purposes #
+#################################################################
+elements:
+
+ignore:
+dc1 = ni !np !nd !nc !nm,
+dc2 = nx !np !nd !nc !nb !nm !ni,
+dc3 = nb !np !nd !nc !nx !nm !ni;
+
+enhancement:
+normal_enh = (np) nd !nx !nb !ni !nm,
+metal_enh = (np) nd !nx !nb !ni (nm);
+depletion:
+normal_depl = (np) nd !nx !nb ni !nm,
+metal_depl = (np) nd !nx !nb ni (nm);
+
+otherelms:
+diff_track = !np (nd) !nm !nc,
+diff_metal = !np (nd) (nm) !nc,
+poly_track = !nd (np) !nm !nc,
+poly_metal = !nd (np) (nm) !nc,
+metal_track= !np !nd (nm),
+crossing   = (np) (nd) nx !nb !nm,
+cros_metal = (np) (nd) nx !nb (nm),
+buried     = (np nd) nb !nx !nm,
+bur_metal  = (np nd) nb !nx !nc (nm),
+polmet_cont= (np nm) nc !nd,
+poldifmet_c= (np nm nd) nc nb !nx,
+difmet_cont= (nd nm) nc !np;
+
+element_types:
+nenh: enhancement  np  nd,
+ndep: depletion    np  nd;
+
+# EOF

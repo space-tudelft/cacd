@@ -1,0 +1,211 @@
+
+			INSTALLATION
+			============
+
+When you read this "Installation.txt" file, you have successfull downloaded
+the "cacd" repository from GitHub in your "cacd" directory.
+
+Note that this is Public Domain software and only usefull for PCs running Linux.
+Note that other releases and information can be found on the Space website:
+
+	http://www.space.tudelft.nl
+
+This file describes how to install the layout-to-circuit extractor 'space',
+including several other IC design tools like the layout editor 'dali', the
+switch-level simulator 'sls' and the network comparison program 'match'.
+And also is included the OCEAN placement and routing software.
+And included the Berkeley SPICE analogue network simulator.
+And the TU Delft design practicum software.
+
+For a detailed description of the use of the tools, see the users manuals that
+are present in directory "cacd/share/doc" and the manual pages that can be
+obtained by executing the command 'icdman toolname'. But, because this is
+a source distribution, first the tools must be build.
+
+For license and warranty information, please consult the "LICENSE" file
+in the "cacd" source main installation directory.
+
+
+Making the tools
+----------------
+
+Making the tools must be done in the "cacd" main installation directory.
+Go to this directory, for example type:
+(Note that the '%' is a shell prompt and must not be typed.)
+
+	% cd cacd
+
+First set the ICDPATH environment variable (the cacd install directory).
+Normally, the current directory is also the install directory.
+But you may choice another directory, in that case you must give an absolute
+directory path in place of `pwd`. (This directory does not need to exist.
+You must have write permission to create this directory.)
+
+If you are working in a "csh" environment, type:
+
+	% setenv ICDPATH `pwd`
+
+If you are working in a "sh" environment, type:
+
+	% export ICDPATH=`pwd`
+
+All tools are installed in "$ICDPATH/bin" and libraries in "$ICDPATH/lib".
+Some stuff is already installed in directory "$ICDPATH/share".
+
+Note that "share/demo", "share/doc", "share/lib/process", "share/man" and
+"share/tutorial" are already installed.
+Directory "share" must be copied, if you choice to use another ICDPATH.
+Note that no sources of documents are distributed (only .pdf files).
+And that also no sources of "demo" and "tutorial" are distributed.
+
+Before starting "make", your Linux PC must have the following libraries:
+
+	libqt-mt (in "qt-3.3/lib" and "qt-3.3/bin/moc") for "spock",
+	libX11 (and /usr/include/X11),
+	libXaw (and /usr/include/X11/Xaw),
+	libXm  (and /usr/include/Xm) for "simeye" and "helios",
+	libXt  (the X toolkit library).
+
+Normally, shared object (.so) libraries are used from "/usr/lib64".
+Your PC also needs to have installed the GNU C-compiler (gcc, g++).
+
+Before starting "make", you maybe want to edit the make file "src/Config.mk"
+and/or "src/spice3/conf/linux64" and/or "src/spice3/conf/defaults".
+
+To build and install all the tools, type:
+
+	% make
+
+To clean the "src" tree, type:
+
+	% make clean
+
+To uninstall all tools / libs, type:
+
+	% make uninstall
+
+See the Makefile.
+Look carefully, if all the tools were built successfully.
+If not, go to the tool "src" sub-directory and try to fix the problem
+and try to make the tool there.
+
+If you experience problems while performing these steps, please contact us.
+See the section "Questions and bug reports" below.
+
+
+Installing OP
+-------------
+
+To install OP (Ontwerp Practicum (IC Lab course)) you need to set the
+environment variable OPPROGPATH. See also the "src/GoWithTheFlow/Makefile".
+See also the OP manuals in "share/doc/opman" (manualEE2CL11_2017.pdf).
+Default install path under the cacd-tree is "$ICDPATH/opprog".
+To start using OP, you need to have a "bash" shell working environment.
+To init OP "source $OPPROGPATH/bin/op_init" to get a correct ".bashrc" file.
+
+
+Running the tools
+-----------------
+
+Set the environment variable ICDPATH, because it is used by some tools.
+Add "$ICDPATH/bin" to your shell search path (environment variable PATH).
+Or edit your "~/.cshrc" (or "~/.bashrc") file.
+(Some tools require that "tclsh" or "wish" is installed on your PC.)
+
+For example, add the following lines to your ".cshrc" file:
+
+	% setenv ICDPATH $HOME/cacd
+	% setenv PATH $ICDPATH/bin:$PATH
+
+See also the "sourceme.csh" file or the "sourceme.bash" file.
+Have a look at the documentation, which is in directory "share/doc".
+Use tool 'icddoc' to view a document.  For example, type:
+
+	% icddoc
+
+Have also a look at the demos, for example:
+
+	% cd $ICDPATH/share/demo/crand
+	% ./script.sh
+
+And have a look at the files of the space helios tutor:
+
+	% cd $ICDPATH/share/tutorial
+
+Tools are typically run from a project directory.  Such a project directory can
+be created by using the program 'mkpr' (make project, see 'icdman mkpr').
+For example, in order to create a project 'test', type:
+
+	% mkpr test
+
+Mkpr will ask for the process that should be chosen (the processes that are
+available are listed in the file "$ICDPATH/share/lib/process/processlist") and
+for the value of lambda (lambda is the grid - in microns - that will be used
+for layout coordinates).
+
+New processes can be added to the system as described in "process.pdf", type:
+
+	% icddoc process.pdf
+
+The value of lambda that is specified for a project should be small enough
+in order to represent all valid layout positions.
+Also, it should be not too small in order to prevent integer overflows for
+large layouts. (Typical values for lambda are 0.1 - 0.001 micron.)
+
+Alternatively, when you use the graphical user interface helios of space, you
+can create a new project using the button `Database -> New ...' of helios, and
+you can change to an already existing project using button `Database -> Open ...'.
+
+A tutorial about the use of Space is found in the directory "share/doc", use
+
+	% icddoc spacetutor_helios.pdf
+
+for the case when you use the helios user interface to space.
+And "spacetutor.pdf" for the case when you do not use helios.  Remember that
+you can also consult the manual page of a tool, for example helios, type:
+
+	% icdman helios
+
+
+Running ICELLS
+--------------
+When you want to use the OCEAN fishbone process and celllibs, you need to run
+the script ICELLS ones to install the celllibs. Be sure that your PATH include
+the $ICDPATH/bin directory. This is also true if you want to use the OP program
+GoWithTheFlow and this program is calling script mkvopr.
+
+
+Running X-Windows programs
+--------------------------
+
+Sometimes you need first to set local access control enabled, type:
+
+	% xhost local:
+
+
+Questions and bug reports
+-------------------------
+
+Questions and bug reports can be send to the Space support team.
+Department of Electrical Engineering,
+Delft University of Technology, the Netherlands.
+
+Email: space-support-ewi@tudelft.nl
+
+
+Limitations
+-----------
+
+There are some known limitations of Space.  These are described in the manuals.
+If you discover any other limitations of Space that are not mentioned in the
+manual, please report them to the above address.
+
+
+About the Project
+-----------------
+
+The Space project was carried out by the Circuits and Systems group of Delft
+University of Technology.  For more information, see the WWW page at
+
+	http://www.space.tudelft.nl
+

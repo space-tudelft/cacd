@@ -1,0 +1,524 @@
+.de OP
+\fB\\$1\fP\\fI\\$2\\fP\\$3
+..
+.TH SPACE2 1ICD "User Commands"
+.UC 4
+.SH NAME
+space2 - fast 2D layout to circuit extractor
+
+.SH SYNOPSIS
+.ta 1c
+.B space2
+[-ClrRzbnuhvi]
+[-a\fItime\fP]
+.br
+	[-E\fIfile\fP | -e\fIdef\fP]
+[-P\fIfile\fP | -p\fIdef\fP]
+[-S\fIparam=value\fP]
+cell
+
+.SH OPTIONS
+The following options can be specified:
+.TP
+.B -C
+Extract edge/surface coupling \fIcapacitances\fP.
+.TP
+.B -l
+Extract also \fIlateral\fP coupling capacitances, implies \fB-C\fP.
+.TP
+.B -r
+Extract high-resistive interconnect \fIresistances\fP.
+.TP
+.B -R
+Extract all resistances, overrule the
+"low_contact_res"
+and
+"low_sheet_res"
+parameters (set to 0), implies \fB-r\fP.
+.TP
+.B -z
+Apply \fImesh refinement\fP for resistances, implies \fB-r\fP.
+It uses the preprocessor program \fImakemesh\fP(1ICD).
+.TP
+.B -b
+Extract also \fIsubstrate resistances\fP (simple method).
+.TP
+.B -n
+Do not apply the circuit reduction heuristics.
+.TP
+.B -u
+Do not automatically run the preprocessor programs \fImakeboxl\fP(1ICD),
+\fImakegln\fP(1ICD) and \fImakesize\fP(1ICD).
+This does not check the layout cells
+.I update
+status (time stamps) versus existing expand data.
+.br
+Note that an automatically run is always done if the existing expand data is missing or incorrect.
+Also if resize data is missing or incorrect.
+.br
+Normally you don't use this option,
+because the layout of a local cell may be changed.
+However,
+the standard check can not garantee that the existing expand data is up-to-date.
+Because the layout data of imported cells is not checked.
+Thus, if you always want a new layout expansion,
+use tool dbclean(1ICD) to remove the 'old' expand data.
+.TP
+.B -h
+Print help information.
+.TP
+.B -v
+Verbose mode.
+.TP
+.B -i
+Print statistics, implies verbose mode.
+.TP
+.OP -a time
+Make
+.I space2
+report its progression every \fItime\fP seconds.
+.TP
+.OP -E file
+Use \fIfile\fP as the element definition (.t) file.
+.TP
+.OP -e def
+Use the file space.\fIdef\fP.t in the ICD process library as the element definition file.
+.TP
+.OP -P file
+Use \fIfile\fP as the parameter (.p) file.
+.TP
+.OP -p def
+Use the file space.\fIdef\fP.p in the ICD process library as the parameter file.
+.TP
+.OP -S param=value
+Set parameter \fIparam\fP to the value \fIvalue\fP,
+overrides the setting in the parameter (.p) file.
+Note that
+.OP -S param
+is equivalent to
+.OP -S param =on.
+
+.SH HIDDEN OPTIONS
+For hidden options a '%' sign needs to be specified after the first '-'.
+The following options can be specified:
+.TP
+.B -f
+Extract fine network (no nodes are eliminated).
+.TP
+.B -q
+Print recognized masks and elements.
+.TP
+.B -w
+Print statistics of recognized elements.
+.TP
+.B -X
+Make a display.out file with tile and fe-mesh data.
+.TP
+.B -Z
+Do only the prepass steps (no extract pass).
+.TP
+.B -0
+Skip the mesh refinement pass(es).
+.TP
+.B -2
+Skip all prepasses (only extract pass).
+
+.SH NOTICE
+.I Space2
+creates a "space2.log" file in the current directory.
+.br
+This manual page only gives a brief introduction to \fIspace2\fP.
+It should in most cases be sufficient
+for performing straight-forward extraction tasks.
+Other documentation is available, see below.
+
+.SH DESCRIPTION
+.I Space2
+is a fast 2D layout to circuit extractor for 45 degree polygonal
+geometries.
+It uses another strategy to extract very big and/or complicated layouts
+and it produces also a somewhat different circuit format then \fIspace\fP(1ICD).
+Note that not all netlist tools can use this new circuit format.
+In that case use postprocessor \fInet2net\fP(1ICD).
+.br
+Use \fIdbcat\fP(1ICD) to see the data of "nethead" / "netsub".
+.PP
+.I Space2
+is capable to extract very accurately
+MOS and bipolar integrated circuits,
+including interconnect resistances and capacitances,
+and substrate resistances.
+Generally spoken,
+.I space2
+extracts the circuit for the layout cell that is specified
+on the command line.
+This circuit can afterwards be simulated,
+for example with \fIsls\fP(1ICD).
+
+.SS "Flat Extraction"
+The basic extraction mode of
+.I space2
+is flat.
+In this mode, the layout is flattened before extraction.
+This flatten and expansion process is done by preprocessors
+\fImakeboxl\fP(1ICD)
+and
+\fImakegln\fP(1ICD).
+When needed, also the \fImakesize\fP(1ICD)
+preprocessor is called for resizes and new gln masks.
+You cannot use
+.I space2
+in hierarchical mode.
+For a hierarchical layout extraction use \fIspace\fP(1ICD).
+.PP
+The layout cell, named on the command line,
+is the root cell of a hierarchical cell tree in the database.
+This cell must be a local database cell,
+because an imported cell can not be checked out (and is not found).
+.I Space2
+only traverses the hierarchical tree itself
+for checking the time stamps when the
+.OP -u
+option is not specified.
+.PP
+The cell may have the
+.I library
+status.
+However, a cell with
+.I device
+or
+.I macro
+status can
+.I not
+be extracted.
+See tool \fIxcontrol\fP(1ICD).
+Note that the layout flatten / expand / check process stops by sub-cells with
+.I device
+or
+.I library
+status (only if the interface type is "strict").
+.PP
+Note that the cell,
+named on the command line,
+is extracted even if the circuit exists and is up-to-date with respect to the layout.
+
+.SS "2D Capacitance Extraction"
+By default,
+.I space2
+uses an area/perimeter method for couple capacitance extraction.
+The capacitance is assumed
+to be proportional to c1 * A + c2 * P, where c1 and c2 are constants
+depending on which masks are present at a certain spot, and A and P
+are the relevant interconnect areas and perimeters.
+.PP
+The formula above
+only accounts for the coupling capacitances
+caused by overlapping wires.
+To also extract
+the capacitive coupling between neighboring wires,
+the
+.OP -l
+option can be used.
+See the Space User's Manual for details.
+
+.SS "2D Resistance Extraction"
+When extracting interconnect resistances,
+.I space2
+applies finite element techniques to
+construct a fine resistance mesh that models
+resistive effects in detail,
+and then applies a Gaussian elimination
+(or, equivalently, a star-triangle transformation)
+node reduction technique to find the final network.
+In general, this network contains
+the nodes that are gate, source or drain connections,
+and nodes that are connections to instances or terminals of the cell.
+However, the topology of the network is influenced
+by the network reduction heuristics that are applied, see below.
+Note that resistance is only extracted for high-resistive conductors.
+This can be controlled with parameter \fIlow_sheet_res\fP (default 1 ohm).
+.PP
+When also extracting capacitances,
+the mesh will be an RC mesh.
+In this case,
+the node reduction will proceed such that
+the Elmore time constants
+between the nodes in the final network
+are unchanged with respect to their value in the fine RC mesh.
+This will guarantee
+that the electrical transfer function
+of the final network
+closely matches that of the fine RC mesh
+and, consequently,
+that of the actual circuit.
+
+.SS "Network Reduction Heuristics"
+When extracting resistances and capacitances,
+.I space2
+can apply some heuristics
+to further reduce the number of elements
+(resistors, capacitors and nodes)
+in the final network
+by neglecting irrelevant detail.
+These heuristics include
+.TP 4
+1.
+Merging of nodes that are connected by small resistance.
+.TP
+2.
+Deletion of large shunt resistances.
+.TP
+3.
+Reconnecting small coupling capacitances to ground.
+.PP
+All heuristics are controlled by
+parameters from the parameter file (see below).
+
+.SS "Selective Resistance/Capacitance Extraction"
+You can selective extract resistances and capacitances by using filters.
+For more information consult "Using Space Resistance and Capacitance Extraction Filters",
+report EWI-ENS 14-02, Feb. 2014.
+
+.SS "Library Cell Circuit Extraction"
+When a layout description contains cells that need
+not to be extracted because a separate circuit
+or behavioral description is available for them
+(e.g. standard cells, gate arrays)
+these cells should be set to the
+.I library
+or
+.I device
+status.
+For new projects, the status is set by using tool \fIxcontrol\fP(1ICD).
+Note that for old projects the device status was set by tool \fIdevice\fP(1ICD).
+For the library cells a circuit view must already exist.
+For device cells, use tool \fIputdevmod\fP(1ICD)
+to put device descriptions in the circuit view.
+When the device/library status is defined for a layout cell,
+.I space2
+will not extract this cell but it will include
+it as a network primitive in the extracted circuit.
+
+.SS "Element Definition File"
+.I Space2
+is technology independent.
+At start up,
+it reads a tabular element definition file
+specifying
+how the different elements like conductors and transistors
+can be recognized from the different mask combinations,
+and which values should be used for for example conductor
+capacitivity and conductor resistivity.
+This tabular element file is constructed
+from an user-defined element definition file by the
+.I space
+technology compiler \fItecc\fP(1ICD).
+.PP
+The default element definition file is
+\fIspace.def.t\fP in the appropriate directory of the ICD process library.
+However,
+there can be several other element definition files for a particular
+process.
+For example,
+the file \fIspace.max.t\fP may
+contain an element description with worst-case capacitance
+and resistance values.
+This file can be read rather than the standard file by
+specifying
+.OP -e max
+at the command line.
+.PP
+You can also prepare your own element definition file
+and specify the name of that file with the
+.OP -E file
+option.
+For a description of the format of such a file,
+see the Space User's Manual.
+
+.SS "Parameter File"
+Much of the operation of
+.I space2
+is also under control of parameters
+that are specified in a parameter file.
+The default parameter file is
+\fIspace.def.p\fP in the appropriate directory of the ICD process library.
+You can select another parameter file with the
+.OP -p def
+or the
+.OP -P file
+options, analogous to selecting another element definition file.
+
+.SS "Information Feedback"
+The
+.B -v
+option produces information on what files
+.I space2
+is reading and what extraction steps are being taken.
+The
+.B -i
+option produces quantitative information, such as the number of nets and transistors.
+With the
+.OP -a time
+option,
+.I space2
+reports its progression,
+in percentage of the layout scanned,
+every
+.I time
+seconds.
+.I Space2
+also reports its progression when it receives an ALARM signal,
+such a signal can be send by the command ``kill -ALRM \fIpid\fP'',
+where \fIpid\fP is the process id.
+
+.SS "Implementation"
+.I Space2
+is a scanline based extractor.
+As a scanline is swept over the layout plane,
+the different steps of the method are executed in one pass.
+While the RC mesh is being constructed from the layout,
+nodes are eliminated as soon as
+all resistances and capacitances for that node are known.
+Also, all network elements are written to the database as soon as possible.
+This results in low time and space complexities
+of O(N) and O(sqrt(N)) respectively,
+where N is the number of contour edges of the interconnection polygons.
+
+.SS "Different Versions of Space"
+Use the \fIspace\fP(1ICD) version
+for a full featured hierarchical 2D capacitance and resistance extraction.
+Use the \fIspace3d\fP(1ICD) version
+for 3D capacitance extraction using a boundary-element method
+and for accurate substrate resistance extraction using a boundary-element method.
+
+.SH NEW PARAMETERS OR DEFAULTS
+.nf
+parameter "component_coordinates" (default: on), no option -t.
+parameter "join_contacts" (default: off).
+parameter "keep_contacts" (default: off).
+parameter "pre_elim_area" (default: on).  MAYBE
+parameter "pre_elim_degree" (default: 6).
+parameter "max_elim_degree" (default: 40).
+parameter "min_art_degree" (default: 4).
+parameter "max_par_res" (default: 20).
+parameter "low_contact_res" and "low_sheet_res" (default: 0).
+
+.SH NON SUPPORTED PARAMETERS
+.nf
+parameter "backannotation" and no option -x.
+parameter "elim_sub_node" and "elim_sub_term_node".
+parameter "max_delayed".
+parameter "max_degree" and "min_degree".
+parameter "min_res" and "lowest_min_res".
+parameter "no_neg_res".
+.PP
+parameter "frag_coup_area" and "frag_coup_cap".
+parameter "min_coup_area" and "min_coup_cap".
+parameter "min_ground_area" and "min_ground_cap".
+parameter "no_neg_cap" and "cap_assign_type".
+.PP
+parameter "remove_unfixed".
+parameters "cap3d.xxx".
+
+.SH EXAMPLES
+.PP
+To produce only a transistor network for cell \fIlatch\fP:
+.PP
+% space2 -v latch
+.PP
+To produce a network with interconnect resistances:
+.PP
+% space2 -v -r latch
+.PP
+Also including coupling capacitances:
+.PP
+% space2 -v -rC latch
+.PP
+Also including lateral coupling capacitances:
+.PP
+% space2 -v -rl latch
+.PP
+To see results:
+.PP
+% ls -l circuit/latch
+.br
+% dbcat -cs nethead latch
+.br
+% xsls latch
+.PP
+To remove the old layout expand data, type:
+.PP
+% dbclean -l latch
+
+.AU "S. de Graaf, N.P. van der Meijs"
+
+.SH FILES
+.TP
+\fCICDPATH/share/lib/process/\fIprocess\fP/space.def.t\fP
+default element definition file
+.TP
+\fCICDPATH/share/lib/process/\fIprocess\fP/space.def.p\fP
+default parameter file
+.TP
+\&./space2.log
+extract log file
+.TP
+\fCPROJECT\fP/circuit/\fIcell\fP/netcd
+stream of new net format (.txt file)
+.TP
+\fCPROJECT\fP/circuit/\fIcell\fP/nethead
+stream of new net format
+.TP
+\fCPROJECT\fP/circuit/\fIcell\fP/netsub
+stream of new net format
+.TP
+\fCPROJECT\fP/circuit/\fIcell\fP/display.out
+option -X
+
+.SH SPACE_TMPDIR
+.I Space2
+uses a directory where it stores temporary data.
+The default directory for this is selected from the
+list of directories "/tmp" and "/usr/tmp", whichever has more space available.
+Using the environment variable \fCSPACE_TMPDIR\fP it is possible
+to specify an alternative list of directories,
+separated by the character ':' or ';'.
+For example:
+.PP
+% setenv SPACE_TMPDIR /tmp:/usr/tmp:/user/john/tmp
+
+.SH SEE ALSO
+N.P. van der Meijs, A.J. van Genderen,
+F. Beeftink and P.J.H. Elias,
+"Space User's Manual",
+Delft University of Technology,
+Delft,
+The Netherlands.
+.PP
+N.P. van der Meijs and A.J. van Genderen,
+"Space Tutorial",
+Delft University of Technology,
+Delft,
+The Netherlands.
+.PP
+A.J. van Genderen, N.P. van der Meijs and T. Smedes,
+"Space Substrate Resistance Extraction User's Manual",
+Delft University of Technology,
+Delft,
+The Netherlands.
+
+.SH SEE ALSO
+dbcat(1ICD),
+dbclean(1ICD),
+makeboxl(1ICD),
+makegln(1ICD),
+makemesh(1ICD),
+makesize(1ICD),
+net2net(1ICD),
+putdevmod(1ICD),
+space(1ICD),
+space(4ICD),
+space3d(1ICD),
+tecc(1ICD),
+xcontrol(1ICD),
+xsls(1ICD).

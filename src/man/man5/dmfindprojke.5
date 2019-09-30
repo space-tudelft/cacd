@@ -1,0 +1,116 @@
+.TH DMFINDPROJKEY 5ICD "DMI User's Manual"
+.SH NAME
+dmFindProjKey - find project key and remote cell name
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+DM_PROJECT *dmFindProjKey (int loc_imp, char *local_name,
+	    DM_PROJECT *father_proj, char **rem_namep, char *view);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "int loc_imp"
+indicates whether it concerns a local or an imported cell.
+Accepted values are \fBLOCAL\fP and \fBIMPORTED\fP,
+as predefined in "dmincl.h".
+.TP
+.B "char *local_name"
+is either the name of a local cell or the alias (local name) of an
+imported cell.
+.TP
+.B "DM_PROJECT *father_proj"
+is the key of the project in which the local name is defined.
+.TP
+.B "char **rem_namep"
+is a pointer to which the actual cell name will be attached.
+.TP
+.B "char *view"
+is the view type of the cell.
+.SH DESCRIPTION
+Function
+.B dmFindProjKey
+is a higher level utility that
+supports the tool in performing a context switch
+to another project from which a cell has to be obtained.
+.PP
+In the project that is identified by \fBfather_proj\fP the cell is
+known as \fBlocal_name\fP.
+If this \fBlocal_name\fP is an alias for an imported cell, as indicated
+by \fBloc_imp\fP,
+.B dmFindProjKey
+will resolve the corresponding project
+and remote name from the meta data that has been administered in the
+father project.
+If necessary, the son project will be opened.
+Function
+.B dmFindProjKey
+attaches the remote name to \fBrem_namep\fP
+and returns the key of the son project.
+If \fBloc_imp\fP is \fBLOCAL\fP,
+.B dmFindProjKey
+assumes the son cell is situated in the father project and
+returns the father project key and the cell name (== \fBlocal name\fP)
+immediately.
+.PP
+Function
+.B dmFindProjKey
+greatly facilitates expansion
+in a multi-project environment,
+where son cells may be called from other projects than their own.
+During the expansion process the tool may obtain aliases for imported cells
+when reading the hierarchical information.
+By simply calling
+.B dmFindProjKey
+the tool can obtain all the necessary
+information for a dmCheckOut() of the son cell.
+As
+.B dmFindProjKey
+may be called for both
+the
+.B LOCAL
+and
+.B IMPORTED
+cases, no explicit testing is necessary in the tool.
+.SH DIAGNOSTICS
+If properly executed,
+.B dmFindProjKey
+will return a pointer to a DM_PROJECT.
+If
+.B dmFindProjKey
+fails
+.B NULL
+will be returned.
+The external variable
+.B dmerrno
+will be set to indicate the error,
+and a call to function dmError() will be done.
+.PP
+This may happen in the following cases:
+.TP 14
+.B DME_BADARG
+Bad
+.B loc_imp
+argument.
+.TP
+.B DME_BADKEY
+Bad project key.
+.TP
+.B DME_BADVIEW
+Bad view type.
+.TP
+.B DME_CORE
+Cannot alloc core.
+.TP
+.B DME_NOCELL
+Cell does not exist.
+.TP
+.B DME_NOIMPCL
+No imported celllist.
+.PP
+Errors may also result from a call to
+dmOpenProject() that may be performed by dmFindProjKey().
+.SH SEE ALSO
+dmOpenProject(5ICD).

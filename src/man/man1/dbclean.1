@@ -1,0 +1,55 @@
+.TH DBCLEAN 1ICD "6/30/86"
+.UC 4
+.SH NAME
+dbclean - remove secondary data from ICD data base
+.SH SYNOPSIS
+\fBdbclean\fP [\fB-aelcfuvV\fP] [cell ...]
+.SH PARAMETERS
+.TP
+.I cell
+Process the named cells.
+.SH OPTIONS
+.TP
+.B -a
+Process all cells.
+.TP
+.B -e
+Process all specified cells except those that are in the "exp_dat" file.
+.TP
+.B -l
+Process only the layout view.
+.TP
+.B -c
+Process only the circuit view.
+.TP
+.B -f
+Process only the floorplan view.
+.TP
+.B -u
+Update release mode (always -a).
+.TP
+.B -v
+Verbose mode.
+.TP
+.B -V
+Verbose mode.
+Informs for the layout view which streams are removed.
+.SH DESCRIPTION
+.I Dbclean
+is a program to remove redundant and/or derived streams from the database,
+to save space when the design is ready.
+.PP
+For the layout view, all streams except the
+box, info, mc, nor, annotations and term streams are removed.
+.PP
+For the circuit view, the streams sls and sls.o are removed.
+.PP
+For the floorplan view, no streams are currently removed.
+.PP
+Additionally,
+the following files are removed from the data base:
+exp_dat.
+.SH AUTHOR
+N. van der Meijs
+.SH SEE ALSO
+rmdb(1ICD).

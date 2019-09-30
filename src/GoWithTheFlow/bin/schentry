@@ -1,0 +1,1000 @@
+#!/bin/sh
+# the next line restarts using wish \
+exec /usr/bin/wish "$0" "$@"
+
+set ProgName "schentry"
+
+if {[info exists env(OPPROGPATH)]} {
+   set OPPROGPATH $env(OPPROGPATH)
+} else {
+   puts stderr "env OPPROGPATH not set"
+   exit 1
+}
+
+# The following variables can be specified in the install script.
+#----------------------------------------------------------------
+#InstallGlobals#
+set TclLibPath1 $OPPROGPATH/src_libs/schentry
+set TclLibPath2 $OPPROGPATH/src_libs/shared
+#the path to the the tcl_library for this program 
+
+set CompLibPath $OPPROGPATH/comp_files
+#the path to the library of the component_descriptions of the basic cells
+
+set ComponentPath ./components
+#The directory where the component_files are placed
+
+set CircuitPath ./circuits
+#The directory where the circuit_files are placed
+
+set VhdlPath ./VHDL
+#The directory where the vhdl_files are placed
+
+set SlsPath ./SLS
+#The directory where the sls_files are placed
+#EndInstallGlobals#
+
+lappend auto_path $TclLibPath1
+lappend auto_path $TclLibPath2
+
+# globals valid in the program
+#-----------------------------
+set kind "unrouted"
+set CvW	[expr min(1000,[expr 0.7*[winfo screenwidth  .]])]; #X_dimension of the canvas
+set CvH	[expr min(700,[expr 0.7*[winfo screenheight .]])]; #Y_dimension of the canvas
+set GW	[expr $CvW/100.];	# distance between the grid_lines
+#set TD	[expr $GW/2.];		# dimension of a terminal/port
+set LinewidthSingle	1;	# width of a single connection in pixels
+set LinewidthBus	3;	# width of a bus connection in pixels
+set BboxId	border_line;	# tag of the border of the cell
+set CellNh	3;	# the nbr_grids of the name_part of the cell
+set MaxYEnt	30;	# maximum number of items in a menu_row
+set NCell	-1;	# highest number of used cells
+set NConn	-1;	# highest number of used connections
+set NPort	-1;	# highest number of used ports
+set NLabel	-1;	# highest number of used labels
+set NSplit	-1;	# highest number of used splitters
+set NMerge	-1;	# highest number of used merger
+
+# port_types:
+set UNKNOWN	-1
+set INPUT	1
+set OUTPUT	2
+set INOUT	3
+set MN_INPUT	4
+set MN_OUTPUT	8
+set S_IN_FULL	16
+set S_IN_PART	32
+set S_OUT_FULL	64
+set S_OUT_PART	128
+
+set COMP_PORT	[expr $INPUT+$OUTPUT]
+set MAIN_PORT	[expr $MN_INPUT+$MN_OUTPUT]
+set S_FULL_PORT [expr $S_IN_FULL+$S_OUT_FULL]
+set S_PART_PORT [expr $S_IN_PART+$S_OUT_PART]
+
+set InpCol	wheat;	# colour of an input_port
+set OutpCol	black;	# colour of an output port
+set InoutCol	gray70;	# colour of an inout port
+set GridCol	wheat2;	# colour of the grid
+set ConnCol	red;	# colour of tempory connection
+set RoutCol	brown;	# colour of routed connection
+
+set XRef	0;	# coords of ref_point(left_upper point)
+set YRef	0;	# of cells with respect to the cursor
+set YBot	0;	# minimum port coord
+set YTop	0;	# maximum port coord
+set XPressed	0;	# cursor_coords of the spot where the
+set YPressed	0;	# 1-button is pressed
+set Cmd		NONE;	# the command that is activated
+
+set CompW	0;	# the width of the component to place
+set CompH	0;	# the height of the component to place
+set CompIn	"";	# list of input_ports of the comp. to place
+set CompOut	"";	# list of output_ports of the comp. to place
+
+set SelTag	"";	# the first selected tag
+set Tags	"";	# the tags that are selected
+set ConnL	"";	# move connect list
+set ConnT	0;	# move connect type
+set CirName	"";	# the name of the circuit that is made
+
+set Fnt		"-*-Courier-Bold-R-Normal--*-140-*"
+set EditFnt	"-*-Courier-Bold-R-Normal--*-140-*"
+set NameFnt	"-*-Courier-Bold-O-Normal--*-180-*"
+set CellFnt	"-*-Courier-Bold-R-Normal--*-120-*"
+set TxtFnt	"-*-Courier-Bold-R-Normal--*-120-*"
+set HdrFnt	"-*-Courier-Bold-O-Normal--*-120-*"
+set PortFnt	"-*-Courier-Bold-O-Normal--*-100-*"
+
+# the interface definition
+#-------------------------
+# put off menubar menus tearOff
+option add *tearOff 0
+
+frame	.fr1  -bg gold -relief raised
+frame	.fr1b -bg gold -relief raised
+frame	.fr2 -bg gold  -bd 2 -relief raised
+frame	.fr3 -bg wheat -bd 2 -relief raised
+frame	.frm
+canvas	.frm.cv -bg wheat -bd 2 -relief sunk -width $CvW -height $CvH\
+		-xscrollcommand ".frm.xsb set" -yscrollcommand ".frm.ysb set"
+scrollbar .frm.ysb -bg wheat -command ".frm.cv yview"
+scrollbar .frm.xsb -orient horizontal -bg wheat -command ".frm.cv xview"
+listbox	.lb -bg wheat -width 14 -font $Fnt -yscrollcommand ".lbsby set"
+scrollbar .lbsby -bg wheat -command ".lb yview"
+
+radiobutton .fr1.rbac -text "addCOMP" -variable Cmd -value ADD_COMP -command "rb_pressed"\
+	-bg gold -indicatoron 0 -selectcolor gold3 -width 9 -state disabled -font $Fnt -pady 4
+radiobutton .fr1.rbat -text "addPORT" -variable Cmd -value ADD_PORT -command "rb_pressed"\
+	-bg gold -indicatoron 0 -selectcolor gold3 -width 9 -state disabled -font $Fnt -pady 4
+radiobutton .fr1.rbas -text "addBUSCON" -variable Cmd -value ADD_SPLITTER -command "rb_pressed"\
+	-bg gold -indicatoron 0 -selectcolor gold3 -width 9 -state disabled -font $Fnt -pady 4
+radiobutton .fr1.rbam -text "addBUSEXP" -variable Cmd -value ADD_MERGER -command "rb_pressed"\
+	-bg gold -indicatoron 0 -selectcolor gold3 -width 9 -state disabled -font $Fnt -pady 4
+radiobutton .fr1.rbal -text "addLABEL" -variable Cmd -value ADD_LABEL -command "rb_pressed"\
+	-bg gold -indicatoron 0 -selectcolor gold3 -width 9 -state disabled -font $Fnt -pady 4
+radiobutton .fr1.rbcl -text "cpyLABEL" -variable Cmd -value CPY_LABEL -command "rb_pressed"\
+	-bg gold -indicatoron 0 -selectcolor gold3 -width 9 -state disabled -font $Fnt -pady 4
+radiobutton .fr1b.rbcn -text "Connect" -variable Cmd -value CONNECT -command "rb_pressed"\
+	-bg gold -indicatoron 0 -selectcolor gold3 -width 9 -state disabled -font $Fnt -pady 4
+radiobutton .fr1b.rbdl -text "Delete" -variable Cmd -value DELETE -command "rb_pressed"\
+	-bg gold -indicatoron 0 -selectcolor gold3 -width 9 -state disabled -font $Fnt -pady 4
+radiobutton .fr1b.rbmv -text "Move" -variable Cmd -value MOVE -command "rb_pressed"\
+	-bg gold -indicatoron 0 -selectcolor gold3 -width 9 -state disabled -font $Fnt -pady 4
+radiobutton .fr1b.rbrn -text "Rename" -variable Cmd -value RENAME -command "rb_pressed"\
+	-bg gold -indicatoron 0 -selectcolor gold3 -width 9 -state disabled -font $Fnt -pady 4
+radiobutton .fr1b.rbrz -text "Resize" -variable Cmd -value RESIZE -command "rb_pressed"\
+	-bg gold -indicatoron 0 -selectcolor gold3 -width 9 -state disabled -font $Fnt -pady 4
+radiobutton .fr1b.rvdd -text "addVDD" -variable Cmd -value ADD_VDD -command "rb_pressed"\
+	-bg gold -indicatoron 0 -selectcolor gold3 -width 7 -state disabled -font $Fnt -pady 4
+radiobutton .fr1b.rvss -text "addVSS" -variable Cmd -value ADD_VSS -command "rb_pressed"\
+	-bg gold -indicatoron 0 -selectcolor gold3 -width 7 -state disabled -font $Fnt -pady 4
+button	.fr1b.rbrt -text "Route"   -bg gold -width 7 -state disabled -font $Fnt -command "do_route"
+button	.fr1b.rbur -text "unRoute" -bg gold -width 7 -state disabled -font $Fnt -command "do_unroute"
+button	.fr1.rbps  -text "makePS"  -bg gold -width 7 -state disabled -font $Fnt -command "ps_wdw"
+button	.fr1.rbsl  -text "makeSLS" -bg gold -width 7 -state disabled -font $Fnt -command "sls_conv"
+button	.fr1.rbvh  -text makeVHDL  -bg gold -width 7 -state disabled -font $Fnt -command "vhdl_conv"
+button	.fr1.rbcm  -text makeCOMP  -bg gold -width 7 -state disabled -font $Fnt -command "mk_component"
+button	.fr1b.rbzo -text "zoomOUT" -bg gold -width 7 -state disabled -font $Fnt -command "do_zoom_out"
+button	.fr1b.rbzi -text "zoomIN"  -bg gold -width 7 -state disabled -font $Fnt -command "do_zoom_in"
+text	.fr3.txt  -height 5  -yscrollcommand ".fr3.sb set" -font $Fnt -bg wheat
+scrollbar   .fr3.sb   -command ".fr3.txt yview" -bg wheat
+
+menubutton  .fr2.file -text "File" -menu .fr2.file.cmds -bg gold -font $Fnt
+menu        .fr2.file.cmds -background gold
+.fr2.file.cmds add command -label "New"  -accelerator "n" -font $Fnt -command "mk_template"
+.fr2.file.cmds add command -label "Read" -accelerator "r" -font $Fnt -command "read_cir_file"
+.fr2.file.cmds add command -label "Save" -accelerator "s" -state disabled -font $Fnt -command {write_cir_file $CirName}
+.fr2.file.cmds add command -label "SaveAs" -accelerator a -state disabled -font $Fnt -command {saveas_template}
+.fr2.file.cmds add command -label "Quit" -accelerator "q" -font $Fnt -command "quit_schentry"
+
+menubutton .fr2.tests -text "Show" -menu .fr2.tests.cmds -bg gold -font $Fnt
+menu	.fr2.tests.cmds -bg gold
+	.fr2.tests.cmds add command -label "show_instances"	-font $Fnt -command "show_instances"
+	.fr2.tests.cmds add command -label "show_connects"	-font $Fnt -command "show_conns"
+	.fr2.tests.cmds add command -label "show_ports"		-font $Fnt -command "show_ports"
+	.fr2.tests.cmds add command -label "show_labels"	-font $Fnt -command "show_labels"
+	.fr2.tests.cmds add command -label "show_busconnectors"	-font $Fnt -command "show_busconnectors"
+	.fr2.tests.cmds add command -label "show_busexpanders"	-font $Fnt -command "show_busexpanders"
+	.fr2.tests.cmds add command -label "show_tags"		-font $Fnt -command "show_tags"
+	.fr2.tests.cmds add checkbutton -label "show_occupied"	-font $Fnt -variable show_occs -onvalue 1 -offvalue 0
+	.fr2.tests.cmds add checkbutton -label "show_references" -font $Fnt -variable show_refs -onvalue 1 -offvalue 0
+
+pack .fr2       -side top -fill x
+pack .fr1       -side top -fill x
+pack .fr1b      -side top -fill x
+pack .fr3       -side bottom -fill x
+pack .frm       -side left -fill both -expand 1
+pack .frm.ysb   -side right -fill y
+pack .frm.cv    -side top -fill both -expand 1
+pack .frm.xsb   -side bottom -fill x
+pack .lbsby     -side right -fill y
+pack .lb        -side right -fill y
+
+pack .fr1.rbac  -side left -padx 2 -pady 2
+pack .fr1.rbat  -side left -padx 2 -pady 2
+pack .fr1.rbas  -side left -padx 2 -pady 2
+pack .fr1.rbam  -side left -padx 2 -pady 2
+pack .fr1.rbal  -side left -padx 2 -pady 2
+pack .fr1.rbcl  -side left -padx 2 -pady 2
+pack .fr1b.rbcn -side left -padx 2 -pady 2
+pack .fr1b.rbdl -side left -padx 2 -pady 2
+pack .fr1b.rbmv -side left -padx 2 -pady 2
+pack .fr1b.rbrn -side left -padx 2 -pady 2
+pack .fr1b.rbrz -side left -padx 2 -pady 2
+pack .fr1b.rvdd -side left -padx 2 -pady 2
+pack .fr1b.rvss -side left -padx 2 -pady 2
+
+pack .fr1.rbps  -side right -padx 2 -pady 2
+pack .fr1.rbvh  -side right -padx 2 -pady 2
+pack .fr1.rbsl  -side right -padx 2 -pady 2
+pack .fr1.rbcm  -side right -padx 2 -pady 2
+pack .fr1b.rbrt -side right -padx 2 -pady 2
+pack .fr1b.rbur -side right -padx 2 -pady 2
+pack .fr1b.rbzo -side right -padx 2 -pady 2
+pack .fr1b.rbzi -side right -padx 2 -pady 2
+
+pack .fr2.file  -side left
+pack .fr2.tests -side left
+pack .fr3.txt -side left -fill x -expand 1
+pack .fr3.sb  -side left -fill y
+
+wm title . "SCHENTRY"
+
+# set the scrollregion equal to the canvas dimensions
+#----------------------------------------------------
+   .frm.cv configure -scrollregion "0 0 $CvW $CvH"
+
+# load the components listbox with the files from the component directory
+# and set the first component as the selected one
+#------------------------------------------------
+proc upd_comp_listbox {} {
+   global ComponentPath
+   .lb delete 0 end
+   set cmp_files [glob -nocomplain $ComponentPath/*.cmp]
+   foreach cmp [lsort $cmp_files] {
+	.lb insert end [lindex [split [file tail $cmp] .] 0]
+   }
+}
+gen_comp_dir
+upd_comp_listbox
+
+# bindings in the program
+#-----------------------------------------------
+bind .frm.cv <ButtonPress>    { press_commands   [.frm.cv canvasx %x $GW] [.frm.cv canvasy %y $GW] }
+bind .frm.cv <ButtonRelease>  { release_commands [.frm.cv canvasx %x $GW] [.frm.cv canvasy %y $GW] }
+bind .frm.cv <Button1-Motion> { drag_commands    [.frm.cv canvasx %x $GW] [.frm.cv canvasy %y $GW] }
+bind . <Key-n> { mk_template }
+bind . <Key-r> { read_cir_file }
+bind . <Key-q> { quit_schentry }
+bind . <Key-a> { if {$CirName != ""} {saveas_template} }
+bind . <Key-s> { if {$CirName != ""} {write_cir_file $CirName} }
+bind . <Key-u> {
+	if {[winfo exists .conn_wdw]} {show_conns}
+	if {[winfo exists .inst_wdw]} {show_instances}
+	if {[winfo exists .port_wdw]} {show_ports}
+	if {[winfo exists .label_wdw]} {show_labels}
+	if {[winfo exists .split_wdw]} {show_splitters}
+}
+
+proc destroy_templ {} {
+   .frm.cv delete outline
+   destroy .templ
+}
+
+proc rb_pressed {} {
+   if {[winfo exists .templ]} { destroy_templ }
+}
+
+# procedure to leave the program
+# before quitting it asks if data has to be saved
+#------------------------------------------------
+proc quit_schentry {} {
+   global CirName
+
+   if {[see_circ_change] == 1} {
+      set answ [tk_messageBox -icon error -type yesno\
+         -message "Quit schentry:\nEditor contains changed data!\nMust it be saved?"]
+      if {$answ == "yes"} { write_cir_file $CirName }
+   }
+   destroy .
+}
+
+# procedure to release the commands, so they can be used again
+#-------------------------------------------------------------
+proc release_cmds {} {
+   foreach i [winfo children .fr1 ] { $i configure -state normal }
+   foreach i [winfo children .fr1b] { $i configure -state normal }
+   .fr2.file.cmds entryconfigure "Save" -state normal
+   .fr2.file.cmds entryconfigure "SaveAs" -state normal
+}
+
+# procedure decode the functions to do when the button is pressed
+#----------------------------------------------------------------
+proc press_commands {x0 y0} {
+   global CirName Cmd XPressed YPressed SelTag Tags GW
+
+   set XPressed $x0
+   set YPressed $y0
+   switch $Cmd {
+      "ADD_COMP"     {set SelTag [.lb curselection]
+                      if {$SelTag == ""} {
+			show_mess "You must first select a component!"
+			return
+                      }
+			set SelTag [.lb get $SelTag]
+                      if {$SelTag == $CirName} {
+			show_mess "You cannot add a component to itself!"
+			return
+                      }
+                      read_compdef $SelTag
+                      set_outline $x0 $y0 comp_dim
+                     }
+      "ADD_PORT"     {set_outline $x0 $y0 port_dim}
+      "ADD_SPLITTER" {set_outline $x0 $y0 split_dim}
+      "ADD_MERGER"   {set_outline $x0 $y0 merge_dim}
+      "CPY_LABEL"    {set_outline $x0 $y0 cpy_dim}
+      "CONNECT"      {set SelTag [get_port_tag $x0 $y0]
+		      if {$SelTag == ""} {
+			show_mess "Select a port to connect from!"
+			return
+		      }
+		      set idx [has_label $SelTag]
+		      if {$idx >= 0} {
+			change_in_conn $SelTag $idx
+			set SelTag ""
+			return
+		      }
+                      .frm.cv create line $x0 $y0 $x0 $y0 -tag outline -fill blue
+                     }
+	"MOVE"		{set_outline $x0 $y0 mov_dim}
+	"DELETE"	{
+			set Tags [.frm.cv gettags [.frm.cv find closest $x0 $y0 [expr $GW/3]]]
+			set SelTag [lindex $Tags 0]
+			if {$SelTag == "border" || $SelTag == "router_con"} { set SelTag ""; return }
+			if {[string range $SelTag 0 1] == "C-"} {
+			    .frm.cv itemconfigure $SelTag -fill blue
+			    return
+			}
+			set B [.frm.cv bbox $SelTag]
+			.frm.cv create rectangle [lindex $B 0] [lindex $B 1]\
+				[lindex $B 2] [lindex $B 3] -outline blue -width 3 -tag DEL-BBOX
+			}
+	"ADD_NEW"	{.frm.cv delete all
+			.frm.cv create rectangle $x0 $y0 $x0 $y0 -outline blue -tag outline
+			}
+	"ADD_LABEL"	{mk_label}
+	"ADD_VDD"	{mk_label}
+	"ADD_VSS"	{mk_label}
+	"RENAME"	{mk_label}
+	"RESIZE"	{
+			set SelTag [lindex [.frm.cv gettags [.frm.cv find closest $x0 $y0 [expr $GW/3]]] 0]
+			if {[string first "~" $SelTag] < 0} { set SelTag border_line }
+			set c [.frm.cv coords $SelTag]
+			if {$SelTag == "border_line"} {
+			    if {$x0 < [expr [lindex $c 2]-4*$GW]} { set SelTag ""; return }
+			    if {$y0 < [expr [lindex $c 3]-4*$GW]} { set SelTag ""; return }
+			}
+			set XPressed [lindex $c 0]
+			set YPressed [lindex $c 1]
+			.frm.cv create rectangle $XPressed $YPressed $x0 $y0 -outline blue -tag outline
+			}
+	}
+}
+
+# procedure decode the functions to do when the button is released
+#-----------------------------------------------------------------
+proc release_commands {x0 y0} {
+   global Cmd GW SelTag XPressed YPressed
+
+   if {$SelTag == ""} { return }
+
+   switch $Cmd {
+	"ADD_COMP"	{if {[check_area_inside] == 0} {
+			   show_mess "Component must be inside the circuit area!"
+			   .frm.cv delete outline
+			   return
+			}
+			.frm.cv delete outline
+			do_add_component $x0 $y0 $SelTag -1
+			}
+	"ADD_PORT"	{mk_termname}
+	"ADD_SPLITTER"	{mk_splitter}
+	"ADD_MERGER"	{mk_merger}
+	"CONNECT"	{
+			.frm.cv delete outline
+			do_connect $x0 $y0 -1 0
+			}
+	"CPY_LABEL"	{
+			copy_label $x0 $y0 0
+			.frm.cv delete outline
+			}
+	"MOVE"		{do_move $x0 $y0}
+	"DELETE"	{delete_item}
+	"RESIZE"	{
+			if {$SelTag == "border_line"} {
+			    do_resize
+			} else {
+			    .frm.cv delete outline
+			    resize_component $SelTag [expr $x0-$XPressed] [expr $y0-$YPressed]
+			}
+			}
+   }
+   set SelTag ""
+}
+
+proc do_drag_port {x0 y0} {
+   global XPressed YPressed XRef YRef YBot YTop
+   set dx 0
+   if {$y0 < $YBot} { set y0 $YBot }
+   if {$y0 > $YTop} { set y0 $YTop }
+   set dy [expr $y0-$YPressed]
+   if {$x0 > [expr ($YRef + $XRef)/2]} {
+	if {$XPressed != $YRef} {
+	    set XPressed $YRef
+	    set dx [expr $YRef - $XRef]
+	}
+   } else {
+	if {$XPressed != $XRef} {
+	    set XPressed $XRef
+	    set dx [expr $XRef - $YRef]
+	}
+   }
+   .frm.cv move outline $dx $dy
+   set YPressed $y0
+}
+
+proc do_drag_conn {x0 y0} {
+   global CONN_ARR ConnL ConnT
+   foreach i $ConnL {
+	set c [get_con_coords [lindex [split $CONN_ARR($i) ">"] $ConnT]]
+	.frm.cv coords C-$i [lindex $c 0] [lindex $c 1] $x0 $y0
+   }
+}
+
+# procedure to decode the functions to do when the cursor is dragged
+#-------------------------------------------------------------------
+proc drag_commands {x0 y0} {
+   global Cmd XPressed YPressed SelTag Tags ConnCol GW
+
+   switch $Cmd {
+	"ADD_COMP"	{do_drag_rect $x0 $y0}
+	"ADD_PORT"	{do_drag_port $x0 $y0}
+	"ADD_SPLITTER"	{do_drag_rect $x0 $y0}
+	"ADD_MERGER"	{do_drag_rect $x0 $y0}
+	"CPY_LABEL"	{do_drag_rect $x0 $y0}
+	"CONNECT"	{if {$SelTag == ""} {return}
+			.frm.cv coords outline $XPressed $YPressed $x0 $y0
+			}
+	"MOVE"		{
+			    if {[string range $SelTag 0 1] == "C-"} {
+				do_drag_conn $x0 $y0
+			    } else {
+				do_drag_rect $x0 $y0
+			    }
+			}
+	"DELETE"	{
+			if {$SelTag != ""} {
+			    if {[string range $SelTag 0 1] == "C-"} {
+				.frm.cv itemconfigure $SelTag -fill $ConnCol
+			    } else {
+				.frm.cv delete DEL-BBOX
+			    }
+			}
+			set Tags [.frm.cv gettags [.frm.cv find closest $x0 $y0 [expr $GW/3]]]
+			set SelTag [lindex $Tags 0]
+			if {$SelTag == "border" || $SelTag == "router_con"} { set SelTag ""; return }
+			if {[string range $SelTag 0 1] == "C-"} {
+			    .frm.cv itemconfigure $SelTag -fill blue
+			    return
+			}
+			set B [.frm.cv bbox $SelTag]
+			.frm.cv create rectangle [lindex $B 0] [lindex $B 1]\
+				[lindex $B 2] [lindex $B 3] -outline blue -width 3 -tag DEL-BBOX
+			}
+	"RESIZE"	{if {$SelTag == ""} {return}
+			if {$SelTag == "border_line"} {
+			    set x0 [MIN $x0 [lindex [.frm.cv cget -scrollregion] 2]]
+			    set y0 [MIN $y0 [lindex [.frm.cv cget -scrollregion] 3]]
+			}
+			.frm.cv coords outline $XPressed $YPressed $x0 $y0
+			}
+	}
+}
+
+# procedure to show the outline of items to be placed or moved
+#-------------------------------------------------------------
+proc set_outline {x0 y0 dim_idx} {
+   global GW SelTag CompW CompH XRef YRef LABEL_ARR CirName InpCol
+   global CellNh XPressed YPressed YBot YTop CONN_ARR ConnL ConnT NConn
+
+   switch $dim_idx {
+   "mov_dim"   {set SelTag [lindex [.frm.cv gettags [.frm.cv find closest $x0 $y0]] 0]
+		set portTag [get_port_tag $x0 $y0]
+		set nr -1
+		if {$portTag != ""} {
+		    if {[string first "C-" $SelTag] >= 0} {
+			set nr [string range $SelTag 2 end]
+		    } else {
+			set nr [is_connected $portTag]
+		    }
+		} elseif {[string first "C-" $SelTag] >= 0} {
+		    set SelTag border
+		}
+
+		if {$nr >= 0} {
+		   set SelTag C-$nr
+		   set pl [split $CONN_ARR($nr) ">"]
+		   set ConnL ""
+		   if {$portTag == [lindex $pl 0]} {
+			set ConnT 1
+			for {set i 0} {$i <= $NConn} {incr i} {
+			   if {[lindex [split $CONN_ARR($i) ">"] 0] == $portTag} {
+				lappend ConnL $i
+			   }
+			}
+		   } else {
+			set ConnT 0
+			lappend ConnL $nr
+		   }
+		   do_drag_conn $x0 $y0
+		   return
+		}
+		if {$SelTag == "router_con"} { set SelTag border }
+		set bbox [.frm.cv bbox $SelTag]
+		.frm.cv create rectangle [lindex $bbox 0] [lindex $bbox 1]\
+			[lindex $bbox 2] [lindex $bbox 3] -outline blue -tag outline
+		set XRef [expr [lindex $bbox 0] - $x0]
+		set YRef [expr [lindex $bbox 1] - $y0]
+		return
+               }
+   "cpy_dim"   {set SelTag [lindex [.frm.cv gettags [.frm.cv find closest $x0 $y0]] 0]
+                if {[string first "L-" $SelTag] < 0} {
+                   show_mess "click on the label to copy"
+                   set SelTag ""
+                   return
+                }
+                set bbox [.frm.cv bbox $SelTag]
+                .frm.cv create rectangle [lindex $bbox 0] [lindex $bbox 1]\
+			[lindex $bbox 2] [lindex $bbox 3] -outline blue -tag outline
+                set XRef [expr [lindex $bbox 0] - $x0]
+                set YRef [expr [lindex $bbox 1] - $y0]
+               }
+   "comp_dim"  {
+		.frm.cv create rectangle $x0 $y0\
+		    [expr $x0+$CompW] [expr $y0+$CompH] -outline blue -tag outline
+                 set XRef 0
+                 set YRef 0
+               }
+   "port_dim"  {set SelTag "P"
+		set TD [expr $GW/2.]
+		set bb [.frm.cv coords border_line]
+		set XRef [lindex $bb 0]
+		set YRef [lindex $bb 2]
+		set YBot [expr [lindex $bb 1] + $CellNh*$GW + $GW]
+		set YTop [expr [lindex $bb 3] - $GW]
+		if {$y0 < $YBot} { set y0 $YBot }
+		if {$y0 > $YTop} { set y0 $YTop }
+		if {$x0 > [expr ($YRef + $XRef)/2]} {
+			set x0 $YRef
+		} else {
+			set x0 $XRef
+		}
+		.frm.cv delete outline
+		.frm.cv create polygon [expr $x0-$TD] $y0\
+			$x0 [expr $y0-$TD] [expr $x0+$TD] $y0\
+			$x0 [expr $y0+$TD] -fill $InpCol -outline blue -tag outline
+		set XPressed $x0
+		set YPressed $y0
+               }
+   "split_dim" {set SelTag "S"
+		.frm.cv delete outline
+		.frm.cv create rectangle $x0 $y0\
+			[expr $x0+5*$GW] [expr $y0+2*$GW] -outline blue -tag outline
+		set XRef 0
+		set YRef 0
+               }
+   "merge_dim" {set SelTag "M"
+		.frm.cv delete outline
+		.frm.cv create rectangle $x0 $y0\
+			[expr $x0+4*$GW] [expr $y0+4*$GW] -outline blue -tag outline
+		set XRef 0
+		set YRef 0
+               }
+   }
+}
+
+# procedure to move a rubberband of an item
+#------------------------------------------
+proc do_drag_rect {x0 y0} {
+   global SelTag CirName XRef YRef
+
+   if {$SelTag == ""} { return }
+   if {$SelTag == "border"} {
+# the circuit must remain within the scrollregion
+      set olc [.frm.cv coords outline]
+      set wd [expr [lindex $olc 2] -[lindex $olc 0]]
+      set ht [expr [lindex $olc 3] -[lindex $olc 1]]
+      set src [.frm.cv cget -scrollregion]
+      set xmax [lindex $src 2]
+      set ymax [lindex $src 3]
+      if {[expr $x0 + $XRef] < 0} {
+         set x0 [expr -$XRef]
+      } elseif {[expr $x0 + $XRef + $wd] > $xmax} {
+         set x0 [expr $xmax - $XRef -$wd]
+      }
+      if {[expr $y0 + $YRef] < 0} {
+         set y0 [expr -$YRef]
+      } elseif {[expr $y0 + $YRef + $ht] > $ymax} {
+         set y0 [expr $ymax - $YRef -$ht]
+      }
+   }
+   set dx [expr $x0-[lindex [.frm.cv coords outline] 0]+$XRef]
+   set dy [expr $y0-[lindex [.frm.cv coords outline] 1]+$YRef]
+   if {[lindex [split $SelTag .] 0] == $CirName} {
+# a port must stay at the x_border
+      .frm.cv move outline 0 $dy
+   } else {
+      .frm.cv move outline $dx $dy
+   }
+}
+
+# procedure to move an item to the place indicated bij the outline
+#-----------------------------------------------------------------
+proc do_move {x0 y0} {
+   global SelTag CirName XPressed YPressed XRef YRef
+   global NConn CONN_ARR ConnL ConnT LABEL_ARR
+
+   if {[string range $SelTag 0 1] == "C-"} {
+	if {[expr {abs($XPressed-$x0)}] < 0.1 && [expr {abs($YPressed-$y0)}] < 0.1} { return }
+	set ok 1
+	foreach i $ConnL {
+	    if {$ok} { set ok [do_connect $x0 $y0 $i $ConnT] }
+	    update_conn $i
+	}
+	return
+   }
+   if {[string range $SelTag 0 1] == "L-"} {
+	copy_label $x0 $y0 1
+	.frm.cv delete outline
+	return
+   }
+
+   if {$SelTag == "border"} {
+	set x_move [expr [lindex [.frm.cv coords outline] 0] - $XRef - $XPressed]
+	set y_move [expr [lindex [.frm.cv coords outline] 1] - $YRef - $YPressed]
+	.frm.cv move all $x_move $y_move
+   } else {
+      if {[lindex [split $SelTag .] 0] == $CirName} {
+         if {[check_y_inside $y0] == 0} {
+            .frm.cv delete outline
+            show_mess "Ports cannot go outside the circuit area!"
+            return
+         }
+	# a port must stay at the x_border
+	set x_move 0
+      } else {
+         if {[check_area_inside] == 0} {
+            .frm.cv delete outline
+            show_mess "This part must stay inside the circuit area!"
+            return
+         }
+	set x_move [expr $x0 - $XPressed]
+      }
+	set y_move [expr $y0 - $YPressed]
+	.frm.cv move $SelTag $x_move $y_move
+	for {set i 0} {$i <= $NConn} {incr i} {
+	  if {[string first $SelTag $CONN_ARR($i)] >= 0} { update_conn $i }
+	}
+   }
+   .frm.cv delete outline
+}
+
+# procedure to delete an item from the circuit area
+#--------------------------------------------------
+proc delete_item {} {
+   global CELL_ARR CONN_ARR PORT_ARR LABEL_ARR SPLIT_ARR MERGE_ARR NCell NConn NLabel NPort NSplit NMerge SelTag Tags
+
+   if {$SelTag == ""} {return}
+
+   if {[string range $SelTag 0 1] == "C-"} {
+	set n [string range $SelTag 2 end]
+	.frm.cv delete $SelTag
+	set CONN_ARR($n) ""
+	while {$NConn >= 0 && $CONN_ARR($NConn) == ""} {incr NConn -1}
+	return
+   }
+   .frm.cv delete DEL-BBOX
+
+   if {[string range $SelTag 0 1] == "L-"} {
+	set n [string range $SelTag 2 end]
+	set name [lindex $LABEL_ARR($n) 0]
+	set port [lindex $LABEL_ARR($n) 1]
+	.frm.cv delete $SelTag
+	set LABEL_ARR($n) ""
+	if {[is_inout_driver $port] 
+            && $name ne "vss" && $name ne "vdd"} {
+	    for {set n 0} {$n <= $NLabel} {incr n} {
+		if {[lindex $LABEL_ARR($n) 0] == $name} {
+		    .frm.cv delete L-$n
+		    set LABEL_ARR($n) ""
+		}
+	    }
+	}
+	while {$NLabel >= 0 && $LABEL_ARR($NLabel) == ""} {incr NLabel -1}
+	return
+   }
+
+   if {[string range $SelTag 0 1] == "S-"} {
+	set n [string range $SelTag 2 end]
+	remove_from_labelarr $SelTag
+	remove_from_connarr  $SelTag
+	.frm.cv delete $SelTag
+	set SPLIT_ARR($n) ""
+	while {$NSplit >= 0 && $SPLIT_ARR($NSplit) == ""} {incr NSplit -1}
+	return
+   }
+
+   if {[string range $SelTag 0 1] == "M-"} {
+	set n [string range $SelTag 2 end]
+	remove_from_labelarr $SelTag
+	remove_from_connarr  $SelTag
+	.frm.cv delete $SelTag
+	set MERGE_ARR($n) ""
+	while {$NMerge >= 0 && $MERGE_ARR($NMerge) == ""} {incr NMerge -1}
+	return
+   }
+
+   set tag1 [lindex $Tags 1]
+   if {[string range $tag1 0 1] == "T-"} {
+	set n [string range $tag1 2 end]
+	remove_from_labelarr $SelTag
+	remove_from_connarr  $SelTag
+	.frm.cv delete $tag1
+	set PORT_ARR($n) ""
+	while {$NPort >= 0 && $PORT_ARR($NPort) == ""} {incr NPort -1}
+	return
+   }
+
+   set n [lindex [split $SelTag "~"] 1]
+   remove_from_labelarr $SelTag
+   remove_from_connarr  $SelTag
+   .frm.cv delete $SelTag
+   set CELL_ARR($n) ""
+   while {$NCell >= 0 && $CELL_ARR($NCell) == ""} {incr NCell -1}
+}
+
+# procedure to remove the label with the tag given
+#-------------------------------------------------
+proc remove_from_labelarr {name} {
+   global LABEL_ARR NLabel
+
+  if {[string first "." $name] < 0} {
+    append name "."
+    for {set i 0} {$i <= $NLabel} {incr i} {
+      if {[string first $name [lindex $LABEL_ARR($i) 1]] == 0} {
+	set LABEL_ARR($i) ""
+	.frm.cv delete L-$i
+      }
+    }
+  } else {
+    for {set i 0} {$i <= $NLabel} {incr i} {
+      if {[lindex $LABEL_ARR($i) 1] == $name} {
+	set LABEL_ARR($i) ""
+	.frm.cv delete L-$i
+	break
+      }
+    }
+  }
+  while {$NLabel >= 0 && $LABEL_ARR($NLabel) == ""} {incr NLabel -1}
+}
+
+# procedure to remove the connection with the tag given
+#------------------------------------------------------
+proc remove_from_connarr {name} {
+   global CONN_ARR NConn InoutCol
+
+  if {[string first "." $name] < 0} {
+    append name "."
+    for {set i 0} {$i <= $NConn} {incr i} {
+      set n [string first ">"   $CONN_ARR($i)]
+      incr n
+      set f [string first $name $CONN_ARR($i)]
+      if {$f == 0 || $f == $n} {
+	.frm.cv delete C-$i
+	if {$f == 0} {
+	    set p [split $CONN_ARR($i) ">"]
+	    if {[.frm.cv itemcget [lindex $p 0] -fill] == $InoutCol} {
+		move_to_driver $i [lindex $p 0] [lindex $p 1]
+	    }
+	}
+	set CONN_ARR($i) ""
+      }
+    }
+  } else {
+    set b 0
+    if {[.frm.cv itemcget $name -fill] == $InoutCol} { incr b }
+    for {set i 0} {$i <= $NConn} {incr i} {
+      set p [split $CONN_ARR($i) ">"]
+      if {[lindex $p 0] == $name} {
+	set CONN_ARR($i) ""
+	.frm.cv delete C-$i
+	if {$b} { move_to_driver $i $name [lindex $p 1]; break }
+      } elseif {[lindex $p 1] == $name} {
+	set CONN_ARR($i) ""
+	.frm.cv delete C-$i
+      }
+    }
+  }
+  while {$NConn >= 0 && $CONN_ARR($NConn) == ""} {incr NConn -1}
+}
+
+proc move_to_driver {i name newd} {
+   global CONN_ARR NConn
+   for {incr i} {$i <= $NConn} {incr i} {
+	set p [split $CONN_ARR($i) ">"]
+	if {[lindex $p 0] == $name} {
+	    set CONN_ARR($i) "$newd>[lindex $p 1]"
+	    update_conn $i
+	}
+   }
+}
+
+# procedure to make a component from the given circuit
+#-----------------------------------------------------
+proc mk_component {} {
+   global NPort PORT_ARR ComponentPath CirName GW
+
+   if {$CirName == ""} return
+
+   if {[file exists $ComponentPath/$CirName.cmp]} {
+      set answ [tk_messageBox -icon error -type yesno\
+	-message "Component already exists!\nMust it be overwritten?"]
+      if {$answ == "no"} { upd_comp_listbox; return }
+   }
+   set fpc [open $ComponentPath/$CirName.cmp "w"]
+   set Nin  0
+   set Nout 0
+   set in_dim  0
+   set out_dim 0
+   set comp_bb [.frm.cv bbox CirName]
+   set comp_width [expr ceil(abs([lindex $comp_bb 0] - [lindex $comp_bb 2])/$GW)]
+
+   set tmpin ""
+   set tmpout ""
+   for {set i 0} {$i <= $NPort} {incr i} {
+	if {$PORT_ARR($i) == ""} { continue }
+	set port_bb [.frm.cv bbox T-$i]
+	set port_name_width [expr ceil(abs([lindex $port_bb 0] - [lindex $port_bb 2])/$GW)]
+	if {[string trimleft [lindex $PORT_ARR($i) 0] *] == "in"} {
+	    if {$in_dim < $port_name_width} { set in_dim $port_name_width }
+	    incr Nin
+	    lappend tmpin "[lindex [.frm.cv coords T-$i] 1] $PORT_ARR($i)"
+	} else {
+	    if {$out_dim < $port_name_width} { set out_dim $port_name_width }
+	    incr Nout
+	    lappend tmpout "[lindex [.frm.cv coords T-$i] 1] $PORT_ARR($i)"
+	}
+   }
+
+   set cw [expr $in_dim+$out_dim+1]
+   if {$comp_width > $cw} { set cw $comp_width }
+
+   if {$Nout > $Nin} { set Nin $Nout }
+   puts $fpc "bbox $cw [expr 2*$Nin+2]"
+
+   foreach p [lsort $tmpin]  { puts $fpc "port [lindex $p 1] [lindex $p 2]" }
+   foreach p [lsort $tmpout] { puts $fpc "port [lindex $p 1] [lindex $p 2]" }
+
+   close $fpc
+   show_info "File '$ComponentPath/$CirName.cmp' (re)written\n"
+   upd_comp_listbox
+}
+
+# procedure to generate the double space for the circuits
+#--------------------------------------------------------
+proc do_zoom_out {} {
+   global GW
+
+   set GW [expr $GW*0.66667]
+   .frm.cv scale all 0 0 .66667 .66667
+   set xr_min [winfo width .frm.cv]
+   set yb_min [winfo height .frm.cv]
+   set xr [expr [lindex [.frm.cv cget -scrollregion] 2]*0.66667]
+   set yb [expr [lindex [.frm.cv cget -scrollregion] 3]*0.66667]
+   set xr [MAX $xr_min $xr]
+   set yb [MAX $yb_min $yb]
+   .frm.cv configure -scrollregion "0 0 $xr $yb"
+}
+
+# procedure to generate half the space for the circuits
+#------------------------------------------------------
+proc do_zoom_in {} {
+   global GW BboxId
+
+   set GW [expr $GW*1.5]
+   .frm.cv scale all 0 0 1.5 1.5
+   set bbox [.frm.cv coords $BboxId]
+   set xr_min [winfo width .frm.cv]
+   set yb_min [winfo height .frm.cv]
+   if {([lindex $bbox 2] > $xr_min) || ([lindex $bbox 3] > $yb_min)} {
+      set xr [expr [lindex [.frm.cv cget -scrollregion] 2]*1.5]
+      set yb [expr [lindex [.frm.cv cget -scrollregion] 3]*1.5]
+      .frm.cv configure -scrollregion "0 0 $xr $yb"
+   }
+}
+
+# procedure to resize the circuit under construction
+#---------------------------------------------------
+proc do_resize {} {
+   global NPort PORT_ARR NSplit NMerge SPLIT_ARR MERGE_ARR
+   global NCell CELL_ARR NConn CONN_ARR GW CirName
+#
+# get the new coordinates of the cell_outline
+#
+   set xl [lindex [.frm.cv coords outline] 0]
+   set yt [lindex [.frm.cv coords outline] 1]
+   set xr [lindex [.frm.cv coords outline] 2]
+   set yb [lindex [.frm.cv coords outline] 3]
+   set xr_old [lindex [.frm.cv coords border_line] 2]
+
+#
+# look if the minimumvalues of the new xr and yb are fullfilled;
+# otherwise use thes minimum values for xr and yb
+#
+   set xmin $xl
+   set ymin $yt
+
+   for {set i 0} {$i <= $NCell} {incr i} {
+	if {[set comp $CELL_ARR($i)] == ""} {continue}
+	set bb [.frm.cv bbox $comp]
+	if {[lindex $bb 2] > $xmin} { set xmin [lindex $bb 2] }
+	if {[lindex $bb 3] > $ymin} { set ymin [lindex $bb 3] }
+   }
+
+   for {set i 0} {$i <= $NSplit} {incr i} {
+	if {$SPLIT_ARR($i) == ""} {continue}
+	set bb [.frm.cv bbox S-$i]
+	if {[lindex $bb 2] > $xmin} { set xmin [lindex $bb 2] }
+	if {[lindex $bb 3] > $ymin} { set ymin [lindex $bb 3] }
+   }
+
+   for {set i 0} {$i <= $NMerge} {incr i} {
+	if {$MERGE_ARR($i) == ""} {continue}
+	set bb [.frm.cv bbox M-$i]
+	if {[lindex $bb 2] > $xmin} { set xmin [lindex $bb 2] }
+	if {[lindex $bb 3] > $ymin} { set ymin [lindex $bb 3] }
+   }
+
+   for {set i 0} {$i <= $NPort} {incr i} {
+	if {$PORT_ARR($i) == ""} {continue}
+	set bb [.frm.cv bbox T-$i]
+	if {[lindex $bb 3] > $ymin} { set ymin [lindex $bb 3] }
+   }
+
+   if {$xmin >= $xr} { set xr [expr $xmin + $GW] }
+   if {$ymin >= $yb} { set yb [expr $ymin + $GW] }
+   .frm.cv coords border_line $xl $yt $xr $yb
+#
+# update the grid
+#
+   .frm.cv delete grid_line
+   mk_grid  $xl $yt $xr $yb
+
+# update the header_dimensions and recentre the text
+#
+   set yb [lindex [.frm.cv coords header] 3]
+   .frm.cv coords header $xl $yt $xr $yb
+   .frm.cv coords CirName [expr ($xl+ $xr)/2.] [expr ($yt+$yb)/2]
+
+# shift the ports at the right side back to the border
+#
+   for {set i 0} {$i <= $NPort} {incr i} {
+	if {$PORT_ARR($i) == ""} {continue}
+	set pname [lindex $PORT_ARR($i) 1]
+	set xc [lindex [.frm.cv coords T-$i] 2]
+	if {[expr abs($xc - $xr_old)] < $GW} {
+	    set port "$CirName.$pname"
+	    .frm.cv move $port [expr $xr - $xc] 0
+	    for {set n 0} {$n <= $NConn} {incr n} {
+		if {[string first $port $CONN_ARR($n)] >= 0} { update_conn $n }
+	    }
+	}
+   }
+   .frm.cv delete outline
+}
+
+proc upd_status_line {mess} {
+   show_info "$mess\n"
+}
+
+set a [lindex $argv 0]
+set cellargs [split $a ":"]
+set cn [lindex $cellargs 0]
+set db [lindex $cellargs 1]
+
+if {$db != ""} { cd $db }
+set MyWd [pwd]
+set DbName "test"
+if {$cn != "" && [file exists $CircuitPath/$cn.cir]} { read_circuit $cn.cir }

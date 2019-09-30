@@ -1,0 +1,13 @@
+
+ports na210  A   B   Y
+types na210  in  in  out
+ports no210  A   B   Y
+types no210  in  in  out
+ports ex210  A   B   Y
+types ex210  in  in  out
+ports iv110  A   Y
+types iv110  in  out
+ports and2   A   B   Y
+types and2   in  in  out
+ports fadder A   B   CI  S   CO
+types fadder in  in  in  out out

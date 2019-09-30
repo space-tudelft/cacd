@@ -1,0 +1,4 @@
+rm -f mult_df_nopads.spice
+ccif -fvt mult_df_nopads.cif >& junk
+space -lzFvt -P space.def.p -a 5 mult_df_nopads
+xspice -aohivx mult_df_nopads > mult_df_nopads.spice

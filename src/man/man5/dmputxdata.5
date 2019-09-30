@@ -1,0 +1,55 @@
+.TH DMPUTXDATA 5ICD "DMI User's Manual"
+.SH NAME
+dmPutXData - put next extraction status entry
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+int dmPutXData (FILE *fp, DM_XDATA *xdata);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "FILE *fp"
+a file pointer obtained from dmOpenXData().
+.TP
+.B "DM_XDATA *xdata"
+a pointer to a \fBDM_XDATA\fP structure.
+.SH DESCRIPTION
+Function
+.B dmPutXData
+writes extraction state information of a cell into the xdata control file.
+This is a low-level function to write subsequent records.
+Use function dmPutCellStatus() to write/change a cell control data.
+.PP
+You must give a filled in \fBDM_XDATA\fP structure to the function.
+.PP
+When successful,
+the filled \fBDM_XDATA\fP structure is written.
+.PP
+The \fBDM_XDATA\fP structure has the following members:
+.PP
+.nf
+.if n .ta 4 11 29
+.if t .ta 1c 2c 6c
+	char *	\fBname\fP	cell name
+	long	\fBtimestamp\fP	last modified date
+	short	\fBcelltype\fP	type of cell
+	short	\fBinterfacetype\fP	type of interface
+	char *	\fBmasks\fP	list of masks
+.SH DIAGNOSTICS
+If \fBdmPutXData()\fP is successful,
+\fB0\fP will be returned.
+.PP
+If \fBdmPutXData()\fP fails,
+\fB-1\fP is returned after dmError() has been called.
+.if t .br
+This may happen in the following case:
+.TP 16
+.B DME_PUT
+Data write error.
+.SH SEE ALSO
+dmOpenXData(5ICD),
+dmPutCellStatus(5ICD),
+xcontrol(1ICD).

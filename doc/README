@@ -1,0 +1,19 @@
+Be sure that variable ICDPATH is set correctly!
+The ICDPATH is used to install the documents.
+The variable TEXINPUTS is used for making tex manuals.
+For example to set these variables, type:
+
+    setenv ICDPATH /home/simon/CACD_make
+
+If current directory is "doc", type:
+
+    setenv TEXINPUTS `pwd`/common:
+
+The documents are installed in:
+
+$ICDPATH/share/doc/*.pdf	(manuals)
+$ICDPATH/share/doc/opman/*.pdf	(manuals/opmanual)
+$ICDPATH/share/doc/howto/*.txt	(howto)
+$ICDPATH/share/doc/memos/*.txt	(memos)
+$ICDPATH/share/doc/notes/*.pdf	(notes)
+

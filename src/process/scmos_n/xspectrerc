@@ -1,0 +1,9 @@
+# process scmos_n
+
+include_library spectre.lib
+
+model nenh_0 nenh nmos ()
+model penh_0 penh pmos ()
+
+bulk nmos 0.0
+bulk pmos 5.0

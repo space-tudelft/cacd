@@ -1,0 +1,5 @@
+
+SUBDIRS = dev ckt cp fte hlp inp misc ni sparse
+
+COBJS = dev.a ckt.a cp.a fte.a hlp.a inp.a misc.a ni.a sparse.a
+

@@ -1,0 +1,107 @@
+%%%%%%%%%%%%%%%%%
+% Main document.
+%%%%%%%%%%%%%%%%%
+
+\documentclass[11pt]{book}
+\usepackage{cacdmanual}
+% \usepackage{alltt}
+% \usepackage{fancyhdr}
+% \usepackage{graphics}
+% \usepackage{calc}
+
+\usepackage{a4wide,times,latexsym,calc,ifthen,float}
+\usepackage{epsfig}
+\usepackage{fancyvrb}
+\usepackage[dvips,colorlinks]{hyperref}
+
+\newcommand{\io}[1]{{\ttfamily #1}}
+\newcommand{\CACDTOP}[1]{\io{\$ICDPATH/share/#1}}
+\newcommand{\manualpage}[1]{\io{icdman\ #1}}
+\input{list.sty}
+
+\def\floatpagefraction{0.9}
+\def\textfraction{0.1}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%
+% Define title page.
+%%%%%%%%%%%%%%%%%%%%%
+
+\cacdreport{ET-ENS 2006.01}
+\cacdauthors{Nick van der Meijs, Simon de Graaf}
+\cacddate{June 29, 2006}
+\cacdyears{2006}
+\cacdtitle{SPACE EXAMPLES}
+\cacdheadertitle{Space Examples}
+\cacdmaketitle
+
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%
+% Define Remainder.
+%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Introduction}
+
+This document explains something about the space demo examples.
+Trying these demo's
+can be a good starting point to learn more about the Space System.
+
+Before you can use the demo's, you must know the space software installation path.
+When the space software is installed in your home directory, then the installation
+path (or \io{ICDPATH}) is \io{\$HOME/cacd}.
+But you can also rename 'cacd' into something else, for example 'cacd\_new'.
+The only thing you need to do, is to set your \io{PATH} environment variable to the \io{ICDPATH}.
+See also the file \io{\$ICDPATH/Installation.txt} for more information.
+Give for example the following commands to set your \io{PATH}:
+\begin{Verbatim}
+    % setenv ICDPATH $HOME/cacd
+    % setenv PATH $ICDPATH/bin:$PATH
+\end{Verbatim}
+Go now to the demo directory, for example type:
+\begin{Verbatim}
+    % cd $ICDPATH/share/demo
+    % ls
+    attenua  invert      ny9t    README    sub3term   switchbox
+    crand    multiplier  poly5   sram      suboscil
+\end{Verbatim}
+Each demo contains a \io{README} file, which explains what you must do.
+When you don't have a private software installation or don't have write permission,
+you must copy the demo files to a private directory to do the demo.
+For example:
+\begin{Verbatim}
+    % mkdir mydemo ; cd mydemo
+    % cp $ICDPATH/share/demo/attenua/* .
+    % cat README
+\end{Verbatim}
+When you don't want to type the space commands yourself,
+you can use a shell script to do it for you.
+In that case, type:
+\begin{Verbatim}
+    % ./script.sh
+ or
+    % sh script.sh
+\end{Verbatim}
+Read the following chapters, to know more about the demo examples (if included).
+We wish you success.
+We hope that you appreciate our software and want to use it.
+If you have any questions or comments, they are welcome.
+\begin{Verbatim}
+    The SPACE team.
+\end{Verbatim}
+
+\include{attenua/demo}
+\include{crand/demo}
+\include{invert/demo}
+\include{multiplier/demo}
+\include{ny9t/demo}
+\include{poly5/demo}
+\include{sram/demo}
+\include{sub3term/demo}
+\include{suboscil/demo}
+\include{switchbox/demo}
+
+% \appendix
+
+\end{document}

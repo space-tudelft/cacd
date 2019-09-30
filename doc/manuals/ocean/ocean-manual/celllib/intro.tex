@@ -1,0 +1,50 @@
+\section{De OP cellenbibliotheek}
+
+\subsection{Inleiding}
+
+In dit hoofdstuk zal een korte beschrijving gegeven worden van de bibliotheekcellen die beschikbaar zijn voor het OP.
+De beschrijving bestaat voor elke cel uit:
+\begin{itemize}
+\item
+Functie
+\item
+Terminal aansluitingen
+\item
+IEC symbool
+\item
+Waarheidstabel
+\item
+Timing parameters
+\item
+Equivalent chip oppervlak
+\item
+Fanout
+\end{itemize}
+
+Er zijn vier soorten timing parameters:
+\begin{tabbing}
+xxxxxxxxxxxxxxxxxx\=\kill
+$T_{PLH}$ en $T_{PHL}$\> De vertragingstijd van de cel bij eenheidsbelasting (0.12 pF)\\
+\\
+${\Delta}T_{PLH}$ en ${\Delta}T_{PHL}$\> De vertragings-co\"effici\"ent bij capacitieve belasting\\
+\\
+$C_{in}$\> De ingangscapaciteit\\
+\\
+$T_{su}$ en $T_{hold}$\> Setup- en hold-tijden van de flipflops
+\end{tabbing}
+De vertragings-tijden en -co\"effici\"enten worden afzonderlijk gedefinieerd voor een opgaande (LH) en neergaande (HL) flank van het uitgangssignaal. 
+De totale vertragingstijd wordt berekend met de formule:
+\begin{description}
+\item
+$T_{\it P_{tot}} = T_{\it P} + \Delta T_{\it P}(C_{\it load}-C_{\it unit})$
+\end{description}
+waarbij $C_{load}$ de belastingscapaciteit voorstelt en $C_{unit}$ de eenheidsbelasting.\\
+Deze belastingscapaciteit is de som van de ingangscapaciteit van de aangestuurde cellen plus de capaciteit van de verbindingsdraden.
+ 
+De eenheid van chip oppervlakte is gedefinieerd als het kleinst mogelijke stukje van het fishbone image en bestaat uit \'e\'en nmos en \'e\'en pmos transistor. De grootte hiervan is ongeveer 800 $\mu$m$^{2}$.
+
+De fanout is de belasting waarboven de totale vertragingstijd {\it afneemt} als een buffer wordt toegevoegd.\\
+
+\clearpage
+
+

@@ -1,0 +1,388 @@
+
+\section{Inwerkopdrachten}
+
+\subsection{Inleiding}
+Het doel van de inwerkopdracht is om u vertrouwd te maken met de ontwerpomgeving
+die nodig is om de groeps\-opdracht te kunnen uitvoeren.
+Per groep van 2 studenten dient 1 inwerkopdracht gemaakt te worden.
+De voorbeeld inwerkopdracht over de hotel schakelaar
+kan doorlopen worden ter voorbereiding
+van de eigenlijke inwerkopdracht.
+
+Naast de informatie in dit hoofdstuk is verdere uitleg te vinden in het 
+hoofdstuk "Ont\-werptrajekt'' en de appendices. 
+Het hoofdstuk "Ontwerptrajekt'' moet u in
+ieder geval gelezen hebben voordat u begint aan de inwerkopdrachten.
+\subsection{Het ontwerpen van een besturing}
+
+\subsubsection{Inleiding}
+
+In deze opdracht wordt aan de hand van een ontwerp van een eenvoudige besturing
+het hele ont\-werptrajekt doorlopen.
+Allereerst moet de opdracht bestudeerd worden en de specificaties, indien onvolledig,
+verder vastgesteld worden. 
+Vervolgens moet er op papier een toestandsdiagram gemaakt worden.
+D.w.z.\ er moet vastgesteld \index{toestandsdiagram}
+worden in welke verschillende toestanden de te ontwerpen schakeling kan verkeren en hoe,
+onder invloed van de stuursignalen,
+de overgangen plaatsvinden, zie~\cite{DT}.
+Uit het toestandsdiagram kan dan een \smc{vhdl}-beschrijving worden afgeleid en
+getest, zie ~\cite{DTVHDL}.
+Daarna kan deze beschrijving worden gesynthetiseerd.
+De gesynthetiseerde schakeling kan worden ingevoerd in het \smc{ocean/nelsis} systeem
+en er kan hiermee een layout worden gegenereerd.
+Na een circuit-extractie van de lay\-out
+kan ook de afgebeelde schakeling op het
+fishbone image getest worden op zijn functionele werking,
+zowel op \smc{vhdl} gate-level niveau als transistor niveau.
+In appendix \ref{intro_seq_machine} is 
+een uitgebreide beschrijving te vinden van het ontwerpen van 
+besturingen en aan welke voorwaarden zo'n besturing zou moeten voldoen.
+In appendix \ref{good_vhdl} wordt
+o.a. beschreven hoe zo'n besturing in \smc{vhdl}
+kan worden beschreven.
+Het is raadzaam deze appendices te bestuderen voordat u aan uw 
+eigen ontwerp gaat beginnen.
+
+\subsubsection{Het opstellen van een toestandsdiagram}
+\index{toestandsdiagram}
+Bestudeer de aan u toegekende opdracht.\\
+Stel een (clock-mode) toestandsdiagram op volgens het Moore-model.
+D.w.z.\ dat de uitgangssignalen niet van de ingangssignalen mogen afhangen,
+maar alleen van de toestand zelf.
+Ga hiervoor eerst na wat de ingangs- en uitgangssignalen zijn en welke toestanden kunnen optreden.
+Geef alle toestanden en signalen een functionele naam.
+Bepaal wat de uitgangssignalen zijn bij elke toestand.
+Geef de overgangen aan als functie van de stuursignalen.
+Controleer of alle mogelijke combinaties zijn weergegeven.
+
+\subsubsection{Generatie van de besturing}
+In de volgende paragraaf zal  worden besproken welke stappen er moeten
+worden genomen om uiteindelijk tot een (werkende) schakeling te komen.\\
+Het gehele ontwerp kan worden gedaan m.b.v. de \tool{GoWithTheFlow} interface.
+Achtereenvolgens dienen nu de volgende stappen hierin te worden doorlopen:
+\begin{itemize}
+\item
+Maak een \smc{vhdl}-file, die overeenkomt met de gemaakte FSM, en maak tevens
+een testbench voor de FSM.
+\item
+Compileer de gemaakte \smc{vhdl}-files
+\item
+Simuleer de testbench en kijk of de schakeling zich gedraagt zoals verwacht.
+Pas zonodig de \smc{vhdl}-beschrijving aan.
+Maak tevens de list-file(s) voor latere vergelijking met simulaties
+van de layout en testen aan de gerealiseerde schakeling.
+\item
+Synthetiseer de \smc{vhdl}-beschrijving van de schakeling.
+Deze synthese levert twee beschrijvingen:
+\begin{itemize}
+\item
+Een nieuwe \smc{vhdl}-beschrijving, bestaande uit componenten uit de
+\smc{ocean/nelsis}-bibliotheek en hun onderlinge verbindingen.\\
+Deze kunnen worden gecompileerd en dit kan via simulatie worden
+getest op een correcte werking.
+Eventueel moet de \smc{vhdl}-beschrijving worden aangepast.
+\item
+Een beschrijving van het circuit in het \smc{sls}-formaat.\\
+Deze beschrijving kan worden gebruikt als circuit invoer voor het
+\smc{ocean/nelsis} systeem. 
+\end{itemize} 
+\item
+Genereer via \tool{madonna} (placer) en \tool{trout} (router) van \tool{seadali} de layout
+van de schakeling.
+\item
+Extraheer de \smc{vhdl}-code uit de gemaakte layout en simuleer deze om
+te zien of ook de layout goed functioneert.
+\item
+Genereer referentie- en commando-files om de schakeling te kunnen testen
+op transistor niveau.
+\item
+Voer met de gegenereerde commando-file een simulatie uit op het circuit.
+\item
+Vergelijk de uitkomst van deze simulatie met de gegenereerde referentie-file.
+Er mogen geen verschillen optreden.
+\end{itemize}
+
+\clearpage
+\input{M_tutorial}
+\clearpage
+\input{M_restricties}
+\clearpage
+
+\subsection{Opdrachten ontwerp van een besturing}
+\subsubsection{De Ron Brandsteder Lights}
+
+Om t.v.\ shows wat meer aanzien te geven blijkt het noodzakelijk om regelmatig wat
+lampen op en rond het podium aan en uit te zetten, waardoor de inhoud van de show
+wat minder aandacht behoeft.
+De lampen waarom het gaat worden gedacht in een cirkel te staan. Het aantal
+lampen is een veelvoud van drie. Elke derde opeenvolgende lamp is met dezelfde
+schakelaar verbonden (zie figuur~\ref{lampen}). Hierdoor ontstaan drie groepen
+lampen. Elke groep is door een aparte schakelaar aan of uit te zetten.
+
+\begin{figure}[hb]
+\centerline{\callpsfig{lampen.eps}{width=0.4\textwidth}}
+\caption{Aansluitschema Ron Brandsteder Lights}
+\label{lampen}
+\end{figure}
+
+U krijgt de opdracht om een besturing voor deze schakelaars te ontwerpen.\\
+De besturing moet de volgende mogelijkheden hebben:
+\begin{itemize}
+\item
+Alle lampen staan uit.
+\item
+De drie groepen worden rechtsom-draaiend na elkaar aan en uit gezet.
+\item
+De drie groepen worden linksom-draaiend na elkaar aan en uit gezet.
+\item
+Alle lampen blijven in dezelfde stand staan.
+\end{itemize}
+De input van de besturing bestaat uit twee stuursignalen s0 en s1.
+De output bestaat uit drie outputsignalen L0, L1 en L2, die elk een der
+schakelaars bedient.
+\clearpage
+
+\subsubsection{De Basket-aanduiding}
+
+Joop van den Beginne heeft voor het nieuwe seizoen weer een nieuw 
+televisiespel bedacht. Bij een bepaald onderdeel moeten de deelnemers
+een bal in een basketbal-netje gooien.
+Als het lukt, gaat er een toeter af. Naast de toeter bevindt zich op 
+het bord ook een signaallamp die als het spel begint uit is, gaat
+knipperen als \'e\'en keer raak is gegooid en aan gaat als twee keer 
+raak is gegooid. De quiz-master kan met een drukknop de schakeling
+weer in de begintoestand brengen.
+
+
+%figuur bus.eps
+\begin{figure}[bth]
+\centerline{\callpsfig{bus.eps}{width=.3\textwidth}}
+\caption{Situatieschets basket}
+\end{figure}
+
+Aan de basket-rand is een lichtsluis aangebracht die een logi\-sche '1'
+afgeeft als er een bal raak geworpen wordt.\\
+U krijgt de opdracht een schakeling te ontwerpen die aan de
+gestelde eisen voldoet. Verder geldt er dat:
+\begin{itemize}
+\item
+De aangeboden klok heeft een frequentie die geschikt is om een lamp
+te laten knipperen (5 Hz).
+\item
+Het sensor- en resetsignaal duren \'e\'en klokpuls
+en zijn ontdenderd en gesynchroniseerd (met de klok).
+\item
+De toeter moet gedurende minimaal twee klokpulsen hoorbaar zijn.
+\end{itemize}
+
+\clearpage
+
+\subsubsection{De Treinbeveiliging}
+Op het trajekt Madurodam-Lutjebroek wordt een nieuw station gebouwd.
+Om een goede doorstroom van de sneltreinen te garanderen,
+wordt bij de perrons een extra spoor aangelegd. Hierdoor 
+blijft het hoofdspoor vrij voor passerende sneltreinen.\\
+
+%figuur trein.eps
+\begin{figure}[bth]
+\centerline{\callpsfig{trein.eps}{width=1\textwidth}}
+\caption{Situatieschets spoorbaan}
+\end{figure}
+
+Om ongelukken te voorkomen is ook een seinenstelsel aangebracht.
+Er zijn vier seinen geplaatst ($S_{1a}, S_{1b}, S_{2a}, S_{2b}$)
+ die worden 
+aangestuurd met twee signalen ($S_{1}\ en\ S_{2}$). Als een signaal 
+een logi\-sche '1' is, zijn de bijbehorende seinen $S_{na}\ en\ S_{nb}$
+respectievelijk geel en rood. In het andere geval zijn ze beide
+groen.\\
+Om de seinen te kunnen besturen, zijn ook drie detectoren
+($d_{1},d_{2},d_{3}$)
+aangebracht. Deze geven een logische '1' af als een trein zich in hun
+baanvak bevindt.\\
+U krijgt de opdracht een schakeling te ontwerpen die ervoor zorgt
+dat de seinen een zodanige stand krijgen dat er bij juiste handeling
+geen ongelukken kunnen gebeuren. Het ontwerp dient tevens zo te zijn 
+dat bij een tegelijk aankomen van zowel een trein op het hoofd- als
+zijspoor de trein op het hoofdspoor voorrang krijgt.\\
+Verder geldt er dat:
+\begin{itemize}
+\item
+De remweg van een trein is kleiner dan de afstand tussen $S_{na}\ en\ S_{nb}$.
+\item
+Het is niet mogelijk dat een trein twee detectoren tegelijkertijd activeert.
+\item
+De treinen rijden op dit baanvak slechts van links naar rechts.
+\end{itemize}
+
+\clearpage
+
+\subsubsection{De 'luie' Sluisdeur}
+De opdracht is de logica te ontwerpen voor twee deuren 
+die als 'anti-tochtschakeling' 
+moeten werken, net zoals de achterdeur van het elektro-gebouw. 
+De configuratie van de 2 deuren A en B is in onderstaande figuur getekend.
+
+\begin{figure}[bth]
+\centerline{\callpsfig{situatie2.eps}{width=0.8\textwidth}}
+\caption{Situatieschets sluisdeuren}
+\end{figure}
+
+Bij elke deur zijn 3 lichtstraalsensors gemonteerd om de personen te
+detecteren. Een sensor geeft een logisch '1' signaal af als de lichtstraal wordt 
+onderbroken. 
+De logica voor de deurschakeling moet aan de volgende regels voldoen:
+\begin{itemize}
+\item
+In elke situatie is er altijd {\em minimaal} \'e\'en deur gesloten.
+\item
+De deur kan niet dicht als sensor a3 (of b3) een signaal geeft. Dit
+is om nare ongelukken te voorkomen.
+\item
+Personen moeten zowel van links naar rechts als van rechts naar links
+door de deur kunnen. 
+\item
+Om slijtage aan het deurmechaniek te beperken is de schakeling 'lui',
+d.w.z.\ hij gaat niet vanzelf naar de toestand met 2 gesloten deuren terug.
+\item
+Als tegelijkertijd bij deur A en bij deur B een persoon
+aankomt krijgt de persoon bij deur A voorrang.
+\item
+Bij een reset of bij het aanzetten van de stroom moeten beide 
+deuren dicht zijn.
+\end{itemize}
+
+\clearpage
+
+\subsubsection{De Personendetector}
+
+Bij veel evenementen blijkt het gewenst om na afloop te weten hoeveel mensen er aanwezig geweest zijn. Om dit te kunnen meten is er een vrij smalle (60 cm) gang gemaakt waar maximaal \'e\'en persoon tegelijk doorheen kan. In deze gang zijn kort achter elkaar twee lichtsluizen (d1, d2) opgenomen die elk weer uit een combinatie van twee infrarood zenders en ontvangers (a, b) bestaan. Als zowel de a als b zender-ontvanger-combinatie onderbroken is, wordt er door de desbetreffende sensor een hoog signaal afgegeven. Signaal d1 wordt dus hoog als zowel d1a als d1b onderbroken zijn.\\
+De looprichting is van links naar rechts. De uitgang is een signaal dat ervoor zorgt dat een teller opgehoogd wordt.
+
+\begin{figure}[bth]
+\centerline{\callpsfig{persdetect.eps}{width=.8\textwidth}}
+\caption{Situatieschets personendetector}
+\label{persdetect}
+\end{figure}
+
+U krijgt de opdracht een besturing te maken die aan bovengestelde eisen voldoet.\\
+Overige voorwaarden:
+
+\begin{itemize}
+\item
+Een persoon die in tegengestelde richting loopt, mag niet gedetecteerd worden.
+\item
+Het is niet mogelijk om het tel-signaal op de klok-ingang van de teller aan te sluiten.
+\end{itemize}
+
+Facultatief: Maak een schakeling die tevens personen detecteert die van rechts komen en dan een count-down-signaal afgeeft.
+
+\clearpage
+\subsubsection{De Garagedeur}
+
+Om niet elke keer uit z'n auto te moeten stappen om de garagedeur open en dicht te doen, wil de heer B. Modaal een garagedeur besturing laten installeren die ervoor zorgt dat zijn garagedeur automatisch opengaat als hij aankomt en sluit als hij vertrekt.\\
+Naast de deur is daarvoor een infrarood (IR) sensor (d2) aangebracht die een "hoog'' signaal afgeeft als hij het signaal herkent dat door een zendertje in de auto uitgezonden wordt. Tevens is in de vloer van de garage een metaaldetectorlus (d3) aangebracht waarmee gedetecteerd kan worden of er een auto in de garage aanwezig is. Als laatste is er bij de deur naar de woning nog een drukknop aangebracht waarmee de garagedeur met de hand bediend kan worden.\\
+
+
+\begin{figure}[bth]
+\centerline{\callpsfig{garage.eps}{width=1\textwidth}}
+\caption{Situatieschets garage}
+\label{garage}
+\end{figure}
+
+U krijgt de opdracht een besturing te ontwerpen waarmee met de aanwezige sensoren de garagedeur bediend kan worden.\\
+Overige voorwaarden en opmerkingen:
+
+\begin{itemize}
+\item
+Als de drukknop wordt ingedrukt moet de garagedeur altijd openen of sluiten.
+\item
+Als de IR-sensor geactiveerd wordt, moet de garagedeur all\'e\'en openen of sluiten als de garage leeg is.
+\end{itemize}
+
+\clearpage
+
+\subsubsection{De Frisdrankautomaat}
+
+Ontwerp een besturing voor de afhandeling van het ingeworpen geld in
+een frisdrankautomaat.\\ 
+De frisdankautomaat kan muntjes van 20 cent en euros verwerken, maar kan niet wisselen.
+De prijs van een blikje drank is 1,20 euro.
+Een schets van het transportsysteem is gegeven in figuur \ref{geldbox}.
+
+De muntstukken worden na inworp op grootte geselecteerd. De muntjes van 20 cent komen in
+het eerste kanaal terecht en worden gedetecteerd door sensor S1. De euros
+komen in het tweede kanaal terecht en worden gedetecteerd door sensor S2. 
+De sensoren geven na detectie een hoog signaal af ter breedte van minimaal een klokpuls.
+
+Indien er 1 muntje van 20 cent en 1 euro is ingeworpen moet er een 
+puls aan een relais R2 worden afgegeven waarmee de frisdrankautomaat 
+een blikje vrijgeeft. Dit relaissignaal hoeft slechts 1 klokpuls lang te zijn.
+De resetknop zorgt ervoor dat het tot dan toe ingeworpen geld voor een nieuw
+blikje weer teruggegeven wordt. Dit wordt bewerkstelligd door een hoog signaal
+op een relais R1. Tevens moet relais R1 worden aangestuurd indien er voor een
+nieuw blikje 2 muntjes van 20 cent of 2 euros zijn ingeworpen.
+D.w.z.\ dat bij foutieve inworp al het ingeworpen geld wordt teruggegeven.
+In figuur \ref{geldbox} zijn de relais R1 en R2, die resp. het teruggeven van het geld en het vrijgeven van een blikje besturen, niet weergegeven.\\
+
+\paragraph{Facultatief:} Bedenk een uitbreiding van het systeem waarbij ook
+de inworp van 6 muntjes van 20 cent is toegestaan en/of alleen het teveel ingeworpen geld
+wordt geretourneerd. De eventueel benodigde extra uitgangssignalen kunnen niet 
+naar buiten worden uitgevoerd, maar kunnen in de simulaties wel getest worden.
+\begin{figure}[hbt]
+\centerline{\callpsfig{frisdrank.eps}{height=0.3\textheight}}
+\caption{Schets geld-inwerpsysteem frisdrankautomaat}
+\label{geldbox}
+\end{figure}
+
+\clearpage
+\subsubsection{De Telefoonschakeling}
+Een student, die nog niet zo ver is met z'n studie, heeft het volgende probleem:
+Hij deelt samen met een huisgenoot de telefoonaansluiting.
+Tot nu toe stonden de telefoons parallel aangesloten, maar ze
+vinden het vervelend dat ze
+door elkaar heen kunnen praten, wanneer ze beiden tegelijk de telefoon opnemen.
+Degene die opbelt, begrijpt er dan niets meer van.
+
+\begin{figure}[h]
+\centerline{\callpsfig{telefoon2.eps}{width=1\textwidth}}
+\caption{Schets schakeling telefoons}
+\end{figure}
+
+De studenten hebben bedacht dat ze het probleem met de bovenstaande schakeling
+kunnen verhelpen. De telefoons zijn nu beide via een relais
+aangesloten op de telefoonlijn.
+Daarnaast heeft toestel A een drukknop, waarmee doorverbonden kan worden. 
+U krijgt de opdracht om de 'black box' in te vullen met
+een schakeling, die moet voldoen aan de volgende eisen:
+
+\begin{itemize}
+\item
+Wanneer opgebeld wordt, moeten beide telefoons rinkelen.
+\item
+Wanneer \'e\'en van beiden de telefoon opneemt, wordt het andere
+toestel van de lijn afgeschakeld.
+\item
+Wanneer beiden tegelijk de telefoon opnemen, krijgt toestel~A voorrang.
+\item
+Als de drukknop wordt ingedrukt, worden beide toestellen met de
+telefoonlijn verbonden. Op deze manier kunnen de studenten de opbeller
+doorverbinden naar het andere toestel.
+\end{itemize}
+
+De input van de schakeling bestaat uit drie signalen.
+De signalen A\_bezet en B\_bezet geven een logische '1' af als de hoorn
+van het betreffende toestel niet op de haak ligt.
+Het signaal druk geeft een logische '1' af als de drukknop 
+wordt ingedrukt.
+De uitgangssignalen relais\_A en relais\_B zorgen ervoor dat de
+toestellen met de telefoonlijn worden verbonden.
+Daarnaast hebt u de beschikking over voedingssignalen en een kloksignaal
+(niet getekend in de figuur). De schakeling heeft geen apart resetsignaal.        
+\clearpage
+\cleardoublepage
+
+
+
+

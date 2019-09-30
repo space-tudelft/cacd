@@ -1,0 +1,43 @@
+		       About the cell library "bonding"
+		       ================================
+
+This library contains the bonding patterns for the fishbone chip.  It currently
+contains seven cells which which are useful for finishing the design at the
+highest level. To place the design on the final chip, these bonding patterns fit
+presisely to make a multi-project chip (in library 'chip').
+
+The bonding cells span up the area for the design. They also specify the exact
+terminal locations.
+
+The cell 'bond_leer' is used by the students to place their exercise cell in.
+They have to finish the name of the group in the upper parts.  Each 'bond_leer'
+should be isolated from its neighbours. To enforce this there are in/ins (=
+metal1 and metal2) borders around the cell. The repetition of the 'bond_leer'
+cell on the final chip should be [136,84] grid points.
+
+These subciruits can be placed in the chip. The result should be the
+following hierarchical tree:
+
+
+                  CHIP
+                  / | \
+                 /  |  \
+            sides seal CORE
+                        / \
+                       /   \
+                   image C H A N N E L S
+                         /    /  \    \
+                        /    /    \    \
+                  lefttop   /      \    righttop         (4 projects)
+                     leftbottom  RIGHTBOTTOM
+                       / \               / \
+                              bondZuidOost  design_rb
+                                              / | \
+                                             sub-circuits
+
+
+Any remarks or questions: contact
+    space system support
+	space-support-ewi@tudelft.nl
+    see also
+	www.space.tudelft.nl

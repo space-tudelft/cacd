@@ -1,0 +1,72 @@
+.TH MKROPR 1ICD "User Commands"
+.UC 4
+.SH NAME
+mkropr - make an ocean project and import the ringlib
+.SH SYNOPSIS
+.B mkropr
+project
+.SH PARAMETERS
+.TP
+.I project
+Absolute or relative path of the project to be created.
+.SH DESCRIPTION
+.I Mkropr
+is a symbolic link to the ICELLS(1ICD) script.
+The
+.I ICELLS
+script is a front-end to the real
+.I mkropr
+script.
+This script is to be sourced by the
+.I ICELLS
+script.
+It creates a NELSIS project directory for the OCEANPROCESS (default "fishbone")
+and imports the libraries "primitives", "g_digilib", "g_analib" and "ringlib" into that project.
+The libraries must first be installed with the script ICELLS(1ICD).
+.SH ENVIRONMENT VARS
+.TP
+ICDPATH
+The full path to the place where the Ocean & Nelsis tree lives.
+This environment variable must be set!
+.TP
+OCEANPROCESS
+The name of the ocean process and image to use,
+e.g. "fishbone", "gatearray" or "octagon".
+The default process is "fishbone".
+.TP
+BINLIBS
+Is set to ICDPATH/share/lib/celllibs/OCEANPROCESS.
+This variable is used by the real script and is not an enviroment variable.
+It is the path to the directory containing the binary version of the libraries.
+.TP
+SRCLIBS
+Is set to ICDPATH/share/lib/celllibs/OCEANPROCESS/src.
+This variable is used by the real script and is not an enviroment variable.
+It is the path to the directory containing the ascii version of the libraries,
+as well as the template directory.
+.SH EXAMPLES
+.nf
+% mkropr myproject
+------- creating fishbone project myproject -------
+------- importing primitives -------
+------- importing g_digilib5_99 -------
+------- importing g_analib8_00 -------
+------- importing ringlib3_05 -------
+------- copying default config files -------
+
+\&...done. Enjoy your new project "myproject" !!!
+% cd myproject
+.SH AUTHORS
+P. Groeneveld,
+P. Stravers
+.SH FILES
+.nf
+ICDPATH/share/lib/process/processlist
+SRCLIBS/mkropr         # the ocean process real mkropr script
+SRCLIBS/template/*     # place of default config files
+BINLIBS/*              # place of imported libraries
+.SH SEE ALSO
+ICELLS(1ICD),
+mkpr(1ICD),
+mkopr(1ICD),
+mkvopr(1ICD).

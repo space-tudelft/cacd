@@ -1,0 +1,47 @@
+.TH DMSCANF 5ICD "DMI User's Manual"
+.SH NAME
+dmScanf - scan formatted data from the database
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+int dmScanf (DM_STREAM *streamkey, char *format, ...);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "DM_STREAM *streamkey"
+is a pointer to a valid \fBDM_STREAM\fP as obtained
+from function dmOpenStream().
+It is the access key of a named stream
+from which the data is read.
+.TP
+.B "char *format"
+is a control string
+which contains conversion specifications
+to be used for the data that is read
+(see scanf(3S)).
+.SH DESCRIPTION
+Function
+.B dmScanf
+reads from the
+open data stream specified by \fBstreamkey\fP
+under control of the \fBformat\fP
+and stores the data items in the specified \fIpointer\fP arguments.
+.PP
+The function can be used by programmers
+who wish to define their own
+representation of data in the database
+(this data is not stored in PACKED format).
+.SH DIAGNOSTICS
+Function \fBdmScanf\fP returns the number of successfully matched and
+assigned input items;
+this number can be zero in the event of an early conflict
+between an input character and the control string.
+If the input ends before the first conflict or conversion,
+\fBEOF\fP is returned.
+.SH SEE ALSO
+dmGetDesignData(5ICD),
+dmOpenStream(5ICD),
+scanf(3S).

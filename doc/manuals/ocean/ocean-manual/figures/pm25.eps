@@ -1,0 +1,1170 @@
+%!PS-Adobe-1.0
+%%BoundingBox: 51 29 544 808
+%%Pages: 1
+%%EndComments
+%% getepslay prolog for c3tu process, fish variant.
+
+% begin inclusion of /usr/cacd/lib/epslay.pro
+%
+% Author: N.P. van der Meijs.
+%
+% This is the common part of the eps prolog for getepslay,
+% the process-specific part is still to be added.
+% This is to be done with %%Include directive of getepslay.
+
+/fillBigPaths {/bigPathFill exch def} def
+
+  true  fillBigPaths   % Goes well if poly has no holes.
+% false fillBigPaths   % Uncomment this line if poly has holes that are
+		       % plotted incorrectly. The result is that the masks
+		       % that contain such polygons are not filled
+		       % (contour only), but the layout is otherwise
+		       % plotted normally.
+
+% Assumes three pass plotting:
+% pass 1: filled mask layers
+% pass 2: contour of mask layers, and other stroked paths
+% pass 3: text, so it is on top of everyting.
+
+/EPSLayDict 140 dict def EPSLayDict begin
+/Style 40 dict def
+0 setlinewidth
+
+% The following has to do with pathLimit of (Level 1) Postscript.
+/pathCount 0 def
+/pathLimit 1000 def
+/pathLimitExceeded false def
+
+% First, some procedure definitions for defining overal appearance,
+% and setting of defaults.
+
+% [min max lambda fontname] plotFont -
+/plotFont {
+    aload pop
+    /FontName exch def
+    /LambdaFs exch def
+    /MaxFs    exch def
+    /MinFs    exch def
+    % [(FontName) FontName (LambdaFs) LambdaFs (MaxFs) MaxFs (MinFs) MinFs] ==
+    % /FontSize MinFs def % avoid use before define
+} def
+[8 8 1 /Helvetica-Bold] plotFont % default 8 point non-proportional
+
+% [factor] plotPatScale -
+/patternScale {aload pop /Bfreq exch def} def
+[1] patternScale % default
+
+% bool plotRotate
+/plotRotate {/Rotate exch def} def
+false plotRotate % default
+
+% Defaults
+/Tailwd    1 def % width of arrow tails, in points
+/Tipwd     6 def % width of arrow heads, in points
+
+/plotPass {/passnumber exch def} def
+1 plotPass
+
+% Drawing patterns.
+%
+/basketweave  [1 8 <d1e3c5885c3e1d88>] def
+/fishscale    [1 8 <3e418080e3140808>] def
+
+/p2 [2 16 <1010200840048002000100000000000010100820044002800100000000000000>]
+def
+/p4 [2 16 <18000c00040000000004000c00180030006000c0008000008000c00060003000>]
+def
+/p5 [2 16 <c071c00101e001e001e0e001e001e3c103c003c0000f1c0f1c0f1c000070c071>]
+def
+/p6 [2 16 <1000001000000200000040000008010000000000100200000000004000000001>]
+def
+/p7 [2 16 <002100210021ffe1e1e1e1e1e1ffe1ff210021002100e1ffe1e1e1e1ffe1ffe1>]
+def
+/p8 [2 16 <0000000080c0c0c160033006180c0c1806300360c1c0c08000000000cccccccc>]
+def
+/p9 [2 16 <00000000c0c0c0c00000000000c000c000000000cccccccc0000000000c000c0>]
+def
+/p13 [2 16 <00ff00ff00ff00ff00ff00ff00ff00ffff00ff00ff00ff00ff00ff00ff00ff00>]
+def
+/p15 [2 16 <ffff0202040408081010202040408080ffff4040202010100808040402020101>]
+def
+/p16 [2 16 <4040202010100808040402020101808040402020101008080404020201018080>]
+def
+/p17 [2 16 <c0c06060303018180c0c060603038181c0c06060303018180c0c060603038181>]
+def
+/p18 [2 16 <0180024004200810100820044002800180014002200410080810042002400180>]
+def
+/p19 [2 16 <8080808080808080808080808080808080808080808080808080808080808080>]
+def
+
+/lines0    [1 8 <ff000000ff000000>] def % lines 0 degrees inclined (horiz)
+/lines45   [1 8 <0102040810204080>] def % lines 45 degrees inclined (/)
+/lines90   [1 8 <1111111111111111>] def % lines 90 degrees inclined (vert)
+/lines135  [1 8 <8040201008040201>] def % lines 135 degrees inclined (\)
+/flines0   [1 8 <ffff000000000000>] def % fat lines 0 dg. inclined (horiz)
+/flines45  [1 8 <03060C183060C081>] def % fat lines 45 dg. inclined (/)
+/flines90  [1 8 <3333333333333333>] def % fat lines 90 dg. inclined (vert)
+/flines135 [1 8 <81C06030180C0603>] def % fat lines 135 dg. inclined (\)
+/cross0    [1 8 <ff01010101010101>] def % lines 0 and 90
+/cross45   [1 8 <110a040a11a040a0>] def % lines 45 and 135
+/fcross45  [1 8 <331e0c1e33e1c0e1>] def % lines 45 and 135
+/black     [1 8 <ffffffffffffffff>] def % black (or dots 100%)
+/dots50    [1 8 <aa55aa55aa55aa55>] def % dots 50%
+/dots25    [1 8 <8822882288228822>] def % dots 25%
+/dots12    [1 8 <8800220088002200>] def % dots ~12% (1 of 8)
+/dots6     [1 8 <8800000088000000>] def % dots ~ 6% (1 of 16)
+/dots3     [1 8 <8000000080000000>] def % dots ~ 3% (1 of 32)
+/dots2     [1 8 <8000000000000000>] def % dots ~ 2% (1 of 64)
+/white     [1 8 <0000000000000000>] def % white (or dots 0%)
+
+/bitison {
+    /ybit exch def /xbit exch def
+    bstring ybit bwidth mul
+    xbit 8 idiv add get
+    1 7 xbit 8 mod sub bitshift
+    and 0 ne
+} def
+
+/setpattern {
+    /bstring exch def
+    /onbits 0 def /offbits 0 def
+    freq 0 {
+      /y exch def /x exch def
+      /xindex x 1 add 2 div bpside mul cvi def
+      /yindex y 1 add 2 div bpside mul cvi def
+      xindex yindex bitison
+        {/onbits onbits 1 add def 1}
+        {/offbits offbits 1 add def 0}
+        ifelse
+    } setscreen
+    {} settransfer
+    offbits offbits onbits add div setgray
+} def
+
+% Adapted from cookbook example program.
+% x1 y1 x2 y2 Tailwd headwd headlen type arrow
+/arrow {
+    0 begin
+    /ArrowType exch def 
+    /headlength exch def
+    /halfheadthickness exch 2 div def
+    /halfthickness exch 2 div def
+    /tipy exch def /tipx exch def
+    /taily exch def /tailx exch def
+    /dx tipx tailx sub def
+    /dy tipy taily sub def
+    /arrowlength dx dx mul dy dy mul add sqrt def
+    /angle dy dx atan def
+    /base arrowlength headlength sub def
+                                                            
+    /savematrix matrix currentmatrix def
+    tailx taily translate
+    angle rotate
+
+    /Forward false def
+    /Backward false def
+    ArrowType 1 eq {/Forward  true def} if
+    ArrowType 3 eq {/Forward  true def} if
+    ArrowType 2 eq {/Backward true def} if
+    ArrowType 3 eq {/Backward true def} if
+    0 0 moveto
+
+    Backward {
+        headlength halfheadthickness neg lineto
+        headlength halfthickness neg lineto
+    } { 0 halfthickness neg lineto
+    } ifelse
+
+    Forward {
+        base halfthickness neg lineto
+        base halfheadthickness neg lineto
+        arrowlength 0 lineto
+        base halfheadthickness lineto
+        base halfthickness lineto
+    } { arrowlength halfthickness neg lineto
+        arrowlength halfthickness lineto
+    } ifelse
+
+    Backward {
+        headlength halfthickness lineto
+        headlength halfheadthickness lineto
+    } { 0 halfthickness lineto
+    } ifelse
+
+    closepath savematrix setmatrix end
+} def
+/arrow load 0 16 dict put
+
+% x y dx dy text Text -
+% Shows string with (dx,dy) relative to bounding box at (x,y)
+% Dx and dy work same as in mathematica
+% On white background.
+/Text {
+    0 begin
+    /text exch def
+    /dy exch def /dx exch def
+    /Y exch def /X exch def
+    text stringwidth pop /W exch def
+    /H FontSize def
+
+    % center text
+    /Y Y FontSize 2 div sub def
+    /X X W 2 div sub def
+
+    % adjust according to dx,dy
+    /X X dx W mul 2 div sub def
+    /Y Y dy H mul 2 div sub def
+
+    gsave
+	% determine bbox of text.
+	newpath X Y moveto text true charpath pathbbox
+	/st exch def /sr exch def /sb exch def /sl exch def
+
+	% define a margin around bbox of text
+	/Margin st sb sub 0.2 mul def
+	/sb sb Margin sub def
+	/sl sl Margin sub def
+	/sr sr Margin add def
+	/st st Margin add def
+
+	% construct path corresponding to bbox
+	newpath sl sb moveto sr sb lineto sr st lineto sl st lineto
+	closepath
+
+	% make it white.
+	gsave 1 setgray fill grestore
+
+	% stroke outline
+	gsave 0 setlinewidth stroke grestore
+
+    grestore
+
+    % print text.
+    X Y moveto text show
+
+    end
+} def
+/Text load 0 20 dict put
+
+/BeginLayout {
+    /EPSLayGC save def
+    /TForm exch def % TForm ==
+
+    /bbxl TForm 4 get def
+    /bbxr TForm 6 get def
+    /bbyb TForm 5 get def
+    /bbyt TForm 7 get def
+    /Resolution TForm 8 get def
+
+    % Rotate if necessary
+    Rotate {
+        /xl TForm 7 get neg def
+        /xr TForm 5 get neg def
+        /yb TForm 4 get def
+        /yt TForm 6 get def
+
+        TForm 4 xl put
+        TForm 6 xr put
+        TForm 5 yb put
+        TForm 7 yt put
+    } if % TForm ==
+
+    /DrawWd TForm 2 get TForm 0 get sub def
+    /DrawHt TForm 3 get TForm 1 get sub def
+
+    /PicHt TForm 7 get TForm 5 get sub def
+    /PicWd TForm 6 get TForm 4 get sub def   
+
+    /WdScale DrawWd PicWd div def
+    /HtScale DrawHt PicHt div def
+
+    /ScaleFactor
+        WdScale HtScale lt {WdScale} {HtScale} ifelse def
+
+    % now move to center
+    TForm 0 get DrawWd PicWd ScaleFactor mul sub 2 div add
+    TForm 1 get DrawHt PicHt ScaleFactor mul sub 2 div add
+    translate
+
+    % Finally, perform scaling.  [(ScaleFactor) ScaleFactor] ==
+    ScaleFactor ScaleFactor scale
+
+    % but following items should not be scaled, so undo it.
+    /Tailwd Tailwd ScaleFactor div def
+    /Tipwd Tipwd ScaleFactor div def
+
+    % Compute {min,max}fontsize and target fontsize in scaled coordinates.
+    /MinFs MinFs ScaleFactor div def
+    /MaxFs MaxFs ScaleFactor div def
+    /FontSize LambdaFs Resolution mul def
+    % [MinFs MaxFs FontSize] ==
+
+    % Apply min and max, and set font
+    FontSize MinFs lt {/FontSize MinFs def} if
+    FontSize MaxFs gt {/FontSize MaxFs def} if
+    FontName findfont FontSize scalefont setfont
+
+    % set user origin
+    TForm 4 get neg TForm 5 get neg translate
+    Rotate {90 rotate} if
+} def
+
+/SetClipPath {
+    newpath
+    bbxl bbyb moveto
+    bbxr bbyb lineto
+    bbxr bbyt lineto
+    bbxl bbyt lineto
+    closepath
+    clip
+} def
+
+/SetLayer {
+    /Layer exch def
+    gsave
+    passnumber 1 eq {SetClipPath} if
+    SetStyle clear newpath
+    /pathLimitExceeded false def
+} def
+
+/EndLayer {
+    pathCount 0 gt {DrawPolygons} if
+    grestore
+} def
+
+% Start a polygon: x0 y0 P -
+/P {moveto /pathCount pathCount 1 add def} def
+
+% Continue a polygon: x y T -
+/T {lineto /pathCount pathCount 1 add def} def
+
+% Close a polygon: x y L -
+/L {
+    T closepath
+    pathCount pathLimit gt {
+	/pathLimitExceeded true def DrawPolygons
+    } if
+} def
+
+% Rectangular box: x0 y0 w h B -
+/B {
+    /dy exch def /dx exch def /yb exch def /xl exch def
+    /xr xl dx add def
+    /yt yb dy add def
+    xl yb P xr yb T xr yt T xl yt L
+} def
+
+/R {
+    /dy exch def /dx exch def /y0 exch def /x0 exch def
+    x0 y0 P dx 0 rlineto 0 dy rlineto
+    /pathCount pathCount 2 add def
+} def
+
+/X {
+    exch 0 rlineto 0 exch rlineto
+    /pathCount pathCount 2 add def
+} def
+
+/C {
+    exch 0 rlineto 0 exch rlineto
+    % [(current) currentpoint (x0) x0 (y0) y0 ] ==
+    x0 currentpoint pop sub 0 rlineto
+    closepath
+    /pathCount pathCount 4 add def
+    pathCount pathLimit gt {
+	/pathLimitExceeded true def DrawPolygons
+    } if
+} def
+
+/EndLayout {
+    EndLayer showpage
+    % EPSLayDict length =
+    EPSLayGC restore
+    end
+} def
+
+/DrawPolygons {
+    % pathLimitExceeded { [(pathLimitExceeded) pathCount Layer] == } if
+    passnumber 1 eq {
+	pathLimitExceeded false eq bigPathFill true eq or {
+	    gsave FillPolygons grestore
+	} if
+    } if
+    % Always stroke polygon boundaries, because a mask
+    % might be skipped in pass 2.
+    OutlinePolygons 
+    /pathCount 0 def
+} def
+
+/FillPolygons {FillPattern setpattern fill} def
+
+/OutlinePolygons {
+    /bwidth 1    def
+    /bpside 8    def
+    <ffffffffffffffff> setpattern
+    LineWd setlinewidth
+    0 setgray
+    stroke
+} def
+
+/SetStyle {
+    Style Layer get aload pop
+    /LineWd exch Resolution mul def % in lambda's
+    /Pfreq exch def
+    aload pop
+    /FillPattern exch def
+    /bpside exch def
+    /bwidth exch def
+    /freq 300 bpside div Pfreq div Bfreq div def
+    % [(bpside, bwidth, freq) bpside bwidth freq (FillPattern) FillPattern]==
+} def
+
+% x1 y1 x2 y2 ArrowType plotArrow
+% ArrowType has meaning as defined in dali/comment.h
+/plotArrow {
+    /ArrowType exch def
+    /y2 exch def
+    /x2 exch def
+    /y1 exch def
+    /x1 exch def
+    newpath
+    x1 y1 x2 y2 Tailwd Tipwd Tipwd 2 mul ArrowType arrow
+    fill
+} def
+
+/align false def
+%[dx dy] termTextAlignment
+/termTextAlignment {
+    aload pop
+    /ady exch def
+    /adx exch def
+    /align true def
+} def
+
+% xl xr yb yt dx dy termname plotTerminal
+/plotTerminal {
+    /name exch def
+    /dy exch def /dx exch def
+    /yt exch def /yb exch def /xr exch def /xl exch def
+    passnumber 2 eq {
+	LineWd setlinewidth
+	newpath
+	xl yb moveto xr yb lineto xr yt lineto xl yt lineto
+	closepath stroke
+	newpath xl yb moveto xr yt lineto stroke
+	newpath xr yb moveto xl yt lineto stroke
+    } if
+    passnumber 3 eq {
+	align true eq {/dx adx def /dy ady def} if
+        xl xr add 2 div yb yt add 2 div dx dy name Text
+    } if
+} def
+
+/PlotBBox {
+    passnumber 2 eq {
+	1 setlinewidth newpath
+	bbxl bbyb moveto
+	bbxr bbyb lineto
+	bbxr bbyt lineto
+	bbxl bbyt lineto
+	closepath stroke
+    } if
+} def
+
+% [ (maskname) pattern pfreq linewidth ] defineStyle -
+/defineStyle {
+    /stylearg exch def
+    Style stylearg 0 get stylearg 1 3 getinterval put
+} def
+% end inclusion of /usr/cacd/lib/epslay.pro
+
+%%Order: dp sn sp cb ce od ps in co 
+
+[5 14 15 /Helvetica-Bold] plotFont
+[-1 1] termTextAlignment
+
+%% mask   patt      pscale linewidth
+[ (dp)     white    1.0    0.1 ] defineStyle
+[ (sn)     white    1.0    0.1 ] defineStyle
+[ (sp)     white    1.0    0.1 ] defineStyle
+[ (od)     dots2    1.0    0.1 ] defineStyle
+[ (ps)     dots6    1.0    0.1 ] defineStyle
+[ (in)     dots12   1.0    0.1 ] defineStyle
+[ (co)    black    1.0    0.1 ] defineStyle
+[ (cb)     white    1.0    4.0 ] defineStyle
+[ (ce)     white    1.0    4.0 ] defineStyle
+[ (bb)     white    1.0    4.0 ] defineStyle
+[ (t_od)   p6       1.0    0.1 ] defineStyle
+[ (t_ps)   p18      1.0    0.1 ] defineStyle
+[ (t_in)   p16      1.0    0.1 ] defineStyle
+[ (t_ins)  p15      1.0    0.1 ] defineStyle
+[51 29 544 808 0 0 1344 2120 4] BeginLayout
+1 plotPass
+(sp) SetLayer
+EndLayer
+(cb) SetLayer
+EndLayer
+(ce) SetLayer
+EndLayer
+(od) SetLayer
+0 676 48 24 B
+0 1736 48 24 B
+220 360 232 24 B
+220 1420 232 24 B
+524 480 P
+508 496 T
+164 496 T
+148 480 T
+148 424 T
+164 408 T
+508 408 T
+524 424 L
+524 1540 P
+508 1556 T
+164 1556 T
+148 1540 T
+148 1484 T
+164 1468 T
+508 1468 T
+524 1484 L
+116 612 440 100 B
+116 1672 440 100 B
+624 676 96 24 B
+624 1736 96 24 B
+892 360 232 24 B
+892 1420 232 24 B
+1196 480 P
+1180 496 T
+836 496 T
+820 480 T
+820 424 T
+836 408 T
+1180 408 T
+1196 424 L
+1196 1540 P
+1180 1556 T
+836 1556 T
+820 1540 T
+820 1484 T
+836 1468 T
+1180 1468 T
+1196 1484 L
+788 612 440 100 B
+788 1672 440 100 B
+1296 676 48 24 B
+1296 1736 48 24 B
+EndLayer
+(ps) SetLayer
+0 0 20 340 B
+0 408 20 248 B
+0 720 20 680 B
+0 1468 20 248 B
+0 1780 20 340 B
+36 0 40 284 B
+76 760 -40 -40 R
+24 -64 X
+-24 -248 X
+24 -68 X
+-24 -40 C
+36 776 40 568 B
+76 1820 -40 -40 R
+24 -64 X
+-24 -248 X
+24 -68 X
+-24 -40 C
+36 1836 40 284 B
+92 0 40 284 B
+132 760 -40 -460 R
+40 40 X
+-24 380 C
+92 776 40 568 B
+132 1820 -40 -460 R
+40 40 X
+-24 380 C
+92 1836 40 284 B
+148 0 40 284 B
+188 760 P
+148 760 T
+148 720 T
+172 720 T
+172 628 T
+164 620 T
+160 616 T
+160 604 T
+124 604 T
+124 564 T
+176 564 T
+176 608 T
+188 620 L
+148 776 40 568 B
+188 1820 P
+148 1820 T
+148 1780 T
+172 1780 T
+172 1688 T
+164 1680 T
+160 1676 T
+160 1664 T
+124 1664 T
+124 1624 T
+176 1624 T
+176 1668 T
+188 1680 L
+148 1836 40 284 B
+232 604 P
+196 604 T
+192 600 T
+192 548 T
+124 548 T
+124 508 T
+208 508 T
+208 412 T
+200 404 T
+192 396 T
+188 392 T
+172 376 T
+172 340 T
+148 340 T
+148 300 T
+188 300 T
+188 368 T
+216 396 T
+224 396 T
+224 508 T
+232 508 L
+232 1664 P
+196 1664 T
+192 1660 T
+192 1608 T
+124 1608 T
+124 1568 T
+208 1568 T
+208 1472 T
+200 1464 T
+192 1456 T
+188 1452 T
+172 1436 T
+172 1400 T
+148 1400 T
+148 1360 T
+188 1360 T
+188 1428 T
+216 1456 T
+224 1456 T
+224 1568 T
+232 1568 L
+204 0 40 340 B
+204 720 40 680 B
+204 1780 40 340 B
+260 0 40 284 B
+260 776 40 568 B
+260 1836 40 284 B
+328 548 P
+248 548 T
+248 508 T
+288 508 T
+288 356 T
+284 352 T
+284 340 T
+260 340 T
+260 300 T
+300 300 T
+300 344 T
+304 348 T
+304 508 T
+328 508 L
+328 604 -36 116 R
+8 40 X
+-40 -40 X
+16 -116 X
+-28 -40 C
+328 1608 P
+248 1608 T
+248 1568 T
+288 1568 T
+288 1416 T
+284 1412 T
+284 1400 T
+260 1400 T
+260 1360 T
+300 1360 T
+300 1404 T
+304 1408 T
+304 1568 T
+328 1568 L
+328 1664 -36 116 R
+8 40 X
+-40 -40 X
+16 -116 X
+-28 -40 C
+356 336 P
+352 340 T
+320 340 T
+316 336 T
+316 0 T
+356 0 L
+356 1396 P
+352 1400 T
+320 1400 T
+316 1396 T
+316 720 T
+356 720 L
+316 1780 40 340 B
+372 0 40 284 B
+372 776 40 568 B
+372 1836 40 284 B
+424 548 P
+344 548 T
+344 508 T
+368 508 T
+368 348 T
+372 344 T
+372 300 T
+412 300 T
+412 340 T
+388 340 T
+388 352 T
+384 356 T
+384 508 T
+424 508 L
+424 604 -28 116 R
+16 40 X
+-40 -40 X
+8 -116 X
+-36 -40 C
+424 1608 P
+344 1608 T
+344 1568 T
+368 1568 T
+368 1408 T
+372 1404 T
+372 1360 T
+412 1360 T
+412 1400 T
+388 1400 T
+388 1412 T
+384 1416 T
+384 1568 T
+424 1568 L
+424 1664 -28 116 R
+16 40 X
+-40 -40 X
+8 -116 X
+-36 -40 C
+428 0 40 340 B
+428 720 40 680 B
+428 1780 40 340 B
+484 0 40 284 B
+484 776 40 568 B
+484 1836 40 284 B
+548 548 P
+480 548 T
+480 600 T
+476 604 T
+440 604 T
+440 508 T
+448 508 T
+448 396 T
+456 396 T
+484 368 T
+484 300 T
+524 300 T
+524 340 T
+500 340 T
+500 376 T
+464 412 T
+464 508 T
+548 508 L
+548 604 P
+512 604 T
+512 616 T
+500 628 T
+500 720 T
+524 720 T
+524 760 T
+484 760 T
+484 620 T
+496 608 T
+496 564 T
+548 564 L
+548 1608 P
+480 1608 T
+480 1660 T
+476 1664 T
+440 1664 T
+440 1568 T
+448 1568 T
+448 1456 T
+456 1456 T
+484 1428 T
+484 1360 T
+524 1360 T
+524 1400 T
+500 1400 T
+500 1436 T
+464 1472 T
+464 1568 T
+548 1568 L
+548 1664 P
+512 1664 T
+512 1676 T
+500 1688 T
+500 1780 T
+524 1780 T
+524 1820 T
+484 1820 T
+484 1680 T
+496 1668 T
+496 1624 T
+548 1624 L
+540 0 40 284 B
+580 760 -40 -40 R
+24 -380 X
+-24 -40 C
+540 776 40 568 B
+580 1820 -40 -40 R
+24 -380 X
+-24 -40 C
+540 1836 40 284 B
+596 0 40 284 B
+636 760 -40 -460 R
+40 40 X
+-24 68 X
+24 248 X
+-24 64 C
+596 776 40 568 B
+636 1820 -40 -460 R
+40 40 X
+-24 68 X
+24 248 X
+-24 64 C
+596 1836 40 284 B
+652 0 40 340 B
+652 408 40 248 B
+652 720 40 680 B
+652 1468 40 248 B
+652 1780 40 340 B
+708 0 40 284 B
+748 760 -40 -40 R
+24 -64 X
+-24 -248 X
+24 -68 X
+-24 -40 C
+708 776 40 568 B
+748 1820 -40 -40 R
+24 -64 X
+-24 -248 X
+24 -68 X
+-24 -40 C
+708 1836 40 284 B
+764 0 40 284 B
+804 760 -40 -460 R
+40 40 X
+-24 380 C
+764 776 40 568 B
+804 1820 -40 -460 R
+40 40 X
+-24 380 C
+764 1836 40 284 B
+820 0 40 284 B
+860 760 P
+820 760 T
+820 720 T
+844 720 T
+844 628 T
+836 620 T
+832 616 T
+832 604 T
+796 604 T
+796 564 T
+848 564 T
+848 608 T
+860 620 L
+820 776 40 568 B
+860 1820 P
+820 1820 T
+820 1780 T
+844 1780 T
+844 1688 T
+836 1680 T
+832 1676 T
+832 1664 T
+796 1664 T
+796 1624 T
+848 1624 T
+848 1668 T
+860 1680 L
+820 1836 40 284 B
+904 604 P
+868 604 T
+864 600 T
+864 548 T
+796 548 T
+796 508 T
+880 508 T
+880 412 T
+872 404 T
+864 396 T
+860 392 T
+844 376 T
+844 340 T
+820 340 T
+820 300 T
+860 300 T
+860 368 T
+888 396 T
+896 396 T
+896 508 T
+904 508 L
+904 1664 P
+868 1664 T
+864 1660 T
+864 1608 T
+796 1608 T
+796 1568 T
+880 1568 T
+880 1472 T
+872 1464 T
+864 1456 T
+860 1452 T
+844 1436 T
+844 1400 T
+820 1400 T
+820 1360 T
+860 1360 T
+860 1428 T
+888 1456 T
+896 1456 T
+896 1568 T
+904 1568 L
+876 0 40 340 B
+876 720 40 680 B
+876 1780 40 340 B
+932 0 40 284 B
+932 776 40 568 B
+932 1836 40 284 B
+1000 548 P
+920 548 T
+920 508 T
+960 508 T
+960 356 T
+956 352 T
+956 340 T
+932 340 T
+932 300 T
+972 300 T
+972 344 T
+976 348 T
+976 508 T
+1000 508 L
+1000 604 -36 116 R
+8 40 X
+-40 -40 X
+16 -116 X
+-28 -40 C
+1000 1608 P
+920 1608 T
+920 1568 T
+960 1568 T
+960 1416 T
+956 1412 T
+956 1400 T
+932 1400 T
+932 1360 T
+972 1360 T
+972 1404 T
+976 1408 T
+976 1568 T
+1000 1568 L
+1000 1664 -36 116 R
+8 40 X
+-40 -40 X
+16 -116 X
+-28 -40 C
+1028 336 P
+1024 340 T
+992 340 T
+988 336 T
+988 0 T
+1028 0 L
+1028 1396 P
+1024 1400 T
+992 1400 T
+988 1396 T
+988 720 T
+1028 720 L
+988 1780 40 340 B
+1044 0 40 284 B
+1044 776 40 568 B
+1044 1836 40 284 B
+1096 548 P
+1016 548 T
+1016 508 T
+1040 508 T
+1040 348 T
+1044 344 T
+1044 300 T
+1084 300 T
+1084 340 T
+1060 340 T
+1060 352 T
+1056 356 T
+1056 508 T
+1096 508 L
+1096 604 -28 116 R
+16 40 X
+-40 -40 X
+8 -116 X
+-36 -40 C
+1096 1608 P
+1016 1608 T
+1016 1568 T
+1040 1568 T
+1040 1408 T
+1044 1404 T
+1044 1360 T
+1084 1360 T
+1084 1400 T
+1060 1400 T
+1060 1412 T
+1056 1416 T
+1056 1568 T
+1096 1568 L
+1096 1664 -28 116 R
+16 40 X
+-40 -40 X
+8 -116 X
+-36 -40 C
+1100 0 40 340 B
+1100 720 40 680 B
+1100 1780 40 340 B
+1156 0 40 284 B
+1156 776 40 568 B
+1156 1836 40 284 B
+1220 548 P
+1152 548 T
+1152 600 T
+1148 604 T
+1112 604 T
+1112 508 T
+1120 508 T
+1120 396 T
+1128 396 T
+1156 368 T
+1156 300 T
+1196 300 T
+1196 340 T
+1172 340 T
+1172 376 T
+1136 412 T
+1136 508 T
+1220 508 L
+1220 604 P
+1184 604 T
+1184 616 T
+1172 628 T
+1172 720 T
+1196 720 T
+1196 760 T
+1156 760 T
+1156 620 T
+1168 608 T
+1168 564 T
+1220 564 L
+1220 1608 P
+1152 1608 T
+1152 1660 T
+1148 1664 T
+1112 1664 T
+1112 1568 T
+1120 1568 T
+1120 1456 T
+1128 1456 T
+1156 1428 T
+1156 1360 T
+1196 1360 T
+1196 1400 T
+1172 1400 T
+1172 1436 T
+1136 1472 T
+1136 1568 T
+1220 1568 L
+1220 1664 P
+1184 1664 T
+1184 1676 T
+1172 1688 T
+1172 1780 T
+1196 1780 T
+1196 1820 T
+1156 1820 T
+1156 1680 T
+1168 1668 T
+1168 1624 T
+1220 1624 L
+1212 0 40 284 B
+1252 760 -40 -40 R
+24 -380 X
+-24 -40 C
+1212 776 40 568 B
+1252 1820 -40 -40 R
+24 -380 X
+-24 -40 C
+1212 1836 40 284 B
+1268 0 40 284 B
+1308 760 -40 -460 R
+40 40 X
+-24 68 X
+24 248 X
+-24 64 C
+1268 776 40 568 B
+1308 1820 -40 -460 R
+40 40 X
+-24 68 X
+24 248 X
+-24 64 C
+1268 1836 40 284 B
+1324 0 20 340 B
+1324 408 20 248 B
+1324 720 20 680 B
+1324 1468 20 248 B
+1324 1780 20 340 B
+EndLayer
+(in) SetLayer
+0 356 1344 32 B
+1344 704 P
+0 704 T
+0 672 T
+64 672 T
+72 680 T
+600 680 T
+608 672 T
+736 672 T
+744 680 T
+1272 680 T
+1280 672 T
+1344 672 L
+0 1416 1344 32 B
+1344 1764 P
+0 1764 T
+0 1732 T
+64 1732 T
+72 1740 T
+600 1740 T
+608 1732 T
+736 1732 T
+744 1740 T
+1272 1740 T
+1280 1732 T
+1344 1732 L
+EndLayer
+(co) SetLayer
+0 680 40 16 B
+0 1740 40 16 B
+632 680 80 16 B
+632 1740 80 16 B
+1304 680 40 16 B
+1304 1740 40 16 B
+EndLayer
+2 plotPass
+3 plotPass
+EndLayout

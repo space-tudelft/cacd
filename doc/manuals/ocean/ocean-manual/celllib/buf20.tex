@@ -1,0 +1,52 @@
+\subsection{buf20}
+\index{buffer!buf20}
+Function: Buffer (2x-drive)
+
+Terminals: (A, Y, vss, vdd)
+
+\begin{minipage}[t]{0.4\textwidth}
+IEC-symbol:\\
+
+\callpsfig{buf20.iec.eps}{width=.8\textwidth}
+\end{minipage} \hfill
+\begin{minipage}[t]{0.4\textwidth}
+Function table:\\
+
+\begin{tabular}{|c||c|}
+\hline
+A	&Y\\
+\hline
+L	&L\\
+H	&H\\
+\hline
+\end{tabular}
+\end{minipage}
+\vspace{1cm}
+\begin{minipage}[b]{0.45\textwidth}
+Propagation and load dependent delays:\\
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Parameter               &Van            &Naar   &Typ    &Eenheid\\
+\hline
+T$_{PLH}$               &A     		&Y      &0.6    &ns\\
+T$_{PHL}$               &A    		&Y      &0.7    &ns\\
+\hline
+$\Delta$T$_{PLH}$       &A           	&Y      &1.1    &ns/pF\\
+$\Delta$T$_{PHL}$       &A           	&Y      &1.0    &ns/pF\\
+\hline
+C$_{in}$                &A	    	&vss    &0.12   &pF\\
+\hline
+\end{tabular}\\
+
+Equivalent chip area: 4\\
+
+circuit:\\
+
+\callpsfig{buf20.cir.eps}{width=.95\textwidth}
+\end{minipage} \hfill
+\begin{minipage}[b]{0.35\textwidth}
+layout:\\
+\callpsfig{buf20.lay.eps}{width=0.95\textwidth}
+\end{minipage}
+\clearpage

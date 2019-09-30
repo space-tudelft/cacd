@@ -1,0 +1,6 @@
+bbox 6 10
+port in clk
+port in res
+port in s
+port in ov
+port out lamp

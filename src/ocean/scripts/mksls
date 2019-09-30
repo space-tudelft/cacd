@@ -1,0 +1,116 @@
+#!/bin/sh
+
+usage()
+{
+cat << \EOF >&2
+
+USAGE
+   mksls [-h] [-m] [topcell]
+
+DESCRIPTION
+   Mksls searches the current project directory for *.sls and *.fun files
+   that need be recompiled. It then calls csls or cfun, whatever's
+   appropriate. If topcell is specified, mksls calls sls_exp for this
+   topcell and then executes ``sls topcell topcell.cmd''. Mksls aborts if
+   an error occurs in any of the subprocesses it spawns.
+
+OPTIONS
+   -h               Print this help form, then exit.
+   -m               Print a script on stdout that can be processed by make(1)
+                    to obtain the required recompilations, then exit.
+FILES
+   The following files provide the user of mksls with a possibility to
+   override mksls's default actions and arguments to subprocesses. None of
+   the files is obligatory.
+
+   mk.slsfiles      This file contains the names of the files that need be
+                    processed by csls. The order in which the
+                    filenames appear in mk.slsfiles is significant.
+                    Default is *.sls
+   mk.funfiles      This file contains the names of the files that need be
+                    processed by cfun. The order in which the
+                    filenames appear in mk.funfiles is significant.
+                    Default is *.fun
+   mk.topcell       Contains the name of the top level cell. Default is
+                    the cell name supplied on the command line, see the
+                    description above.
+   mk.slsargs       Contains extra args for csls. Defaults to "-s".
+   mk.funargs       Contains extra args for cfun. The default is
+                    "-s -Cg -CI$INCLUDE", where $INCLUDE is substituted
+                    with the contents of the file mk.include (see below).
+   mk.expargs       Contains the argument to sls_exp. Defaults to "-g".
+   mk.include       Contains directory names to be searched for include
+                    files. Include files must have a suffix ".h".
+                    Default is to have no include directories.
+   mk.dates         This is the directory that mksls creates to keep track
+                    of the time a file was last processed. If you remove
+                    this directory --or entries in it-- mksls assumes that
+                    the missing timestamp is the beginning of the epoch,
+                    thus forcing (re)compilation of that particular file.
+
+EOF
+}
+
+trap "echo ajuuparapluu" 2
+
+MAKE="make -f -"
+
+set geneuzel `getopt mh $*`
+if [ $? != 0 ]; then usage; exit 1; fi
+
+shift
+for i in $*
+do
+  case $i in
+   -m) MAKE=cat; shift;;
+   -h) usage; exit 0;;
+   --) shift; break;;
+  esac
+done
+
+if [ -f mk.slsfiles ]; then SLSFILES=`cat mk.slsfiles` ; else SLSFILES="`echo *.sls`" ; fi
+if [ -f mk.funfiles ]; then FUNFILES=`cat mk.funfiles` ; else FUNFILES="`echo *.fun`" ; fi
+if [ -f mk.topcell ] ; then TOPCELL=`cat mk.topcell` ; else TOPCELL="$1" ; fi
+if [ -f mk.slsargs ] ; then SLSARGS=`cat mk.slsargs` ; else SLSARGS="-s" ; fi
+if [ -f mk.funargs ] ; then FUNARGS=`cat mk.funargs` ; else FUNARGS="-s -Cg" ; fi
+if [ -f mk.expargs ] ; then EXPARGS=`cat mk.expargs` ; else EXPARGS="-g" ; fi
+if [ -f mk.include ] ; then INCLUDE=`cat mk.include` ; else INCLUDE=""; fi
+
+# check if the wildcards *.sls and *.fun matched ...:
+if [ "$SLSFILES" = "*.sls" ] ; then SLSFILES="" ; fi
+if [ "$FUNFILES" = "*.fun" ] ; then FUNFILES="" ; fi
+
+HEADERFILES=`for INCL in $INCLUDE; do echo $INCL/*.h; done`
+
+for INCL in $INCLUDE; do FUNARGS="$FUNARGS -CI$INCL"; done
+
+FUNC_MKDB="${FUNC_MKDB:-cfun} $FUNARGS"
+SLS_MKDB="${SLS_MKDB:-csls} $SLSARGS"
+SLS_EXP="${SLS_EXP:-sls_exp} $EXPARGS"
+
+# construct a Makefile and feed it into $MAKE
+DATESDIR="mk.dates"
+(if [ "$MAKE" = "cat" ] ; then
+    echo "# DO NOT EDIT !!! This file is regenerated every time you run mksls ..."
+    echo "#\n# host    `hostname`\n# project `pwd`\n# date    `date`\n# user    `whoami`\n#\n"
+ fi
+ echo "all: $DATESDIR funfiles slsfiles"
+ if [ "$TOPCELL" != "" ] ; then echo "\t$SLS_EXP $TOPCELL\n\tsls $TOPCELL $TOPCELL.cmd\n" ; fi
+ echo "\n${DATESDIR}: \n\tmkdir ${DATESDIR}\n"
+ if [ "$SLSFILES" = "" ] ; then
+    echo "#\n# No *.sls files found in the current project directory...:\n#\nslsfiles:;\n\n"
+ else
+    echo slsfiles: `for SLSFILE in $SLSFILES ; do echo "$DATESDIR/$SLSFILE"; done` "\n\n"
+    for SLSFILE in $SLSFILES ; do
+        echo "$DATESDIR/$SLSFILE: $SLSFILE "`echo $HEADERFILES`"\n\t$SLS_MKDB $SLSFILE\n\t@touch $DATESDIR/$SLSFILE\n";
+    done
+ fi
+ if [ "$FUNFILES" = "" ] ; then
+    echo "#\n# No *.fun files found in the current project directory...:\n#\nfunfiles:;"
+ else
+    echo funfiles: `for FUNFILE in $FUNFILES ; do echo "$DATESDIR/$FUNFILE"; done`"\n\n"
+    for FUNFILE in $FUNFILES ; do
+        echo "$DATESDIR/$FUNFILE: $FUNFILE "`echo $HEADERFILES`"\n\t$FUNC_MKDB $FUNFILE\n\t@touch $DATESDIR/$FUNFILE\n";
+    done
+ fi
+) | $MAKE

@@ -1,0 +1,5 @@
+dc_shell -x "set hdlin_vhdl_93 false;\
+                     define_design_lib CellsLib -path CellsLib;\
+                     analyze -format vhdl -work CellsLib {../vhdl/cells.vhd};\
+                     analyze -format vhdl -work CellsLib {../vhdl/cellslib_decl_pack.vhd};\
+                     quit"

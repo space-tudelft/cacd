@@ -1,0 +1,33 @@
+.ll 77
+.hy
+.TH SDFWRITEALL 3SDF "THE SEADIF PROGRAMMERS MANUAL"
+.SH NAME
+sdfwriteallcir, sdfwritealllay - functions for updating
+and creating a hierarchical tree of cells in a seadif database
+.SH SYNOPSIS
+ #include <sealib.h>
+
+ int sdfwriteallcir(long what, CIRCUITPTR circuit)
+ int sdfwritealllay(long what, LAYOUTPTR layout)
+
+.SH DESCRIPTION
+These functions write the attributes specified in the parameter "what" to the
+database for the specified cell and for all its children.
+If any such attribute already exists it is overwritten.
+The legal values for "what" are described in
+.I sdfread (3SDF).
+
+The functions operate by repeatedly calling sdfwrite.
+They also administrate which cells have been written,
+so that multiple instances of the same cell only
+account for a single write operation.
+.SH "WARNING"
+For their own convenience, the functions sdfwriteallcir() and sdfwritealllay()
+modify bit 15 (0x8000) of layout->flag.l and all its children.
+.SH "AUTHOR"
+Paul Stravers, Delft University of Technology.
+
+.SH "SEE ALSO"
+sdfwrite (3SDF), sealib(3SDF), sdfread(3SDF), sdfwriteall(3SDF), seadif(4SDF),
+sdfopen(3SDF), sdfclose(3SDF), cs(3SDF), sdfattachlib(3SDF), sdfexists(3SDF),
+memman(3SDF), sdfimage(4SDF).

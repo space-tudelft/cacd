@@ -1,0 +1,28 @@
+echo Reading..
+state_minimize stamina
+state_assign nova
+
+full_simplify
+extract_seq_dc
+
+sweep; eliminate -1
+simplify -m nocomp
+eliminate -1
+
+sweep; eliminate 5
+simplify -m nocomp
+resub -a
+
+fx
+resub -a; sweep
+
+eliminate -1; sweep
+full_simplify -m nocomp
+
+retime -n
+
+rlib oplib1_93.genlib
+map -s
+write_blif -n tmpFile.out
+
+

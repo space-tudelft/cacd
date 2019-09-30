@@ -1,0 +1,358 @@
+\chapter{sram Example of 3D Capacitance Extraction}
+\section{Introduction}
+\label{SRintro}
+In this tutorial, we will be studying a CMOS static RAM example.
+We will see how Space is used to compute 3D capacitances.
+See also the "Space 3D Capacitance Extraction User's Manual".
+\\[1 ex]
+This is a more serious example than the 5 parallel conductors example \io{poly5}.
+The layout looks as follows, using the layout editor \io{dali} (see \manualpage{dali}):
+
+\begin{figure}[h]
+\centerline{\epsfig{figure=sram/sram.eps, width=12cm}}
+\end{figure}
+
+\section{Files}
+This tutorial is located in the directory \CACDTOP{demo/sram}.
+Initially, it contains the following files:
+\begin{filelist}
+\item[README] A file containing information about the demo.
+\item[sram.gds] The layout of the sram design.
+\item[sram.s] The technology file for Space. See Section \ref{SRtech}.
+\item[sram.p] The parameter settings file for Space. See Section \ref{SRparam}.
+\item[sram.cmd] A command file with stimuli to simulate the circuit.
+\item[script.sh] A file containing the commands for executing all
+steps of the demo in sequence.
+\end{filelist}
+
+\section{Technology File}
+\label{SRtech}
+The technology file that we will use is the file \io{sram.s},
+of which a number of parts are listed below.
+
+\small \begin{Verbatim}[frame=single]
+listing of file sram.s
+       ...
+ 22  unit vdimension    1e-6  # um
+ 23  unit shape         1e-6  # um
+       ...
+ 27  colors :
+ 28     cpg   red
+ 29     caa   green
+ 30     cmf   blue
+ 31     cms   gold
+ 32     cca   black
+ 33     ccp   black
+ 34     cva   black
+ 35     cwn   glass
+ 36     csn   glass
+ 37     cog   glass
+ 38
+ 39  conductors :
+ 40  # name    : condition     : mask : resistivity : type
+ 41    cond_mf : cmf           : cmf  : 0.045       : m   # first metal
+ 42    cond_ms : cms           : cms  : 0.030       : m   # second metal
+ 43    cond_pg : cpg           : cpg  : 40          : m   # poly interc.
+ 44    cond_pa : caa !cpg !csn : caa  : 70          : p   # p+ active area
+ 45    cond_na : caa !cpg  csn : caa  : 50          : n   # n+ active area
+ 46
+ 47  fets :
+ 48  # name : condition    : gate d/s
+ 49    nenh : cpg caa  csn : cpg  caa     # nenh MOS
+ 50    penh : cpg caa !csn : cpg  caa     # penh MOS
+ 51
+ 52  contacts :
+ 53  # name   : condition        : lay1 lay2 : resistivity
+ 54    cont_s : cva cms cmf      : cms  cmf  :   1    # metal to metal2
+ 55    cont_p : ccp cmf cpg      : cmf  cpg  : 100    # metal to poly
+ 56    cont_a : cca cmf caa !cpg : cmf  caa  : 100    # metal to act. area
+ 57
+ 58  capacitances :
+       ...
+       ...
+ 96
+ 97  vdimensions :
+ 98     ver_caa_on_all : caa !cpg   : caa : 0.30 0.00
+ 99     ver_cpg_of_caa : cpg !caa   : cpg : 0.60 0.50
+100     ver_cpg_on_caa : cpg caa    : cpg : 0.35 0.70
+101     ver_cmf        : cmf        : cmf : 1.70 0.70
+102     ver_cms        : cms        : cms : 2.80 0.70
+103
+104  dielectrics :
+105     # Dielectric consists of 5 micron thick SiO2
+106     # (epsilon = 3.9) on a conducting plane.
+107     SiO2   3.9   0.0
+108     air    1.0   5.0
+109
+110  #EOF
+\end{Verbatim}
+\normalsize
+Please note that the masks to be used in this file have already been defined
+in the \io{maskdata} file in the process library \CACDTOP{lib/process}.
+In this example, we will only use the \io{vdimensions} of 4 masks.
+
+When we look to the file, we first see on line \io{22} an \io{unit} specification
+for the \io{vdimensions} definitions starting on line \io{97}.
+An unit of \io{1e-6} $m$ is chosen for the values.
+Thus, the values must be specified in $\mu m$.
+On line \io{23} is an unit specified for possible \io{eshapes} definitions.
+For shape definitions, see sections 3.4 and 3.5 of the "Space 3D Capacitance User's Manual".
+
+Starting on line \io{27} we find the \io{colors} specification.
+Note that this information is only used by the visualization program \io{Xspace}.
+For a picture, see section 5.2 of the User's Manual.
+When the color is \io{glass}, then the mask is invisible.
+
+Starting on line \io{39} we find the \io{conductors} definitions.
+This is an important section, because without this we can not specify
+element pins and even a vdimension.
+The conductor values are not important,
+because we don't extract resistances in this example.
+On line \io{44} and \io{45} are two different conductors specified for the \io{caa} mask.
+These are the drain/source regions, also called diffused conductors.
+These conductors have a conductor type, respectivily \io{p} and \io{n}.
+
+We skip all 2D \io{capacitances} definitions, starting on line \io{58}.
+Because, for 3D capacitance extraction, we need only the following two sections.
+First, the \io{vdimensions} definitions for building the 3D conductor mesh.
+This section specifies respectivily the bottom (against the ground plane) and the thickness
+of each conductor.
+You find, on line \io{98}, only one specification for the diffused conductors.
+And these conductors are modeled with a zero thickness (see section 3.8 of the User's Manual).
+On lines \io{99} and \io{100}, you see, that the gate conductor \io{cpg} is modeled with
+two different heights and thicknesses.
+
+Second, the \io{dielectrics} definitions specify the dielectric properties of the media
+around the conductors, respectivily the relative permitivity $\epsilon_r$ and the bottom in $\mu m$.
+Note that the thickness of the last medium (\io{air}) extends to infinity.
+
+\section{Parameter File}
+\label{SRparam}
+The parameter file \io{sram.p} is controlling the extraction, see listing below.
+
+\small \begin{Verbatim}[frame=single]
+listing of file sram.p
+        ...
+   3
+   4    BEGIN cap3d
+   5    be_mode                 0c
+   6    be_window               2.0
+   7    max_be_area             1.0
+   8    omit_gate_ds_cap        on
+   9    END cap3d
+\end{Verbatim}
+\normalsize
+In the above listing, we see a \io{cap3d} block from line \io{4} to line \io{9}.
+These parameters are only used for controlling capacitance 3D extraction.
+The \io{max\_be\_area} (in $\mu m^2$) and \io{be\_window} (width in $\mu m$) parameters
+needs always to be specified.
+On line \io{5}, you find also the \io{be\_mode} parameter.
+However, this boundary element mode is the default (see the 3D Cap. User's Manual).
+On line \io{8} you see the \io{omit\_gate\_ds\_cap} parameter.
+With this parameter, you can skip the couple capacitances between gate and drain/source regions.
+Possibly, these capacitances are already present in the used SPICE device model
+(see section 3.9 of the User's Manual).
+
+\section{Running the Extractor}
+For example, you have copied this demo files to a directory \io{exam2}:
+\small
+\begin{Verbatim}
+% cd exam2
+% cp $ICDPATH/share/demo/sram/* .
+\end{Verbatim}
+\normalsize
+The file \io{script.sh} is a batch file for running all the commands
+for this example.
+First, it changes the current working directory '.' into a project directory:
+\small
+\begin{Verbatim}
+% mkpr -p scmos_n -l 0.25 .
+\end{Verbatim}
+\normalsize
+The static RAM cell is in $0.5 \mu$ technology.
+Thus, we use a lambda value (option \io{-l}) of $0.25 \mu m$.
+For the CMOS technology, we use the \io{scmos\_n} process from the technology library.
+We use the mask names as defined in the \io{maskdata} file of the library.
+But, we are not using the default technology
+file \io{space.def.s} and parameter file \io{space.def.p} of the library.
+Thus, the local technology file \io{sram.s} needs to be compiled with \io{tecc} to the format
+(a \io{.t} file) which is used by the extractor:
+\small
+\begin{Verbatim}
+% tecc sram.s
+\end{Verbatim}
+\normalsize
+Second, the layout description is put into the project database.
+The layout is supplied in a GDS2 file, which can be converted to
+internal database format with the \io{cgi} program:
+\small
+\begin{Verbatim}
+% cgi sram.gds
+\end{Verbatim}
+\normalsize
+Now, we can extract a circuit description for the layout of the \io{sram} cell, as follows:
+\small
+\begin{Verbatim}
+% space3d -C3 -E sram.t -P sram.p sram
+\end{Verbatim}
+\normalsize
+In this case, the capacitances are calculated, using a 3D mesh method (BEM).
+The method calculates couple capacitances between the conductors and between the conductors
+and a ground plane.
+\\[1 ex]
+The extracted circuit can be inspected using the \io{xspice} program.
+We use option \io{-a} to get alpha-numeric node names.
+\small
+\begin{Verbatim}
+% xspice -a sram
+\end{Verbatim}
+\normalsize
+The output of the SPICE circuit is listed below.
+
+\small \begin{Verbatim}[frame=single]
+  1   sram
+  2
+  3   * Generated by: xspice 2.39 25-Jan-2006
+  4   * Date: 20-Jun-06 10:40:34 GMT
+  5   * Path: /users/simon/exam2
+  6   * Language: SPICE
+  7
+  8   * circuit sram pbulk nbulk word vdd b_vss t_vss c1 c2 bit notbit
+  9   m1 vdd c1 c2 pbulk penh_0 w=500n l=500n
+ 10   m2 vdd c2 c1 pbulk penh_0 w=500n l=500n
+ 11   m3 b_vss c1 c2 nbulk nenh_0 w=500n l=500n
+ 12   m4 t_vss c2 c1 nbulk nenh_0 w=500n l=500n
+ 13   m5 notbit word c2 nbulk nenh_0 w=500n l=500n
+ 14   m6 bit word c1 nbulk nenh_0 w=500n l=500n
+ 15   c1 b_vss word 114.8418e-18
+ 16   c2 b_vss vdd 43.84559e-18
+ 17   c3 b_vss c2 74.079e-18
+ 18   c4 b_vss c1 212.2091e-18
+ 19   c5 b_vss notbit 610.2115e-18
+ 20   c6 b_vss GND 1.80899f
+ 21   c7 notbit bit 107.3522e-18
+ 22   c8 notbit word 115.7189e-18
+ 23   c9 notbit vdd 6.609528e-18
+ 24   c10 notbit c2 360.549e-18
+ 25   c11 notbit c1 66.39728e-18
+ 26   c12 notbit GND 2.597814f
+ 27   c13 t_vss word 114.8457e-18
+ 28   c14 t_vss vdd 43.82952e-18
+ 29   c15 t_vss bit 610.3344e-18
+ 30   c16 t_vss c2 212.2316e-18
+ 31   c17 t_vss c1 73.78773e-18
+ 32   c18 t_vss GND 1.808788f
+ 33   c19 word bit 115.8338e-18
+ 34   c20 word c2 113.7943e-18
+ 35   c21 word c1 111.6566e-18
+ 36   c22 word GND 344.449e-18
+ 37   c23 vdd bit 6.60235e-18
+ 38   c24 vdd c2 56.77325e-18
+ 39   c25 vdd c1 58.65703e-18
+ 40   c26 vdd GND 9.5875f
+ 41   c27 bit c1 360.2213e-18
+ 42   c28 bit c2 67.05254e-18
+ 43   c29 bit GND 2.597536f
+ 44   c30 c2 c1 998.1198e-18
+ 45   c31 c2 GND 5.426256f
+ 46   c32 c1 GND 5.425883f
+ 47   * end sram
+ 48
+ 49   .model penh_0 pmos(level=2 ld=0 tox=25n nsub=50e15 vto=-1.1 uo=200 uexp=100m
+ 50   + ucrit=10k delta=200m xj=500n vmax=50k neff=1 rsh=0 nfs=0 js=10u cj=500u
+ 51   + cjsw=600p mj=500m mjsw=300m pb=800m cgdo=300p cgso=300p)
+ 52   .model nenh_0 nmos(level=2 ld=0 tox=25n nsub=20e15 vto=700m uo=600 uexp=100m
+ 53   + ucrit=10k delta=200m xj=500n vmax=50k neff=1 rsh=0 nfs=0 js=2u cj=100u
+ 54   + cjsw=300p mj=500m mjsw=300m pb=800m cgdo=300p cgso=300p)
+ 55
+ 56
+ 57   vpbulk pbulk 0 5
+ 58   rpbulk pbulk 0 100meg
+ 59
+ 60   vnbulk nbulk 0 0
+ 61   rnbulk nbulk 0 100meg
+\end{Verbatim}
+\normalsize
+On lines \io{49} to \io{54}, you find the
+device models for \io{penh\_0} and \io{nenh\_0} fets.
+Lines \io{57} to \io{61} are automatically added,
+and are the \io{pbulk} and \io{nbulk} voltage sources and resistors.
+Below, you find a drawing of the listing of the extracted circuit.
+
+\begin{figure}[h]
+\centerline{\epsfig{figure=sram/circuit.eps, width=11cm}}
+\end{figure}
+
+Note that there are couple capacitances between almost all nodes of the circuit.
+This happens, because the chosen \io{be\_window} is $2 \mu m$ width.
+Each node has also a couple capacitance to the ground plane (node \io{GND}).
+
+\section{Running a Circuit Simulation}
+With the simulation GUI \io{simeye} you can run a SLS or SPICE circuit simulation.
+With SLS, you can choice between a logic and timing simulation.
+The timing simulation is also using the extracted couple capacitances.
+An accurate analog simulation is performed with the SPICE simulator.
+The following command file with stimuli is used for both simulators:
+
+\small \begin{Verbatim}[frame=single]
+listing of file sram.cmd
+      ...
+  3   /*
+  4   /* Command file for simulating the sram circuit with simeye/nspice.
+  5   */
+  6
+  7   print vdd t_vss b_vss word bit notbit c1 c2
+  8   plot  vdd t_vss b_vss word bit notbit c1 c2
+  9   option simperiod = 30
+ 10   option sigunit = 0.75e-10
+ 11   option outacc  = 10p
+ 12   option level = 3
+ 13
+ 14   /*  spice commands:
+ 15
+ 16   *%
+ 17   trise 0.075n
+ 18   tfall 0.075n
+ 19   tstep 0.0125n
+ 20   *%
+ 21   .options nomod
+ 22   .options limpts=601
+ 23   .options cptime=30
+ 24   *%
+ 25
+ 26   */
+ 27   set vdd = h*25
+ 28   set t_vss = l*25
+ 29   set b_vss = l*25
+ 30   set word = l*5 h*5 l*5 h*5 l*5 h
+ 31   set notbit = l*10 h*10 l*5
+ 32   set bit = h*10 l*10 h*5
+\end{Verbatim}
+\normalsize
+For a SPICE simulation, \io{simeye} is using the script \io{nspice}.
+First, the script contains commands to prepare the circuit and to translate
+the stimuli to pwl voltage sources.
+Note that these stimuli are connected between the nodes and the ground node \io{0}.
+On line \io{27} you see node \io{vdd}, the positive power supply node,
+which gets a high voltage (default $5 V$).
+On lines \io{28} and \io{29} you see the \io{vss} nodes,
+which get a low voltage of $0 V$ and are connected to the ground node.
+Second, the script tries to run the Berkeley \io{spice3} simulator.
+For more information, see \manualpage{nspice}.
+\\[1 ex]
+Below, you see the \io{simeye} Simulate Prepare Dialog.
+\begin{figure}[h]
+\centerline{\epsfig{figure=sram/simdialog.eps, width=10cm}}
+\end{figure}
+\\[1 ex]
+On the next page, you find the results of a logic SLS and analog SPICE simulation.
+\newpage
+Below, you see the result of a logic SLS simulation.
+\begin{figure}[h]
+\centerline{\epsfig{figure=sram/simeye1.eps, height=9cm}}
+\end{figure}
+
+Below, you see the result of a analog SPICE simulation.
+\begin{figure}[h]
+\centerline{\epsfig{figure=sram/simeye2.eps, height=9cm}}
+\end{figure}

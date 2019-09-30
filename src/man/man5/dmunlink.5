@@ -1,0 +1,47 @@
+.TH DMUNLINK 5ICD "DMI User's Manual"
+.SH NAME
+dmUnlink - unlink secondary data stream
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+int dmUnlink (DM_CELL *cellkey, char *stream);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "DM_CELL *cellkey"
+is a pointer to a valid \fBDM_CELL\fP as obtained from
+function dmCheckOut().
+.TP
+.B "char *stream"
+names the stream which must be unlinked.
+.SH DESCRIPTION
+Function
+.B dmUnlink
+removes the named \fBstream\fP
+from the cell with the given access \fBcellkey\fP.
+The absolute path for the stream is obtained from the cellkey.
+.PP
+The dmUnlink function is intended only for secondary data streams.
+The primary data streams are automatically removed when a cell is removed.
+.SH DIAGNOSTICS
+If properly executed, dmUnlink() will return \fB0\fP.
+If dmUnlink() fails \fB-1\fP will be returned.
+The external variable
+.B dmerrno
+will be set to indicate the error.
+.PP
+This may happen in the following cases:
+.TP 14
+.B DME_BADKEY
+The cellkey is not valid.
+A call to function dmError() will be done.
+.TP
+.B DME_SYS
+The stream of the cell does not exist or cannot be removed.
+Note that function dmError() is not called.
+.SH SEE ALSO
+unlink(2),
+dmCheckOut(5ICD).

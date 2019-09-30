@@ -1,0 +1,39 @@
+.TH CGA2GDS 1ICD "User Commands"
+.UC 4
+.SH NAME
+cga2gds - convert ASCII file into GDS II file
+.SH SYNOPSIS
+.B cga2gds
+cga-file
+gds-file
+.SH DESCRIPTION
+.I Cga2gds
+reads a CGA formatted file (made by the
+.I cga
+program)
+and converts the ASCII GDS records back into a binary GDS II representation.
+.PP
+.I Cga2gds
+checks the correctness of the ASCII GDS records.
+.SH AUTHOR
+S. de Graaf
+.SH LIMITATIONS
+GDS layer numbers must be in the range of 0 to 255.
+.PP
+Path and boundary elements may have up to 8190 pairs of coordinates.
+.PP
+Structure names may be up to 255 characters long.
+.PP
+Space in strings is only supported in double quoted strings.
+.PP
+Strings are not checked for illegal characters.
+.PP
+Multi-reel record codes are not supported.
+.PP
+The 'short' record header format of
+.I cga
+is not supported.
+.SH SEE ALSO
+cga(1ICD),
+cgi(1ICD),
+cig(1ICD).

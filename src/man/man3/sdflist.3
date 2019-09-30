@@ -1,0 +1,36 @@
+.ll 77
+.hy
+.TH SDFLIST 3SDF "THE SEADIF PROGRAMMERS MANUAL"
+.SH NAME
+sdflistlay, sdflistcir, sdflistfun, sdflistlib - set of seadif calls that read
+all the meta-children of an object
+.SH SYNOPSIS
+ #include <sealib.h>
+
+ int sdflistlay(long what, CIRCUITPTR circuit);
+
+ int sdflistcir(long what, FUNCTIONPTR function);
+
+ int sdflistfun(long what, LIBRARYPTR library);
+
+ int sdflistlib(long what);
+
+.SH DESCRIPTION
+Sdflistlay reads all the layouts associated with a circuit.
+Sdflistcir reads all the circuits associated with a function.
+Sdflistfun reads all the functions contained in a library.
+Sdflistlib reads all the libraries known to the system.
+
+All four functions require a first argument specifying in detail what to get
+from the database.
+Refer to sdfread(3SDF) to see what values are allowed for this parameter.
+
+.SH "RETURN VALUE"
+A successful call to any of the four functions returns TRUE.
+On failure NIL is returned.
+
+.SH AUTHOR
+Paul Stravers, Delft University of Technology.
+
+.SH "SEE ALSO"
+sdfread(3SDF), sdflistall(3SDF).

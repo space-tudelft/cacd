@@ -1,0 +1,21 @@
+# process: ami-c5n
+# adapted from scmos_n process
+
+include_library spice3f3.lib
+
+model nenh_0 nenh nmos ()
+model penh_0 penh pmos ()
+
+bulk nmos 0.0
+bulk pmos 5.0
+
+#model ndif ndif d ()
+#model pdif pdif d ()
+
+#model nwell nwell d ()
+
+#ds_nmos nenh
+#ds_pmos penh
+#ds_ncap ndif
+#ds_pcap pdif
+#ds_ncap nwell

@@ -1,0 +1,269 @@
+====================================================================================
+def_color_sub_con	#S# "white", sub_def_color	@X11/rgb.c
+color_<mskname>		#S# maskdrawcolor[i], display_colors[c]	@X11/rgb.c (2x)
+
+program_file		#S# "program", programFile	@X11/robot.c
+
+cam_distance		#D#   "2.0", camDistance	@X11/draw.c
+cam_latitude		#D#  "30.0", camLatitude	@X11/draw.c
+cam_longitude		#D# "270.0", camLongitude	@X11/draw.c
+cam_parallel		#B# "off", paramCamParallel	@X11/x3d.c
+
+====================================================================================
+BEGIN disp
+show_menu		#B# "off|on", optNoMenus	@scan/sp_main.c
+save_prepass_image	#B# "off", if			@scan/sp_main.c
+layout_window		#S# NULL,  s			@scan/sp_main.c
+pair_boundary		#B# "off", goptPairBoundary	@X11/interact.c
+draw_tile		#B# "off", goptDrawTile		@X11/interact.c
+draw_edge		#B# "off", goptDrawEdge		@...
+draw_resistor		#B# "off", goptDrawResistor	
+undraw_resistor		#B# "off", goptUnDrawResistor	
+draw_out_resistor	#B# "off", goptOutResistor		
+draw_capacitor		#B# "off", goptDrawCapacitor	
+undraw_capacitor	#B# "off", goptUnDrawCapacitor	
+draw_out_capacitor	#B# "off", goptOutCapacitor	
+draw_fe_mesh		#B# "off", goptDrawTriangle	
+draw_equi_lines		#B# "off", goptDrawEquiEdge	
+be_mesh_only		#B# "off", goptOnly3DMesh		
+draw_be_mesh		#B# "off", goptDrawSpider		
+draw_green		#B# "off", goptDrawGreen		
+3_dimensional		#B# "off", gopt3D			
+draw_sub_term		#B# "off", goptDrawSubContact	
+draw_delaunay		#B# "off", goptDrawDelaunay	
+draw_sub_resistor	#B# "off", goptDrawSubResistor	
+sync			#B# "off", goptSync		
+fill_sub_term		#B# "on", fillSubContact		
+width			#I# canvas_width  (500)
+height			#I# canvas_height (375)
+END
+====================================================================================
+max_res			#D# "1e50", MIN_CONDUCTANCE	@lump/out.c
+simple_net_format	#B# "off", oceanCompatible	@lump/out.c
+net_node_sep		#S# "_", grp_node_sep		@lump/out.c
+node_pos_name		#B# "off", makeMaskXYName	@lump/out.c
+pos_name_prefix		#S# "", maskXYNamePrefix	@lump/out.c
+====================================================================================
+jun_caps		#S# "linear", val		@lump/init.c
+pos_supply		#S# NULL, names			@lump/init.c
+neg_supply		#S# NULL, names			@lump/init.c
+
+BEGIN sne
+frequency		#D# "1e9", sneOmega		@lump/init.c
+norm			#I# "0", sneNorm		@lump/init.c
+errorfunc		#I# "0", sneErrorFunc		@...
+fullgraph		#I# "0", sneFullGraph
+extra_update		#B# "off", sneExtraErrorUpdate
+tolerance		#D# "0.05", sneTolerance
+resolution		#I# "1", sneResolution
+print_elimcount		#B# "off", printElimCount
+reset_moments		#B# "off", sneResetMoments
+END
+
+BEGIN moments
+r_epi			#D# "0.0", RCtime
+max			#I# "2", maxMoments
+elmore			#B# "off", doElmore
+out_rc			#B# "off", doOutRC
+out_l			#B# "off", doOutL
+out_negc		#B# "on", else doOutNegC
+out_negr		#B# "on", doOutNegR
+print			#B# "on", printMoments
+END
+
+histogram		#B# "off",
+name_ground		#S# "GND", nameGND
+name_substrate		#S# "SUBSTR", nameSUBSTR
+elim_sub_node		#B# "off", eliminateSubstrNode
+elim_sub_term_node	#B# "off", elim_sub_con
+( elim_sub_con )
+max_delayed		#I# "500", maxDelayed
+elim_order		#I# "0", elim_order
+====================================================================================
+param_verbose		#B# "off", if			@scan/sp_main.c
+verbose			#B# "off", optVerbose		@scan/sp_main.c
+sub3d_extraction	#B# "off", optSubRes		@scan/sp_main.c
+simple_sub_extraction	#B# "off", optSimpleSubRes	@scan/sp_main.c
+progress_timer		#I# "0", optAlarmInterval	@scan/sp_main.c
+component_coordinates	#B# "off", optTorPos		@scan/sp_main.c
+backannotation		#B# "off", optBackInfo		@scan/sp_main.c
+netinformation		#B# "off", optNetInfo		@scan/sp_main.c
+heuristics		#B# "on", optNoReduc		@scan/sp_main.c
+network_reduction	#B# "on", optFineNtw		@scan/sp_main.c
+print_time		#B# "off", optTime		@scan/sp_main.c
+flat_extraction		#B# "off", optFlat		@scan/sp_main.c
+expand_connectivity	#B# "off", optPseudoHier	@scan/sp_main.c
+no_parasitics		#B# "off", if			@scan/sp_main.c
+allow_hierarchical_cap3d  #B# "off", if			@scan/sp_main.c
+allow_hierarchical_subres #B# "off", if			@scan/sp_main.c
+save_prepass_image	#B# "off", if			@scan/sp_main.c
+substrate_extension	#I# "10", sub_ext		@scan/sp_main.c
+no_labels		#B# "off", useAnnotations	@scan/sp_main.c
+hier_labels		#B# "off", useHierAnnotations	@scan/sp_main.c
+hier_terminals		#B# "off", useHierTerminals	@scan/sp_main.c
+leaf_terminals		#B# "off", useLeafTerminals	@scan/sp_main.c
+cell_pos_name		#B# "off", useCellNames		@scan/sp_main.c
+delete_bxx		#B# "on", if			@scan/sp_main.c
+prep_bin (MSDOS)	#S# path, prep_bin		@scan/sp_main.c
+hier_name_sep		#S# ".", hier_name_sep		@scan/sp_main.c
+inst_term_sep		#S# ".", inst_term_sep		@scan/sp_main.c
+trunc_name_prefix	#S# "n", trunc_name_prefix	@scan/sp_main.c
+max_name_length		#I# "0", maxname		@scan/sp_main.c
+no_split		#B# "off", no_split		@scan/scan.c
+debug_strip		#S# "", s			@scan/scan.c
+cbemdata_output		#B# "off", if			@scan/determ.c
+max_tan_slice_y		#D# "-1.0", max_tan_slice_y	@scan/getparam.c
+max_obtuse		#D# "-1.0", max_obtuse		@scan/getparam.c
+min_art_degree		#I# "-1", min_art_degree	@scan/getparam.c
+min_degree		#I# "-1", min_degree		@scan/getparam.c
+min_res			#D# "-1.0", min_res		@scan/getparam.c
+min_sep_res		#D# "-1.0", min_sep_res		@scan/getparam.c
+max_par_res		#D# "-1.0", max_par_res		@scan/getparam.c
+low_sheet_res		#D# "1.0", low_sheet_res	@scan/getparam.c
+no_neg_res		#B# "off", no_neg_res		@scan/getparam.c
+no_neg_cap		#B# "off", no_neg_cap		@scan/getparam.c
+capitalize		#B# "off", paramCapitalize	@scan/getparam.c
+min_coup_cap		#D# "-1.0", min_coup_cap	@scan/getparam.c
+frag_coup_cap		#D# "0.0", frag_coup_cap	@scan/getparam.c
+min_ground_cap		#D# "-1.0", min_ground_cap	@scan/getparam.c
+min_coup_area		#D# "-1.0", min_coup_area	@scan/getparam.c
+frag_coup_area		#D# "0.0", frag_coup_area	@scan/getparam.c
+min_ground_area		#D# "-1.0", min_ground_area	@scan/getparam.c
+lat_cap_window		#D# "0.0", physBandWidth	@scan/getparam.c
+lat_base_width		#D# "3.0", max_lat_base		@scan/getparam.c
+merge_par_bjts		#B# "off", parallelMerge	@scan/getparam.c
+lumped_bjt_models	#B# "off", lumpedModels		@scan/getparam.c
+quasi_3d_mode		#B# "off", quasi3D		@scan/getparam.c
+max_message_cnt		#I# "-1", setMaxMessageCnt	@scan/getparam.c
+duplicate_list		#B# "off", duplicate_list	@scan/input.c
+====================================================================================
+collocation_mode	#I# "0", collocationMode	@green/colloc.c
+check_collocation	#I# "0", checkCollocation	@green/colloc.c
+an_turnover		#I# "100", an_turnover		@green/colloc.c
+accelerate_levin	#B# "off", if			@green/colloc.c
+====================================================================================
+GD=greenData
+SC=spiderControl
+
+BEGIN debug
+print_green_init	#B# "off", bool_t printInit	@green/init.c
+print_green_terms	#B# "off", printGreenTerms	@green/init.c
+print_green_gterms	#B# "off", printGreenGTerms	@green/init.c
+print_cap3d_init	#B# "off", printCap3dInit	@spider/cap3d.c
+server_matrix		#B# "off", serverMatrix		@spider/cap3d.c
+print_matrix		#B# "off", SC.printMatrix	@spider/cap3d.c
+print_green		#B# "off", SC.printGreen	@spider/cap3d.c
+print_spider		#B# "off", SC.printSpider	@spider/cap3d.c
+print_spider2d		#B# "off", SC.printSpiderEdge2d	@spider/cap3d.c
+check_spider_nom	#B# "off", check_nom		@spider/cap3d.c
+END
+
+use_adptv_intgrtn	#B# "off", useAdptvIntgrtn	@green/init.c
+force_adptv_intgrtn	#B# "off", forceAdptvIntgrtn	@green/init.c
+force_mp_anaint		#B# "on", forceMpAnaInt		@green/init.c
+force_mp_exint		#B# "off", forceMpExInt		@green/init.c
+
+BEGIN cap3d
+be_window		#S# NULL, xx			@scan/sp_main.c
+omit_diff_cap		#B# "on", extractDiffusionCap3d	@scan/getparam.c
+omit_unused_subcont	#B# "on", omit_subcont		@scan/getparam.c
+
+use_mean_green_values	#B# "off", xx			@green/init.c
+merge_images		#B# "on", xx			@green/init.c
+mp_min_dist		#D# "2.0", xx			@green/init.c
+mp_max_order		#I# "2", xx			@green/init.c
+be_mode			#S# "collocation", xx		@green/init.c
+use_lowest_medium	#B# "on", GD.useLowestMedium[0]	@green/init.c
+use_old_images		#B# "off", GD.useOldImages[0]	@green/init.c
+point_green		#D# "infinity", xx		@green/init.c
+collocation_green	#D# "infinity|0", xx		@green/init.c
+asym_collocation_green	#D# "infinity", xx		@green/init.c
+max_green_terms		#I# GREEN_MAX_TERMS, xx		@green/init.c
+y_stretch		#D# "1.0", xx			@green/init.c
+green_eps		#D# "0.001", xx			@green/init.c
+col_rel_eps		#D# "0.2", xx			@green/init.c
+all_non3d_cap		#B# "off", extractNon3dAllways	@extract/gettech.c
+omit_gate_ds_cap	#B# "off", extractGateDsCap3d	@spider/cap3d.c
+omit_gate_gnd_cap	#B# "on", extractGateGndCap3d	@spider/cap3d.c
+max_be_area		#D# "-1", SC.maxFeArea		@spider/cap3d.c
+max_coarse_be_area	#D# "-1", SC.maxCoarseFeArea	@spider/cap3d.c
+edge_be_ratio		#D# "1", ratio			@spider/cap3d.c
+edge_be_split		#D# "0.5", split		@spider/cap3d.c
+edge_be_split_lw	#D# "4", maxlw			@spider/cap3d.c
+default_step_slope	#D# buf, step_slope		@spider/cap3d.c
+be_window		#S# NULL, xx			@spider/cap3d.c
+be_shape		#S# "1", FeShape		@spider/refine.c
+END
+
+
+BEGIN sub3d
+be_window		#S# NULL, xx			@scan/sp_main.c
+use_mean_green_values	#B# "off", xx			@green/init.c
+merge_images		#B# "on", xx			@green/init.c
+mp_min_dist		#D# "2.0", xx			@green/init.c
+mp_max_order		#I# "2", xx			@green/init.c
+saw_dist		#D# "infinity", d		@green/init.c
+edge_dist		#D# "0.0", d			@green/init.c
+be_mode			#S# "collocation", xx		@green/init.c
+use_lowest_medium	#B# "on", GD.useLowestMedium[1]	@green/init.c
+use_old_images		#B# "off", GD.useOldImages[1]	@green/init.c
+neumann_simulation_ratio#D# "100", d			@green/init.c
+point_green		#D# "infinity", xx		@green/init.c
+collocation_green	#D# "infinity|0", xx		@green/init.c
+asym_collocation_green	#D# "infinity", xx		@green/init.c
+max_green_terms		#I# GREEN_MAX_TERMS, xx		@green/init.c
+y_stretch		#D# "1.0", xx			@green/init.c
+green_eps		#D# "0.001", xx			@green/init.c
+col_rel_eps		#D# "0.2", xx			@green/init.c
+max_be_area		#D# "-1", SC.maxFeArea		@spider/cap3d.c
+edge_be_ratio		#D# "1", ratio			@spider/cap3d.c
+edge_be_split		#D# "0.5", split		@spider/cap3d.c
+edge_be_split_lw	#D# "4", maxlw			@spider/cap3d.c
+be_window		#S# NULL, xx			@spider/cap3d.c
+be_shape		#S# "1", FeShape		@spider/refine.c
+END
+
+use_multipoles		#B# "on", useMultiPoles		@green/init.c
+test_multipoles		#B# "off", testMultiPoles	@green/init.c
+min_divergence_term	#I# "3", divergenceTerm		@green/init.c
+multipoles_oMaxMpOrder	#I# oMaxMpOrder, oMaxMpOrder	@green/init.c
+multipoles_cMaxMpOrder	#I# cMaxMpOrder, cMaxMpOrder	@green/init.c
+test_computation (DEBUG)#B# "off", if			@green/green.c
+color_<mskname>		#S# maskdrawcolor[i], col	@scene/scene.cc
+
+BEGIN scene
+show_spider (CAP3D)	#B# "on",  if ...		@scene/scene.cc
+show_green		#B# "off", if ...		@scene/scene.cc
+show_tile		#B# "on",  if ...		@scene/scene.cc
+show_text		#B# "on",  if ...		@scene/scene.cc
+END
+
+lu			#B# "off", luFact		@schur/schur.c
+coefficient		#B# "off", coefficient		@schur/schur.c
+print_coef		#B# "off", printCoef		@schur/schur.c
+no_split		#B# "off", no_split		@makesize/rscan.c
+debug_strip		#S# "", s			@makesize/rscan.c
+sub_term_distr_<msk>	#B# "off", sep_on_res[i]	@extract/init.c (SUB_RES)
+ds_<tor_elname>		#S# NULL, if (val) ...		@extract/init.c (INT_RES & OPTEM_PRE)
+cap_assign_type		#I# "0", cap_assign_type	@extract/init.c
+equi_line_ratio		#D# "-1.0", equi_line_ratio	@extract/init.c
+equi_line_area		#B# "on", equi_line_area	@extract/init.c
+do_bipo			#B# "on|off", hasBipoElem	@extract/init.c
+term_is_netname		#B# "off", termIsLabel		@extract/init.c
+sep_sub_term		#B# "off", mergeNeighborSubContacts	@extract/init.c
+compensate_lat_part	#D# "1.0", compensate_lat_part	@extract/init.c
+lat_linear_polate	#B# "off", lat_linear_polate	@extract/init.c
+keep_nodes		#S# "", keep_nodes		@extract/gettech.c
+sheet_<vdim_elname>	#B# "off", if(1) thickness=0	@extract/gettech.c
+sheet_<vdim_mskname>	#B# "off", if(1) thickness=0	@extract/gettech.c
+core_mask		#S# "core", coreMaskName	@extract/gettech.c
+default_step_slope	#D# "-1", step_slope		@spider/cap3d.c
+no_schur		#B# "off", noSchur		@spider/cap3d.c
+no_green		#B# "off", noGreen		@spider/cap3d.c
+cbemdata_output		#B# "off", if			@spider/cap3d.c
+extract_window		#S# NULL, param			@spider/cap3d.c
+fast_green		#B# "off", fast_green		@spider/dogreen.c
+sub_res_interp_method	#I# "-1", sub_res_interp_method	@substr/subcont.cc
+omit_self_sub_res	#B# "off", omit_self_sub_res	@substr/subcont.cc
+decrease_sub_res	#B# "on", decrease_sub_res	@substr/subcont.cc
+====================================================================================

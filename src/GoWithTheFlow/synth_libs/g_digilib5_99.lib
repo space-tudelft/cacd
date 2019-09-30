@@ -1,0 +1,769 @@
+
+library (g_digilib5_99) {
+
+    date : "February 25, 2000";
+    revision : 1.0;
+
+    default_inout_pin_cap        :  1.0;
+    default_inout_pin_fall_res   :  0.0;
+    default_inout_pin_rise_res   :  0.0;
+    default_input_pin_cap        :  1.0;
+    default_intrinsic_fall       :  1.0;
+    default_intrinsic_rise       :  1.0;
+    default_output_pin_cap       :  0.0;
+    default_output_pin_fall_res  :  0.0;
+    default_output_pin_rise_res  :  0.0;
+    default_slope_fall           :  0.0;
+    default_slope_rise           :  0.0;
+
+    time_unit : "1ns";
+    voltage_unit : "1V";
+    current_unit : "1uA";
+    pulling_resistance_unit : "1kohm";
+    capacitive_load_unit (1.0,pf);
+
+
+cell (iv110) {
+  area : 2
+  pin(A) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+  pin (Y) {
+    direction : output
+    function : "A'"
+    max_fanout : 3
+    timing() {
+      intrinsic_rise : 0.35
+      intrinsic_fall : 0.4
+      rise_resistance : 1.1
+      fall_resistance : 0.8
+      related_pin : "A"
+    }
+  }
+}
+
+cell (no210) {
+  area : 3
+  pin(A) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+  pin(B) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+  pin (Y) {
+    direction : output
+    function : "(A+B)'"
+    max_fanout : 2.4
+    timing() {
+      intrinsic_rise : 0.59
+      intrinsic_fall : 0.38
+      rise_resistance : 1.8
+      fall_resistance : 0.8
+      related_pin : "A"
+    }
+    timing() {
+      intrinsic_rise : 0.59
+      intrinsic_fall : 0.4
+      rise_resistance : 1.8
+      fall_resistance : 0.8
+      related_pin : "B"
+    }
+  }
+}
+
+cell (no310) {
+  area : 4
+  pin(A) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+  pin(B) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+  pin(C) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+  pin (Y) {
+    direction : output
+    function : "(A+B+C)'"
+    max_fanout : 1.9
+    timing() {
+      intrinsic_rise : 1.1
+      intrinsic_fall : 0.47
+      rise_resistance : 2.4
+      fall_resistance : 0.9
+      related_pin : "A"
+    }
+    timing() {
+      intrinsic_rise : 1.1
+      intrinsic_fall : 0.47
+      rise_resistance : 2.4
+      fall_resistance : 0.9
+      related_pin : "B"
+    }
+    timing() {
+      intrinsic_rise : 1.1
+      intrinsic_fall : 0.41
+      rise_resistance : 2.4
+      fall_resistance : 0.9
+      related_pin : "C"
+    }
+  }
+}
+
+cell (na210) {
+  area : 3
+  pin(A) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+  pin(B) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+  pin (Y) {
+    direction : output
+    function : "(A B)'"
+    max_fanout : 2.9
+    timing() {
+      intrinsic_rise : 0.5
+      intrinsic_fall : 0.52
+      rise_resistance : 1.0
+      fall_resistance : 1.1
+      related_pin : "A"
+    }
+    timing() {
+      intrinsic_rise : 0.36
+      intrinsic_fall : 0.52
+      rise_resistance : 1.0
+      fall_resistance : 1.1
+      related_pin : "B"
+    }
+  }
+}
+
+cell (na310) {
+  area : 4
+  pin(A) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+  pin(B) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+  pin(C) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+  pin (Y) {
+    direction : output
+    function : "(A B C)'"
+    max_fanout : 2.5
+    timing() {
+      intrinsic_rise : 0.61
+      intrinsic_fall : 0.77
+      rise_resistance : 0.9
+      fall_resistance : 1.4
+      related_pin : "A"
+    }
+    timing() {
+      intrinsic_rise : 0.58
+      intrinsic_fall : 0.77
+      rise_resistance : 0.9
+      fall_resistance : 1.4
+      related_pin : "B"
+    }
+    timing() {
+      intrinsic_rise : 0.37
+      intrinsic_fall : 0.77
+      rise_resistance : 0.9
+      fall_resistance : 1.4
+      related_pin : "C"
+    }
+  }
+}
+
+cell (ex210) {
+  area : 7
+  pin(A) {
+    direction : input
+    capacitance : 0.36
+    fanout_load : 0.36
+  }
+  pin(B) {
+    direction : input
+    capacitance : 0.36
+    fanout_load : 0.36
+  }
+  pin (Y) {
+    direction : output
+    function : "A'B+B'A"
+    max_fanout : 2.4
+    timing() {
+      intrinsic_rise : 1.6
+      intrinsic_fall : 0.68
+      rise_resistance : 1.4
+      fall_resistance : 1.1
+      related_pin : "A"
+    }
+    timing() {
+      intrinsic_rise : 1.6
+      intrinsic_fall : 0.68
+      rise_resistance : 1.4
+      fall_resistance : 1.1
+      related_pin : "B"
+    }
+  }
+}
+
+cell (buf40) {
+  area : 6
+  pin(A) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+  pin (Y) {
+    direction : output
+    function : "A"
+    max_fanout : 12
+    timing() {
+      intrinsic_rise : 1.0
+      intrinsic_fall : 1.3
+      rise_resistance : 0.3
+      fall_resistance : 0.4
+      related_pin : "A"
+    }
+  }
+}
+
+cell (tbuf10) {
+  area : 7
+  pin(A) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+  pin(E) {
+    direction : input
+    capacitance : 0.24
+    fanout_load : 0.24
+  }
+  pin (Y) {
+    direction : output
+    function : "A"
+    three_state : "E'" 
+    max_fanout : 2.4
+    timing() {
+      intrinsic_rise : 0.99
+      intrinsic_fall : 0.87
+      rise_resistance : 1.8
+      fall_resistance : 1.1
+      related_pin : "A"
+    }
+    timing() {
+      timing_type : three_state_enable
+      intrinsic_rise : 0.7
+      intrinsic_fall : 0.5
+      rise_resistance : 2.0
+      fall_resistance : 1.4
+      related_pin : "E"
+    }
+    timing() {
+      timing_type : three_state_disable
+      intrinsic_rise : 0.7
+      intrinsic_fall : 0.5
+      rise_resistance : 2.0
+      fall_resistance : 1.4
+      related_pin : "E"
+    }
+  }
+}
+
+cell (tinv10) {
+  area : 5
+  pin(A) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+  pin(E) {
+    direction : input
+    capacitance : 0.24
+    fanout_load : 0.24
+  }
+  pin (Y) {
+    direction : output
+    function : "A'"
+    three_state : "E'" 
+    max_fanout : 2.4
+    timing() {
+      intrinsic_rise : 0.59
+      intrinsic_fall : 0.52
+      rise_resistance : 1.8
+      fall_resistance : 1.1
+      related_pin : "A"
+    }
+    timing() {
+      timing_type : three_state_enable
+      intrinsic_rise : 0.7
+      intrinsic_fall : 0.5
+      rise_resistance : 2.0
+      fall_resistance : 1.4
+      related_pin : "E"
+    }
+    timing() {
+      timing_type : three_state_disable
+      intrinsic_rise : 0.7
+      intrinsic_fall : 0.5
+      rise_resistance : 2.0
+      fall_resistance : 1.4
+      related_pin : "E"
+    }
+  }
+}
+
+cell (mu111) {
+  area : 7
+  pin(A) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+  pin(B) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+  pin(S) {
+    direction : input
+    capacitance : 0.36
+    fanout_load : 0.36
+  }
+  pin (Y) {
+    direction : output
+    function : "S'A+S B"
+    max_fanout : 3.0
+    timing() {
+      intrinsic_rise : 0.81
+      intrinsic_fall : 0.98
+      rise_resistance : 1.2
+      fall_resistance : 1.0
+      related_pin : "A"
+    }
+    timing() {
+      intrinsic_rise : 0.81
+      intrinsic_fall : 0.98
+      rise_resistance : 1.2
+      fall_resistance : 1.0
+      related_pin : "B"
+    }
+    timing() {
+      intrinsic_rise : 0.95
+      intrinsic_fall : 1.1
+      rise_resistance : 1.2
+      fall_resistance : 1.0
+      related_pin : "S"
+    }
+  }
+}
+
+cell (mu210) {
+  area : 16
+  pin(S1) {
+    direction : input
+    capacitance : 0.54
+    fanout_load : 0.54
+  }
+  pin(S2) {
+    direction : input
+    capacitance : 0.36
+    fanout_load : 0.36
+  }
+  pin(A) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+  pin(B) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+  pin(C) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+  pin(D) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+  pin (Y) {
+    direction : output
+    function : "S1'S2'A+S1 S2' B+S1'S2 C+S1 S2 D"
+    max_fanout : 3.0
+    timing() {
+      intrinsic_rise : 2.0
+      intrinsic_fall : 3.2
+      rise_resistance : 1.3
+      fall_resistance : 1.4
+      related_pin : "A"
+    }
+    timing() {
+      intrinsic_rise : 2.0
+      intrinsic_fall : 3.2
+      rise_resistance : 1.3
+      fall_resistance : 1.4
+      related_pin : "B"
+    }
+    timing() {
+      intrinsic_rise : 2.0
+      intrinsic_fall : 3.2
+      rise_resistance : 1.3
+      fall_resistance : 1.4
+      related_pin : "C"
+    }
+    timing() {
+      intrinsic_rise : 2.0
+      intrinsic_fall : 3.2
+      rise_resistance : 1.3
+      fall_resistance : 1.4
+      related_pin : "D"
+    }
+    timing() {
+      intrinsic_rise : 2.0
+      intrinsic_fall : 3.2
+      rise_resistance : 1.3
+      fall_resistance : 1.4
+      related_pin : "S1"
+    }
+    timing() {
+      intrinsic_rise : 1.7
+      intrinsic_fall : 1.3
+      rise_resistance : 1.3
+      fall_resistance : 1.4
+      related_pin : "S2"
+    }
+  }
+}
+
+cell (de211) {
+  area : 12
+  pin(A) {
+    direction : input
+    capacitance : 0.54
+    fanout_load : 0.54
+  }
+  pin(B) {
+    direction : input
+    capacitance : 0.45
+    fanout_load : 0.45
+  }
+  pin (Y0) {
+    direction : output
+    function : "A'B'"
+    max_fanout : 2.4
+    timing() {
+      intrinsic_rise : 0.51
+      intrinsic_fall : 0.38
+      rise_resistance : 1.8
+      fall_resistance : 0.8
+      related_pin : "A"
+    }
+    timing() {
+      intrinsic_rise : 0.45
+      intrinsic_fall : 0.33
+      rise_resistance : 1.8
+      fall_resistance : 0.8
+      related_pin : "B"
+    }
+  }
+  pin (Y1) {
+    direction : output
+    function : "A B'"
+    max_fanout : 2.4
+    timing() {
+      intrinsic_rise : 0.93
+      intrinsic_fall : 0.81
+      rise_resistance : 1.8
+      fall_resistance : 0.8
+      related_pin : "A"
+    }
+    timing() {
+      intrinsic_rise : 0.45
+      intrinsic_fall : 0.33
+      rise_resistance : 1.8
+      fall_resistance : 0.8
+      related_pin : "B"
+    }
+  }
+  pin (Y2) {
+    direction : output
+    function : "A'B"
+    max_fanout : 2.4
+    timing() {
+      intrinsic_rise : 0.51
+      intrinsic_fall : 0.38
+      rise_resistance : 1.8
+      fall_resistance : 0.8
+      related_pin : "A"
+    }
+    timing() {
+      intrinsic_rise : 0.87
+      intrinsic_fall : 0.76
+      rise_resistance : 1.8
+      fall_resistance : 0.8
+      related_pin : "B"
+    }
+  }
+  pin (Y3) {
+    direction : output
+    function : "A B"
+    max_fanout : 2.4
+    timing() {
+      intrinsic_rise : 0.93
+      intrinsic_fall : 0.81
+      rise_resistance : 1.8
+      fall_resistance : 0.8
+      related_pin : "A"
+    }
+    timing() {
+      intrinsic_rise : 0.87
+      intrinsic_fall : 0.76
+      rise_resistance : 1.8
+      fall_resistance : 0.8
+      related_pin : "B"
+    }
+  }
+}
+
+cell(dfn10) {
+  area : 17
+  pin(D) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+    timing() {
+      timing_type : setup_rising
+      intrinsic_rise : 1.4
+      intrinsic_fall : 1.4
+      related_pin : "CK"
+    }
+    timing() {
+      timing_type : hold_rising
+      intrinsic_rise : 0.9
+      intrinsic_fall : 0.9
+      related_pin : "CK"
+    }
+  }
+  pin(CK) {
+    direction : input
+    capacitance : 0.27
+    fanout_load : 0.27
+    min_pulse_width_high : 5.0;
+    min_pulse_width_low : 5.0;
+  }
+  ff("IQ","IQN") {
+    next_state : "D";
+    clocked_on : "CK";
+  }
+  pin(Q) {
+    direction : output;
+    max_fanout : 3.0
+    function : "IQ";
+    timing() {
+      timing_type : rising_edge;
+      intrinsic_rise : 3.2;
+      intrinsic_fall : 2.9;
+      rise_resistance : 1.1;
+      fall_resistance : 0.8;
+      related_pin : "CK";
+    }
+  }
+}
+
+cell(dfr11) {
+  area : 21
+  pin(D) {
+    direction : input
+    nextstate_type : data
+    capacitance : 0.18
+    fanout_load : 0.18
+    timing() {
+      timing_type : setup_rising
+      intrinsic_rise : 1.4
+      intrinsic_fall : 1.4
+      related_pin : "CK"
+    }
+    timing() {
+      timing_type : hold_rising
+      intrinsic_rise : 0.9
+      intrinsic_fall : 0.9
+      related_pin : "CK"
+    }
+  }
+  pin(CK) {
+    direction : input
+    capacitance : 0.27
+    fanout_load : 0.27
+    min_pulse_width_high : 5.0;
+    min_pulse_width_low : 5.0;
+  }
+  pin(R) {
+    direction : input
+    nextstate_type : clear
+    capacitance : 0.18
+    fanout_load : 0.18
+    timing() {
+      timing_type : setup_rising;
+      intrinsic_rise : 1.4;
+      intrinsic_fall : 1.4;
+      related_pin : "CK";
+    }
+    timing() {
+      timing_type : hold_rising;
+      intrinsic_rise : 0.9;
+      intrinsic_fall : 0.9;
+      related_pin : "CK";
+    }
+  }
+  ff("IQ","IQN") {
+    next_state : "D R'";
+    clocked_on : "CK";
+  }
+  pin(Q) {
+    direction : output;
+    max_fanout : 3.0
+    function : "IQ";
+    timing() {
+      timing_type : rising_edge;
+      intrinsic_rise : 3.2;
+      intrinsic_fall : 2.9;
+      rise_resistance : 1.1;
+      fall_resistance : 0.8;
+      related_pin : "CK";
+    }
+  }
+}
+
+cell(dfa11) {
+  area : 19
+  pin(D) {
+    direction : input
+    nextstate_type : data
+    capacitance : 0.18
+    fanout_load : 0.18
+    timing() {
+      timing_type : setup_rising
+      intrinsic_rise : 1.4
+      intrinsic_fall : 1.4
+      related_pin : "CK"
+    }
+    timing() {
+      timing_type : hold_rising
+      intrinsic_rise : 0.9
+      intrinsic_fall : 0.9
+      related_pin : "CK"
+    }
+  }
+  pin(CK) {
+    direction : input
+    capacitance : 0.27
+    fanout_load : 0.27
+    min_pulse_width_high : 5.0;
+    min_pulse_width_low : 5.0;
+  }
+  pin(R) {
+    direction : input
+    capacitance : 0.18
+    fanout_load : 0.18
+    min_pulse_width_high : 5.0;
+    min_pulse_width_low : 5.0;
+  }
+  ff("IQ","IQN") {
+    next_state : "D";
+    clocked_on : "CK";
+    clear : "R";
+  }
+  pin(Q) {
+    direction : output;
+    max_fanout : 3.0
+    function : "IQ";
+    timing() {
+      timing_type : rising_edge;
+      intrinsic_rise : 3.2;
+      intrinsic_fall : 2.9;
+      rise_resistance : 1.1;
+      fall_resistance : 0.8;
+      related_pin : "CK";
+    }
+    timing() {
+      timing_type : clear;
+      timing_sense : non_unate;
+      intrinsic_rise : 3.2;
+      intrinsic_fall : 2.9;
+      rise_resistance : 1.1;
+      fall_resistance : 0.8;
+      related_pin : "R";
+    }
+  }
+}
+
+operating_conditions(WCCOM) {
+    process : 1.5 ;
+    temperature : 70 ;
+    voltage : 4.75 ;
+    tree_type : "worst_case_tree" ;
+}
+operating_conditions(BCCOM) {
+    process : 0.6 ;
+    temperature : 0 ;
+    voltage : 5.25 ;
+    tree_type : "best_case_tree" ;
+}
+
+wire_load(small) {
+    resistance : 0 ;
+    capacitance : 1 ;
+    area : 0.2 ;
+    slope : 0.186 ;
+    fanout_length(1,0.39) ;
+}
+wire_load(standard) {
+    resistance : 0 ;
+    capacitance : 1.2 ;
+    area : 0.5 ;
+    slope : 0.311 ;
+    fanout_length(1,0.53) ;
+}
+
+timing_range (BEST) {
+  faster_factor : 0.95
+  slower_factor : 0.99
+}
+      
+timing_range (WORST) {
+  faster_factor : 1.00
+  slower_factor : 1.05
+}
+      
+}

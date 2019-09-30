@@ -1,0 +1,234 @@
+.TH XCONTROL 1ICD "16/06/00"
+.UC 4
+.SH NAME
+xcontrol - set and list extraction state of cells
+.SH SYNOPSIS
+.B xcontrol
+[-macro | -regular | -device | -library | -remote]
+.br
+.if n .ta 7
+.if t .ta 1.8c
+	[-strict | -free | -freemasks[:mask,..]] [-v] cell...
+.br
+.B xcontrol
+-cleanup [-v] [cell...]
+.br
+.B xcontrol
+-convert [-v]
+.br
+.B xcontrol
+-default [-v] [cell...]
+.br
+.if n .ta 9
+.if t .ta 1c
+.B xcontrol
+-list	[ct] [it] [cell... | -cl | -icl]
+.br
+.B xcontrol
+-liste	[ct] [it] [cell... | -cl | -icl | -obs | -new | -old]
+.SH OPTIONS
+.TP 12
+.B -macro
+Set the extraction state to Macro.
+.TP
+.B -regular
+Set the extraction state to Regular.
+.TP
+.B -device
+Set the extraction state to Device.
+.TP
+.B -library
+Set the extraction state to Library.
+.TP
+.B -remote
+Set the extraction state of imported cells to remote state.
+.TP
+.B -strict
+Set the interface type to Strict.
+.TP
+.B -free
+Set the interface type to Free.
+.TP
+.B -freemasks
+Set the interface type to Freemasks.
+When no masklist is specified, old masklist of entry is used.
+.TP
+.B -cleanup
+Remove (all) obsolete cell entries from xcontrol file.
+.TP
+.B -convert
+Convert format of extraction state information in the project.
+.TP
+.B -default
+Set (all) cells to the default status.
+.TP
+.B -list
+List the extraction state of the database cells.
+When option 'ct' is specified, only of that celltype.
+When option 'it' is specified, only of that interfacetype.
+.TP
+.B -liste
+List only the entries of cells in the xcontrol file.
+.TP
+.B -cl
+List only celllist (local) cells.
+.TP
+.B -icl
+List only impcelllist (imported) cells.
+.TP
+.B -obs
+List only obsolete cell entries.
+.TP
+.B -new
+List only newest cell entries.
+.TP
+.B -old
+List only oldest cell entries.
+.TP
+.B -v
+Set verbose mode.
+.SH DESCRIPTION
+The
+.I xcontrol
+program sets or reads the extraction state and interface type
+of the cells that are local or imported from another project.
+See below for a description of these settings.
+
+Note that the requested set action takes always place and touches the
+timestamp of the cell entry.
+
+When the option
+.B -list
+without a cell is specified,
+all cells in the project and their extraction state will be shown.
+
+When the option
+.B -convert
+is specified,
+the dataformat of the extraction state information of
+the cells that are present in the IC design database is converted.
+.br
+The extraction state of all cells in the project will be read, converted in the new
+format provided by dmPutCellStatus(), and the old extraction state information of each
+cell will be removed.
+.SH EXTRACTION STATUS and INTERFACE TYPE
+A cell can have different extraction statuses, as well as different
+interface types. Extraction statuses and their meaning are as follows:
+.TP 12
+.B regular
+the module is extracted hierarchically or flattened,
+depending on the extractor option.
+.TP
+.B macro
+the module is always flattened during extraction.
+.TP
+.B library
+the module is not extracted, it is included
+in the extracted circuit as an instance and a
+(previously extracted) library circuit is available for it.
+.TP
+.B device
+the module is not extracted and is included
+in the extracted circuit as a network primitive.
+
+.TP 0
+Interface types and their meaning are as follows:
+.TP 12
+.B strict
+when the module is used as an instance, it only connects to its
+parent module via its terminal areas.
+.TP
+.B free
+when the module is used as an instance, it connects to its
+parent module via its terminal areas as well as via
+all polygons that are connected to its terminal areas.
+.TP
+.B freemasks
+when the module is used as an instance, it connects to its
+parent module via its terminal areas as well as via
+all polygons of the specified mask type(s)
+that are connected to its terminal areas.
+.SH EXAMPLES
+The first example converts the current (old) database project
+into the (new) xcontrol format:
+.nf
+
+% xcontrol -convert
+
+.fi
+The second example sets the celltype "macro" of two cells:
+.nf
+
+% xcontrol -macro inv oscil
+
+.fi
+The third example sets the interfacetype "freemasks" with
+3 masks (the masks have to be in the project) of the cell oscil:
+.nf
+
+% xcontrol -freemasks:cpg,caa,cmf oscil
+
+.fi
+The fourth example sets the celltype "device" and the
+interfacetype "free" of 2 cells verbose:
+.nf
+
+% xcontrol -device -free -v term3 poly5
+  term3  Device  Free  Jun 13 15:00:12 2000
+  poly5  Device  Free  Jun 13 15:00:12 2000
+
+.fi
+The fifth example lists all cells in the actual project
+with their extraction state. The first row is the cellname,
+the second the celltype, the third the interfacetype and the
+fourth the last date of change. If the interfacetype is Freemasks,
+the masks of this cell are written just on the next line.
+.nf
+
+% xcontrol -list
+local cells:
+  aa     C  Regular  Strict     No status found
+  inv    L  Macro    Strict     Jun 13 14:49:57 2000
+  oscil  L  Macro    Freemasks  Jun 13 14:51:02 2000
+
+  Mask(s): cpg cca cmf
+  poly5  LC  Device  Free  Jun 13 15:00:12 2000
+  term3  LC  Device  Free  Jun 13 15:00:12 2000
+
+imported cells:
+  rc1  L   Regular  Strict  Jun 13 14:47:38 2000
+  rc2  LC  Regular  Strict  Jun 13 14:47:38 2000
+
+.fi
+The sixth example sets all local and imported cells to default.
+The local cells are set to regular, strict and the imported cells
+are set to the status from the imported project.
+.nf
+
+% xcontrol -default
+
+.SH AUTHOR
+M. Grueter,
+S. de Graaf
+.SH FILES
+.TP 30
+\fCproject/.dmxdata\fP
+(in/output xcontrol file)
+.TP
+\fCproject/layout/celllist\fP
+(input file)
+.TP
+\fCproject/layout/impcelllist\fP
+(input file)
+.TP
+\fCproject/layout/\fIcell\fP/is_macro\fP
+(old file, deleted)
+.TP
+\fCproject/circuit/celllist\fP
+(input file)
+.TP
+\fCproject/circuit/impcelllist\fP
+(input file)
+.TP
+\fCproject/circuit/\fIcell\fP/devmod\fP
+(old file, deleted if empty)

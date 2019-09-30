@@ -1,0 +1,93 @@
+.TH DMREMOVECELL 5ICD "DMI User's Manual"
+.SH NAME
+dmRemoveCell - remove a cell from a project
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+int dmRemoveCell (DM_PROJECT *projkey, char *cell, char *versionstatus,
+		  int versionnumber, char *view);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "DM_PROJECT *projkey"
+is a pointer to a valid \fBDM_PROJECT\fP as obtained from dmOpenProject().
+.TP
+.B "char *cell"
+is a character string naming the cell to be removed.
+This cell cannot be an imported cell (or alias name).
+.TP
+.B "char *versionstatus"
+controls the selection of a particular version of the cell.
+Valid status types are \fBWORKING\fP and \fBACTUAL\fP.
+.TP
+.B "int versionnumber"
+can be used to select an individual version by its number (not supported).
+You may only use \fBDONTCARE\fP.
+.TP
+.B "char *view"
+specifies the view type of the cell that is to be removed.
+Function
+.B dmRemoveCell
+checks whether this is a valid view type for the project
+identified by the \fBprojkey\fP.
+Currently, default view types for project creation are
+\fBLAYOUT\fP, \fBCIRCUIT\fP and \fBFLOORPLAN\fP (as pre-defined in "dmincl.h").
+.SH DESCRIPTION
+Function
+.B dmRemoveCell
+removes a cell from a project directory.
+.PP
+The removal fails if, among other reasons,
+the cell appears to be a non-root cell,
+the cell has been exported, or a transaction is in progress on the cell.
+Write permission is required for the project identified by the \fBprojkey\fP.
+.SH DIAGNOSTICS
+If properly executed,
+.B dmRemoveCell
+will return \fB0\fP.
+If the function fails \fB-1\fP will be returned.
+The external variable
+.B dmerrno
+will be set to indicate the error,
+and a call to function dmError() will be done.
+.br
+This may happen in the following cases:
+.TP 14
+.B DME_BADARG
+Bad versionstatus argument.
+.TP
+.B DME_BADKEY
+Bad project key.
+.TP
+.B DME_BADNAME
+Bad cell name.
+.TP
+.B DME_BADVIEW
+Bad view type.
+.TP
+.B DME_LOCK
+Cell already checked out.
+.TP
+.B DME_MODE
+Project is not writable.
+.TP
+.B DME_NOCELL
+Cell does not exist.
+.TP
+.B DME_NOROOT
+Cell is not a root cell.
+.TP
+.B DME_NOCELLL
+Celllist cannot be opened.
+.TP
+.B DME_FOPEN
+Celllist cannot be written.
+.TP
+.B DME_SYS
+Error in system call.
+.SH SEE ALSO
+dmCheckOut(5ICD),
+dmOpenProject(5ICD).

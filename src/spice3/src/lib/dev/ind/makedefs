@@ -1,0 +1,13 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+
+COBJS		= ind.o indacld.o indask.o inddel.o inddest.o indload.o \
+		  indmdel.o indparam.o indpzld.o indsacl.o indsetup.o \
+		  indsload.o indsprt.o indsset.o indsupd.o indtrunc.o \
+		  mutacld.o mutask.o mutdel.o mutdest.o mutmdel.o mutparam.o \
+		  mutpzld.o mutsetup.o mutsprt.o mutsset.o
+
+LIB_TARGET	= ../../dev.a
+INCLUDE		= -I../../../include
+

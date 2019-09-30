@@ -1,0 +1,46 @@
+.TH SHOWBUS 1SDF "THE SEADIF PROGRAMMERS MANUAL"
+.UC 4
+.SH NAME
+showbus - analyzes a netlist to extract buses from it
+.SH SYNOPSIS
+.B showbus
+[options] <circuitname>
+.SH OPTIONS
+.TP
+.B <circuitname>
+Seadif circuit name to be analyzed.
+.TP
+.B -f <functionname>
+Seadif function name (default: <circuitname>).
+.TP
+.B -l <libraryname>
+Seadif library name (default: current working directory name).
+.TP
+.B -n
+Also print the nets contained in each bus.
+.TP
+.B -h
+Print help screen, then exit.
+
+.SH DESCRIPTION
+.I
+Showbus
+shows the buses of a circuit.
+This is essentially a print-out of the
+seadif BusList structure associated with the circuit.
+
+.SH EXAMPLE
+To show the buses of the circuit of cell count8 use:
+
+% showbus count8
+
+.SH AUTHORS
+Paul Stravers,
+Patrick Groeneveld
+
+.SH FILES
+.ta 8c
+proj_dir/seadif/sealib.sdf	(database file)
+
+.SH "SEE ALSO"
+makebus(1SDF)

@@ -1,0 +1,244 @@
+/* * * * * * * * * * * * * * * *
+ *
+ * This is the file 'analib8_00.ext'.
+ * Contents: The external sls-declarations of all cells
+ *           in the analog library analib8_00. (version aug 2000)
+ * Purpose:  To determine the terminal configuration of the
+ *           library cells and to include in your sls-description file.
+ * Created:  july 18th 1993 by Patrick Groeneveld
+ * Modified: aug 15 2000 by Arjan van Genderen
+ *
+ * This file was copied into this project directory by 'mkopr' or
+ * 'mkepr'
+ */
+
+extern network ln3x3    (terminal g, d, s, vss, vdd)
+extern network lp3x3    (terminal g, d, s, vss, vdd)
+extern network mir_nin  (terminal i, g, vss, vdd)
+extern network mir_nout (terminal i, g, o, vss, vdd)
+extern network mir_pin  (terminal i, g, vss, vdd)
+extern network mir_pout (terminal i, g, o, vss, vdd)
+extern network osc10    (terminal E, F, XI, XO, vss, vdd)
+
+
+/* * * * * * * * * * * * * * * * *
+ *
+ * Start of extracted cells
+ * These cells start with capitals
+ * you probably never want to use these
+ * Therefore they are commented out now.
+ * Remove the momment marks to enable them
+ */
+
+/* commented out (remove this line to enable)
+extern network Iv110    (terminal A, Y, vss, vdd)
+extern network Ln3x3    (terminal g, d, s, vss, vdd)
+extern network Lp3x3    (terminal g, d, s, vss, vdd)
+extern network Mir_nin  (terminal i, g, vss, vdd)
+extern network Mir_nout (terminal i, g, o, vss, vdd)
+extern network Mir_pin  (terminal i, g, vss, vdd)
+extern network Mir_pout (terminal i, g, o, vss, vdd)
+extern network Osc10	(terminal E, F, XI, XO, vss, vdd)
+ end of out commenting (remove this line to enable) */
+/* * * * * * * * * * * * * * * *
+ *
+ * This is the file 'bonding11_93.ext'.
+ * Contents: The external sls-declarations of the bonding frames
+ *           in the library 'bonding8_93'.
+ * Purpose:  To determine the terminal configuration of the
+ *           bonding cells and to include in your sls-description file.
+ * Created:  jan 6, 1993 by Patrick Groeneveld
+ * Modified: aug 10, 1993 by Patrick Groeneveld
+ *
+ * (c) The OCEAN Sea-of-Gates design system
+ * Delft University of Technology
+ */
+
+extern network bond_leer (terminal vss, bf1, bf2, bf3, vdd, bf4, bf5, bf6)
+extern network bond_bar (terminal t1, t2, t3, t4, t5, t6, t7, t8, t9, t10,
+                  t11, t12,
+                  t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23, t24,
+                  t25, t26, t27, t28, t29, t30, t31, t32)
+extern network bondflap8 (terminal bf1, bf2, bf3, bf4, bf5, bf6, bf7, bf8)
+/* * * * * * * * * * * * * * * *
+ *
+ * This is the file 'digilib8_93.ext'.
+ * Contents: The external sls-declarations of all cells
+ *           in the library digilib8_93. (version august 1993)
+ * Purpose:  To determine the terminal configuration of the
+ *           library cells and to include in your sls-description file.
+ * Created:  july 18th by Patrick Groeneveld
+ * Modified: ..
+ *
+ * This file was copied into this project directory by 'mkopr' or
+ * 'mkepr'
+ */
+
+extern network buf40    (terminal A, Y, vss, vdd)
+extern network de211    (terminal A, B, Y0, Y1, Y2, Y3, vss, vdd)
+extern network de310    (terminal A, B, C, Y0, Y1, Y2, Y3, Y4, Y5, Y6, Y7, vss, vdd)
+extern network dfn10    (terminal D, CK, Q, vss, vdd)
+extern network dfr11    (terminal D, R, CK, Q, vss, vdd)
+extern network dfa11    (terminal D, R, CK, Q, vss, vdd)
+extern network ex210    (terminal A, B, Y, vss, vdd)
+extern network iv110    (terminal A, Y, vss, vdd)
+extern network mu111    (terminal A, B, S, Y, vss, vdd)
+extern network mu210    (terminal S1, S2, A, B, C, D, Y, vss, vdd)
+extern network na210    (terminal A, B, Y, vss, vdd)
+extern network na310    (terminal A, B, C, Y, vss, vdd)
+extern network no210    (terminal A, B, Y, vss, vdd)
+extern network no310    (terminal A, B, C, Y, vss, vdd)
+extern network tbuf10   (terminal A, E, Y, vss, vdd)
+extern network tinv10   (terminal A, E, Y, vss, vdd)
+
+
+/* * * * * * * * * * * * * * * * *
+ *
+ * Start of extracted cells
+ * These cells start with capitals
+ * you probably never want to use these
+ * Therefore they are commented out now.
+ * Remove the comment marks to enable them
+ */
+
+/* commented out (to enable, remove this line and the last)
+extern network Buf40    (terminal A, Y, vss, vdd)
+extern network De211    (terminal A, B, Y0, Y1, Y2, Y3, vss, vdd)
+extern network De310    (terminal A, B, C, Y0, Y1, Y2, Y3, Y4, Y5, Y6, Y7, vss, vdd)
+extern network Dfn10    (terminal D, CK, Q, vss, vdd)
+extern network Dfr11    (terminal D, R, CK, Q, vss, vdd)
+extern network Dfa11    (terminal D, R, CK, Q, vss, vdd)
+extern network Ex210    (terminal A, B, Y, vss, vdd)
+extern network Iv110    (terminal A, Y, vss, vdd)
+extern network Mu111    (terminal A, B, S, Y, vss, vdd)
+extern network Mu210    (terminal S1, S2, A, B, C, D, Y, vss, vdd)
+extern network Na210    (terminal A, B, Y, vss, vdd)
+extern network Na310    (terminal A, B, C, Y, vss, vdd)
+extern network No210    (terminal A, B, Y, vss, vdd)
+extern network No310    (terminal A, B, C, Y, vss, vdd)
+end of comment out, (remove this line to enable) */
+/* * * * * * * * * * * * * * * *
+ *
+ * This is the file 'g_analib8_00.ext'.
+ * Contents: The external sls-declarations of all cells
+ *           in the analog library g_analib8_00. (version aug 2000)
+ * Purpose:  To determine the terminal configuration of the
+ *           library cells and to include in your sls-description file.
+ * Created:  july 18th 1993 by Patrick Groeneveld
+ * Modified: aug 15 2000 by Arjan van Genderen
+ *
+ * This file was copied into this project directory by 'mkopr' or
+ * 'mkepr'
+ */
+
+extern network ln3x3    (terminal g, d, s, vss, vdd)
+extern network lp3x3    (terminal g, d, s, vss, vdd)
+extern network mir_nin  (terminal i, g, vss, vdd)
+extern network mir_nout (terminal i, g, o, vss, vdd)
+extern network mir_pin  (terminal i, g, vss, vdd)
+extern network mir_pout (terminal i, g, o, vss, vdd)
+extern network osc10    (terminal E, F, XI, XO, vss, vdd)
+
+
+/* * * * * * * * * * * * * * * * *
+ *
+ * Start of extracted cells
+ * These cells start with capitals
+ * you probably never want to use these
+ * Therefore they are commented out now.
+ * Remove the momment marks to enable them
+ */
+
+/* commented out (remove this line to enable)
+extern network Iv110    (terminal A, Y, vss, vdd)
+extern network Ln3x3    (terminal g, d, s, vss, vdd)
+extern network Lp3x3    (terminal g, d, s, vss, vdd)
+extern network Mir_nin  (terminal i, g, vss, vdd)
+extern network Mir_nout (terminal i, g, o, vss, vdd)
+extern network Mir_pin  (terminal i, g, vss, vdd)
+extern network Mir_pout (terminal i, g, o, vss, vdd)
+extern network Osc10	(terminal E, F, XI, XO, vss, vdd)
+ end of out commenting (remove this line to enable) */
+/* * * * * * * * * * * * * * * *
+ *
+ * This is the file 'g_digilib5_99.ext'.
+ * Contents: The external sls-declarations of all cells
+ *           in the library g_digilib5_99. (version may 1999)
+ * Purpose:  To determine the terminal configuration of the
+ *           library cells and to include in your sls-description file.
+ * Created:  july 18th by Patrick Groeneveld
+ * Modified: ..
+ *
+ * This file was copied into this project directory by 'mkopr' or
+ * 'mkepr'
+ */
+
+extern network buf40    (terminal A, Y, vss, vdd)
+extern network de211    (terminal A, B, Y0, Y1, Y2, Y3, vss, vdd)
+extern network de310    (terminal A, B, C, Y0, Y1, Y2, Y3, Y4, Y5, Y6, Y7, vss, vdd)
+extern network dfn10    (terminal D, CK, Q, vss, vdd)
+extern network dfr11    (terminal D, R, CK, Q, vss, vdd)
+extern network dfa11    (terminal D, R, CK, Q, vss, vdd)
+extern network ex210    (terminal A, B, Y, vss, vdd)
+extern network iv110    (terminal A, Y, vss, vdd)
+extern network mu111    (terminal A, B, S, Y, vss, vdd)
+extern network mu210    (terminal S1, S2, A, B, C, D, Y, vss, vdd)
+extern network na210    (terminal A, B, Y, vss, vdd)
+extern network na310    (terminal A, B, C, Y, vss, vdd)
+extern network no210    (terminal A, B, Y, vss, vdd)
+extern network no310    (terminal A, B, C, Y, vss, vdd)
+extern network tbuf10   (terminal A, E, Y, vss, vdd)
+extern network tinv10   (terminal A, E, Y, vss, vdd)
+
+
+/* * * * * * * * * * * * * * * * *
+ *
+ * Start of extracted cells
+ * These cells start with capitals
+ * you probably never want to use these
+ * Therefore they are commented out now.
+ * Remove the momment marks to enable them
+ */
+
+/* commented out (to enable, remove this line and the last)
+extern network Buf40    (terminal A, Y, vss, vdd)
+extern network De211    (terminal A, B, Y0, Y1, Y2, Y3, vss, vdd)
+extern network De310    (terminal A, B, C, Y0, Y1, Y2, Y3, Y4, Y5, Y6, Y7, vss, vdd)
+extern network Dfn10    (terminal D, CK, Q, vss, vdd)
+extern network Dfr11    (terminal D, R, CK, Q, vss, vdd)
+extern network Dfa11    (terminal D, R, CK, Q, vss, vdd)
+extern network Ex210    (terminal A, B, Y, vss, vdd)
+extern network Iv110    (terminal A, Y, vss, vdd)
+extern network Mu111    (terminal A, B, S, Y, vss, vdd)
+extern network Mu210    (terminal S1, S2, A, B, C, D, Y, vss, vdd)
+extern network Na210    (terminal A, B, Y, vss, vdd)
+extern network Na310    (terminal A, B, C, Y, vss, vdd)
+extern network No210    (terminal A, B, Y, vss, vdd)
+extern network No310    (terminal A, B, C, Y, vss, vdd)
+end of comment out, (remove this line to enable) */
+/* This is the file ringlib8_04.ext */
+
+extern network bond_ring (terminal t_B10, t_B9, t_B8, t_B7, t_B6, t_B5, t_B4,
+   t_B3, t_B2, t_B1, vaa, t_L2, t_L3, t_L4, t_L5,
+   t_L6, t_L7, t_L8, t_L9, t_L10)
+extern network comparator_B2a (terminal vaa, Qbar, Q, inmin, inplus)
+extern network comparator_T2a (terminal vaa, Qbar, Q, inmin, inplus)
+extern network opamp_B2a (terminal vaa, Ibias, OUT, inmin, inplus)
+extern network opamp_L9a (terminal vaa, Ibias, OUT, inmin, inplus)
+extern network opamp_T2a (terminal vaa, Ibias, OUT, inmin, inplus)
+extern network r100k_B2a (terminal PLUS, MINUS)
+extern network r10k_B2a (terminal PLUS, MINUS)
+extern network r10k_B2b (terminal PLUS, MINUS)
+extern network r200k_B2a (terminal PLUS, MINUS)
+extern network r200k_L9a (terminal PLUS, MINUS)
+extern network r20k_B1a (terminal PLUS, MINUS)
+extern network r20k_B1b (terminal PLUS, MINUS)
+extern network r20k_B1c (terminal PLUS, MINUS)
+extern network r20k_B2a (terminal PLUS, MINUS)
+extern network r20k_B2b (terminal PLUS, MINUS)
+extern network r50k_B2a (terminal PLUS, MINUS)
+extern network r50k_B2b (terminal PLUS, MINUS)
+extern network r50k_L9a (terminal PLUS, MINUS)
+extern network r50k_L9b (terminal PLUS, MINUS)
+extern network rladder_B1a (terminal out0, out1, bit0, bit1, bit2, bit3, bit4,
+   bit5, bit6, bit7, rlow, rhigh)

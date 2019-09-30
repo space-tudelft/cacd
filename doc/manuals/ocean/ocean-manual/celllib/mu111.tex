@@ -1,0 +1,74 @@
+\subsection{mu111}
+
+Function: 2-line-to-1-line data selector/multiplexer
+
+Terminals: (A, B, S, Y, vss, vdd)
+
+
+IEC-symbol:
+%figuur mu111.iec.eps
+\begin{figure}[bth]
+\callpsfig{mu111.iec.eps}{width=.25\textwidth}
+\end{figure}
+
+\begin{minipage}[t]{0.3\textwidth}
+Function table:\\
+
+\begin{tabular}{|c|cc||c|}
+\hline
+S	&A	&B	&Y\\
+\hline
+L	&L	&-	&L\\
+L	&H	&-	&H\\
+H	&-	&L	&L\\
+H	&-	&H	&H\\
+\hline
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.6\textwidth}
+Timing parameters:\\
+
+\begin{tabular}{|c|cc|ccc|c|}
+\hline
+Parameter               &From            &To   	&Min	&Typ	&Max    &Unit\\
+\hline
+T$_{PLH}$               &A, B     	&Y      &0.31	&0.50	&0.81    &ns\\
+T$_{PHL}$               &A, B    	&Y      &0.37	&0.60	&0.98    &ns\\
+T$_{PLH}$               &S         	&Y      &0.37	&0.60	&0.95    &ns\\
+T$_{PHL}$               &S         	&Y      &0.37	&0.65	&1.1    &ns\\
+\hline
+$\Delta$T$_{PLH}$       &any           &Y      &-	&-	&1.2    &ns/pF\\
+$\Delta$T$_{PHL}$       &any           &Y      &-	&-	&1.0    &ns/pF\\
+\hline
+C$_{in}$                &A, B    	&vss   &-	&0.12	&0.18   &pF\\
+C$_{in}$                &S             	&vss   &-	&0.24	&0.36   &pF\\
+\hline
+\end{tabular}
+\end{minipage}
+\\
+
+Equivalent chip area: 7
+
+Fanout: 3.0pF
+
+\makebox[0.98\textwidth]{
+%figuur mu111.cir.eps
+\begin{minipage}[t]{0.5\textwidth}{
+circuit:\\
+\\
+
+{\callpsfig{mu111.cir.eps}{height=2.5in}}
+}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\textwidth}{
+%figuur mu111.lay.eps
+layout:\\
+\\
+
+{\callpsfig{mu111.lay.eps}{height=2.5in}}
+}
+\end{minipage}
+}
+\clearpage

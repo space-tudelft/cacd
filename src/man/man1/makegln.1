@@ -1,0 +1,70 @@
+.TH MAKEGLN 1ICD "User Commands"
+.UC 4
+.SH NAME
+makegln - create a gln representation of a layout
+.SH SYNOPSIS
+.B makegln
+[-vDc] [-o masklist] [-n masklist] [-m maxmem] cell [...]
+.SH OPTIONS
+.TP
+.B -v
+verbose mode.
+.TP
+.B "-o\fImasklist\fR"
+process only the masks in \fImasklist\fP.
+\fIMasklist\fP is a comma- or blank-separated list of masknames.
+.TP
+.B "-n\fImasklist\fR"
+exclude the masks in \fImasklist\fP from processing.
+.TP
+.B "-m\fImaxmem\fR"
+use \fImaxmem\fR (default 1) MByte of main memory for sorting of gln edges.
+.TP
+.B "-D"
+delete the bxx and nxx files (output of makebox) when ready.
+.TP
+.B "-c"
+do not compress the temporary files (less cpu time, more disk space).
+.SH DESCRIPTION
+.I Makegln
+creates a non-vertical line segment representation
+(gln representation)
+of the layout of the specified cells,
+as input for the programs
+.I space (1ICD)
+and
+.I mplot (1ICD)
+and
+.I getepslay (1ICD).
+Normally,
+.I makegln
+is automatically invoked by the programs above.
+However,
+makegln can also be run directly
+or trough
+.I exp (1ICD)
+with the ``-g'' option.
+.PP
+The input of makegln is a set of nxx and bxx files
+as produced by
+.I makeboxl (1ICD)
+or
+.I makeboxh (1ICD).
+.PP
+In order to sort the output,
+.I makegln
+uses a directory where it stores temporary data.
+The default directory for this is selected from the
+list of directories /tmp and /usr/tmp, whichever has more space available.
+Using the environment variable SPACE_TMPDIR it is possible
+to specify an alternative list of directories,
+separated by the character ':' (e.g. /tmp:/usr/tmp:/user/john/tmp).
+.PP
+.SH LIMITATIONS
+The current version of makegln can only handle 45-degree layout.
+.AU "N.P. van der Meijs"
+.SH SEE ALSO
+exp(1ICD),
+mplot (1ICD),
+getepslay (1ICD),
+space (1ICD).

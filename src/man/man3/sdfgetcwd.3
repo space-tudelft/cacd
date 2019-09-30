@@ -1,0 +1,26 @@
+.ll 77
+.hy
+.TH SDFGETCWD 3SDF "THE SEADIF PROGRAMMERS MANUAL"
+.SH NAME
+sdfgetcwd - return the current working directory as a canonic string
+.SH SYNOPSIS
+ #include <sealib.h>
+
+ STRING sdfgetcwd(void)
+
+.SH DESCRIPTION
+The function sdfgetcwd() returns the name of the current working directory as a
+canonicstring. Depending on whether you are on a BSD system or not, sdfgetcwd()
+calls itself either getwd() or getcwd() and then converts the result to a
+canonicstring. Subsequent calls to sdfgetcwd() return pointers to the same
+memory location and do not cause any more calls to getwd() or getcwd() or cs().
+
+.SH "RETURN VALUE"
+A successful call to sdfgetcwd() returns a pointer to the name of the current
+working directory. On failure it returns NIL.
+
+.SH AUTHOR
+Paul Stravers, Delft University of Technology.
+
+.SH "SEE ALSO"
+cs(3SDF), getwd(3), getcwd(3).

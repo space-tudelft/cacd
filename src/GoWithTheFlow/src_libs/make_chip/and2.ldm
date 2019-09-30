@@ -1,0 +1,32 @@
+:: Delft Layout Description Modified, LDM V3.2
+:: Generated with the program xldm V4.14
+:: at Fri Jan  3 09:05:45 2003
+:: by the Delft NELSIS IC Design System Release 3
+:: no-origin mode LDM
+:: project = /home/joop/src_vwo/test
+:: process = fishbone
+:: lambda = 0.2 micron
+:: extraction of all related cells of cell: and2
+:: level 1
+ms and2
+term in 38 50 226 238 A
+term in 38 50 186 198 B
+term in 38 50 11 23 vss
+term in 38 50 505 517 vdd
+term in 198 210 186 198 Y
+label in 124 232 is0
+box in 78 90 186 238
+box in 118 170 426 438
+box in 118 170 258 270
+box in 118 170 226 238
+box in 38 90 186 198
+mc <IMAGE> fishbonec3tu2 cx 40 4
+mc <iv110_1> iv110 120 0
+mc <na210_0> na210
+me
+:: list of imported cells
+:: alias:         rem_name:      lib_project_path:
+:: fishbonec3tu2  fishbonec3tu2  /opt/cad/ocean/celllibs/fishbone/i486_Linux/nelsis3/primitives
+:: iv110          iv110          /opt/cad/ocean/celllibs/fishbone/i486_Linux/nelsis3/g_digilib5_99
+:: na210          na210          /opt/cad/ocean/celllibs/fishbone/i486_Linux/nelsis3/g_digilib5_99
+:: eof

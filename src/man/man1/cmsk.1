@@ -1,0 +1,65 @@
+.TH CMSK 1ICD "User Commands"
+.UC 4
+.SH NAME
+cmsk - convert CMSK to layout database
+.SH SYNOPSIS
+.B cmsk
+[-sv] [-m mlist] cmkfile
+.SH OPTIONS
+.TP 10
+.B -s
+Syntax check only.
+.TP
+.B -v
+Verbose mode.
+.TP
+\fB-m\fP mlist
+Use this mask list instead of process default list.
+.SH DESCRIPTION
+.I Cmsk
+converts a file with Circuit MaSK layout descriptions
+(pattern definitions)
+directly to the ICD database,
+the program can handle almost every CMSK statement.
+.AU "R. van der Valk"
+.SH FILES
+.TP
+\fCICDPATH/share/lib/process/\fIproc\fP/bmlist.cmk\fP
+(def.: basic mask list)
+.TP
+\fCNELSISPROJECT/.dmrc\fP
+.TP
+\fCNELSISPROJECT/layout/impcelllist\fP
+.TP
+\fCNELSISPROJECT/layout/celllist\fP
+
+.PP
+For each \fIcell\fP (pattern) in the celllist:
+
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/box\fP
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/info\fP
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/mc\fP
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/nor\fP
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/term\fP
+(empty)
+.SH LIMITATIONS
+The current working directory must be the project directory.
+.br
+Not all circuit mask statements are implemented.
+.br
+Extract, transfer, remove, formmask and grow statements
+don't work for rs, path, polygon, circle and cpeel program patterns.
+.SH SEE ALSO
+Circuitmask User Manual, Philips, August 1978.
+.br
+R. van der Valk, "Design of a CMSK-parser", report 84-72.
+.br
+addproj(1ICD),
+impcell(1ICD),
+mkpr(1ICD),
+xcmk(1ICD).

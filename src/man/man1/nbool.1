@@ -1,0 +1,68 @@
+.TH NBOOL 1ICD "User Commands"
+.UC 4
+.SH NAME
+nbool - perform boolean operations on layout masks
+.SH SYNOPSIS
+.B "nbool [-c|-n] [-f] [cell_name]"
+.SH OPTIONS
+.TP
+.B -c
+Check for hierarchical compostion errors,
+this is the default mode of operation.
+.TP
+.B -n
+Do not check for hierarchical compostion errors.
+.TP
+.B -f
+Use 'booldata' from the current working directory as
+input_file in which the layercombinations are specified
+instead of the standard one from the library.
+.SH DESCRIPTION
+.I Nbool
+performs boolean operations on vln_files.
+If no option or the "-c" option is given, the
+program also checks for
+hierarchical composition errors
+such as
+overlap of layers of different cells without the presence of terminals.
+Use the "-n" option to turn this mode of operation off.
+.PP
+The boolean functions,
+which are performed,
+are specified in file "booldata" in
+directory "ICDPATH/share/lib/process".
+.br
+A boolean processing number,
+as specified in the file "booldata",
+is appended to the corresponding output file "bool_".
+.PP
+If no cell_name is given the cells given in file "exp_dat"
+are processed.
+.PP
+The current working directory must be the project directory.
+.PP
+The
+.I nbool
+program is normally not called directly by the user,
+but it is used by the
+.I dimcheck2
+program.
+.AU "T.G.R. van Leuken, J. Fokkema"
+.SH FILES
+.TP
+\fCNELSISPROJECT/exp_dat\fP
+names of the cells to be processed
+.TP
+\fCICDPATH/share/lib/process/TECHN/booldata\fP
+input, TECHN=technology name
+.TP
+\fCNELSISPROJECT/layout/cell/LC_vln\fP
+input, LC=LayerCode
+.TP
+\fCNELSISPROJECT/layout/cell/bool_BN\fP
+input - output, BN=Boolean Nr.
+.SH SEE ALSO
+exp(1ICD),
+dimcheck2(1ICD),
+makevln(1ICD),
+booldata(4ICD)

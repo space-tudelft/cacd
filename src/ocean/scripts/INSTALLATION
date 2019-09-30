@@ -1,0 +1,329 @@
+#!/bin/sh
+
+cat << EOF
+
+			O C E A N   INSTALLATION MANUAL
+			-------------------------------
+
+1. INTRODUCTION
+   ============
+
+OCEAN is a freely-available system that enables you to design CMOS chips in
+the sea-of-gates design style. The sea-of-gates design style aims at three
+goals:
+
+  (1) minimizing the chip design time
+  (2) minimizing the chip fabrication time
+  (3) minimizing the chip cost
+
+Before you can start designing a sea-of-gates chip you have to select a
+master image. This is a prefabricated pattern of transistors that is laid
+out over the entire chip area. The effort of the designer (and the design
+tools) is to interconnect these transistors by metal wires, thus
+implementing the desired functionality of the chip.
+
+In contrast to other sea-of-gates design systems that we know of, OCEAN
+allows you to design your chip in a hierarchical fashion. This has several
+advantages, including the ability to
+
+ (1) easily mix analogue and digital subcomponents on a chip
+ (2) manually optimize parts of the automatically generated layout
+ (3) design critical subcomponents (e.g. RAM) and reuse them
+
+OCEAN has been used extensively at the EE faculty of Delft University of
+Technology, the Netherlands.  Second year students without any previous
+experience in VLSI design were able to design reasonably complex CMOS chips
+with OCEAN.  After processing in the DIMES foundry, many of these student
+chips where successfully tested.
+
+For more information, we recommend that you read the "ocean_manual.pdf"
+from the "share/doc" subdirectory about the OCEAN system.
+
+
+2. AVAILABILITY
+   ============
+
+OCEAN is integrated with the NELSIS (release 3) full-custom chip design
+system.  For best results, do not install OCEAN without installing NELSIS.
+(This will automatically be done when you use the cacd "make" procedure.)
+Both systems are available for free (under the terms of the ISC License)
+in the Space CACD distribution from Delft University of Technology.
+See "https://github.com/space-tud/cacd".  See the "LICENSE" file.
+
+Please mail any remarks or bug reports to space-support-ewi@tudelft.nl.
+
+
+4. HOW TO INSTALL
+   ==============
+
+Here we describe how to install the pre-compiled version of OCEAN.  For
+additionally compiling the system yourself, please read the file COMPILATION.
+Note that the COMPILATION procedure also installs the software.
+
+You do not need root privileges to install OCEAN and NELSIS.
+Find a place in the file system. (They are both installed under Space CACD.)
+Let's assume that the place is "/users/cacd".
+(If you prefer another path, substitute that in what follows below.)
+
+Before you have downloaded the files from "https://github.com/space-tud/cacd".
+Let's assume that you have put the files also in the "/users/cacd" directory.
+Maybe, there is something changed and a new install is necessary.
+
+Note that the following environment variables must correctly be set.
+Else the following commands must be given:
+
+  [1] setenv ICDPATH /users/cacd
+  [2] setenv PATH $ICDPATH/bin:$PATH
+
+The commands [6-8] will install everything. Command [8] will also compile
+the cell libraries of OCEAN into the binary format of the NELSIS database.
+(Note that the default OCEANPROCESS is "fishbone".)
+It is normal that numerous warnings appear on your screen
+-- JUST IGNORE ALL ERRORS AND WARNINGS.
+
+  [6] cd /users/cacd
+  [7] make
+  [8] ICELLS
+
+If you are interested in the octagon image and the gatearray image, proceed
+as follows:
+
+  [16] setenv OCEANPROCESS octagon
+  [17] ICELLS
+  [18] setenv OCEANPROCESS gatearray
+  [19] ICELLS
+  [20] setenv OCEANPROCESS fishbone
+
+To set your proper print command, you might want to edit the layout print tool
+'playout'. For the first time, this is not absolutely essential, but you'll
+probably need it to print layouts.
+
+  [21] vi $ICDPATH/bin/playout
+
+.... and set the proper print and printer queue commands for your system.
+
+We ran this installation procedure on several types of machines and it
+appeared to work.  If you experience any problems, *please* let us know.
+Mail to space-support-ewi@tudelft.nl.
+
+After you have unwrapped everything, the final directory structure of the
+system looks like this:
+
+/users/cacd/..
+            bin/..            (NELSIS/OCEAN executables and scripts)
+            lib/..            (NELSIS/OCEAN libraries)
+            src/..            (NELSIS/OCEAN sources)
+            src/ocean/..      (OCEAN sources)
+            src/GoWithTheFlow/..    (Ontwerp Practicum sources)
+            src/spice3/..     (Berkeley SPICE3 sources)
+            share/demo/..           (NELSIS examples)
+	    share/doc/..            (NELSIS/OCEAN pdf manuals)
+            share/man/..            (NELSIS/OCEAN on-line manual pages)
+	    share/lib/celllibs/..   (Sea-of-Gates cell libraries and templates)
+	    share/lib/process/..    (process description databases)
+            share/lib/slsmodgen/..  (switch-level timing model generator)
+            share/src/..            (libddm, sls, sls_exp include files)
+            share/tutorial/..       (NELSIS tutorial)
+
+
+5. HOW TO RUN
+   ==========
+
+Users running OCEAN and NELSIS must have a number of environment variables
+set:
+
+  OCEANPROCESS   to "fishbone" or "octagon" or "gatearray".
+
+  % setenv OCEANPROCESS fishbone
+
+  ICDPATH        to "/users/cacd" (or whatever the root of the OCEAN
+		 and/or NELSIS tree is).
+
+  % setenv ICDPATH /users/cacd
+
+The users also need to add some directories to their search path for
+commands:
+
+  % setenv PATH $ICDPATH/bin:$PATH
+
+You can try whether everything was installed properly by trying to
+run the tutorial:
+
+  [1] tutorial sis
+  [2] cd sis
+  [3] csls hotel.sls
+         File hotel.sls:
+         Parsing network: hotel
+  [4] setenv DISPLAY <your_screen>:0
+  [4] simeye hotel
+      (clicking [run] should give simulator results)
+  [5] seadali
+      [database], [place and route], [DO IT]
+      (a routed circuit should appear)
+      [write] as hotel
+  [6] space -c hotel
+  [7] ghoti Hotel
+  [8] simeye Hotel
+      (clicking [run] should give simulator result of extracted circuit)
+
+
+6. THE TOOLS
+   =========
+
+The OCEAN tools operate on their own EDIF-like database called "the seadif
+database". The NELSIS tools operate on the NELSIS database. Both databases
+are part of a NELSIS "design project". Conversion from data in one database
+to the other database happens automatically, and users do not even notice
+that this happens. Sometimes OCEAN tools operate immediately on the NELSIS
+database.
+
+All tools that are available from the distribution are listed below, with a
+one-liner briefly describing each tool. The programs that live in the ocean
+tree document themselves briefly if you pass them the -h option.  For full
+documentation refer to the ocean/docs directory.  The NELSIS tools have real
+manual pages!  Use "icdman" to view them. The seadif database is also nicely
+documented in man pages.
+
+We assume that all executables are placed in "$ICDPATH/bin".
+
+**** Executables NELSIS/OCEAN:
+
+ICELLS		 compiles and installs sea-of-gates cell libraries.
+cedif		 compiles EDIF sources into the NELSIS database.
+dofunc		 front-end for the functional simulator "cfun".
+fish		 sea-of-gates layout purifier.
+ghoti		 sea-of-gates extracted circuit purifier.
+mkopr		 creates a new sea-of-gates design project.
+mksls		 constructs a Makefile for updating a NELSIS database.
+nelsea		 NELSIS to seadif and seadif to NELSIS database converter.
+sea		 front-end for calling seadif tools in a NELSIS environment.
+seadali		 interactive tool for layout editing, placing and routing.
+tutorial	 creates a sea-of-gates design project containing a
+		 tutorial.
+
+**** Executables OCEAN:
+
+esea		 compiles EDIF sources into the seadif database.
+freedif		 removes cells from the seadif database.
+gnarp		 performs various kind of operations on a seadif database.
+madonna		 partitioning-based sea-of-gates placer.
+makebus		 analyses a netlist to extract buses from it.
+seedif		 lists the contents of the seadif database.
+showbus		 shows the buses in a netlist, as found by "makebus".
+trout		 Lee-type over-the-cell sea-of-gates router.
+
+**** Executables OCEAN (odd):
+
+INSTALLATION	 prints OCEAN installation instructions on stdout.
+rmsdflock	 removes (blasts) the locks from a seadif database.
+seatail		 temporarily shows output from a sea-of-gates tool.
+
+**** Executables NELSIS/CACD:
+
+addproj		 adds a project to the list of imported projects.
+arrexp		 expands the arrays in an SLS commandfile, used by "simeye".
+ccif		 compiles CIF data format into the NELSIS database.
+cga		 converts GDS-II data format to ASCII.
+cgi		 compiles GDS-II sources into the NELSIS database.
+cig		 converts info from the NELSIS database to GDS-II format.
+clambda		 changes the lambda value of a design project.
+cldm		 compiles LDM (= layout description language) into the database.
+csls		 compiles SLS (= circuit description language) into the database.
+cspice	 	 compiles a SPICE network description into the database.
+device		 lists the device cells, see also putdevmod.
+dbcat		 lists the contents of cells that are in the NELSIS database.
+dbclean		 removes data from the database that can be regenerated.
+dblist		 lists the contents of the NELSIS database.
+cfun		 creates a functional ("behavioral") simulator.
+getepslay	 converts a layout cell to PostScript suitable for printing.
+impcell		 imports a cell from another project (see also "addproj").
+layflat		 removes all hierarchy from a layout cell.
+macro		 sets or unset a macro status for a layout cell.
+makeboxl	 expands a layout cell linearly to boxes (see "exp").
+makegln		 creates a non-vertical line segment representation (see "exp").
+mkpr		 creates a NELSIS project (see "mkopr").
+mplot		 makes a plotfile for a masklayout.
+nspice		 front-end for spice-2 and spice-3, used by "simeye".
+nspice_bs	 pre-processor for spice-2 and spice-3, used by "simeye".
+nspice_pp	 post-processor for spice-2 and spice-3, used by "simeye".
+putdevmod	 puts a device model description into the circuit database.
+rmdb		 removes cells from the NELSIS database.
+rmpr		 removes a NELSIS design project.
+setcmap		 manipulates the X-window colormap for NELSIS and OCEAN tools.
+simeye		 interactive switch-level and spice simulator for X-windows.
+sls		 switch-level simulator, used by "simeye".
+sls_exp		 pre-processor for "sls".
+space		 layout-to-circuit extractor.
+tecc		 technology compiler for "space".
+xcif		 extracts CIF format from the layout database, see "ccif".
+xcmk		 extracts CIRCUITMASK format (Philips) from the layout database.
+xedif		 extracts EDIF format from the circuit database, see "cedif".
+xldm		 extracts LDM format from the layout databse, see "cldm".
+xsls		 extracts SLS format from the circuit database, see "csls".
+xspef		 extracts SPEF format from the circuit database.
+xspf		 extracts SPF format from the circuit database.
+xspice		 extracts SPICE format from the circuit database, see "cspice".
+xvhdl		 extracts VHDL format from the circuit database.
+
+
+7. CONTENTS OF THE PUBLIC OCEAN DIRECTORY
+   ======================================
+
+7.1 Source code of OCEAN
+------------------------
+The specific OCEAN sources can be found in the "src/ocean" directory.
+These sources are part of the Space CACD source code distribution.
+
+7.2 Source code of CACD
+-----------------------
+The sources of the binaries in the cacd/bin directory (simeye, space, etc.)
+are available from "https://github.com/space-tud/cacd".
+
+See the file COMPILATION for instructions on how to compile and install
+the CACD sources.  See also the file "Installation.txt".
+
+7.3 The OCEAN cell libraries
+----------------------------
+We distribute a simple cell library that you can use in your sea-of-gates
+chip.  This archive also contains the cell library "primitives" that
+describes the primitive electric elements (transistors, capacitors, et
+cetera). Some OCEAN tools don't run without it. It also contains the image
+description file "image.seadif" for all supported master images, and it
+contains the tutorial tree.
+
+7.4 Documentation of OCEAN
+--------------------------
+Documentation for the OCEAN tools and a tutorial, in pdf and text form and
+the on-line manual pages.
+
+
+8. SUPPORTED MASTER IMAGES
+   =======================
+
+The OCEAN tools can handle almost any sea-of-gates master image that you
+can think of. All tools read the information concerning the topological and
+electrical properties of the image from an ASCII image description file. If
+you have designed an image of your own, it is usually not more than a few
+hours of work to create an image description file for it.
+
+To illustrate how generic the tools are, the standard OCEAN installation
+comes with three radically different master images named "fishbone",
+"octagon" and "gatearray".
+
+The fishbone master image is the one that we almost exclusively use
+ourselves, because it is reasonably fast (1 ns gatedelay) and our foundry
+DIMES can process the fishbone image in sufficient quantities. It is a 1.6
+micron, 2-metal layer CMOS process. The fishbone master images that we have
+in stock contain about 200,000 transistors.
+
+The octagon master image was designed at Twente University. It allows the
+designer to mirror and rotate her cells in many ways. It uses a 0.8 micron,
+3-metal layer CMOS process. Unfortunately, we do not have the means nor the
+money to process octagon designs.
+
+The gatearray master image is an old fashioned 4 micron, 1-metal layer gate
+array. It uses the gate array concept of predefined wiring channels. We
+sometimes use this image for designs of low complexity, where a high-speed
+operation is not decisive.
+
+EOF

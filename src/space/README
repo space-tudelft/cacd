@@ -1,0 +1,42 @@
+This is a port of the Public Domain version of space.
+
+A number of items are removed from these space sources.
+I want to keep the sources as simple as possible (SdeG).
+
+Functions pp1SetColors() and pp1ResetColors() are not yet removed
+from "extract/gettech.c". This functions are only used by space3d.
+See "scan/sp_main.c" Only by option -B (optSubRes).
+And only if optSubResInternal is set. In that case program "makesubres"
+is not called, but an internal prepass is done to use green and schur
+to process the 3D substrate. This is only needed to display results
+of this prepass by tool Xspace (makesubres can't do this).
+Of coarse it makes the source code more difficult to understand.
+You must know that normally only cap3D is processed by space3d itself
+in the extract pass (and can be displayed).
+Note that the special sub3D prepass must use a different color scheme.
+
+I removed parameter "sub3d.old_mesh" and variable optSubResOldMesh.
+
+I removed define "#ifdef OTHER_EPI"
+This also removes parameter "moments.r_epi" and variable RCtime.
+This seems to be experimental stuff.
+
+I removed define "#ifdef NET_TERM_MODE" and "#ifdef NO_CORE_MODE"
+Also removed variables optGenNetTerm, optReadNetTerm, optNoCore.
+Also removed functions initInstNr(), endInstNr(), findInstNr().
+Also removed parameter "write_net_term" (no write of stream "netterm").
+Also removed parameter "read_net_term" (no write of stream "nethier").
+Also removed noSubnodeJoin, HasCore, coreBitmask, setCoreBitMask, core_l/_r.
+
+Not removed define "#ifdef DMS_TERM_POS" (see "lump/out.c").
+This shows how possibly stream "termpos" can be written.
+
+Not removed code to use corner_nodes (see "icddoc notes/an1405.pdf").
+Variables corner_line_node, use_corner_ratio, node_h/_w.
+Parameters "use_corner_nodes" and "use_corner_ratio".
+Note that parameter "equi_line_ratio" must be specified.
+
+Not removed code to join contacts.
+Variable join_contacts and parameter "join_contacts".
+Note: auto enabled by use of corner_nodes.
+

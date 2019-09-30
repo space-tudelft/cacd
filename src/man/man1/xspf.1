@@ -1,0 +1,205 @@
+.TH XSPF 1ICD "User Commands"
+.UC 4
+.SH NAME
+xspf - extract SPF network description out of the database
+.SH SYNOPSIS
+.ie n .ta 20
+.el .ta 2i
+.B xspf
+[-defghikonpruvxy -w width -z name -O name
+.br
+	-C file -D name -F outfile -X lib] cell
+.SH OPTIONS
+.TP
+.B -d
+Use original
+.I database
+.I names
+for instance names.
+.TP
+.B -e
+Expand name arrays into single names.
+.TP
+.B -f
+Send output to a file \fIcell\fP.spf instead of to \fIstdout\fP.
+.TP
+.B -g
+Connect a large
+.I grounded
+.I resistor
+to each node of the two nodes
+.if t .br
+that are connected by a net statement.
+.TP
+.B -h
+Also extract
+.I hierarchy
+(used local sub-cells).
+.TP
+.B -i
+Also extract
+.I imported
+sub-cells (when option \fB-h\fP is used).
+.TP
+.B -k
+Output all cells as sub-circuits.
+.TP
+.B -o
+Omit model definitions for devices in the output file.
+.TP
+.B -n
+Always add terminals for
+.I n-bulk
+connections.
+.TP
+.B -p
+Always add terminals for
+.I p-bulk
+connections.
+.TP
+.B -r
+Do not generate **DEFINE lines.
+.TP
+.B -u
+Do not automatically add terminals for bulk connections.
+.TP
+.B -v
+Enable
+.I verbose
+mode.
+.TP
+.B -w
+Use \fIwidth\fP for the output listing.
+.TP
+.B -x
+Omit nodes whose name start with "gnd" or "GND".
+.TP
+.B -y
+Omit nodes whose name start with "vss" or "VSS".
+.TP
+\fB-z\fP \fIprefix\fP
+Omit nodes whose name start with \fIprefix\fP.
+.TP
+\fB-O\fP \fIname\fP
+Omit the node that has this name.
+This option has a default value "GND".
+.TP
+\fB-C\fP \fIfile\fP
+Use the specified \fIfile\fP as the control file.
+.TP
+\fB-D\fP \fIname\fP
+Define label \fIname\fP for conditional reading of the control file.
+.TP
+\fB-F\fP \fIoutfile\fP
+Send output to the specified file.
+.TP
+\fB-X\fP \fIlib\fP
+Exclude specific certain library cells from the listing
+(when options \fB-hi\fP are used).
+This is very useful if you have a design with your own imported libraries.
+This option may be given several times.
+There are two exclude possibilities:
+(1) all lib's starting with absolute path (for example "-X /usr/ocean");
+(2) the lib with basename (for example "-X primitives").
+.SH DESCRIPTION
+.I Xspf
+is a program to extract an SPF circuit description out of the database.
+Default, only a circuit description of the cell itself is extracted and
+no sub-cells are extracted.
+When using the
+.B -h
+option the program will also extract all (local) sub-cells
+that are not a function (see "SLS: Switch-Level Simulator User's Manual")
+or a device.
+.PP
+The
+.I xspf
+program
+is a derivate of the
+.I xspice
+program.
+See also the description in the
+.I xspice
+manual page.
+.PP
+.I Xspf
+adds Cadence Standard Parasitic Format (SPF) information to the SPICE
+alike output.
+The output is in proposed Detailed SPF (DSPF).
+It contains complete extracted circuit information intended
+to be used in conjunction
+with a circuit simulator for comprehensive simulation
+or with a timing analyzer for delay analysis.
+.PP
+For
+.I xspf
+the netlist in the database must contain conductor numbers.
+This netlists are generated with the
+.I space(1ICD)
+layout to circuit extractor.
+.SH "THE CONTROL FILE"
+For
+.I xspf
+a control file may be used.
+The default name of the control file is "xspicerc".
+First,
+the program tries to read this file from the current working directory.
+Next,
+it tries to open the control file in the process directory.
+Note, the control file may also be used for other programs.
+.PP
+See the
+.I xspice
+manual page for a complete description of all possible parameters.
+Only two useful specifications for
+.I xspf
+are given here.
+.PP
+The
+.I hier_name_sep
+parameter defines the DIVIDER character (default '/') that must be used:
+.nf
+
+   hier_name_sep  \fIchar\fP
+
+.fi
+The
+.I inst_term_sep
+parameter defines the DELIMITER character (default ':') that must be used:
+.nf
+
+   inst_term_sep  \fIchar\fP
+
+.fi
+.SH "CONTROL FILE CONDITIONALS"
+See the
+.I xspice
+manual page for more details.
+.br
+The following condition is true for \fIxspf\fP:
+.TP
+#if SPF
+.SH EXAMPLES
+.nf
+% xspf -h latch
+.AU "A.J. van Genderen"
+.SH MODIFIED BY
+.nf
+S. de Graaf
+.SH FILES
+.TP 12
+\fC\fIcell\fP.spf\fP
+(output file, when option \fB-i\fP is used)
+.TP
+\fCxspicerc\fP
+(default control file for xspf/xspice/...)
+.TP
+\fCspicemod\fP
+(models file for xspf/xspice/...)
+.SH SEE ALSO
+cspice(1ICD),
+putdevmod(1ICD),
+space(1ICD),
+xcontrol(1ICD),
+xspice(1ICD),
+xspef(1ICD).

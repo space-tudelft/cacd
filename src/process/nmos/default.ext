@@ -1,0 +1,101 @@
+#################################################################
+# definition of elements for extraction and simulation purposes #
+#################################################################
+elements:
+
+# transistors in Nmos, with an extra minterm expressing metal
+# overlap, so that the corresponding metal-poly capacitance
+# can be computed, using the minterm surfaces.
+# Moreover nodes in the touching metal regions can be merged
+# because this is specified by "(nm)"
+transistor:
+metal_trans = (np) nd (nm) !ni !nx !nb !nc,
+norm_trans = (np) nd !nm !ni !nb !nx !nc,
+cnt_trans = (nm np) nd nc !ni !nx !nb;
+
+depl_trans:
+norm_depl = ni (np) nd !nm !nb !nx !nc,
+metal_depl = ni (np) nd (nm) !nb !nx !nc,
+cnt_depl = ni (nm np) nd !nb nc !nx;
+
+# interconnect tracks in a chip not being crossed by other
+# interconnect layers, having only capacitance to substrate
+poly_ic:
+normal_poly = (np) !nd !nm !nc;
+
+diff_ic:
+norm_diff = (nd) !np !nm !nc;
+
+met_ic:
+norm_met = (nm) !np !nd !nc;
+
+# crossing of interconnect layers causing coupling
+# capacitance to arise
+poldiffcap:
+crospoly = nx (np) (nd) !nm !nc;
+
+metpolcap:
+mpcap = (nm) (np) !nd !nc;
+
+metdiffcap:
+mdcap = (nm) (nd) !np !nc;
+
+metpoldiffcap:
+mpdcap = (nm) (np) (nd) nx !nc;
+
+# contacts between different interconnect layers
+difmtcnt:
+dmc = nc (nm nd) !np;
+
+polmtcnt:
+pmtc = nc (nm np) !nd;
+
+burcnt:
+bc = nb (nd np) !nx !nc !nm;
+
+metburcnt:
+mbc = nb (nd np) !nx !nc (nm);
+
+threecnt:
+trlc = nb nc (nm np nd);
+
+# layer combinations that are to be ignored by the extractor
+ignore:
+ign = !np !nd !nc !nm;
+
+# specification of the types of elements with some process
+# parameters to be used by the extractor's output functions
+# making switch-level/circuit description for SLS and SPICE
+element_types:
+
+#   type  name       gate-layer drain/source-layer
+#   ---  --------      -----      -----
+    nenh: transistor    np         nd,
+    ndep: depl_trans    np         nd,
+
+# a empty string instead of a layer name means the bulk
+#   type name          lay1 lay2 sqcap wallcap
+#   ---  --------      ---- ---   ---  ----
+    cap:  metal_trans    nm  np    .07  .07,
+    cap:  metal_depl     nm  np    .07  .07,
+
+    cap:  diff_ic        nd        .06  .34,
+    cap:  met_ic         nm        .03  .06,
+    cap:  poly_ic        np        .05  .06,
+    cap:  poldiffcap     np  nd    .07  .06,
+    cap:  poldiffcap     nd        .06  .34,
+    cap:  metpolcap      nm  np    .07  .07,
+    cap:  metpolcap      np        .05  .06,
+    cap:  metdiffcap     nm  nd    .07  .07,
+    cap:  metdiffcap     nd        .06  .34,
+    cap:  metpoldiffcap  nm  np    .07  .07,
+    cap:  metpoldiffcap  np  nd    .07  .06,
+    cap:  metpoldiffcap  nd        .06  .34,
+
+    cap:  difmtcnt       nd        .06  .34,
+    cap:  polmtcnt       np        .05  .06,
+    cap:  burcnt         nd        .06  .34,
+    cap:  metburcnt      nm  np    .07  .07,
+    cap:  metburcnt      nd        .06  .34;
+
+# EOF

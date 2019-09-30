@@ -1,0 +1,79 @@
+.TH RMPR 1ICD "5/31/90"
+.UC 4
+.SH NAME
+rmpr - remove a project
+.SH SYNOPSIS
+.B rmpr
+[-fsv] project
+.SH PARAMETERS
+.TP 12
+.I project
+The project to be removed.
+.SH OPTIONS
+Options are:
+.TP
+.B -f
+Force removal of cells in project.
+.TP
+.B -s
+Silence(sure) mode (don't ask for it).
+.TP
+.B -v
+Verbose mode.
+More verbose, if used more than ones.
+.SH DESCRIPTION
+.I Rmpr
+removes the specified \fIproject\fP.
+The argument has to be a legal UNIX path to the project directory.
+.PP
+With the -f option
+.I rmpr
+removes all cells in the project.
+If the -f option is not specified
+.I rmpr
+requires the project to be empty,
+that is, it should contain no cells.
+.PP
+The project directory is removed
+only if it does not contain any non-project files.
+If it does contain non-project files
+.I rmpr
+just degrades the project directory to an ordinary non-project directory
+containing only the remaining non-project files.
+.SH NOTE
+This program does not use environment variable CWD.
+.SH EXAMPLES
+.nf
+% rmpr old_project
+% rmpr ../../projects/project3
+.fi
+.SH AUTHORS
+P. van der Wolf, P. Bingley.
+.SH FILES
+The following files and directories are removed:
+.PP
+.if n .ta 24
+.if t .ta 6c
+.nf
+\fCproject/.dmrc\fP	(file)
+\fCproject/.dmxdata\fP	(file)
+\fCproject/projlist\fP	(file)
+\fCproject/exp_dat\fP	(file)
+\fCproject/display.out\fP	(Xspace file)
+\fCproject/layout\fP	(view dir.)
+\fCproject/circuit\fP	(view dir.)
+\fCproject/floorplan\fP	(view dir.)
+\fCproject/seadif\fP	(ocean dir.)
+\fCproject/sls_prototypes\fP	(ocean dir.)
+\fCproject\fP	(project dir.)
+\fCproject/.cslsrc\fP	(init file)
+\fCproject/.dalirc\fP	(init file)
+\fCproject/.seadalirc\fP	(init file)
+\fCproject/.simeyerc\fP	(init file)
+\fCproject/.space.def.p\fP	(init file)
+.SH SEE ALSO
+mkpr(1ICD),
+rmdb(1ICD).
+.SH DIAGNOSTICS
+Upon successful completion \fIrmpr\fP returns exit code 0.
+Otherwise, a diagnostic is printed and 1 is returned.

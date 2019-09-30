@@ -1,0 +1,22 @@
+# directory: demo/FreePDK45/NangateOpenCellLibrary
+
+The NangateOpenCellLibrary.gds file is downloaded from the Nangate Resource Center.
+Two cells are modified (DFFRS_X1 and DFFRS_X2), because they had duplicated terminals.
+For installation, run the "install.sh" script (type "./install.sh" or "sh install.sh").
+
+See: www.nangate.com (Menu item: 45nm Open Cell Library)
+(section: Download, click on "Nangate Resource Center")
+
+The Nangate 45nm Open Cell Library is an open-source, standard-cell library
+provided for the purposes of testing and exploring EDA flows.
+
+Nangate has developed and donated this library to si2.org for open use.
+The library is intended to aid university research programs and organizations
+such as Si2 in developing flows, developing circuits and exercising new algorithms.
+The library was generated using Nangate's Library Creator(TM) and the 45nm FreePDK
+Base Kit from North Carolina State University (NCSU).
+
+FreePDK is an effort to develop an open-source, Open-Access-based PDK for the 45nm
+technology node and the Predictive Technology Model (PTM).
+See: www.eda.ncsu.edu/wiki/FreePDK
+

@@ -1,0 +1,58 @@
+\section{Enige aanwijzingen voor het gebruik van Linux}
+\index{linux}
+\label{linux}
+\subsection{Eerste maal inloggen}
+Voor het practicum moet worden ingelogd onder linux,
+gebruikmakende van je NetID gebruikersnaam en password.
+Voor problemen hiermee kun je terecht bij het EWI steunpunt
+bij de portiersloge in het gebouw aan de Drebbelweg.
+
+Na het inloggen moet een terminal window worden worden geopend
+en moet daarin het volgende commando worden getypt:
+\begin{verbatim}
+   source /data/public/common/software/opprog/bin/op_init
+\end{verbatim}
+Dit zorgt ervoor, dat alle paden naar de te gebruiken
+programmatuur worden gezet.
+Alle programma's die tijdens het practicum gebruikt worden
+zijn nu bereikbaar.
+Deze procedure behoeft slechts eenmalig bij de eerste keer inloggen
+te worden uitgevoerd.
+
+\subsection{Enkele linux commando's}
+Enkele veelgebruikte linux commando's die in een terminal window gegeven kunnen worden zijn:
+\begin{description}
+\setlength{\itemsep}{0cm}
+\item[ls]    
+Toon de inhoud van een de huidige directory.
+De optie -l geeft details over elke file en subdirectory.
+\item[mkdir]   
+Maak een nieuwe directory. \\
+mkdir $<$dir\_name$>$ \hspace*{0.5cm}maak een een directory $<$dir\_name$>$ onder de huidige directory.
+\item[cd]
+Verander van directory. \\
+cd \hspace*{3.2cm}ga naar de home\_directory \\
+cd .. \hspace*{2.8cm}         ga naar de parent\_directory \\
+cd $<$dir\_name$>$ \hspace*{1.0cm} ga naar de opgegeven directory 
+\item[cp]    
+Copieer een file. \\
+cp $<$file\_from$>$ $<$file\_to$>$ \hspace*{0.5cm}maak een copie van $<$file\_from$>$ onder de naam $<$file\_to$>$ \\
+cp $<$file\_from$>$ $<$dir\_to$>$ \hspace*{0.58cm}maak een copie van $<$file\_from$>$ in directory $<$dir\_to$>$ \\
+\hspace*{4.7cm}met de naam $<$file\_from$>$ 
+\item[rm]   
+Verwijder een file. \\
+rm $<$file\_name$>$ \hspace*{1.2cm} verwijder de file $<$file\_name$>$ uit het file\_systeem. \\
+rm -rf $<$dir\_name$>$ \hspace*{0.8cm} verwijder de directory $<$dir\_name$>$ en al zijn files en subdirectories \\
+\hspace*{4cm}uit het file\_systeem
+\item[man]    
+Geef uitleg over een commando. \\
+man rm \hspace*{2.6cm} geef uitleg over het commando rm
+\end{description}
+Voor file en directory namen kunnen pattern matching karakters zoals het
+karakter * gebruikt worden.
+Bijvoorbeeld, het volgende commando copieert alle files die eindigen op .vhd naar 
+een directory proj/VHDL
+\begin{verbatim}
+   cp *.vhd proj/VHDL
+\end{verbatim}
+\cleardoublepage

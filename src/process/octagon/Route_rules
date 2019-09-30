@@ -1,0 +1,211 @@
+/* * *    ROUTER DESIGN RULE FILE for C3TU process  * * *
+ *
+ * This file describes the design rules which are (only)
+ * used by the plar-programs 'glroute', 'sequ' and 'gcr'.
+ * These programs fetch the data they need from this
+ * file. Everything they do not recognize will be ignored
+ * WITHOUT warning. The programs start looking for this
+ * file in the project directory. If no 'Route_rules'
+ * -file was found there, the default Route_rules file
+ * of the process (in ICDPATH/lib/process/xxxx) will
+ * be used. In this way the user can modify his/her own
+ * router design rules by placing this file in the project
+ *  directory.
+ * The other router design rule file 'Route_rev' will
+ * only be used in special cases.
+ * For a more detailed description: see Delft P&R users
+ * manual
+ *
+ * Patrick Groeneveld  4-1989
+ */
+
+/*
+ * Declaration of masknames for internal layers.
+ * Used by: gcr, sequ
+ */
+mask[poly] = ps;
+mask[diff] = od;
+mask[metal1] = in;
+mask[metal2] = ins;
+
+/*
+ * Masknames of the contact hole patterns which connect
+ * to metal1.
+ * Used by: gcr, sequ
+ */
+contactmask[poly] = cps;
+contactmask[diff] = con;
+contactmask[metal2] = cos;
+
+/*
+ * The primary layer used in the vertical direction.
+ * poly, diff or metal2 can be selected.
+ * This layer is also used for vertical channels with the
+ * '-d' option of sequ.
+ * Used by: sequ, gcr
+ */
+vertical = metal2;
+
+/*
+ * The minimum spacing between the layers of indices 1
+ * and 2.
+ * Used by: gcr, sequ
+ */
+spacing[diff][diff] = 12;   /* NOTE: this value is wrong,
+                              but diff-terminals are not
+                              allowed anyway */
+spacing[diff][poly] = 4;
+spacing[poly][poly] = 12;
+spacing[metal1][metal1] = 12;
+spacing[metal2][metal2] = 12;
+
+/*
+ * The minimum separation between two cells. This value is
+ * determined by well separation rules.
+ * Used by: gcr
+ */
+minchanwidth = 40;
+
+/*
+ * The minimum width of the layers.
+ * Used by: gcr
+ */
+width[diff] = 8;
+width[poly] = 8;
+width[metal1] = 12;
+width[metal2] = 12;
+
+/*
+ * The minimum size of the contact window between layer 1
+ * and layer 2.
+ * Used by: gcr, sequ
+ */
+contact[diff][poly] = 0;
+contact[diff][metal1] = 10;
+contact[poly][metal1] = 10;
+contact[metal2][metal1] = 10;
+
+/*
+ * The minimum spacing between contact holes between
+ * <layer> and metal1.
+ * used by: gcr
+ */
+contspacing[poly] = 10;
+contspacing[diff] = 10;
+contspacing[metal2] = 10;
+
+/*
+ * The minimun spacing between poly-metal1 (ps-in) and
+ * metal1-metal2 (in-ins) contact patterns. If this value
+ * is ommitted stacked contacts may occur.
+ * used by: gcr
+ */
+contspacing[metal1] = 16;
+
+/*
+ * The overlap of layer 1 at a contact window between
+ * layers 1 and 2.
+ * Used by: gcr, sequ
+ */
+overlap[poly][metal1] = 5;
+overlap[metal1][poly] = 5;
+overlap[diff][metal1] = 5;
+overlap[metal1][diff] = 5;
+overlap[metal2][metal1] = 5;
+overlap[metal1][metal2] = 5;
+
+overlap[poly][diff] = 0;         /* not used */
+overlap[diff][poly] = 0;
+
+/*
+ * The maximum length of a wire in the specified layer in
+ * the horizontal direction. If nothing is specified for
+ * a layer, infinity is assumed. A value <= 0 set the
+ * length to minimum, a value < 0 prevents any joining
+ * of contactholes by gcr. See manual for more details.
+ * Used by: gcr
+ */
+length[diff] = 0;
+length[poly] = 300;
+/* metal1 length cannot be set
+   metal2 length remains infinity */
+
+/*
+ * The minimum length of a wire in the layer of the index
+ * to justify conversion into metal. If a layer is not
+ * mentioned here, the postprocessor will not minimize
+ * the length of the wire in that layer.
+ * Used by: gcr
+ */
+minlength[diff] = 70;
+minlength[poly] = 250;
+/* no length minimization in metal2 */
+
+/*
+ * The aspect ratio of a via from index to metal1:
+ * height = viafactor * width.
+ * The factor should be in the range from [0,1].
+ * A value of zero gives the minimum height.
+ */
+viafactor[diff] = 0.9;
+viafactor[poly] = 0.9;
+viafactor[metal2] = 0.9;
+
+/*
+ * The decrease of contact hole height to justify 1 unit
+ * extra wire length in layer. Used to position vias
+ * by the channel router. The smaller this value,
+ * the more off-centered vias will be present.
+ * Example: if Polyfactor[POLY] = 0.25, at most 4 units of
+ * extra poly length are justified by 1 unit gain in height
+ * Used by: gcr.
+ */
+polyfactor[diff] = 1;
+polyfactor[poly] = 0.8;
+polyfactor[metal2] = 0.1;
+
+/*
+ * The decrease of conctacthole height to justify a metal
+ * wire to a contacthole which is 1 unit longer. Notice
+ * that if Metalfactor[layer] < Polyfactor[layer], the
+ * contacthole will be centered on top of the terminal
+ * interval. However, if
+ * Metalfactor[layer] > Polyfactor[layer] the contacthole
+ * will be placed such that the length of the metal wire
+ * to the contacthole is minimized, ignoring the length
+ * of wire in 'layer'.
+ * Used by: gcr.
+ */
+metalfactor[diff] = 0.2;
+metalfactor[poly] = 0.4;
+metalfactor[metal2] = 0.12;
+
+
+/*
+ * Approximate size of the grid in two and three layers
+ * Used by: glroute
+ */
+grid_2 = 32;
+grid_3 = 32;
+
+/*
+ * Maximum width of power wires
+ * Used by: glroute
+ */
+max_power_width = 200;
+
+/*
+ * Max. current dissipation (in mA) per unit width (/5).
+ * Used to calculate power wire width by glroute
+ */
+current[metal1] = ( (w ^ 1.5) / 96.824584);
+current[metal2] = ( (w ^ 1.5) / 24.206146);
+
+/*
+ * Formula to calculate the power wire width (um*5) gived the current (mA).
+ * This is the inverse of the previous formula
+ * Used to calculate power wire width by glroute
+ */
+power_line[metal1] = ( (i * 96.824584) ^ 0.6666 );
+power_line[metal2] = ( (i * 24.206146) ^ 0.6666 );
+

@@ -1,0 +1,68 @@
+.TH FLATTEN 1ICD "User Commands"
+.UC 4
+.SH NAME
+flatten - flatten the layout of a cell
+.SH SYNOPSIS
+.B flatten
+[-L] [-dN] [-f file] [-h] [-n name] [-s] [-t] [-p] [-v] cell
+.SH OPTIONS
+.TP 10
+.B -L
+Flatten only LOCAL sub-cells.
+.TP
+\fB-d\fPN
+Flatten depth (default N=1000)
+.TP
+\fB-f\fP file
+Output to LDM file (no overwrite).
+.TP
+\fB-F\fP file
+Output to LDM file (overwrite).
+.TP
+.B -h
+Help messages (no processing).
+.TP
+\fB-n\fP name
+New cell name (default ...flat).
+.TP
+.B -s
+Silent mode.
+.TP
+.B -t
+Flatten terminals of sub-cells.
+.TP
+.B -p
+No terminal postfix (only if needed).
+.TP
+.B -v
+Verbose mode.
+.SH DESCRIPTION
+The
+.I flatten
+program flattens the hierarchical layout of a cell into the ICD database.
+The new cell name is default ...flat.
+If this cell name already exists it is updated (overwritten).
+Take care not to overwrite an existing cell accidentely,
+especial when using option \fB-n\fP.
+Alternatively the layout of the flattend cell can be written to a LDM file.
+.PP
+Options may be combined.
+Except after \fB-d\fP must be a number.
+For options \fB-f\fP, \fB-F\fP and \fB-n\fP the next argument is taken.
+Last argument must be the cell name.
+.PP
+The option \fB-t\fP adds all sub-cell terminals to the flattend top-cell,
+it is default using the _subN postfix (N >= 1) for the terminal names.
+If you don't want this, use option \fB-p\fP, then the postfix is only
+added when the terminal is already found.
+.PP
+When a LDM file is specified on the command line,
+you can best add the LDM postfix ".ldm".
+.AU "S. de Graaf"
+.SH LIMITATIONS
+Sub-cell labels are not flattend.
+.SH SEE ALSO
+"The Geometrical Mask Layout Language LDM" - NELSIS user documentation.
+.br
+cldm(1ICD),
+xldm(1ICD).

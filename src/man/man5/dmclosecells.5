@@ -1,0 +1,43 @@
+.TH DMCLOSECELLSTREAMS 5ICD "DMI User's Manual"
+.SH NAME
+dmCloseCellStreams - close all streams for cell
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+void dmCloseCellStreams (DM_CELL *cellkey, int mode);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "DM_CELL *cellkey"
+is a pointer to a valid
+.B DM_CELL
+as obtained from the function
+dmCheckOut() when the cell was opened.
+.TP
+.B "int mode"
+is an integer selecting a specific behavior of dmCloseStream().
+Valid modes as pre-defined in "dmincl.h" are \fBCOMPLETE\fP,
+\fBQUIT\fP and \fBCONTINUE\fP.
+See dmCloseStream(5ICD).
+.SH DESCRIPTION
+Function
+.B dmCloseCellStreams
+performs a dmCloseStream() for
+all open streams related to the access key \fBcellkey\fP.
+.SH DIAGNOSTICS
+If a close-stream operation fails for a particular stream
+the function dmError() will be called.
+See dmCloseStream(5ICD).
+.SH EXAMPLES
+.SH SEE ALSO
+dmCloseStream(5ICD),
+dmOpenStream(5ICD),
+dmCheckIn(5ICD).
+.SH NOTE
+This function should be used with care, it will become obsolete
+in future releases.
+Note that dmCheckIn() can be used to close all open streams for a
+particular cell.

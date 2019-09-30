@@ -1,0 +1,156 @@
+% -*- latex -*-
+
+\chapter{Using OCEAN: tips and tricks} 
+
+\section{Simple troubleshooting: the seadif database}
+\index{seadif@\fname{seadif} database}
+'Seadif' is a special representation for grid-based sea-of-gates layout. It is
+stored in the subdirectory 'seadif' of every project.  The seadif
+representation of a cell is generated automatically, so you don't need to worry
+about it. In some cases, however, the seadif representation cold become corrupt
+or or incomplete. This might happen after a program crash or two users writing
+at the same time. Fortunately, the seadif representation is redundant, so it
+can be re-created automatically as soon as you run \tool{madonna} or
+\tool{trout} the next time. Therefore, the following command will solve most
+of your troubles:\cd{/myproject}
+\type{rm -rf seadif}
+This command removes the entire seadif directory and its contents.
+Only for the case that you are importing cells from this directory, you should
+re-create the seadif database manually using the command \tool{nelsea}:
+\type{nelsea}
+
+\section{Assembling cells from various projects}
+
+Combining cells from different projects is quite easy.  Using the commands
+\tool{addproj} and \tool{impcell} you can import remote cells into your
+project. To make sure that everything will work smoothly, please comply with
+the following three simple rules. Suppose that the want to make a cell in the
+project called 'top-project', which needs imported son-cells from remote
+projects 'project1', 'project2' and 'project3'.  In order to make things more
+realistic (and complicated), suppose also that in some of the imported projects
+also other projects are imported: the son-cell in 'project1' imports
+grandchildren from projects 4 and 5, and the cell in 'project2' imports some
+kids from 'project5'.  Confused?  The situation is shown in
+figure~\ref{extree}.
+
+\begin{figure}
+\begin{verbatim}
+                         top-project
+                           /  |  \
+                          /   |   \
+                         /    |    \
+                  project1    |    project3
+                    /   \   project2
+                   /     \    |
+                  /       \   |
+              project4   project5
+\end{verbatim}
+\caption{\label{extree}
+Example of a project hierarchy}
+\end{figure}
+
+\begin{itemize}
+\item[{\bf Rule 1}:]
+Add ALL projects in the tree with \tool{addproj}, also the projects which are imported
+indirectly.
+\end{itemize}
+
+For the example, we should not only add projects 1, 2 and 3, but also
+the other ones with grandchildren or even the most remote relatives in
+the tree:\cd{/top-project}
+\begin{itemize}%
+\item
+{\tt /user/hillary\thedir~\%~ addproj /users/neuzeltje/project1}%
+\item
+{\tt /user/hillary\thedir~\%~ addproj /users/calimero/project2}%
+\item
+{\tt /user/hillary\thedir~\%~ addproj /users/prince/project3}%
+\item
+{\tt /user/hillary\thedir~\%~ addproj /users/neuzeltje/project4}%
+\item
+{\tt /user/hillary\thedir~\%~ addproj /users/hillary/project5}%
+\end{itemize}
+
+With the command \tool{impcell}, on the other hand, you only need to import
+the son-cells which you really need in 'top-project'.
+
+\begin{itemize}
+\item[{\bf Rule 2}:]
+All project names in the imported tree must be unique. 
+\end{itemize}
+
+For example, you will run into troubles if you try to import both the
+projects '/users/neuzeltje/memory' and '/users/calimero/memory',
+because the project name "memory" is used twice. You can prevent name
+clashes simply by renaming a project. See the section~\ref{renamingprojects}
+(on page~\pageref{renamingprojects}) to find out how to do that.
+
+\begin{itemize}
+\item[{\bf Rule 3}:]
+All cells in the tree must have a proper seadif representation. 
+\end{itemize}
+
+For every son-cell there must be a proper seadif-representation. Normally this is
+performed automatically, but problems with the 'seadif' representation are more
+likely with imported cells.
+\tool{Madonna} or \tool{trout} will tell you exactly which seadif
+representation is missing.  The cure is easy. First you go to the project about
+which \tool{madonna} (or \tool{trout}) complains. Then you use the program
+\tool{nelsea} to force an update of the seadif representation:\cd{/project5}
+\index{nelsea@\tool{nelsea}}
+\typeb{cd /users/neuzeltje/project4}{nelsea}
+
+You must have write permissions in the directory where you run
+\tool{nelsea}.  Without arguments, the command \tool{nelsea} will create or
+update the seadif representation of all cells in the project. If there
+are many unimportant cells, you can speed things up by specifically
+updating one cell. For instance, the command:
+\type{nelsea myadder}
+will update cell \fname{myadder} and all the children (and grandchildren, if
+necessary) of \fname{myadder}. 
+
+
+\section{Renaming, copying or moving projects: how to proceed}
+\index{project!renaming}
+\index{project!copying}
+\label{renamingprojects}
+In some cases it might be necessary to rename project, to duplicate
+one, or to move a project to a different place in the file system. In
+order to prevent unpleasant surprises, follow the guidelines below.
+
+\begin{itemize}
+\item[{\bf Step 1}:]
+Make sure that no other project is importing from the project.
+\end{itemize}
+
+Since the project will be renamed, any old references to it will point
+"ins Blaue hinein", like the Germans say. Generally you should only move 
+top-level projects. 
+
+\begin{itemize}
+\item[{\bf Step 2}:]
+Move or copy the project
+\end{itemize}
+Within the same file system (that is, the same disk), you can use the
+\smc{unix} command \tool{mv}:\cd{}
+\type{mv oldproject newproject}
+
+This is the fastest way. To move to a different disk, or if you want
+to make a copy, use \tool{cp -r}:
+\type{cp -r oldproject /otherdisk/prince/newproject}
+
+\begin{itemize}
+\item[{\bf Step 3}:]
+Clean up the seadif representation
+\end{itemize}
+
+After moving or copying, the subdirectory 'seadif' of the project
+still contains old name and path of the project. There is a simple 
+way to solve this. First go to the project, remove the existing 
+seadif representation, and then create a new one:\cd{}
+\type{cd newproject} \cd{/newproject}
+\typeb{rm -rf seadif}{nelsea}
+
+Also on other situations where you get strange database errors, you 
+can do this to clean things up.
+

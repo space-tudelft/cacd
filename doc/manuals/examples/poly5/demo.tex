@@ -1,0 +1,187 @@
+\chapter{poly5 Example of 3D Capacitance Extraction}
+\section{Introduction}
+\label{PEintro}
+In this tutorial, we will be studying the poly5 example.
+We will see how Space is used to compute 3D capacitances.
+See also the "Space 3D Capacitance Extraction User's Manual".
+\\[1 ex]
+The example consists out of a configuration of 5 parallel conductors.
+The conductors have a length of 5 micron, a width of 0.5 micron,
+a height of 0.5 micron and their separation is also 0.5 micron.
+Each conductor is assigned a terminal (port).
+Thus, each conductor can easy be found in the extracted netlist.
+The layout looks as follows (such a figure can be printed using \io{getepslay}, see
+\manualpage{getepslay}):
+
+\begin{figure}[h]
+\centerline{\epsfig{figure=poly5/poly5.eps, width=8cm}}
+\end{figure}
+
+\section{Files}
+This tutorial is located in the directory \CACDTOP{demo/poly5}.
+Initially, it contains the following files:
+\begin{filelist}
+\item[README] A file containing information about the demo.
+\item[poly5.gds] The layout of the poly5 design.
+\item[tech.s] The technology file for Space. See Section \ref{PEtech}.
+\item[param.p] The parameter settings file for Space. See Section \ref{PEparam}.
+\item[script.sh] A file containing the commands for executing all
+steps of the demo in sequence.
+\end{filelist}
+
+\section{Technology File}
+\label{PEtech}
+The technology file that we will use is the file \io{tech.s}, see listing below.
+
+\small \begin{Verbatim}[frame=single]
+listing of file tech.s
+        ...
+   3
+   4    unit vdimension  1e-6  # micron
+   5
+   6    colors :
+   7        cpg  red
+   8
+   9    conductors :
+  10        resP : cpg : cpg : 0.0
+  11
+  12    vdimensions :
+  13        dimP : cpg : cpg : 0.5 0.5
+  14
+  15    dielectrics :
+  16        # Dielectric consists of 5 micron thick SiO2
+  17        # (epsilon = 3.9) on a conducting plane.
+  18        SiO2   3.9   0.0
+  19        air    1.0   5.0
+\end{Verbatim}
+\normalsize
+Please note that the masks to be used in this file have already been defined
+in the \io{maskdata} file in the process library \CACDTOP{lib/process}.
+In this example, we will only use the poly-silicon mask (\io{cpg}).
+
+When we look to the file, we first see on line \io{4} an \io{unit} specification
+for the \io{vdimensions} definitions starting on line \io{12}.
+An unit of \io{1e-6} $m$ is chosen for the values.
+Thus, the values must be specified in $\mu m$.
+
+Starting on line \io{6} we find the \io{colors} specification.
+The color of the \io{cpg} mask is chosen to be \io{red}.
+Note that this info is only used by the visualization program \io{Xspace}.
+
+Starting on line \io{9} we find the \io{conductors} specification.
+This is an important section, because without this we can not specify
+element pins and even a vdimension.
+The conductor value is for this example unimportant,
+because we don't extract resistances.
+
+For 3D capacitance extraction, we need only two additional specifications.
+First, the \io{vdimensions} definitions for building the 3D conductor mesh.
+This section specifies respectivily the bottom (against the ground plane) and the thickness
+of each conductor.
+Second, the \io{dielectrics} definitions specify the dielectric properties of the media
+around the conductors, respectivily the relative permitivity $\epsilon_r$ and the bottom in $\mu m$.
+Note that the thickness of the last medium (\io{air}) extends to infinity.
+
+\section{Parameter File}
+\label{PEparam}
+The parameter file \io{param.p} is controlling the extraction, see listing below.
+
+\small \begin{Verbatim}[frame=single]
+listing of file param.p
+        ...
+   3
+   4    BEGIN cap3d
+   5    be_mode           0c
+   6    max_be_area       0.5
+   7    be_window         1
+   8    END cap3d
+\end{Verbatim}
+\normalsize
+In the above listing, we see a \io{cap3d} block from line \io{4} to line \io{8}.
+These parameters are only used for controlling capacitance 3D extraction.
+The \io{max\_be\_area} (in $\mu m^2$) and \io{be\_window} (width in $\mu m$) parameters
+needs always to be specified.
+On line \io{5}, you find also the \io{be\_mode} parameter.
+However, this boundary element mode is the default (see 3D Cap. User's Manual).
+
+\section{Running the Extractor}
+The file \io{script.sh} is a batch file for running all the commands
+for this example.
+First, it changes the current working directory '.' into a project directory:
+\small
+\begin{Verbatim}
+% mkpr -p scmos_n -l 0.05 .
+\end{Verbatim}
+\normalsize
+It uses the \io{scmos\_n} process from the technology library.
+We use the mask names as defined in the \io{maskdata} file of the library.
+But, see before, we are not using the default technology
+file \io{space.def.s} and parameter file \io{space.def.p} of the library.
+Thus, the local technology file \io{tech.s} needs to be compiled with \io{tecc} to the format
+(a \io{.t} file) which is used by the extractor:
+\small
+\begin{Verbatim}
+% tecc tech.s
+\end{Verbatim}
+\normalsize
+Second, the layout description is put into the project database.
+The layout is supplied in a GDS2 file, which can be converted to
+internal database format with the \io{cgi} program:
+\small
+\begin{Verbatim}
+% cgi poly5.gds
+\end{Verbatim}
+\normalsize
+Now, we can extract a circuit description for the layout of the \io{poly5} cell, as follows:
+\small
+\begin{Verbatim}
+% space3d -C3 -E tech.t -P param.p poly5
+\end{Verbatim}
+\normalsize
+In this case, the capacitances are calculated, using a 3D mesh method (BEM).
+The method calculates couple capacitances between the conductors and between the conductors
+and a ground plane.
+\\[1 ex]
+The extracted circuit can be inspected using the \io{xspice} program.
+We use also the \io{-f} option to get a file \io{poly5.spc}:
+\small
+\begin{Verbatim}
+% xspice -af poly5
+\end{Verbatim}
+\normalsize
+The content of the file is listed below.
+
+\small \begin{Verbatim}[frame=single]
+listing of file poly5.spc
+   1    poly5
+   2
+   3    * Generated by: xspice 2.39 25-Jan-2006
+   4    * Date: 19-Jun-06 16:03:04 GMT
+   5    * Path: /users/simon/poly5
+   6    * Language: SPICE
+   7
+   8    * circuit poly5 e d c b a
+   9    c1 a b 253.3136e-18
+  10    c2 a GND 624.1936e-18
+  11    c3 b c 253.3136e-18
+  12    c4 b GND 457.9544e-18
+  13    c5 c d 253.3136e-18
+  14    c6 c GND 457.9544e-18
+  15    c7 e d 253.3136e-18
+  16    c8 e GND 624.1936e-18
+  17    c9 d GND 457.9544e-18
+  18    * end poly5
+\end{Verbatim}
+\normalsize
+We can make a drawing of this listing of the extracted circuit.
+For this topology see the figure below.
+
+\begin{figure}[h]
+\centerline{\epsfig{figure=poly5/circuit.eps, width=11cm}}
+\end{figure}
+
+Note that there are no couple capacitances between conductors (a, c), (b, d) and (c, e).
+This happens, because the chosen \io{be\_window} is $1 \mu m$ width, and the distance between these
+conductors is more than $1 \mu m$.
+Note that the "Space 3D Capacitance User's Manual" shows also the capacitance values in a table
+for other values of the \io{be\_window}.

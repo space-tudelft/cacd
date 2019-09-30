@@ -1,0 +1,150 @@
+.TH MACRO 1ICD "User Commands"
+.UC 4
+.SH NAME
+macro - change the macro status for a layout cell
+.SH SYNOPSIS
+.B macro
+[-a\fImask\fP | -d\fImask\fP | -f | -s[\fImask\fP] | -u | -t] [cell ...]
+.SH OPTIONS
+.TP 8
+.B -a\fImask\fP
+Add the mask(s) to the list of masks which have macro status.
+.TP
+.B -d\fImask\fP
+Delete the mask(s) from the list of masks which have macro status.
+.TP
+.B -f
+Full, can be used as shorthand to specify all masks.
+.TP
+.B -s[\fImask\fP]
+Set the macro status or only for specified mask(s).
+.TP
+.B -t
+Touch always the macro status file.
+.TP
+.B -u
+Unset the macro status.
+.SH DESCRIPTION
+.I Macro
+sets or unsets or changes the macro status for one or more layout cells and prints
+the new status(es).
+If no option is specified, only the current status of the cell is printed.
+The status can be "macro = no" (which means that the cell has no macro
+status), "macro = yes" (which means that the total cell has the
+macro status) or "macro = yes (only for masks: ...)" which means
+that only a few masks of the cell have the macro status.
+.PP
+For new projects with xcontrol you can also use the program
+.I xcontrol
+to change the cell macro status.
+But also in that case you may use
+the
+.I macro
+program.
+.PP
+You can only add masks to cells which have not already full macro status.
+If you delete all masks, the cell macro status is unset.
+If you unset the macro status, then the mask list is not removed.
+Thus, you can set the macro status again with the current mask list.
+However, when there was no status before, the
+.B -s
+option default sets the full macro status.
+You can force the full status with the
+.B -f
+option.
+.PP
+If you add the touch option to your action, the macro status file
+is always touched, also if there are no changes in it.
+If you touch the macro status (file) of a cell,
+then its mask list is sorted again and unknown or unneeded masks are deleted.
+.PP
+You can use all options together.
+Option
+.B -u
+has precedence above option
+.B -s
+and option
+.B -d
+has precedence above the
+.B -a
+option.
+You can also specify a range of masks with the minus sign.
+Single masks must be separated from each other with the comma character.
+The options with a mask list can only ones be used.
+Note that the options -a, -d or -f don't change the macro status,
+but only the saved mask list.
+.PP
+If no cell is specified,
+all macro cells in the current project are listed.
+The program also reads the imported celllist and tries to find
+. \"macro status for aliases in the current project or tries to find
+macro status for imported cells in the remote projects.
+A printed macro status for a remote cell is flagged with an '*' sign.
+Cells with
+.I device
+status are flagged with a 'D' sign and cells with
+.I library
+status with a 'L' sign.
+But these cells are only listed if they have
+.I Free
+or
+.I Freemasks
+interfacetype.
+.PP
+When a layout cell is defined as a macro,
+during expansion (see \fIexp(1ICD)\fP),
+instances of the cell are always flattened.
+Even when a hierarchical extraction is performed.
+When the cell that is defined as a macro has one or more son-cells itself,
+the macro status of each of these son-cells determines if the instances
+of these cells are also flattened.
+It is also possible to set the macro status only for one or more masks
+of the cell instead of the total cell.
+In that case only the
+.I Freemasks
+will be expanded.
+.PP
+When a macro cell is also a device (see \fIdevice(1ICD)\fP and
+\fIputdevmod(1ICD)\fP),
+the cell will become an instance in the extracted circuit (just
+as in the normal case) but
+the layout of the cell will additionally be (partial) expanded in the father cell.
+.PP
+For new projects with xcontrol use the program
+.I xcontrol
+to change (or list) the cell device or library status.
+In that case,
+a device or library cell has also macro status,
+if the interfacetype is set to Free or Freemasks.
+.SH EXAMPLES
+.nf
+% macro -fs image91
+% macro -sPoly-Metal2 -dActive image91
+% macro
+% macro image91
+% macro -u image91
+% macro -dVia1,Via2 image91
+% macro -s image91 latch select
+.fi
+.SH FILES
+.TP
+\fCNELSISPROJECT/layout/celllist\fP
+.TP
+\fCNELSISPROJECT/layout/impcelllist\fP
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/is_macro\fP
+.SH LIMITATIONS
+In old projects without xcontrol,
+the program can only change the status for local cells.
+The program can't create directories and does not update the celllist(s).
+The program lists only cells which are in the layout celllist and impcelllist.
+The program does not check the local celllist when updating macro status.
+. \"You must make the cell directory by hand for an imported cell which
+. \"you want to give macro status "yes" or "no" locally.
+If you specify an option,
+you must also specify one of more cell arguments.
+Unknown masks are always removed when you specify a cell argument.
+.br
+Only the first 64 masks of the maskdata can be Freemasks.
+.SH SEE ALSO
+device(1ICD), putdevmod(1ICD), space(1ICD), xcontrol(1ICD).

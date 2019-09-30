@@ -1,0 +1,19 @@
+G 14.285714285714286
+R 0 0 1000 700
+B 10 5 60 43 na444
+K unrouted
+T in A 10 15
+T in B 10 20
+T in C 10 25
+T in D 10 30
+T out Y 60 25
+I na210~0 19 14
+I na210~1 19 26
+I na210~2 31 22
+C na444.A>na210~0.A
+C na444.B>na210~0.B
+C na444.C>na210~1.A
+C na444.D>na210~1.B
+C na210~0.Y>na210~2.A
+C na210~1.Y>na210~2.B
+C na210~2.Y>na444.Y

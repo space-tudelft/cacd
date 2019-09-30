@@ -1,0 +1,112 @@
+.TH CLDM 1ICD "User Commands"
+.UC 4
+.SH NAME
+cldm - convert LDM to layout database
+.SH SYNOPSIS
+.B cldm
+[-4bforsvx] inputfile
+.SH OPTIONS
+.TP 8
+.B -4
+Test non-orthogonal input conform 45 degree.
+.TP
+.B -b
+Sound the bell if the program is finished.
+.TP
+.B -f
+Enables cell overwrite (force) mode.
+.TP
+.B -o
+Use no-origin mode (default).
+.TP
+.B -r
+Give no rounding messages.
+.TP
+.B -s
+Do only a syntax check.
+.TP
+.B -v
+Enable the verbose mode.
+.TP
+.B -x
+Use origin mode.
+.SH DESCRIPTION
+.I Cldm
+adds the layout description of one or more cells
+(models in LDM)
+to the ICD database.
+If a cell description is read,
+.I cldm
+creates a new cell directory,
+and translates the LDM cell description
+into an internal database format.
+.PP
+The cell descriptions are read from the specified LDM file
+and must be the last argument.
+In most cases a file with suffix ".ldm".
+The input must be conform the syntax rules of LDM.
+If not, a syntax error will be the result,
+and an appropriate error message will be generated.
+.PP
+To help you in making a correct cell definition you can invoke
+.I cldm
+with option -s.
+In that case
+.I cldm
+performs only a syntax check, and two kinds of semantic checks, i.e.:
+.nf
+.PP
+1) a cell may not be redefined,
+.PP
+2) a cell called in a cell description must already exist.
+.fi
+.PP
+With the origin mode (option -x)
+the lower-left corner of the bounding box of a sub-cell is used
+as the translation vector reference point.
+Note that if the input file for
+.I cldm
+was obtained with
+.I xldm,
+the option -x should only be used if and only if
+it was also used with
+.I xldm.
+.PP
+If an error is detected the cell will not be added to the database.
+This can result in subsequent error messages,
+complaining about the fact that the cell does not exist.
+.AU "J. Annevelink, S. de Graaf"
+.SH FILES
+.TP
+\fCNELSISPROJECT/.dmrc\fP
+.TP
+\fCNELSISPROJECT/layout/impcelllist\fP
+.TP
+\fCNELSISPROJECT/layout/celllist\fP
+
+.PP
+For each \fIcell\fP in the celllist:
+
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/annotations\fP
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/box\fP
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/info\fP
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/mc\fP
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/nor\fP
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/term\fP
+.SH LIMITATIONS
+The current working directory must be the project directory.
+.SH SEE ALSO
+"The Geometrical Mask Layout Language LDM" - NELSIS user documentation.
+.br
+addproj(1ICD),
+impcell(1ICD),
+mkpr(1ICD),
+xldm(1ICD).
+.SH DIAGNOSTICS
+All error messages are intended to be self-explanatory.

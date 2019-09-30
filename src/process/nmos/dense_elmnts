@@ -1,0 +1,166 @@
+# process nmos
+name basic_node
+class CONN_NODE
+auto_gen  TRUE
+circuit
+mark	3	3	 0.0	 0.0
+stick
+mark	-1	3	 0.0	 0.0
+layout
+box	NOT	0	0	 0	 0
+
+name terminal
+class TERM_NODE
+auto_gen  FALSE
+circuit
+mark	3	5	 0.0	 0.0
+stick
+mark	-1	5	 0.0	 0.0
+layout
+box	NOT	0	0	 0	 0
+
+name nenh
+class DEV_NODE
+auto_gen  FALSE
+term	g1	np	-1	 0
+term	g2	np	 1	 0
+term	d	nd	 0	 1
+term	s	nd	 0	-1
+circuit
+line	3	0	 0.0	-1.0	 0.0	-0.5
+line	3	0	 0.0	-0.5	-0.35	-0.5
+line	3	0	-0.35	-0.5	-0.35	 0.5
+line	3	0	-0.35	 0.5	 0.0	 0.5
+line	3	0	 0.0	 0.5	 0.0	 1.0
+line	3	0	-0.50	-0.5	-0.50	 0.5
+line	3	0	-1.0	 0.0	 1.0	 0.0
+stick
+box	1	16	-1.0	-0.1	 1.0	 0.1
+box	2	16	-0.1	-1.0	 0.1	 1.0
+layout
+box	nd	-1	-3	 1	 3
+box	np	-3	-1	 3	 1
+
+name ndep
+class DEV_NODE
+auto_gen  FALSE
+term	g1	np	-1	 0
+term	g2	np	 1	 0
+term	d	nd	 0	 1
+term	s	nd	 0	-1
+circuit
+line	3	0	 0.0	-1.0	 0.0	-0.5
+line	3	0	 0.0	 0.5	 0.0	 1.0
+line	3	0	-0.50	-0.5	-0.50	 0.5
+line	3	0	-1.0	 0.0	 1.0	 0.0
+box	3	16	-0.35	-0.5	 0.0	 0.5
+stick
+box	1	16	-1.0	-0.25	 1.0	 0.25
+box	2	16	-0.1	-1.0	 0.1	 1.0
+box	3	4	-0.4	-0.4	 0.4	 0.4
+layout
+box	nd	-1	-6	 1	 6
+box	np	-3	-4	 3	 4
+box	ni	-2	-5	 2	 5
+
+name ndep_con
+class DEV_NODE
+auto_gen  FALSE
+term	gs1	np	-1	 0
+term	gs2	np	 1	 0
+term	d	nd	 0	 1
+term	gs3	nd	 0	-1
+circuit
+line	3	0	 0.0	-1.0	 0.0	-0.5
+line	3	0	 0.0	 0.5	 0.0	 1.0
+line	3	0	-0.50	-0.5	-0.50	 0.5
+line	3	0	-1.0	 0.0	 1.0	 0.0
+line	3	0	-0.75	-0.75	-0.75	 0.0
+line	3	0	-0.75	-0.75	 0.0	-0.75
+box	3	16	-0.35	-0.5	 0.0	 0.5
+stick
+box	1	16	-1.0	-0.25	 1.0	 0.25
+box	2	16	-0.1	-1.0	 0.1	 1.0
+box	3	4	-0.4	-0.4	 0.4	 0.4
+box	5	4	-0.4	-0.4	 0.4	-1.0
+layout
+box	nd	-1	-7	 1	 6
+box	np	-3	-6	 3	 4
+box	ni	-2	-5	 2	 5
+box	nb	-2	-7	 2	-4
+
+name dp_crossing
+class UC_NODE
+auto_gen  TRUE
+stick
+box	6	4	 -0.4	-0.4	 0.4	 0.4
+layout
+box	np	-2	-1	 2	 1
+box	nd	-1	-2	 1	 2
+box	nx	-2	-2	 2	 2
+
+name dp_contact
+class CONN_NODE
+auto_gen  TRUE
+circuit
+mark	3	3	 0.0	 0.0
+stick
+box	3	16	-0.2	-0.2	 0.2	 0.2
+box	5	4	-0.4	-0.4	 0.4	 0.4
+layout
+box	np	-1	-1	 1	 1
+box	nd	-1	-1	 1	 1
+box	nb	-2	-2	 2	 2
+
+name pm_contact
+class CONN_NODE
+auto_gen  TRUE
+circuit
+mark	3	3	 0.0	 0.0
+stick
+box	0	16	-0.2	-0.2	 0.2	 0.2
+box	5	4	-0.4	-0.4	 0.4	 0.4
+layout
+box	np	-2	-2	 2	 2
+box	nm	-2	-2	 2	 2
+box	nc	-1	-1	 1	 1
+
+name dm_contact
+class CONN_NODE
+auto_gen  TRUE
+circuit
+mark	3	3	 0.0	 0.0
+stick
+box	0	16	-0.2	-0.2	 0.2	 0.2
+box	6	4	-0.4	-0.4	 0.4	 0.4
+layout
+box	nd	-2	-2	 2	 2
+box	nm	-2	-2	 2	 2
+box	nc	-1	-1	 1	 1
+
+name pdm_contact
+class CONN_NODE
+auto_gen  TRUE
+circuit
+mark	3	3	 0.0	 0.0
+stick
+box	0	16	-0.2	-0.2	 0.2	 0.2
+box	7	4	-0.4	-0.4	 0.4	 0.4
+layout
+box	nd	-2	-2	 2	 2
+box	np	-2	-2	 2	 2
+box	nm	-2	-2	 2	 2
+box	nc	-1	-1	 1	 1
+box	nb	-3	-3	 3	 3
+
+name sub_cell
+class MODEL_NODE
+auto_gen  FALSE
+circuit
+box	4	16	 0.0	 0.0	 0.0	 0.0
+box	1	0	 0.0	 0.0	 0.0	 0.0
+stick
+box	7	16	 0.0	 0.0	 0.0	 0.0
+layout
+box	bb	0	0	 0	 0
+

@@ -1,0 +1,7 @@
+
+Do not install these man pages.
+They are only for reference.
+
+The man pages are copied to "src/man"
+and modified and installed there.
+

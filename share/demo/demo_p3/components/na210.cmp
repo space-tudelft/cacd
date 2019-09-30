@@ -1,0 +1,4 @@
+bbox 6 6
+port in A
+port in B
+port out Y

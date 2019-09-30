@@ -1,0 +1,416 @@
+
+                    CAPACITANCE EXTRACTION HOWTO
+                    ============================
+
+
+Introduction
+============
+
+This file serves as a rough guide to get you started on extracting
+capacitive parasitics from a layout.
+
+First, we briefly explain how to setup a new process; then we create a
+simple test-cell, and show how to extract capacitive parasitics, first
+using the 3d extraction mode, and then using the faster 2d mode.
+
+
+Setting up a process
+====================
+
+We will describe here the steps necessary to setup a simple process, with
+information suitable for capacitance extraction.
+
+Note that the software provides two ways of creating a process. The first
+method is to write the necessary configuration files manually. The second
+method is to use the graphical tool "spock" (see [4]). We will use the first
+method here. One advantage of this method is that it provides a better
+understanding of the structure and the interdependencies of the software.
+
+Note also that we will not discuss the description of device rules.
+For details about adding devices, see [1], or see [4].
+
+Now, to begin, create a directory for your process:
+
+   % mkdir test_process
+   % cd test_process
+
+The next step is to define the masks used in your process. This is done by
+editing the file "maskdata". Basically, this file defines only the names of
+the masks, and some color (and style) information necessary to plot the
+masks in various tools. Thus, the information in the maskdata file is not
+extremely important, except of course that the masknames should be right.
+Below is a simple example of the contents of a maskdata file.
+
+   "test_process" "simple process used as an example"
+   #---------------------------------------------+---------------------
+   # Layer     | PG-Tape | CMask | Dali  | Plot  | Comment
+   #-----------+---------+-------+-------+-------+---------------------
+   # name      | job     | color | color | pen   |
+   # |    type | |  type | | fill| | fill| | fill|
+   # |    |    | |  |    | |  |  | |  |  | |  |  |
+   # 1    2    | 3  4    | 5  6  | 7  8  | 9  10 |
+   #-v----v----+-v--v----+-v--v--+-v--v--+-v--v--+---------------------
+   cpg    1      1  1      1  1    1  1    1  0   "polysilicon"
+   caa    1      2  1      2  1    2  1    2  0   "active area"
+   cmf    1      3  1      3  1    4  1    4  0   "metal"
+   cms    1      4  1      5  1    3  2    6  0   "metal2"
+   cca    0      5  1      8  1    0  1    8  0   "contact metal to caa"
+   ccp    0      7  1      8  1    0  1    8  0   "contact metal to cpg"
+   cva    0      8  1      6  1    7  1    6  0   "contact metal to cms"
+   cwn    0      9  1      4  1    5  0    5  0   "n-well"
+   csn    0     10  1      5  1    6  2    3  0   "n-channel implant"
+   cog    0     12  1      6  1    6  0    6  0   "contact to bondpads"
+   cx     2      0  1      0  0    7  0    8  0   "bounding box"
+
+Place the above lines in the file "maskdata" in the "test_process"
+directory. The syntax of the file should be obvious from this example:
+different fields are separated by one or more spaces, and you can
+use a "#"-mark to start a comment. The first line contains a short,
+descriptive name for the process, as well as a longer description.
+
+For the meaning of the different fields in the above example, you can type
+
+   % icdman maskdata
+
+You should make appropriate changes to the "maskdata" file, to let it
+represent the masks in your own technology; add, change or delete lines
+where necessary. In the examples that follow, we will assume that the file
+is left untouched.
+
+Now, add a file "default_lambda", which specifies the default unit distance
+in your layouts. For this example, put the following number in the file:
+
+   0.20
+
+This number means that a distance of 1 in the layout editor corresponds
+to 0.2 microns in reality (the layout editor, and in fact the complete cacd
+database, can only cope with integer coordinates, hence this scaling factor).
+
+Now, we also need an element definition file, which is called "space.def.s".
+This file describes the "elements" used in the extraction process. Elements
+are, for example, conductors, transistors, capacitance-rules, etc. Since
+we focus here on capacitance extraction only, we will define elements for
+conductors only. We will use a special preprocessing tool to generate
+capacitance-rules for these conductors. Capacitive effects originating from
+semiconductor junctions will not be considered here. See [1] for details.
+
+Below are the contents of the example "space.defs.s" file.
+
+   unit resistance    1     # ohm
+   unit c_resistance  1e-12 # ohm um^2
+   unit a_capacitance 1e-6  # aF/um^2
+   unit e_capacitance 1e-12 # aF/um
+   unit capacitance   1e-15 # fF
+   unit vdimension    1e-6  # um
+   unit shape         1e-6  # um
+
+   colors :
+       cpg   red
+       caa   green
+       cmf   blue
+       cms   gold
+       cca   black
+       ccp   black
+       cva   black
+       cwn   glass
+       csn   glass
+       cog   glass
+       @sub  pink
+
+   conductors :
+   # name    : condition : mask : resistivity : type
+     cond_mf : cmf       : cmf  : 0.045       : m  # first metal
+     cond_ms : cms       : cms  : 0.030       : m  # second metal
+     cond_pg : cpg       : cpg  : 40          : m  # poly interconnect
+
+   contacts :
+   # name   : condition    : lay1 lay2 : resistivity
+     cont_s : cva cmf cms  : cmf  cms  :   1   # metal to metal2
+     cont_p : ccp cmf cpg  : cmf  cpg  : 100   # metal to poly
+
+   vdimensions :
+     v_cpg_of_caa : cpg !caa  : cpg : 0.60 0.50
+     v_cpg_on_caa : cpg caa   : cpg : 0.35 0.70
+     v_cmf        : cmf       : cmf : 1.70 0.70
+     v_cms        : cms       : cms : 2.80 0.70
+
+   dielectrics :
+   # Dielectric consists of 5 micron thick SiO2
+   # (epsilon = 3.9) on a conducting plane.
+     SiO2   3.9   0.0
+     air    1.0   5.0
+
+
+For detailed information on the format of the "space.def.s" file,
+you may type:
+
+   % icdman tecc
+
+or see [1].
+
+The "unit" section describes the units used for the various numbers used
+later on. The "colors" section describes the colors used by Xspace for each
+mask. Typically, you will choose approximately the same colors as used in
+the "maskdata" file. Note however, that color names are used here instead of
+numbers. You can find an overview of color names (and their respective RGB
+values) in the file "cacd/share/lib/rgb.txt".
+
+Conductors are specified in the "conductors" section. Here we define only
+the conductive behavior of the "cmf", "cms" and "cpg" masks.
+Note that you should specify the sheet-resistivity in the fourth column;
+the unit of sheet-resistivity is given in the "unit" section above,
+and is set to 1 ohm in this example.
+
+The "contacts" section define the conditions under which a contact (via) is
+assumed between the conductors. Here, a contact between "metal" and "metal2"
+(masks "cmf" and "cms", resp.) is made at locations where the masks "cmf",
+"cms" and "cva" are present in the layout. Similarly, a contact is made
+between "metal" and "polysilicon" (masks "cmf" and "cpg", respectively),
+under the condition that "cmf", "cpg" and "ccp" are present.
+
+The "vdimensions" section contains the vertical dimensions of the
+conductors.  The third field contains the name of the conducting mask.
+The fourth field contains the vertical position, as well as the thickness
+of the conductor. The values are in microns, as specified in the "units"
+section (under "vdimensions"). These values are particularly important
+for capacitance extraction.
+
+The "dielectrics" section contains a description of the dielectric layers.
+The first column contains a name for the dielectric, the second column
+contains the relative permittivity (epsilon-r), and the third column
+contains the y-position at which the dielectric layer starts.
+Note that at most 3 layers may be currently defined (this limitation
+will be removed in the near future).
+
+When you have entered the "space.def.s" file, type the following command:
+
+   % tecc -m maskdata space.def.s
+
+This will compile the element file into a compiled version, suitable for
+use by the extractor. A new file will be written to the process directory,
+under the name "space.def.t".
+
+Finally, we will need a default parameter file for the extractor. This file
+is called "space.def.p". Use your text-editor to create this file, and
+give it the following contents:
+
+   min_art_degree        3
+   min_degree            4
+   min_res             100      # ohm
+   max_par_res          20
+   no_neg_res           on
+   min_coup_cap          0.05
+   lat_cap_window        6.0    # micron
+   max_obtuse          110.0    # degrees
+   equi_line_ratio       1.0
+
+   BEGIN cap3d  # Data for 3D capacitance extraction
+   be_mode               0c
+   be_window             2.0
+   max_be_area           1.0
+   omit_gate_ds_cap      on
+   END cap3d
+
+The extractor will take its parameters from this file by default, but you
+can override the parameters from the command-line, as we will see later on.
+
+See [2] if you are interested in the meaning of the different parameters.
+
+
+Creating a project
+==================
+
+We will now create an example project, which will use the process defined
+in the previous section.
+
+Perform the following commands:
+
+   % cd ..
+   % mkpr -p ./test_process test_project
+
+Now, cd into the test project directory:
+
+   % cd test_project
+
+
+Creating a test-cell
+====================
+
+Now, we will place a test-cell into the database of the current project.
+Normally, we would import a cell using the "cgi" tool, or we would create a
+cell by using the layout editor "dali". However, in this example, we will
+create a cell by entering its geometry in a textual format. Use your text-
+editor to create a file named "squares.ldm", and give it the following
+contents:
+
+   ms squares
+   term cmf 0 250 0 250 a
+   term cms 0 250 0 250 b
+   me
+
+This defines two square terminals of 250x250 units, consisting of masks
+"cmf" and "cms", respectively, and named "a" and "b", respectively.
+Since we set lambda to 0.20 microns, the terminals are of dimensions
+50x50 microns in reality.
+
+Now, place the cell in the database, by issuing the following command:
+
+   % cldm squares.ldm
+
+Type "dblist" to verify that the cell has been entered into the database.
+
+You can verify the layout in the layout-editor by typing:
+
+   % dali squares
+
+For information on how to use this layout-editor, see [3]. Use the "+"
+and "-" keys to zoom in to your layout, and use the arrow keys to change
+the view-position.
+
+
+Performing a 3d capacitance extraction
+======================================
+
+We will now perform a 3d capacitance extraction of the test-cell.
+The simplest way of doing this is by issuing the following command.
+
+   % space3d -3C squares
+
+The -3 option specifies that the three-dimensional extraction mode should
+be active, and -C specifies that coupling capacitances should be extracted.
+If you wish, you can add the -v option to raise the verbosity level.
+Type "icdman space3d" for more detailed information, or see [2].
+
+After the extraction is finished, you can inspect the resulting circuit
+for parasitic capacitances. You can do this by typing:
+
+   % xspice -a squares
+
+This gives you a spice netlist. For the example above, the output will
+contain something similar to the following.
+
+   ...
+   c1 b a 222.0366f
+   c2 b GND 11.81104f
+   c3 a GND 55.57874f
+   ...
+
+It is important to know that When the extractor is run, it will consider
+only capacitive coupling within a certain window. For maximum precision,
+the size of this window can be set to infinity, but in practice this is
+not necessary.  A smaller window size means that the extractor can divide
+the problem into smaller pieces, so that less processing time is necessary.
+You can change the window size by specifying "-Scap3d.be_window=value" at
+the command-line.  The value is in microns.
+For example:
+
+   % space3d -3C -Scap3d.be_window=1 squares
+
+You will notice that the extraction will be somewhat faster. This is because
+the default value for this parameter is 2 microns. (We specified this in the
+file "space.def.p" above). When running "xspice -a squares" again, we get:
+
+   ...
+   c1 b a 223.1784f
+   c2 b GND 11.47019f
+   c3 a GND 45.85488f
+   ...
+
+As you see, decreasing the window size introduces some inaccuracy, but the
+results are still acceptable in this case. When you are just starting with a
+new kind of process, you should experiment with this parameter to see what
+value gives accurate results in a reasonable amount of time.
+
+For more information on 3d capacitance extraction, see [2].
+
+
+Defining the 2d capacitance rules
+=================================
+
+Because full 3d extraction of capacitances is more time-consuming, space
+also offers a method of extraction known as "2d extraction". This method
+uses a "database" of capacitance rules to perform the extraction. Thus
+instead of performing tedious computations, space will simply "look up"
+capacitance values using a set of rules. Of course, this method is
+inherently less accurate than full 3d extraction, but it can provide
+results in much less time.
+This means that 2d extraction is suitable for realistic vlsi designs,
+while 3d extraction is suitable only for small to middle-size test-cases.
+
+In the past, it was necessary to generate capacitance rules manually, but
+we have recently developed a tool to automate this task. You can simply
+invoke this tool by changing to your project directory, and typing:
+
+   % tabs -L 2 -S 0.4
+
+The value specified after -L is the number of conductor layers which should
+be taken into account. In many cases, it is reasonable to use the value 1,
+and in some cases you might need to use the value 2. Higher values may not
+be useful in most situations.
+
+The value after -S is the nominal lateral spacing in microns between two
+conductors. Of course, the lateral distance between conductors can be
+different in an actual design, but the capacitance rules will be "optimized"
+for the given value.
+
+Running "tabs" will take some time. Internally, tabs invokes the space 3d
+extractor many times to extract data for the various capacitance rules.
+You may use the -v option to see what is going on.
+
+When "tabs" is finished, you may want to inspect the file "space.def.s".
+This file will now also contain the capacitance rules.
+You should run "tecc" once again to compile the file.
+
+   % tecc ../test_process/space.def.s
+
+Do not forget this step (!)
+
+If you wish to have more information on the tool "tabs", type the command
+"icdman tabs".
+
+
+Performing a 2d capacitance extraction
+======================================
+
+After the capacitance rules have been generated, you can perform a 2d
+extraction. Enter the following command:
+
+   % space3d -l squares
+
+You will notice that this time, extraction is very fast. Inspect the
+results by typing
+
+   % xspice -a squares
+
+The output will now be:
+
+   ...
+   c1 b a 220.3094f
+   c2 a GND 50.78f
+   ...
+
+Notice that the results deviate somewhat from the results obtained by 3d
+extraction, but that they are still reasonable. No coupling between terminal
+"b" and "GND" is present, since there is a distance of more than 2 layers
+between them (layers "cmf" and "cpg" are between the top of the substrate
+and "cms"), and we specified "-L 2" when running "tabs".
+
+For more information on 2d extraction, see [1].
+
+
+References
+==========
+
+[1] Space User's Manual.
+    http://www.space.tudelft.nl/documentation
+
+[2] Space 3D Capacitance Extraction User's Manual.
+    http://www.space.tudelft.nl/documentation
+
+[3] Dali User's Manual.
+    http://www.space.tudelft.nl/documentation
+
+[4] Building Technology Files Using Spock.
+    (part of the user documentation released by Optem)
+
+

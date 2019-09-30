@@ -1,0 +1,3 @@
+read_lib g_digilib5_99.lib
+report_lib g_digilib5_99
+write_lib g_digilib5_99

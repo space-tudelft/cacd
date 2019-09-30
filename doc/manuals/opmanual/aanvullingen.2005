@@ -1,0 +1,87 @@
+
+
+      Enige aanvullingen voor 2005 op de practicum handleiding
+
+      1: Inloggen.
+         Voor het practicum moet worden ingelogd onder linux met de
+         login_naam en het password voor het afs_systeem.
+         Mocht je je password zijn vergeten, dan kun je een nieuw
+         krijgen via de website:
+            http://elektron.ewi.tudelft.nl
+         door achtereenvolgens
+            Some special account management services
+         en
+            request a new 'atlas' password
+         aan te klikken.
+
+      2: Na het inloggen moet het volgende commando worden getypt:
+
+            /afs/.ewi.tudelft.nl/common/software/opprog/bin/op_init
+      
+         Dit zorgt ervoor, dat alle paden naar de te gebruiken
+         programmatuur worden gezet.
+         Hierna uitloggen en opnieuw inloggen.
+         Alle programma's die tijdens het practicum gebruikt worden
+         zijn nu bereikbaar.
+         Deze procedure behoeft alleen bij de eerste keer inloggen
+         te worden gebruikt.
+
+      3: Het practicum werkt onder Linux.
+         Enkele commando's van linux zijn:
+            ls    Toon de inhoud van een de huidige directory
+            cd    Verander van directory.
+                    cd             ga naar de home_directory
+                    cd ..          ga naar de parent_directory
+                    cd  <dir_name> ga naar de opgegeven directory
+            cp    Copieer een file
+                    cp <file_from> <file_to> maak een copie van
+                                             <file_from> onder de naam
+                                             <file_to>
+                    cp <file_name> <dir_to>  maak een copie van
+                                             <file_from>
+                                             in directory <dir_to>
+                                             met de naam <file_from>
+            rm    Verwijder een file
+                    rm <file_name>     Verwijder de file <file_name>
+                                       uit het file_systeem.
+                    rm -rf <dir_name>  Verwijder de directory <dir_name>
+                                       en al zijn files en subdirectories
+                                       uit het file_systeem
+            man   Geef uitleg over een commando
+                    man rm   Geef uitleg over het commando rm
+
+      4: Er is een extra commando
+            cd_opdir 
+         toegevoegd, waarmee naar de directory wordt gesprongen, waarin
+         je kunt werken. Deze directory en alle directories die je hierin
+         maakt zijn lees en schrijfbaar voor alle leden van je groep. 
+
+
+
+      5: Enkele macro's
+         Er zijn in de vhdl_simulator vsim een paar macro's toegevoegd,
+         die gebruikt kunnen worden bij het simuleren van de vhdl_code.
+         Je kunt ze vinden in het 'Tools' menu in de entry 'Op_Macros'
+         De volgende macro's zijn daar beschikbaar:
+         dcf_in.do      Hiermee kan een dcf_signaal worden gemaakt bij
+                        de opdracht dcf_klok.
+         meter.do       Hiermee kan de waarde van een std_logic_vector
+                        in de vorm van een meter worden weergegeven.
+        segm_display.do Hiermee kan de waarde van een
+                        std_logic_vector(6 downto 0) in de vorm van een
+                        7_segments display worden weergegeven.
+        toetsenbord.do  Hiermee wordt een telefoon_toetsenbord
+                        gesimuleerd.
+                        Om dit toetsenbord te kunnen gebruiken, moet
+                        aan je testbench een van de components
+                        'tbord_rout' of 'tbord_cout' zijn toegevoegd.
+        lcd_display.do  Hiermee wordt een lcd_display gesimuleerd.
+                        Het display reageert op de codes die worden
+                        aangeboden op de data, rs, e en rw ingangen.
+
+
+      6: Blackboard
+         Op Blackboard onder Ontwerppracticum (et2805) staat nog meer
+         aanvullende informatie.  In de loop van de cursus zal deze
+         informatie nog uitgebreid worden.
+

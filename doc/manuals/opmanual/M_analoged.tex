@@ -1,0 +1,380 @@
+\section{Analoge Deelschakelingen}
+\index{analoog}
+\label{analoog}
+\subsection{Inleiding}
+Een kenmerk van een digitaal signaal is het feit dat slechts twee
+signaalniveaus van betekenis zijn voor de informatie-inhoud van dat signaal.
+Schakelingen die digitale signalen verwerken worden digitale schakelingen genoemd.
+Soms is het zinnig om voor de codering van informatie in een signaal meer dan twee niveaus te gebruiken.
+Het maximale aantal signaalniveaus dat nuttig gebruikt kan worden, hangt af van het maximaal toegelaten signaalniveau en het kleinst onderscheidbare verschil tussen twee signaalniveaus.
+Een veel gebruikte maat hiervoor is het dynamische bereik van een signaal.
+Schakelingen die dit soort signalen verwerken heten analoge schakelingen.
+\\
+Elektronische schakelingen zullen bij het verwerken van signalen altijd het signaal in zekere mate aantasten.
+Het is de taak van de ontwerper om de schakelingen zo te ontwerpen dat de schade tot een minimum beperkt blijft.
+Bij digitale schakelingen zijn er slechts twee signaalniveaus van belang.
+Alle tussenliggende signaalniveaus worden slechts ``gepasseerd'' tijdens de overgang van het ene bekende naar het andere bekende niveau.
+Hoe de digitale schakeling van het ene niveau omschakelt naar het andere is niet aan erg gecompliceerde eisen gebonden.
+In het algemeen is het feit dat een digitale schakeling binnen een bepaalde tijd schakelt een voldoende garantie voor een goede werking.
+Dit heeft tot gevolg dat de modellering van de schakeling op dit gebied erg simpel kan zijn.
+Een model hoeft tijdens het omschakelen niet nauwkeurig te beschrijven op welk tijdstip een bepaald tussenliggend signaalniveau gepasseerd wordt, daar deze signaalniveaus toch geen informatie bevatten.
+\\
+Bij analoge signalen en circuits is dit anders.
+Daar worden alle mogelijke signaalniveaus gebruikt om de informatie in het signaal te coderen.
+De modellering van analoge circuits zal daarom gecompliceerder zijn dan die van digitale circuits.
+Dit heeft tot gevolg dat op plaatsen in het ontwerptrajekt waar de modellering ter sprake komt het ontwerptrajekt voor analoge schakelingen zal afwijken van dat voor digitale schakelingen.
+Het betekent echter ook dat voor een zeer groot gedeelte van het ontwerptrajekt er geen onderscheid gemaakt hoeft te worden tussen analoge en digitale schakelingen.
+Het is eigenlijk ook niet verstandig om schakelingen het label analoog of digitaal te geven.
+Het gaat om het karakter van het signaal dat verwerkt wordt of de schakeling die het verwerkt analoog of digitaal genoemd moet worden.
+Ontwerphulpmiddelen zoals layout editors, design-rule checkers, routers, die geen weet hebben van het karakter van de signalen die verwerkt worden, kunnen met evenveel gemak op analoge als op digitale schakelingen worden toegepast.
+Alleen hulpmiddelen die zwaar leunen op de modellering van de schakelingen zullen voor analoge schakelingen duidelijk anders zijn dan voor digitale.
+De circuit simulator is daarvan wel het meest sprekende voorbeeld.
+Digitale schakelingen zijn meestal groot van omvang.
+Om zeer grote schakelingen nog effici\"ent te kunnen simuleren is het belangrijk dat de modellering van de componenten waaruit de schakeling is opgebouwd zo simpel mogelijk is.
+Hierbij kan met veel succes gebruik gemaakt worden van het feit dat de te verwerken signalen digitaal zijn en dat er dus maar twee signaalniveaus onderscheiden hoeven te worden.
+Simulatoren voor digitale schakelingen zullen dus gekenmerkt zijn door de toepassing van simpele modellen op grote hoeveelheden componenten.
+Door de simpele modellen die gebruikt worden, zijn ze echter meestal niet geschikt voor het nauwkeurig simuleren van analoge schakelingen. 
+Voor analoge schakelingen zal daarom gebruikt gemaakt worden van een simulator die werkt met gecompliceerde, nauwkeurige modellen.
+Dit beperkt dan weer de grootte van de schakeling die nog effici\"ent gesimuleerd kan worden.
+Gelukkig zijn analoge schakelingen meestal veel kleiner dan digitale, zodat de simulator toch effici\"ent gebruikt kan worden.
+
+\subsection{Analoge signaalbewerkingen in de groepsopdracht}
+
+\paragraph{Inleiding}
+
+Tijdens het ontwerp van de groepsopdracht zullen er in een aantal gevallen 
+analoge signalen bewerkt of gegenereerd moeten worden. Deze signalen worden vaak opgedrongen door de ''buitenwereld'', omdat in de natuur bijna alle signalen meer dan twee niveaus kunnen aannemen. In deze paragraaf zullen we een aantal analoge signaalbewerkingen op een rijtje zetten die u kunt tegenkomen bij het maken van uw ontwerp.
+\paragraph{Uitlezen van een toetsenbord}
+
+Een toetsenbord bestaat uit een aantal schakelaars die open of ge\-sloten kunnen zijn. De impedantie van een schakelaar die gesloten is, is lager dan van een schakelaar die open is. In het geval van het folie-toetsenbord dat voor het practicum beschikbaar is, is de impedantie in gesloten toestand ongeveer 100 $\Omega$ en in open toestand enkele M$\Omega$'s.
+De impedantie van een schakelaar zal moeten worden omgezet in een digitaal signaal. Hier vindt dus een eenvoudige \'e\'en-bit AD-conversie plaats.
+\paragraph{Generatie van sinusvormige signalen}
+
+Omdat een digitaal signaal slechts twee niveaus kan aannemen, zal zo'n signaal er altijd blokvormig uitzien. De ''beste'' benadering van een sinus met een digitaal signaal is een blokgolf met een duty-cycle van 50\%. Als we een dergelijke blokgolf met een amplitude van van $\frac \pi{4}E_{0}$ opdelen in zijn verschillende frequentie-componenten, krijgen we:
+
+\begin{equation}
+\frac \pi{4}E_{0}{\bf B} (\omega t) = E_{0}sin(\omega t)
++ \frac {E_{0}}{3}sin (3\omega t)
++ \frac {E_{0}}{5}sin (5\omega t)
++ \frac {E_{0}}{7}sin (7\omega t) 
++ \,.\,.\,.\,.
+\end{equation}
+
+De harmonische distorsie van dit signaal is de som van het vermogen van de hogere harmonischen gedeeld door de grondharmonische. Dus:
+
+
+\begin{equation}
+\frac{{\displaystyle \left( \frac{E_{0}}{3} \right) ^2}
++{\displaystyle \left( \frac{E_{0}}{5} \right) ^2}
++{\displaystyle \left( \frac{E_{0}}{7} \right) ^2}
++ \,.\,.\,.
+}{{E_{0}}^2}
+\end{equation}
+
+
+en dit is gelijk aan:
+
+\begin{equation}
+{\displaystyle \left( \frac 1{3}\right)}^2
++{\displaystyle \left( \frac 1{5}\right)}^2
++{\displaystyle \left( \frac 1{7}\right)}^2
++\,.\,.\,. 
+= \sum\limits_{n=1}^{\infty} \frac 1{{(2n+1)}^2}
+\end{equation}
+
+Dit kunnen we ook schrijven als:
+
+\begin{equation}
+\sum\limits_{n=1}^{\infty} \frac 1{{n}^2}
+\,-\,
+\sum\limits_{n=1}^{\infty} \frac 1{{2n}^2}
+\,-\,1
+=
+\frac{\pi^2}{6}\,-\,\frac{\pi^2}{24}\,-\,1
+=
+\frac{\pi^2}{8}\,-\,1
+\,\approx \, 0.23 
+\end{equation}
+
+Op een iets meer intu{\ii}tieve manier kunnen we dit ook zien aan de hand van figuur \ref{sinharm}:
+
+\begin{figure}[bth]
+\centerline{\callpsfig{sinharm.eps}{width=.7\textwidth}}
+\caption{Figuur ter verduidelijking van bewijs harmonische distorsie blokgolf}
+\label{sinharm}
+\end{figure}
+
+De harmonische distorsie is, zoals al eerder gezegd, de som van het vermogen van de hogere harmonischen gedeeld door de grondharmonische. Het vermogen van de grondharmonische is in de figuur de oppervlakte onder de sinus. De som van de vermogens van de hogere harmonischen is de oppervlakte onder de blokgolf minus de oppervlakte onder de sinus. De harmonische distorsie is dus:
+
+\begin{equation}
+\frac{opp.\,blok\,-\,opp.\,sinus}{opp.\,sinus}
+\,=\,
+\frac{
+\pi\,.\,\frac{\pi}{4}E_{0}\,-\, 
+\int_0^\pi E_{0}\,sin\,x\,dx}
+{\int_0^\pi E_{0}\,sin\,x\,dx}
+\,=\,
+\frac{\frac{\pi^2}{4}\,-\,2}{2}
+\,=\,
+\frac{\pi^2}{8}\,-\,1
+\end{equation}
+
+Als we dus een signaal willen genereren met een lagere harmonische distorsie dan 0.23 of -6.4 dB, kan dat niet met een digitale schakeling.\\
+Er zijn verschillende mogelijkheden om een sinusvormig signaal te genereren,
+b.v.:
+\begin{itemize}
+\item
+Met behulp van oscillatoren die elektronisch afstembaar zijn (Voltage Controlled Oscillator = VCO).
+Het digitale deel zal dan via een DA-converter (digitaal-analoog omvormer) de oscillator op de juiste frequentie afstemmen.
+\item
+Met behulp van een teller en een DA-converter.
+De teller zal een DA-converter zodanig aan\-sturen dat aan de uitgang van de DA-converter een sinusvormig signaal verschijnt van de juiste frequentie.
+\item
+Door het digitale circuit een blokvormig (digitaal) signaal van de juiste frequentie te laten le\-veren wat daarna gefilterd moet worden om hogere harmonischen in het signaal te verwijderen.
+\item
+Met behulp van puls-breedte modulatie. Een hoogfrequent draaggolf wordt puls-breedte gemoduleerd met een gekwantificeerde sinus. De draaggolf wordt vervolgens uitgefilterd.
+\end{itemize}
+\paragraph{Versterken}
+
+Versterken is de meest gebruikte analoge signaalbewerking. Aan de ingang van een ontwerp is meestal versterking nodig omdat het inkomende signaal vaak te zwak is om direct gedi\-gitaliseerd te worden. Aan de uitgang omdat het digitale signaal vaak te weinig vermogen heeft om direct een actuator \footnote{ Voorbeelden van actuatoren zijn: een luidspreker, robot-arm, beeldbuis, enz.} aan te sturen.
+\paragraph{Optellen}
+
+
+Het optellen van twee signalen kan zowel digitaal als analoog gebeuren. In dit hoofdstuk zullen we ons beperken tot de analoge methode. In dit laatste geval worden de twee op te tellen signalen  eerst afzonderlijk gegenereerd en daarna opgeteld.
+De twee gegenereerde signalen zullen beschikbaar zijn als spanning of als stroom.
+Stromen kunnen vrij simpel worden opgeteld door ze simpelweg in hetzelfde knooppunt te laten vloeien (parallel schakeling).
+Door de uitgangen van twee stroombronnen die ieder een sinusvormige stroom produceren met elkaar te verbinden is de optelling gerealiseerd.\\
+Om spanningen te kunnen optellen moeten de spanningsbronnen in serie geschakeld worden.
+Dit betekent dat tenminste \'e\'en van de twee bronnen zwevend zal moeten zijn.
+Het maken van zwevende spanningsbronnen is moeilijk,
+daarom worden van de spanningen meestal eerst stromen gemaakt
+(bijvoorbeeld d.m.v.\ een weerstand) die daarna worden opgeteld.\\
+In figuur \ref{OPTELLEN} is het optellen van spanningen en stromen te zien.
+Figuur \ref{OPTELLEN}A toont het optellen van stromen,
+figuur \ref{OPTELLEN}B het optellen van spanningen.
+
+
+
+\begin{figure}[htb]
+\centerline{\callpsfig{optellen.ps}{width=1.4\textwidth}}
+\caption{Het optellen van spanningen en stromen}
+\label{OPTELLEN}
+\end{figure}
+
+
+
+\subsection{Bouwstenen voor analoge circuits op de SoG wafer}
+
+
+Er zijn voor de implementatie drie verschillende soorten componenten beschikbaar:
+\begin{enumerate}
+\item
+MOS-transistoren
+\item
+Weerstanden
+\item
+Condensatoren
+\end{enumerate}
+\paragraph{MOS-transistoren.}
+Op de sea-of-gates chip is van de PMOS en de NMOS transistor maar \'e\'en type beschikbaar.
+Dit zijn transistoren met een zeer kort kanaal.
+Om toch iets aan schaling van W/L verhoudingen te kunnen doen moeten er transistoren parallel en in serie geschakeld worden.
+Door twee transistoren parallel te schakelen neemt de breedte (W) van de zo ontstane compound-transistor met een factor twee toe.
+Door er twee in serie te schakelen (gates aan elkaar) ontstaat een twee keer zo lange.
+
+E\'en van de nadelige effecten van een kort kanaal is de lage uitgangsimpedantie die de transistor daardoor heeft.
+Dit is o.a.\ bijzonder vervelend in stroomspiegels, waarvan veel gebruik gemaakt wordt.
+Daarom is er een compound-transistor van 3$\times$3 transistoren gemaakt die bij de ontwerpen zal worden gebruikt,
+zie figuur \ref{COMPOUND_TOR}.
+In de bibliotheek staan deze compound-transistoren
+onder de naam {\tt ln3x3} (nmos) en {\tt lp3x3} (pmos).
+
+
+\begin{figure}[htb]
+\centerline{\callpsfig{compound.eps}{width=.7\textwidth}}
+\caption{De compound-transistor.}
+\label{COMPOUND_TOR}
+\end{figure}
+\paragraph{Weerstanden}
+\index{weerstand!maken}
+Het is mogelijk de gate van de mos-transistoren te gebruiken als weerstand.
+Elke gate heeft twee aansluitingen waartussen zich een stukje poly-silicium bevindt dat de gate vormt.
+De weerstand tussen de twee aansluitingen wordt bepaald door de weerstand van dit stukje poly-silicium en ligt rond de 700 $\Omega$. 
+Door deze weerstandjes in serie of parallel te schakelen kunnen weerstanden van verschillende waarden gemaakt worden.
+De source en de drain van de betreffende transistoren worden dan niet gebruikt.
+De ``gate-weerstandjes'' matchen goed zodat op deze manier nauwkeurig geschaalde weerstanden kunnen worden gemaakt.
+\paragraph{Capaciteiten}
+\index{capaciteit!maken}
+Er zijn verschillende manieren om op de Sea-of-Gates chip capaciteiten te maken.
+Als er een ''zwevende'' (die niet met een aansluiting aan de {\tt vss} verbonden is) capaciteit gemaakt moet worden,
+kan gebruikt gemaakt worden van de capaciteit tussen de eerste en tweede metaallaag.
+Capaciteiten die met \'e\'en poot aan {\tt vss} liggen,
+kunnen gemaakt worden door verschillende onderliggende lagen met elkaar te verbinden,
+zodat een soort ''sandwich'' ontstaat.
+De waarden van deze capaciteiten per oppervlakte staan gegeven in appendix \ref{SoGchip}.
+Omdat op deze manier slechts capaciteits-waarden tot enkele pF's te maken zijn,
+zal het in de praktijk vaak voorkomen dat capaciteiten extern aangesloten moeten worden.
+Hierdoor is het tevens mogelijk om achteraf de waarde ervan nog aan te passen.
+
+
+\subsection{Voorbeelden van implementaties} 
+
+
+\subsubsection{Toetsenbord-uitlezing}
+
+
+In deze paragraaf zal niet diep worden ingegaan op het scannen van een toetsenbord, maar alleen op het omzetten van de impedantievariaties in een digitaal signaal.
+In figuur \ref{TOETS} is een simpel schema gegeven.
+
+
+%figuur toets.eps
+\begin{figure}[bth]
+\centerline{\callpsfig{toets.eps}{width=.7\textwidth}}
+\caption{Methode om een toetsenbord uit te lezen.}
+\label{TOETS}
+\end{figure}
+
+
+
+
+
+Een referentiestroom $I_{re\!f}$ kan door middel van de ingangen E0, E1 en E2 worden geleid door \'e\'en van de drie takken met een schakelaar.
+Het is de bedoeling dat de signalen op E0, E1 en E2 z\`o worden gekozen dat steeds slechts \'e\'en weg voor de stroom mogelijk is.\\
+Wanneer $I_{re\!f}$ goed wordt gekozen,
+is het mogelijk om de spanningsvariaties als gevolg van het indrukken van de toetsen zodanig te krijgen,
+dat het signaal direct kan worden aangeboden aan een digitale schakeling.
+Omdat de flank van dit signaal meestal niet al te steil zal zijn,
+is het aan te raden om het digitale circuit een zgn.\ Schmitt-trigger ingang te geven.
+Deze schakeling is ook weergegeven in de figuur.
+Een Schmitt-trigger is een schakeling die vanwege meekoppeling een zeer abrupte input-output-karakteristiek krijgt.
+Overigens hebben de inputbuffers op de chip alle een Schmitt-trigger-ingang.
+
+
+\subsubsection{DA-converter}
+
+Het principe van de DA-converter wordt behandeld in \cite{ET1205}.
+Hier staat ook een voorbeeld van een DA-converter op basis van een ladder-verzwakker-netwerk.
+Andere methoden zijn bijvoorbeeld met behulp van ladingsdeling of geschaalde stroomspiegels.
+In deze paragraaf zal dieper worden ingegaan op een DA-converter
+gebaseerd op geschaalde \index{stroomspiegel} stroomspiegels.\\
+In figuur \ref{spiegels}A is het schema gegeven van een eenvoudige stroomspiegel. 
+
+\begin{figure}[bth]
+\centerline{\callpsfig{spiegels.eps}{width=.7\textwidth}}
+\caption{A: Een eenvoudige stroomspiegel, B: Een gecascodeerde stroomspiegel, C: Een schalende (gecascodeerde) stroomspiegel}
+\label{spiegels}
+\end{figure}
+
+
+Bij een stroomspiegel is het de bedoeling dat uitgaande stroom gelijk is aan de ingaande.
+E\'en van de oorzaken waarom dit nooit precies zo zal zijn,
+is de eindige uitgangsimpedantie van de uitgangstransistor.
+Deze gedraagt zich hierdoor niet als een ideale stroombron.\\
+Als dus de drain-spanningen niet hetzelfde zijn,
+zal I$_{out}$ niet precies gelijk zijn aan I$_{in}$.\\
+Bij de transistoren die op de Sea-of-Gates chip voorhanden zijn,
+kan de fout bij een verschil van \'e\'en Volt al vele procenten bedragen.\\ 
+Om dit effect te verkleinen kan voor een configuratie als in figuur \ref{spiegels}B gekozen worden.
+De stroomspiegel is nu gecascodeerd.
+Hierdoor worden de drain-spanningen (van de onderste transistoren) beter aan elkaar gelijk gehouden. \index{cascoderen}
+Meer informatie over stroomspiegels kunt u vinden in \cite{ET1205}.\\
+Het is ook mogelijk om met een stroomspiegel stromen te schalen.
+Door in figuur \ref{spiegels}B de uitgangstransistoren dubbel te nemen,
+zal de stroom I$_{out}$ twee keer zo groot zijn als I$_{in}$,
+zie figuur \ref{spiegels}C.
+Op deze manier kunnen dus uit \'e\'en referentiestroom stromen gemaakt worden die een geheel veelvoud hiervan zijn. \index{stroomspiegel!schalen}
+Met deze techniek is het heel eenvoudig een DA-converter samen te stellen.
+
+\begin{figure}[bth]
+\centerline{\callpsfig{dac.eps}{width=.5\textwidth}}
+\caption{Een 2-bits DA-converter gebouwd met stroomspiegels en stroomschakelaars.}
+\label{dac}
+\end{figure}
+ 
+In figuur \ref{dac} is een uitvoering van zo'n DA-converter gegeven.\\
+Met de (digitale) signalen bit0 en bit1 kunnen stromen aan- en afgeschakeld worden.
+Als bijvoorbeeld bit0 ''hoog'' is (5 V) en bit1 ''laag'',
+zal de uitgangsstroom I$_{out}$ gelijk zijn aan I$_{re\!f}$.
+Wanneer beide signalen hoog gemaakt worden,
+zal I$_{out}$ 3I$_{re\!f}$ bedragen.\\
+Vanwege het al eerder geschetste probleem met de (te) lage uitgangsimpedantie, is in dit voorbeeld gekozen voor de gecascodeerde stroomspiegel.
+De basiscellen {\tt mir\_nin} en {\tt mir\_nout} komen uit de bibliotheek.  
+
+\subsubsection{Sinus-generatie met een DAC}
+
+E\'en van de mogelijkheden om een sinus te genereren is een DAC aan te sturen vanuit een digitaal circuit.\\
+Stel dat we een sinus willen genereren in 8 stapjes met een 3-bits DAC.
+We krijgen dan een signaal dat er uitziet als in figuur \ref{sindig}.
+
+\begin{figure}[bth]
+\centerline{\callpsfig{sindig.eps}{width=.7\textwidth}}
+\caption{Benadering van een sinus met een DAC}
+\label{sindig}
+\end{figure}
+
+In tabel~\ref{tabel1} staan de signalen die toegevoerd moeten worden om deze ''sinus'' te krijgen.
+
+\begin{table}[htb]
+\begin{center}
+\caption{Signalen voor de DAC\label{tabel1}}
+\medskip
+\begin{tabular}{|c|c|ccc|}
+\hline
+t	&E	&bit2	&bit1	&bit0\\
+\hline
+0	&3	&0	&1	&1\\
+1	&5	&1	&0	&1\\
+2	&6	&1	&1	&0\\
+3	&5	&1	&0	&1\\
+4	&3	&0	&1	&1\\
+5	&1	&0	&0	&1\\
+6	&0	&0	&0	&0\\
+7	&1	&0	&0	&1\\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Het is vrij lastig om de distorsie van dit signaal met de hand te berekenen.
+Programma's als SPICE doen dit via een Fourier-analyse.
+Uit simulaties met dit programma blijkt dat een sinusgeneratie in 16 stapjes
+met een 4-bits DA-converter een harmonische distorsie geeft
+die kleiner is dan -20 dB (Wanneer de DAC niet-lineair gemaakt wordt,
+kan bij juiste dimensionering ook volstaan worden met 3-bits).
+
+
+\subsubsection{Eindversterker}
+
+
+De luidspreker heeft een impedantie van ongeveer 50 $\Omega$.
+Om hierin voldoende vermogen te kunnen ontwikkelen is er een 
+eindversterker nodig.\\
+Er kan gebruikt gemaakt worden van een geschaalde stroomspiegel zoals dit ook al is gedaan bij de DA-converters.
+De schaalfactor wordt z\`o gekozen dat er voldoende stroom door de luidspreker zal lopen.
+Het zal duidelijk zijn dat er op deze manier geen ``high-performance'' versterker ontstaat, maar op dit moment zal de schakeling kunnen voldoen.
+
+
+\subsubsection{Power on reset}
+
+
+Bij geheugenelementen is het vaak niet te voorspellen in welke toestand de
+schakeling komt wanneer de voedingsspanning aangesloten wordt. Omdat dit in
+veel gevallen ongewenst is, wordt vaak een zgn.\ ''power-on-reset'' aan de
+schakeling toegevoegd. Dit schakelingetje genereert een reset-puls op het
+moment dat de voedingsspanning aangesloten wordt. Hierdoor komt de
+schakeling altijd in een vaste begintoestand als hij aangezet wordt.\\
+Een mogelijkheid die men vaak ziet, is die met een simpel RC-filtertje, zoals in figuur \ref{por}. 
+
+
+
+
+\begin{figure}[bth]
+\centerline{\callpsfig{por.eps}{width=.35\textwidth}}
+\caption{Simpele implementatie power on reset.}
+\label{por}
+\end{figure}
+
+Deze schakeling wordt volledig extern aangebracht.\\
+Op dit moment wordt er gewerkt aan een bibliotheekcel die hetzelfde doet. Deze is echter nog niet voor het practicum geschikt.
+
+\cleardoublepage

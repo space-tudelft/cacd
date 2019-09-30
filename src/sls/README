@@ -1,0 +1,145 @@
+
+End of the year 2016 i have updated the sls program for the use of longer simulation time.
+A "long long" integer is now used, the word length of such integer is 64 bits.
+This is currently true for 32bit and 64bit Linux systems.
+Because we are now using 64bit, i have checked sls for "long" variables.
+If possible, i have also changed "float" into "double".
+Float variables are only useful for data structs (using less memory).
+Note that a float in expressions is always upgraded to a double.
+
+I have also updated the simeye(2) programs.
+
+Here follow some notes about the sls program
+============================================
+
+The following .cmd options have been changed: simperiod, disperiod, sigoffset
+The "dump at <time>" command is also changed.
+The signal "duration" as used in the "set" command is also changed.
+Note that you can now also use c++ style comments (in place of #) in .cmd files.
+
+The sls simulator generates a .res (simulation results) file.
+This file is an ascii file, but not so good readable for an user,
+because it is not very well formatted.
+
+The user can better read a more formatted version, the .out file.
+
+The .res file contains each signal (terminal / node) which must be printed
+by the print command in the .cmd file.
+
+The .plt file is generated when the signals must be plotted.
+This is requested by the "plot" command in the .cmd file.
+This .plt file is also an ascii file but for an user not good readable,
+it can be displayed with the simeye program.
+
+The "outunit" is only important, when an .out file must be generated.
+When not specified, it is taken from the "sigunit".
+It is a power of 10, thus if the "sigunit" is not a power of 10,
+the closest power of 10 is chosen.
+
+The "outacc" is used in the .res file and is also a power of 10.
+Note that output is always specified in a power of 10 seconds.
+The "outacc" must now be <= "sigunit", because else the "sigunit"
+cannot good be presented in the output.
+Because the sigunit >= outacc, the internal conversion factor sigtoint
+is always >= 1.
+
+For example, when the sigunit = 2.5 second and outacc = 1 second, sigtoint = 2.5
+Note that in this case rounding is involved, because the outacc is not high enough.
+Because 2.5 second cannot be presented in the output, thus 2 or 3 must be chosen.
+Thus the following sequence of steps is presented in the output like this:
+
+input:  0   1   2   3    4  (in steps)   (l h)*2
+input:  0  2.5  5  7.5  10  (in seconds)
+output: 0  3    5  8    10  (in  ,,  )
+
+Note that if we use steps of width=2 no rounding problem exist (l*2 h*2)*2
+
+By chosing a higher accurracy of outacc = 0.1, the output in .res shall be:
+output: 0  25  50  75  100  (sigtoint = 25)
+Note that the output time values in .res are always integers (>= 0).
+Note that the outacc must be high enough in case timing or delay times are involved.
+
+When no outacc is specified, the outunit is taken as outacc.
+Normally outacc <= outunit.
+However, now outunit may be smaller than outacc.
+In that case trailing zero's are used in the .out file.
+If outunit > outacc, then a floating point is used in the time values in the .out file.
+Note that the "outunit" is only used for representing the time values in the .out file.
+Note that the "outunit" value is given in the header of the .out file.
+
+sigunit
+=======
+Is the unit (in second) of the smallest signal duration (width, step, tick).
+Note that now is tested for a too small or too large sigunit.
+Smallest value may be 1e-12 and largest value may be 1e+3.
+Note that sls use internally `outacc' ticks to simulate (an integer).
+
+outacc
+======
+Note that the highest accuracy, you can specify, is 1f (1 femto) second.
+You can specify the "outacc" only as a power of ten.
+And you cannot use an e-notation.  Femto is the smallest existing unit.
+
+simperiod
+=========
+Is a duration (integer), the period of time in sigunit seconds, how long must be simulated.
+Because sls use internally `outacc' ticks, the duration has a limit based on this accuracy.
+The limit is currently set on MAXSIMTIME = 10000000000000000LL (a "long long" constant).
+When you use a higher outacc the max. duration becomes shorter.
+When "simperiod * sigtoint" > MAXSIMTIME, you must choice a smaller simperiod (or lower acc.)
+
+The format of the .res file:
+============================
+The first line contains in the first field the "outacc" value.
+The other fields of the first line contain the signal specifications.
+Every signal specification is enclosed in parentheses.
+For example:
+( phi1 )         => phi1
+( (sel 0) )      => sel[0]
+( (sel (0 3)) )  => sel[0..3]
+
+The second and following lines contain the logical output results (l, h or x) for each signal,
+but the first field of each line contain the time value.
+If parentheses enclose a logic value, then it is output of a "define" signal.
+Note that the format of the .res file is a little CHANGED.
+No leading spaces are NOW more included before the time values.
+And the time values can now be bigger integers (long long).
+Thus, a .res reader program must be aware of this possible bigger integers.
+
+The format of the .plt file:
+============================
+Another graphic format, can plot rise and fall times of the signals.
+No "define" signals can be plotted.
+The 1st line contains the number of signals (for example 57).
+The 2nd to 58th line contain a signal name.
+The 59th line contains the "timeacc".
+The 60th line contains the "voltacc".
+The 61th line contains the low and high volt values.
+The rest of the lines contain the results (first field is time value).
+Note that a .plt reader program must be aware of possible bigger integers.
+Note that this can also be the case with other formats (like .tst).
+
+Option -o
+=========
+When option -o is given to the sls simulator, it does NOT simulate!
+Only the .res file is read and a new .out file is generated.
+It is now possible to use another "outunit" in the .cmd file.
+Note that the .out file is always generated by a simulation.
+This is not really necessary, because we can always generate it afterwards.
+
+dbclean
+=======
+Removes "sls" and "sls.o" from the "circuit" view (see icdman).
+Note that it now also removes "linux-xxx_sls" and "linux-xxx_sls.o".
+Note that you cannot simulate, when the objects are removed.
+Thus you need to rebuild the objects with "csls" or "cfun".
+
+funcsls
+=======
+When the circuit, you want to simulate, contains functions (functional sub circuits)
+you internally are using "funcsls" to simulate (is run by sls). (use option -v to see what happens)
+The "funcsls" is build by "sls_exp" (is also run by sls).
+Note that "sls_exp" is also `expanding' the circuit you want to simulate,
+and creates a "xxx_sls" image in the cell circuit view.
+For example "demo/multiplier" cell "total" contains functions.
+

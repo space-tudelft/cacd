@@ -1,0 +1,163 @@
+.ll 77
+.hy
+.TH SDFREAD 3SDF "THE SEADIF PROGRAMMERS MANUAL"
+.SH NAME
+sdfreadlib, sdfreadfun, sdfreadcir, sdfreadlay - set of sealib routines to
+read objects from the seadif database into main memory
+.SH SYNOPSIS
+ #include <sealib.h>
+
+ extern LIBRARYPTR  thislib;
+ extern FUNCTIONPTR thisfun;
+ extern CIRCUITPTR  thiscir;
+ extern LAYOUTPTR   thislay;
+
+ int sdfreadlib(long what, STRING libname)
+
+ int sdfreadfun(long what, STRING funname, STRING libname)
+
+ int sdfreadcir(long what, STRING cirname, STRING funname,
+                STRING libname)
+
+ int sdfreadlay(long what, STRING layname, STRING cirname,
+                STRING funname, STRING libname)
+
+.SH DESCRIPTION
+These functions read the named object from a seadif database and install the
+object in an in-core tree. The root of the tree is sdfroot, see
+.I sealib (3SDF).
+The database must have been opened with the sealib function
+.I sdfopen (3SDF).
+
+The parameter "what" specifies what attributes of the object must be read.
+Currently the following values are legal for what:
+
+With
+.I sdfreadlib ()
+the value SDFLIBBODY requests the bare library.
+  SDFLIBSTAT requests the library status.
+  SDFLIBALL requests all aforementioned library features.
+
+With
+.I  sdfreadfun ()
+the value SDFFUNBODY requests the bare function.
+  SDFFUNSTAT requests the function status.
+  SDFFUNTYPE requests the function type and
+  SDFFUNALL requests everyting.
+
+With
+.I  sdfreadcir ()
+the value SDFCIRBODY requests the bare circuit.
+  SDFCIRSTAT requests the circuit status.
+  SDFCIRPORT requests the list of circuit ports.
+  SDFCIRINST requests the list of circuit instances (children of the circuit).
+  SDFCIRNETLIST requests the list of nets.
+  SDFCIRBUS requests the list of buses.
+  SDFCIRATTRIB requests the circuit attributes and
+  SDFCIRALL requests all circuit features listed above.
+
+Some attributes depend on other attributes. For instance the presence of the
+netlist requires the presence of the port list (SDFCIRPORT) and the instance
+list (SDFCIRINST) and of course the circuit body (SDFCIRBODY). The function
+sdfreadcir() "knows" these dependencies and automatically adds such attributes if
+the request makes it necessary.
+
+With
+.I  sdfreadlay ()
+the value SDFLAYBODY requests the bare layout.
+  SDFLAYSTAT requests the layout status.
+  SDFLAYPORT requests the list of layout ports. (Each layout port corresponds to a
+circuit port but a circuit port may correspond to several layout ports.)
+  SDFLAYSLICE requests the sliceing tree of the floorplan. This tree contains the
+names and placement of all the child layouts.
+  SDFLAYWIRE requests the list of all wires (rectangles) that make up the layout.
+  SDFLAYBBX requests the sizes of the bounding box to be read. (This information
+is actually redundant because it can be derived from the extreme values of the
+rectangles in the wire list and the layout port list.)
+  SDFLAYOFF requests the offset of the cell to the lower-left corner of a basic
+sea-of-gates image.
+  SDFLAYATTRIB requests the layout attributes (currently not supported).
+  SDFLAYALL requests all layout features listed above.
+
+As said before, the sdfread functions install the requested objects in the
+sdfroot tree. In addition, one or more global variables are left to point to
+the objects just read. These are the variables named
+.I thislib ,
+.I thisfun ,
+.I thiscir
+and
+.I thislay .
+For instance, after a succesfull call "sdfreadcir(SDFCIRALL,cnam,fnam,bnam)"
+the global variable thislib points to the library named bnam, thisfun points to
+the function fnam and thiscir points to the circuit cnam.
+
+If you want to read a cell which is composed of yet other cells (for instance:
+a flip-flop built from latches, the latches in turn built from nands and the
+nands built from transistors) you can call the function sdfreadallcir() or
+sdfreadalllay() to obtain all levels of the hierarchy in a single call. (Note:
+this is not the meta hierarchy.) The manual page
+.I sdfreadall (3SDF)
+unveils the details.
+
+The sealib functions keep a record of all the objects and attributes that have
+been read into core. As a consequence, repeated calls for the same object
+result only the first time in retrieving the object from the database. The
+following calls just set the global pointers to the previously read object.
+This behavior is especially advantageous when a hierarchical cell is read that
+at some point in its hierarchy refers a number of times to the same child cell.
+Only one time needs the function sdfread retrieve this child cell from the database.
+While descending the hierarchy tree, sdfread automatically discriminates
+between newly encountered cells and those that are already in core. This speeds
+up the sdfread function significantly.
+.SH "RETURN VALUE"
+All functions return TRUE on succes and NIL on failure.
+.SH "WARNINGS"
+Do not forget to canonicize the cell names before passing them to sdfread. See
+also
+.I sealib (3SDF)
+and
+.I cs (3SDF).
+
+Don't you dare to change the name of a cell. This would confuse the sealib
+internal administration and invalidate the hashtables !!!
+.SH "EXAMPLE"
+This piece of code reads the layout (small(cmos(nand2(basic_stuff)))), calls a
+user function to compute the bounding box and then writes the result back to
+the database.
+
+  #include <sealib.h>
+
+  main()
+  {
+  if (sdfopen() == NIL)
+     error("cannot open database");
+  update_bbx();
+  if (sdfclose() == NIL)
+     error("cannot close database");
+  }
+
+  void update_bbx()
+  {
+  STRING lnam,cnam,fnam,bnam;
+  long   whatweneed
+  short  xsize,ysize;
+
+  lnam = cs("small"); cnam = cs("cmos");
+  fnam = cs("nand2"); bnam = cs("basis_stuff");
+  whatweneed = SDFLAYPORT + SDFLAYWIRE;
+  if (sdfreadlay(whatweneed,lnam,cnam,fnam,bnam) == NIL)
+     error("cannot read layout");
+  compute_bbx(&xsize,&ysize,thislay);
+  thislay->bbx[HOR] = xsize;
+  thislay->bbx[VER] = ysize;
+  if (sdfwritelay(SDFLAYBBX,thislay) == NIL)
+     error("cannot write layout");
+  }
+
+.SH "AUTHOR"
+Paul Stravers, Delft University of Technology.
+
+.SH "SEE ALSO"
+sdfreadall(3SDF), sdflist(3SDF), sdflistall(3SDF), sealib(3SDF), seadif(4SDF),
+sdfwrite(3SDF), sdfopen(3SDF), sdfclose(3SDF), cs(3SDF), sdfattachlib(3SDF),
+sdfexists(3SDF), memman(3SDF), sdfimage(4SDF).

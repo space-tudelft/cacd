@@ -1,0 +1,19 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+
+COBJS		= agraf.o arg.o aspice.o breakp.o circuits.o clip.o cmath1.o \
+		  cmath2.o cmath3.o cmath4.o compose.o cpitf.o debugcom.o \
+		  define.o device.o diff.o display.o doplot.o dotcards.o \
+		  error.o evaluate.o fourier.o graf.o graphdb.o grid.o inp.o \
+		  inpcom.o interp.o linear.o misccoms.o miscvars.o \
+		  nutctab.o nutinp.o nutmegif.o options.o outitf.o \
+		  parse.o plot5.o plotcurv.o points.o postcoms.o postsc.o \
+		  rawfile.o resource.o runcoms.o shyu.o signal.o spcmdtab.o \
+		  spiceif.o subckt.o types.o vectors.o where.o x11.o \
+		  gens.o newcoms.o dimens.o xgraph.o runcoms2.o breakp2.o
+
+LIB_TARGET	= ../fte.a
+INCLUDE		= -I../../include $(INCX)
+CFLAGS		= $(CC_OPT) $(SYS_CFLAGS) $(INTERFACE_OPTS)
+

@@ -1,0 +1,81 @@
+.TH DMCLOSESTREAM 5ICD "DMI User's Manual"
+.SH NAME
+dmCloseStream - close a DMI stream transaction
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+int dmCloseStream (DM_STREAM *streamkey, int mode);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "DM_STREAM *streamkey"
+is a pointer to a valid
+.B DM_STREAM
+as obtained from the function dmOpenStream().
+.TP
+.B "int mode"
+is an integer selecting a specific behavior of
+.BR dmCloseStream .
+Valid modes as pre-defined in "dmincl.h" are:
+.sp
+\fBCOMPLETE\fP -
+'in +3
+The stream data is 'flushed' to the database,
+and the \fBstreamkey\fP is destroyed.
+.br
+The transaction \fBcommits\fP.
+.in -3
+\fBQUIT\fP -
+'in +3
+When writing, the stream data is deleted,
+and the \fBstreamkey\fP is destroyed.
+.br
+The transaction was not successful.
+.in -3
+.B CONTINUE
+-
+'in +3
+This mode is not implemented.
+.in -3
+.SH DESCRIPTION
+Function
+.B dmCloseStream
+closes the stream specified by
+the access key \fBstreamkey\fP
+and invalidates the access key.
+.PP
+In the current implementation streams are mapped more or less directly
+to UNIX files.
+Therefore, \fBdmCloseStream\fP
+causes any buffers for the file to be emptied.
+It closes the file,
+like fclose(3S) does.
+Buffers allocated by the standard input/output system are freed.
+.SH DIAGNOSTICS
+If the call to
+.B dmCloseStream
+is successful \fB0\fP is returned.
+If
+.B dmCloseStream
+fails \fB-1\fP is returned.
+The external variable
+.B dmerrno
+will be set to indicate the error,
+and a call to function dmError() will be done.
+.PP
+This may happen in the following cases:
+.TP 14
+.B DME_BADARG
+Bad mode argument given.
+.TP
+.B DME_BADKEY
+Bad cell key given.
+.TP
+.B DME_SYS
+System error (fclose failure).
+.SH SEE ALSO
+dmOpenStream(5ICD),
+fclose(3S).

@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# Seatail -- called by various OCEAN tools to display message
+#            in an xterm window.
+# changed to accept 'q' to erase the window.....
+STTY_SETTINGS=`stty -g 2>/dev/null`        # remember current settings
+trap "stty $STTY_SETTINGS ; exit 0" 2 15   # restore ^C on interrupt
+stty intr q 2> /dev/null                   # set interrupt to "q"
+
+tail -n +0 -f $1 | awk '
+     {
+     if( $1 == "lock" )
+	 {
+	 print "<<< use scrollbar to view all <<<<<<<<<<<< end of file <<<<"
+	 system("sleep 3600")
+	 exit
+	 }
+     else
+     if( $1 == "terminate" )
+	 {
+	 print "-----------------------------------------------------"
+	 print "Programs made by Patrick Groeneveld and Paul Stravers"
+	 print "Delft University of Technology, 17th floor"
+	 system("sleep 120")
+	 exit
+	 }
+     else
+     if( $1 == "kill" )
+	 {
+	 exit
+	 }
+     else
+     	 print $0
+     }
+     '

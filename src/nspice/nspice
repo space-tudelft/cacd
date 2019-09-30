@@ -1,0 +1,16 @@
+#!/bin/sh
+# xspice: always use options -hif;
+#         the use of options -xy [ -z name ] is recommended
+if xspice -hif -x $1
+then
+    if nspice_pp $1 $2 >> $1.spc
+    then
+	spice3 < $1.spc > $1.ana
+	if nspice_bs $1
+	then
+	    exit 0
+	fi
+    fi
+fi
+exit 1
+# eof

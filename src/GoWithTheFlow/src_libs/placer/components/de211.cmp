@@ -1,0 +1,7 @@
+bbox 6 10
+port in A
+port in B
+port out Y0
+port out Y1
+port out Y2
+port out Y3

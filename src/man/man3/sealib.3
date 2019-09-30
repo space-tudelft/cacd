@@ -1,0 +1,103 @@
+.ll 77
+.hy
+.TH SEALIB 3SDF "THE SEADIF PROGRAMMERS MANUAL"
+.SH NAME
+sealib - set of library functions to manage a seadif database
+.SH SYNOPSIS
+#include <sealib.h>
+.SH DESCRIPTION
+A seadif database basicly consists of a small number of files (typicly 1 to
+20) each containing one or more libraries in the seadif language.
+(The manual page
+.I seadif (4SDF)
+describes the seadif language.)
+A seadif file name always end in ".sdf".
+The set of seadif files that make up a consistent database can either be in a
+single directory or in multiple directories. The user indicates which
+directories belong to the database by setting the environment variable SEALIB.
+Alternative directory names are separated by a colon (:).
+The default value of SEALIB is ".:/usr/local/lib/seadif" (specifying the current
+directory and /usr/local/lib/seadif to contain the seadif files that make up a
+single consistent seadif database).
+
+The sealib library package provides a convenient means for reading and writing
+the objects in a seadif database. Sealib operates on the predefined in-core
+data structures described in the file <libstruct.h> These data structures
+represent a list of libraries. Each library contains a list of functions and
+each function contains a hierarchical tree of circuits.
+In turn, each circuit refers to a hierarchical tree of layouts.
+Thus the four-level meta hierarchy as discussed in
+.I seadif (4SDF)
+is also present in memory.
+At the top of the meta hierarchy is the global
+variable sdfroot (declared in libstruct.h).
+It points to the list of libraries.
+
+Before any interaction with the database can take place it must be opened with
+the sealib function
+.I sdfopen (3SDF).
+This function constructs a table of contents of the database and stores it in
+hash tables in main memory, thus enabling fast access to the database.
+Following this initialization step, the user can read data objects at any of
+the four levels of meta hierarchy into main memory: libraries with
+sdfreadlib(), functions with sdfreadfun(), circuits with sdfreadcir() and
+layouts with the sealib function sdfreadlay().
+The manual page
+.I sdfread (3SDF)
+describes the operation of these functions.
+In a similar way the functions sdfwritelib(), sdfwritefun(), sdfwritecir() and
+sdfwritelay() allow for data objects at any level of the meta hierarchy to be
+written into the database, see the manual page
+.I sdfwrite (3SDF).
+Before the user exits, he/she must call the function sdfclose(), as described
+in
+.I sdfclose (3SDF).
+If for some reason sdfclose() is not called, the database will not be updated
+but remain as it was when it was opened by sdfopen(), even if the database had
+been "written". A pleasant consequence of this behavior is that if a program
+crashes before it calls sdfclose(), the database will not be left in a
+partially updated state.
+
+The user can acquire (read only) access to the hash tables constructed by
+sdfopen() by calling any of the functions sdfexistslib(), sdfexistsfun(),
+sdfexistscir() and sdfexistslay() as described in the manual page
+.I sdfexists (3SDF).
+This is especially useful when the user needs information regarding the meta
+hierarchy. For instance, a question like "which layouts implement this
+circuit?" could be answered by calling sdfexistscir(). For details, refer to
+the appropriate manual page.
+
+Normally it is transparent to the user in which file a particular data object
+resides. The only thing the user needs to know is the seadif name of the
+object, not the name of the file where the object happens to be. However, when
+the user creates a new library it is not clear in which file it must be stored.
+In such cases the sealib functions inspect the environment variable NEWSEALIB.
+It should hold the name of the file where new libraries ought to go. If
+NEWSEALIB is not set, new libraries by default go into the file
+"@newsealib.sdf".
+
+At any time, the user may force a particular library to go into a specified
+file. The manual page
+.I sdfattachlib (3SDF)
+explains the details.
+
+The sealib functions often must be passed character strings for names of seadif
+objects. In order to speed up the interaction with the database, all strings
+must be canonicized by the function
+.I cs (3SDF)
+before they can be used as a parameter to a sealib function. Strings returned
+by the sealib functions are guaranteed to be canonic, so they can be used as
+parameter without processing by cs().
+.SH "WARNINGS"
+The sealib package provides for single user access only. Parts of the database
+can be shared among multiple projects as long as they are read only.
+The database was designed to be fast and disc-space efficient. As a
+consequence fancy stuff like access control and version control has been left
+out. If you really are in need for such features you can implement a fancy
+shell around the sealib package to do it for you...
+.SH "AUTHORS"
+Paul Stravers and Patrick Groeneveld, Delft University of Technology.
+.SH "SEE ALSO"
+sdfread(3SDF), sdfwrite(3SDF), sdfdelete(3SDF), sdfopen(3SDF), sdfclose(3SDF),
+sdfattachlib(3SDF), sdfexists(3SDF), cs(3SDF), memman(3SDF), seadif(4SDF),
+sdfimage(4SDF).

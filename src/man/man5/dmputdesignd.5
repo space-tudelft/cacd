@@ -1,0 +1,101 @@
+.TH DMPUTDESIGNDATA 5ICD "DMI User's Manual"
+.SH NAME
+dmPutDesignData - put data to a database stream
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+int dmPutDesignData (DM_STREAM *streamkey, int fmt);
+int dmPutDataEscape (DM_STREAM *streamkey, int fmt);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "DM_STREAM *streamkey"
+is a pointer to a valid \fBDM_STREAM\fP as obtained
+from the function dmOpenStream() when the stream was opened.
+It is the access key of a named stream
+to which the data is written.
+.TP
+.B "int fmt"
+is a function pointer which determines the internal format
+that is to be used for write operations.
+.SH DESCRIPTION
+Function
+.B dmPutDesignData
+is used to shield the programmer as much as possible
+from the internal representation of the data in the database
+(for instance, the data may be in PACKED format).
+The data written to the database is conveyed in an external structure,
+one for each type, which is specified by the argument
+.B fmt.
+.PP
+In the include file \fB"dmincl.h"\fP,
+for each type the corresponding value of the argument
+.B fmt
+is given plus the definition and the name of the structure in which the
+data is conveyed to and from the database.
+There is a #define name for each internal format (for example GEO_BOXLAY and GEO_VLNLAY,
+see the example below).
+You are strongly advised to use these defined names for the internal formats instead
+of ordinary numbers.
+.PP
+Function
+.B dmPutDataEscape
+can be defined by a tool programmer to add transparent extensions to the dmPutDesignData function.
+Because function dmPutDesignData calls dmPutDataEscape for unknown formats.
+Note that negative values of
+.B fmt
+are reserved for such user extensions.
+.SH EXAMPLE
+.nf
+/* the error handling has been omitted */
+         .
+         .
+key = dmCheckOut (projkey, cell, WORKING, DONTCARE, LAYOUT, ATTACH);
+
+fp_boxlay = dmOpenStream (key, "np_bxx", "r");
+fp_vlnlay = dmOpenStream (key, "np_vln", "w");
+
+.if n .bp
+while (dmGetDesignData (fp_boxlay, GEO_BOXLAY) > 0) {
+    xl = gboxlay.xl;
+    xr = gboxlay.xr;
+        .
+        .
+    gvlnlay.x = xl;
+    gvlnlay.occ_type = occ_type;
+        .
+        .
+    dmPutDesignData (fp_vlnlay, GEO_VLNLAY);
+}
+
+dmCheckIn (key, COMPLETE);
+.fi
+.SH DIAGNOSTICS
+Function
+.B dmPutDesignData()
+returns 0,
+if successful.
+If
+.B dmPutDesignData()
+fails \fB-1\fP is returned,
+external variable
+.B dmerrno
+will be set and a call to dmError() will been done.
+.PP
+This may happen in the following cases:
+.TP 14
+.B DME_FMT
+Bad dmPutDesignData format.
+.TP
+.B DME_PUT
+Format write error.
+.SH SEE ALSO
+dmCheckOut(5ICD),
+dmCheckIn(5ICD),
+dmGetDesignData(5ICD).
+.br
+Documentation on the format definition for the layout,
+circuit and floorplan view.

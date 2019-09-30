@@ -1,0 +1,203 @@
+#!/usr/bin/python
+ 
+# from optparse import OptionParser
+import sys
+import os
+import re
+from string import split, join
+
+
+def warning (s):
+    return r'{\bf atp warning: %s}' % s
+
+class Struct: pass
+
+class SectionPrinter:
+    def begin (self, sections):
+        self.emptysection = True
+        self.sections = sections
+	self.holdline = ""
+
+    def printline (self, num, line):
+        if self.emptysection: 
+            print "%%section[s]: %s" % self.sections
+	    if '%all' in self.sections:
+		print r'\small \begin{Verbatim}[frame=single]'
+		print 'listing of file %s' % os.path.basename(self.filename)
+	    else:
+		print r'\small \begin{Verbatim}'
+            self.emptysection = False
+
+	self.holdline = self.holdline + ("%4d    %s" % (num, line))
+	if not re.match ('^\s*$', line):
+	    print self.holdline,
+	    self.holdline = ''
+
+    def end (self):
+        if not self.emptysection:
+            print r'\end{Verbatim}'
+            print r'\normalsize'
+            print r'\noindent',
+        else:
+            for s in self.sections:
+                print warning ('section "%s" not found' % s)
+
+section_printer = SectionPrinter ()
+
+class FileHandler:
+    def __init__ (self, filename):
+	self.lst = []
+	self.lines = []
+	self.tags = ['%all', '%xx']
+        self.strip = False
+        # self.add (r'#<([^<>]*)>\s*\n*', self.catcher)
+        self.add (r'\S*#<([^<>]*)(\-)>.*$', self.span_on)
+        self.add (r'\S*#<(\-)([^<>]*)>.*$', self.span_off)
+        self.add (r'\S*#<([^<>-]*)>.*$', self.catcher)
+        self.filename = filename
+
+    # add regexp to list of active regexps
+    def add (self, exp, func):
+        es = Struct ()
+        es.re, es.func = re.compile (exp), func
+        self.lst.append (es)
+
+    # the tag is placed in pos 1 of tags dict,
+    # to be replaced by other tag if encountered in file.
+    def catcher (self, match):
+        tag = match.group (1)
+        self.tags[1] = tag
+        return ''
+
+    def span_on (self, match):
+        tag = match.group (1)
+	self.tags.append (tag)
+	return ''
+
+    def span_off (self, match):
+        tag = match.group (2)
+	self.tags.remove (tag)
+	return ''
+
+    def stripper (self):
+        self.strip = True
+        self.process ()
+
+    def process (self):
+        input = open (self.filename, "r")
+        for line in input:
+            for es in self.lst:
+                if es.re.match (line):
+                    es.re.sub (es.func, line)
+                    line = ''
+                if es.re.search (line):
+                    line = es.re.sub (es.func, line)
+            if not self.strip:
+                self.save (line),
+            else:
+                if line != '': print line,
+
+    def save (self, line):
+        if line == '': return
+        item = Struct ()
+        item.tags = []
+        item.line = line
+        for t in self.tags: item.tags.append(t)
+        self.lines.append (item)
+
+    def getline (self, args):
+        sections = [args[0]]
+	inc = 0
+	if len (args) > 2:
+	    if args[1] == "+": inc = int(args[2])
+	    elif args[1] == "-": inc = int(args[2])
+	    else: assert 0, "syntax error"
+        for i in range(len(self.lines)):
+            line = self.lines[i].line
+            tags = self.lines[i].tags
+            if self.match (tags, sections):
+                return '%s' % (i+1+inc)
+        return warning ('line "%s" not found' % args[0])
+
+    def listfile (self):
+        self.output_list (['%all'])
+
+    def listsection (self, section):
+        self.output_list ([section])
+
+    def output_list (self, sections):
+        empty = re.compile (r'^\s*$')
+
+	section_printer.filename = self.filename
+        section_printer.begin (sections)
+        for i in range(len(self.lines)):
+            line = self.lines[i].line
+            tags = self.lines[i].tags
+            if self.match (tags, sections):
+                section_printer.printline (i+1, line)
+        section_printer.end ()
+
+    def match (self, tags, sections):
+        # O(N^2), but who cares
+        for t in tags:
+            for s in sections:
+                if t == s:
+                    return True
+        return False
+
+class Processor:
+    lst = []
+    fileHandler = None
+    def __init__ (self):
+        self.add (r'#<([^<>]*)>', self.catcher)
+
+    def add (self, exp, func):
+        es = Struct ()
+        es.re, es.func = re.compile (exp), func
+        self.lst.append (es)
+
+    def catcher (self, match):
+        string = match.group (1)
+        args = split (string)
+        keyword = args.pop(0)
+        if keyword == 'line':
+            result = self.fileHandler.getline (args)
+        elif keyword == 'file':
+            self.fileHandler = FileHandler (args[0])
+            result = self.fileHandler.process ()
+        elif keyword == 'listfile':
+            result = self.fileHandler.listfile ()
+        elif keyword == 'section':
+            result = self.fileHandler.listsection (args[0])
+        else: 
+            result = warning ('unknown keyword: "%s"' % keyword)
+
+        return result
+
+    def process (self, line):
+        for es in self.lst:
+            if es.re.search (line):
+                line = es.re.sub (es.func, line)
+        return line
+
+def usage ():
+    print "Usage: %s filename" % os.path.basename(sys.argv[0])
+    print "    annotation tag processor"
+
+def main ():
+    args = sys.argv[1:]
+    if "-h" in args or "--help" in args or len(args) < 1:
+        usage ()
+        sys.exit (2)
+
+    if "-s" in args or "--strip" in args:
+        filehandler = FileHandler (sys.argv[2])
+        filehandler.stripper ()
+    else:
+        processor = Processor ()
+        input = open (sys.argv[1], "r")
+        for line in input:
+            line = processor.process (line)
+            print line,
+
+main ()

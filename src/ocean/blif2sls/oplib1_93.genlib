@@ -1,0 +1,30 @@
+# Process  fishbone
+# Lambda   0.2
+#
+# time units used   1 unit == 0.1 ns
+#
+# chip area  used   1 unit == 1/2 of image's basic cell
+#
+# capacitance units : pF
+
+
+GATE iv110	2	Y=!A;		PIN * INV 0.12 999 4  22  4   22
+GATE no210	3	Y=!(A+B);	PIN * INV 0.12 999 7  70  7   70
+GATE no310	4	Y=!(A+B+C);	PIN * INV 0.12 999 14 100 14  100
+GATE na210	3	Y=!(A*B);	PIN * INV 0.12 999 4  50  4   50
+GATE na310	4	Y=!(A*B*C);	PIN * INV 0.12 999 12 90 12   90
+GATE ex210	7	Y=A*!B+!A*B;	PIN * UNKNOWN 0.12 999 7  70 7  70
+GATE zero	0	Y=CONST0;
+GATE one	0	Y=CONST1;
+
+# Pure delay
+LATCH   delay   1   Q=D;
+PIN D   NONINV 1 999 0.01 0.01 0.01 0.01
+SEQ Q ANY ASYNCH
+
+LATCH dfn10 12 Q = D;
+PIN D NONINV 0.12 999 30 80 30 80
+SEQ Q ANY RISING_EDGE
+CONTROL CLOCK 0.12 999 23 80 23 80
+CONSTRAINT D 1 1
+

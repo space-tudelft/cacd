@@ -1,0 +1,116 @@
+.TH RMDB 1ICD "User Commands"
+.UC 4
+.SH NAME
+rmdb - remove cell parts of an ICD database project
+.SH SYNOPSIS
+.B rmdb
+[\fB-aifv\fP]
+[\fB-c\fP \fIcellname\fP]
+[\fB-p\fP \fIproject\fP]
+[layout]
+[circuit]
+[floorplan]
+.SH OPTIONS
+.TP
+.B -a
+Remove
+.I all
+cells of all views, if not further restricted by the
+.B -c
+option or one or more view specifications.
+.TP
+.B -i
+Clean also
+.I impcelllist
+of views.
+Not allowed in combination with the
+.B -c
+option.
+.TP
+.B -f
+Use
+.I force
+mode: no confirmations are asked.
+.TP
+.B -v
+Use
+.I verbose
+mode.
+.TP
+.B -c
+Remove
+.I cell
+with name <cellname> from database.
+Either the
+.B -a
+option (for all views) or one or more view specifications must be given.
+.TP
+.B -p
+Use this
+.I project
+path for the database removals.
+.SH DESCRIPTION
+.I Rmdb
+can clean a complete ICD database or remove parts from it.
+It can remove all cells from one or more views together.
+.PP
+.I Rmdb
+can also remove individual cells from one or more views.
+.PP
+.I Rmdb
+askes for a confirmation,
+when option
+.B -f
+is not specified,
+before proceeding.
+.SH NOTES
+The current working directory must be the project directory.
+.br
+You can use the environment variable CWD.
+.SH EXAMPLES
+% rmdb -aiv
+.PP
+The above example removes verbose
+.I all
+cells from
+.I all
+views and cleans also the "impcelllist" in the views.
+.PP
+% rmdb layout circuit
+.PP
+The above example removes
+.I all
+cells from the layout and circuit view.
+.PP
+% rmdb -c FlipFlop layout
+.PP
+The above example removes the FlipFlop cell from the layout view.
+.PP
+% rmdb -c FlipFlop -c nand2 -af
+.PP
+The above example removes the FlipFlop and nand2 cell from
+.I all
+views and does not ask for it.
+.SH AUTHORS
+S. de Graaf
+.SH FILES
+.TP 30
+\fCproject/exp_dat\fP
+(removed, if layout view)
+.TP
+\fCproject/display.out\fP
+(removed, if layout view)
+.TP
+\fCproject/\fIview\fP/celllist\fP
+(cleaned)
+.TP
+\fCproject/\fIview\fP/impcelllist\fP
+(cleaned, option -i)
+.TP
+\fCproject/\fIview\fP/cell ...\fP
+(removed)
+.SH DIAGNOSTICS
+Generally self-explanatory.
+All messages are echoed on the
+.I stderr
+output.

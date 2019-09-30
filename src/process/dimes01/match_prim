@@ -1,0 +1,51 @@
+/* process dimes01 */
+
+primitive network res (terminal p, n)
+{
+	perm { (p, n) };
+}
+
+primitive network cap (terminal p, n)
+{
+	perm { (p, n) };
+}
+
+primitive network jfet (terminal g, d, s)
+{
+	perm { (g) (d, s) };
+}
+
+primitive network npn (terminal c, b, e)
+{
+	perm {(c)(b)(e)};
+}
+
+primitive network pnp (terminal c, b, e)
+{
+	perm {(c)(b)(e)};
+}
+
+primitive network npnBS (terminal c, b, e)
+{
+	perm {(c)(b)(e)};
+}
+
+primitive network npnBW (terminal c, b, e)
+{
+	perm {(c)(b)(e)};
+}
+
+primitive network npnBI (terminal c, b, e)
+{
+	perm {(c)(b)(e)};
+}
+
+primitive network pnpWP (terminal c, b, e)
+{
+	perm {(c)(b)(e)};
+}
+
+primitive network pnpSP (terminal c, b, e)
+{
+	perm {(c)(b)(e)};
+}

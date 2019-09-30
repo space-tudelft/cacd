@@ -1,0 +1,102 @@
+.TH SETCMAP 1ICD
+.UC 4
+.SH NAME
+setcmap - define the standard colormap on an X Windows graphics display
+.SH SYNOPSIS
+.B setcmap
+[options]
+.SH OPTIONS
+The following options can be specified:
+
+.TP 25
+.B -help
+Print usage.
+.TP 25
+\fB-display host:dpy[.screen]\fP
+Specifies the display to set the colormap of.
+The value of the environment
+variable \fBDISPLAY\fP is taken as default.
+.TP 25
+\fB-cf colorfile\fP
+Do not use the internal list of 32 colors, but this list.
+Note that the order of the colors is very important.
+The first 8 colors are normally \fBBlack\fP, \fBRed\fP, \fBGreen\fP,
+\fBYellow\fP, \fBBlue\fP, \fBMagenta\fP, \fBCyan\fP and \fBWhite\fP.
+At least 8 colors must be specified.
+It is possible to specify a maximum of 128 different colors.
+If you use a set of 16 colors, you get one more "white" plane
+if 5 or 7 bitplanes are used.
+.TP 25
+\fB-rgb rgbfile\fP
+Different RGB-values may be specified for the used colors.
+A file in the format like X11 "rgb.txt".
+Normally the "rgb.txt" file on the server is used for RGB-values.
+Be careful, the library routines can not use this new \fBrgbfile\fP,
+and are using another to map colornames to RGB-values.
+If there are too big differences in the RGB-values,
+wrong colormap entries may be used!
+.TP 25
+.B -3
+Set a 3 bit plane colormap instead of the maximum available.
+The last occurrence of \fB-3\fP, \fB-5\fP and \fB-7\fP overrides previous
+bit plane specifications.
+.TP 25
+.B -5
+Set a 5 bit plane colormap instead of the maximum available.
+The last occurrence of \fB-3\fP, \fB-5\fP and \fB-7\fP overrides previous
+bit plane specifications.
+.TP 25
+.B -7
+Set a 7 bit plane colormap instead of the maximum available.
+The last occurrence of \fB-3\fP, \fB-5\fP and \fB-7\fP overrides previous
+bit plane specifications.
+.TP 25
+.B -f
+Replace the colormap with a new one if it already exists.
+Without this option nothing happens if the colormap already exists.
+.TP 25
+.B -p
+Print the current CACD colormap.
+.TP 25
+.B -r
+Remove the current CACD colormap.
+.TP 25
+.B -s
+Run in silent mode; no informative messages are printed.
+.TP 25
+.B -v
+Run in verbose mode; print additional status information.
+.SH DESCRIPTION
+.B Setcmap
+sets, replaces, removes or prints the Nelsis ICD CACD colormap on
+an X Windows graphics display.
+Its normal behaviour is to set the CACD colormap with the largest number
+of bitplanes supported by the display,
+unless the CACD colormap already existed then it just returns.
+This behaviour can be changed using the options described above.
+.SH "STANDARD COLOR TABLE"
+The following standard set of 32 color names is used by the program:
+.PP
+\fBBlack\fP, \fBRed\fP, \fBGreen\fP, \fBYellow\fP, \fBBlue\fP,
+\fBMagenta\fP, \fBCyan\fP, \fBWhite\fP, \fBGrey\fP, \fBKhaki\fP,
+\fBCoral\fP, \fBSienna\fP, \fBFirebrick\fP, \fBOrange\fP, \fBVioletRed\fP,
+\fBNavy\fP, \fBLightGrey\fP, \fBCadetBlue\fP, \fBViolet\fP, \fBGold\fP,
+\fBGoldenrod\fP, \fBMaroon\fP, \fBOrchid\fP, \fBPink\fP, \fBPlum\fP,
+\fBSalmon\fP, \fBTan\fP, \fBThistle\fP, \fBTurquoise\fP, \fBBrown\fP,
+\fBAquamarine\fP and \fBDarkGreen\fP.
+.SH AUTHOR
+P. Bingley
+.br
+S. de Graaf (V4.0)
+.SH LIMITATIONS
+Currently
+.B setcmap
+can only set 3, 5 or 7 bitplane colormaps.
+.SH SEE ALSO
+cmapintro(5ICD),
+.SH DIAGNOSTICS
+.B Setcmap
+tells the user what's happening,
+unless \fB-s\fP is specified.
+If the program runs successfully it exits with exit status \fBzero\fP,
+otherwise the exit status is \fBnon-zero\fP.

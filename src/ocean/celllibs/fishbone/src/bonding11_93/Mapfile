@@ -1,0 +1,18 @@
+# This is a maptable for nelsis <--> seadif conversion, generated/maintained by 'nelsea'
+# Written on: Tue Aug 10 15:36:35 1993
+# You can edit this file to control the mapping process
+# Each line contains the name of a nelsis cell and its corresponding seadif cell
+# The status field may contain the following values:
+#    'written'       the cell was succesfully written into seadif resp. nelsis
+#    'primitive'     the cell is a primitive which should not be read or converted
+#    [anything else] the cell will be written if necessary
+# To check the consistency of this table: use 'nelsea -C'
+#    N E L S I S     |                   S E A D I F                     | nelsis->sdf sdf->nelsis
+# view    cellname   | library      function     circuit      layout     |   status      status
+#--------------------+---------------------------------------------------+------------------------
+ layout   bond_bar     bonding11_93  bond_bar     bond_bar     bond_bar
+ layout   bond_leer    bonding11_93  bond_leer    bond_leer    bond_leer
+ layout   bondflap_8   bonding11_93  bondflap_8   bondflap_8   bondflap_8
+ circuit  bondflap8    bonding11_93  bondflap8    bondflap8    $dummy
+ circuit  bond_bar     bonding11_93  bond_bar     bond_bar     $dummy
+ circuit  bond_leer    bonding11_93  bond_leer    bond_leer    $dummy

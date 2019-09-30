@@ -1,0 +1,99 @@
+\subsection{Testbaar ontwerpen}
+\label{testbaar}
+Nadat de schakelingen gefabriceerd zijn zullen zij door de groep getest worden. 
+Het testen van de ontworpen schakeling na fabricage heeft een tweeledig doel: 
+\begin{itemize}
+\item
+Nagaan of de schakeling aan de specificaties voldoet.
+\item
+Indien de schakeling niet aan de specificaties voldoet: 
+proberen zo nauwkeurig mogelijk te weten te komen wat de reden is waardoor 
+de schakeling niet voldoet,
+zodat tijdens een eventueel herontwerp de schakeling wel zal kunnen werken.
+\end{itemize}
+Het is van groot belang dat al in een vroeg stadium tijdens het ontwerp
+rekening wordt gehouden met het feit dat de schakeling later getest zal
+worden.
+Dit omdat in de eindfase van het ontwerp het meestal lastig is om de 
+schakeling hiervoor nog aan te passen.
+Daarom wordt in deze sectie besproken hoe het testen zal plaatsvinden
+en aan welke eisen de schakeling (en de simulaties) moeten voldoen
+om later op goede wijze te kunnen testen.
+
+\subsubsection{De manier van testen bij het OP}
+Het testen van de schakeling na fabricage wordt op de volgende 2 manieren uitgevoerd.  
+In beide gevallen wordt gemeten aan 2 a 3 stuks afgemonteerde schakelingen in een DIL40 behuizing. 
+\begin{itemize}
+\item
+De schakeling wordt aangesloten op een logic analyzer.
+Via de logic analyzer worden logische signalen naar de ingangen van de
+schakeling gestuurd en de logische signalen aan de uitgangen worden geobserveerd. 
+Dit is vergelijkbaar met het simuleren van de schakeling tijdens het ontwerp,
+maar nu met de echte hardware i.p.v. het (\smc{vhdl}) simulatie model.
+Om te kunnen beoordelen of de schakeling werkt worden testvectors van 
+een eerdere \smc{vhdl} simulatie gebruikt en wordt gekeken of de uitgangen 
+van de werkelijke schakeling dezelfde resultaten geven als tijdens simulatie 
+(aannemende dat de eerder \smc{vhdl} simulatie goede resultaten gaf).
+Voor meer informatie over deze vorm van testen, zie appendix D van de OP handleiding.
+De gehele schakeling dient op deze manier te worden getest, maar ook
+de deelschakelingen dienen op deze
+manier te worden getest.
+\item
+Aan de schakeling worden
+de externe componenten aangesloten 
+(schakelaars, oscillator kristal voor de klok, displays, luidsprekers etc) 
+en de schakeling wordt real-time uitgeprobeerd.
+\end{itemize}
+\subsubsection{Overwegingen tijdens het ontwerp}
+Vanwege de testbaarheid van het ontwerp en het eventuele localiseren van problemen, 
+dient aan de volgende punten aandacht te worden geschonken tijdens het ontwerp:
+\begin{itemize}
+\item
+Zorg dat de uitgangen van de schakeling, bij een gegeven set van ingangsignalen
+en na de reset, altijd een bekende, vaste, reeks van waarden gaan doorlopen. 
+Alleen dan namelijk kan de logic analyzer een vergelijking maken met de 
+referentie set van uitgangsignalen zoals eerder verkregen via simulatie.
+\item
+Tijdens het testen met de logic analyzer (en ook tijdens simulatie !) 
+kan slechts over een beperkt aantal klokcycli gesimuleerd worden: enkele 
+miljoenen/honderdduizenden cycli tijdens simulatie en 65000 cycli tijdens 
+testen met de logic analyzer. 
+Dat wil dus zeggen dat wanneer een kloksignaal van 6.144 Mhz gebruikt wordt 
+en men het gedrag van de schakeling na 1 minuut (real-time) wil bekijken 
+er 60 x 6144000 is ongeveer 360 miljoen klokcycli nodig zouden zijn, wat dus veel te veel is.
+Om dit probleem op te lossen kan men bijvoorbeeld oplossingen bedenken in de volgende richtingen:
+(1) de schakeling een bepaalde mode geven waarin hij met een veel langzamere klok 
+toch de gewenste toestanden doorloopt of 
+(2) het mogelijk maken dat de schakeling van een bepaalde begintoestand start 
+waarna de schakeling veel sneller de gewenste eindtoestand bereikt.
+\item
+Wanneer een schakeling niet goed werkt is aan alleen de uitgangssignalen 
+vaak niet altijd te zien waar het probleem zit.  
+Probeer daarom zoveel mogelijk ``interessante'' interne signalen op de pinnen van het 
+IC aan te sluiten wanneer er nog pinnen beschikbaar zijn. 
+Slecht een beperkt aantal signalen kan tijdens het testen bereikt worden worden: 
+naast voedingsaansluitingen zijn er slechts 32 pinnen beschikbaar per schakeling voor in 
+en uitgangen. 
+Om te analyzeren wat er wel werkt en niet werkt en waar het probleem dus zit kan hier 
+gedacht worden aan het demultiplexen en multiplexen van in en uitgangssignalen 
+zodat via 1 pin meerdere ingangssignalen worden aangeboden of uitgangen worden gelezen. 
+Dit kost echter weer wel extra pinnen voor het aansturen van de (de)multiplexers.
+\end{itemize}
+\subsubsection{Overwegingen tijdens het maken van testbenches}
+Voor zowel de gehele schakeling als de verschillende deelschakelingen zal
+minstens \'e\'en van de testbenches die gebruikt is tijdens simulatie, tevens 
+(na conversie) gebruikt worden voor tijdens het testen met de logic analyzer.
+Deze testbench zal aan de volgende eisen moeten voldoen:
+\begin{itemize}
+\item
+Gebruik een simulatie die niet langer duurt dan 65000 klokcycli.
+\item
+Een ingangsignaal moet gedurende de hele simulatie ook ingangsignaal blijven. 
+D.w.z. het is niet toegestaan dat voor bepaalde tijd een logische waarde opdrukt aan
+een pin en de rest van de simulatie wordt het signaal ``losgelaten''.
+\item
+Bij de gespecificeerde ingangsignalen moeten na afloop van de reset altijd 
+de gespecificeerde uitgangsignalen optreden 
+(de uitgangsignalen mogen na de reset dus niet afhankelijk zijn van een 
+toevallige willekeurige begintoestand waarin de schakeling zich bevindt).
+\end{itemize}

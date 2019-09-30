@@ -1,0 +1,69 @@
+#-----------------------------------------------------------------------------
+#
+#                       M A S K D A T A   I N F O
+#
+#       Layer fields (2):       field  1: layer name
+#                               field  2: layer type
+#                                         type = 0: normal layer
+#                                         type = 1: interconnect layer
+#                                                   (terminals/labels may be
+#                                                    defined for this layer).
+#                                         type = 2: symbolic layer
+#
+#       Pattern-Generate (2):   field  3: job number
+#       (Only used by           field  4: mask type
+#        PG-tape programs)                type = 0: negative
+#                                         type = 1: positive
+#
+#       CMask Terminals (2):    field  5: color number
+#       (Obsolete)              field  6: fill style
+#
+#       (Sea)Dali (2):          field  7: color number
+#                                         0=black, 1=red, 2=green,
+#                                         3=yellow, 4=blue, 5=violet,
+#                                         6=aqua, 7=white
+#                               field  8: fill style
+#                                         0=hashed, 1=solid, 2=hollow
+#                                         3,4,5 = 12,25,50% hash+outline
+#                                         6,7,8 = idem, no outline
+#
+#       Plotter (2):            field  9: pen number
+#       (Obsolete)                        1=black, 2=red, 3=yellow,
+#                                         4=green, 5=brown, 6=violet,
+#                                         7=blue, 8=aqua
+#                               field 10: fill style
+#
+"tsmc025" "MOSIS TSMC 0.25u 5 metal 1 poly N-well cmos process"
+#---------------------------------------------+---------------------
+# Layer     | PG-Tape | CMask | Dali  | Plot  | Comment
+#-----------+---------+-------+-------+-------+---------------------
+# name      | job     | color | color | pen   |
+# |    type | |  type | | fill| | fill| | fill|
+# |    |    | |  |    | |  |  | |  |  | |  |  |
+# 1    2    | 3  4    | 5  6  | 7  8  | 9  10 |
+#-v----v----+-v--v----+-v--v--+-v--v--+-v--v--+---------------------
+cpg    1      0  1      0  1    1  1    1  0   "polysilicon"
+caa    1      0  1      0  1    2  1    1  0   "active area"
+cmf    1      0  1      0  1    4  1    1  0   "metal"
+cms    1      0  1      0  1    3  4    1  0   "metal 2"
+cmt    1      0  1      0  1    5  4    1  0   "metal 3"
+cmq    1      0  1      0  1    6  4    1  0   "metal 4"
+cmp    1      0  1      0  1    4  4    1  0   "metal 5"
+cca    0      0  1      0  1    0  1    1  0   "contact metal to diffusion"
+ccp    0      0  1      0  1    0  1    1  0   "contact metal to poly"
+cva    0      0  1      0  1    7  1    1  0   "contact metal 2 to metal"
+cvs    0      0  1      0  1    7  1    1  0   "contact metal 3 to metal 2"
+cvt    0      0  1      0  1    7  1    1  0   "contact metal 4 to metal 3"
+cvq    0      0  1      0  1    7  1    1  0   "contact metal 5 to metal 4"
+cwn    0      0  1      0  1    5  0    1  0   "n well"
+csp    0      0  1      0  1    5  2    1  0   "p plus select"
+csn    0      0  1      0  1    6  2    1  0   "n plus select"
+cvp    0      0  1      0  1    7  0    1  0   "p high voltage"
+cvn    0      0  1      0  1    7  0    1  0   "n high voltage"
+ccc    0      0  1      0  1    7  0    1  0   "contact"
+cog    0      0  1      0  1    7  0    1  0   "glass"
+csb    0      0  1      0  1    7  0    1  0   "silicide block"
+cta    0      0  1      0  1    7  0    1  0   "thick active"
+ctm    0      0  1      0  1    7  0    1  0   "metal4 prime"
+xp     0      0  1      0  1    7  0    1  0   "highlight mask"
+cx     2      0  1      0  1    7  0    1  0   "bounding box"

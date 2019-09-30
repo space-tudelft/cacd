@@ -1,0 +1,56 @@
+.TH SETFOREGROUNDFROMID 5ICD "9/6/88"
+.UC 4
+.SH NAME
+SetForegroundFromId - set the foreground pixel of a gc to the pixel associated with the Id
+.SH SYNOPSIS
+.nf
+\fB
+SetForegroundFromId (gc, Id)
+GC gc;
+int Id;
+
+SetForegroundFromIds (gc, Ids, n)
+GC gc;
+int Ids[];
+int n;
+
+SetBackgroundFromId (gc, Id)
+GC gc;
+int Id;
+
+SetBackgroundFromIds (gc, Ids, n)
+GC gc;
+int Ids[];
+int n;
+\fP
+.fi
+.SH PARAMETERS
+.TP 14
+.B gc
+the graphics context of which the fore- or background pixel should be set.
+.TP 14
+.B Id(s)
+Id's to identify the pixel value by.
+.TP 14
+.B n
+specifies the number of Ids.
+.SH DESCRIPTION
+These functions set the foreground or background pixel value
+of the specified graphics context to the pixel value obtained
+by OR'ing together the pixel values of the specified Id's.
+.SH DIAGNOSTICS
+If a call to these functions is successful \fB1\fP is returned.
+If a call to these functions fails \fB0\fP will be returned
+and \fBcacdcmaperrno\fP will be set to one of the following values:
+.TP 14
+.B NOINIT
+the CACD colormap library was not initialized.
+.TP 14
+.B BADID
+a specified Id did not exist.
+.SH SEE ALSO
+InitCacdCmap(5ICD)
+CoupleIdToColor(5ICD)
+CoupleIdToRGB(5ICD)
+GetAffectedIds(5ICD)
+GetPixelFromId(5ICD)

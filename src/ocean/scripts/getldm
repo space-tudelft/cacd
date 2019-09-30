@@ -1,0 +1,99 @@
+#!/bin/csh -f
+#
+# getldm: get a flat ldm description from your design
+#         in which the library cells are NOT flattened
+#
+# Usage: getldm -o <outcellname> <cellname>
+#
+# the result is a cell called <outcellname> and the file <outcellname>.ldm
+#
+# Patrick Groeneveld 9-1992
+#
+
+# command line checking...
+if ($#argv < 3) then
+   echo "Error: no cell names specified"
+   goto help
+   exit 1
+endif
+
+top:
+
+if ($#argv >= 2) then
+  switch ($argv[1])
+
+  case -o:		# specify output cell name
+      shift argv
+      set OUTPUTCELLNAME = $argv[1]
+      shift argv
+      goto top
+
+  case -h:		# help
+help:
+      echo "Usage: getldm -o <outcellname> <cellname>"
+      echo
+      echo "getldm: Get a flat ldm description from your design "
+      echo "        in which the library cells are NOT flattened."
+      echo "        The result is a cell called <outcellname> and the file"
+      echo "        <outcellname>.ldm."
+      echo "        The cell <outcellname> contains only the SoG masks and no"
+      echo "        library cells."
+      exit 0
+  default:
+      echo "WARNING: argument ignored: '$argv[1]'"
+      shift argv
+      goto top
+  endsw
+endif
+
+set CELLNAME=$argv[1]
+
+# echo "Cellname : $CELLNAME en OUTCellname : $OUTPUTCELLNAME"
+
+
+if( ! -f ".dmrc") then
+   echo "Error: You are not in a project directory."
+   echo "getldm: program aborted"
+   exit 1
+endif
+
+if( ! -d "layout/$CELLNAME") then
+   echo "Error: Cell $CELLNAME does not seem to exist."
+   echo "getldm: program aborted"
+   exit 1
+endif
+
+if( $CELLNAME == $OUTPUTCELLNAME ) then
+  echo "Error: input cell name and output cell name are the same"
+  echo "       It is not so wise to overwrite your cell"
+  echo "getldm: program aborted"
+  exit 1
+endif
+
+if( $CELLNAME == $OUTPUTCELLNAME ) then
+  echo "Error: input cell name and output cell name are the same"
+  echo "       It is not so wise to overwrite your cell"
+  echo "getldm: program aborted"
+  exit 1
+endif
+
+if( -d "layout/$OUTPUTCELLNAME") then
+   echo "Warning: existing cell '$OUTPUTCELLNAME' will be overwritten."
+   echo "         (if you're scared: Hit ^C to prevent this)"
+   sleep 2
+endif
+
+if( -f "${OUTPUTCELLNAME}.ldm") then
+   echo "Warning: existing file '${OUTPUTCELLNAME}.ldm' will be overwritten."
+   echo "         (if you're scared: Hit ^C to prevent this)"
+   sleep 2
+   /bin/rm -f ${OUTPUTCELLNAME}.ldm
+endif
+
+echo "-- Calling the layout flattener --"
+layflat -L /celllibs/ -i in -i ins -i con -i cop -i cps -i cos -i bb -o $OUTPUTCELLNAME $CELLNAME || exit 1
+
+echo "-- Creating the ldm file $OUTPUTCELLNAME.ldm --"
+xldm $OUTPUTCELLNAME || exit 1
+
+echo "-- getldm: I'm ready\! --"

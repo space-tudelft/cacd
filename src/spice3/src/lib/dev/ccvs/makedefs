@@ -1,0 +1,11 @@
+###########
+# Copyright 1991 Regents of the University of California.  All rights reserved.
+###########
+
+COBJS		= ccvs.o ccvsask.o ccvsdel.o ccvsdest.o ccvsfbr.o ccvsload.o \
+		  ccvsmdel.o ccvspar.o ccvspzld.o ccvssacl.o ccvsset.o \
+		  ccvssld.o ccvssprt.o ccvssset.o
+
+LIB_TARGET	= ../../dev.a
+INCLUDE		= -I../../../include
+

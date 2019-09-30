@@ -1,0 +1,46 @@
+.TH MPLOT 1ICD "User Commands"
+.UC 4
+.SH NAME
+mplot - make a plotfile for a masklayout
+.SH SYNOPSIS
+.B mplot
+[-vte] [-o masklist] [-n masklist] cell
+.SH OPTIONS
+.I Mplot
+understands the following options:
+.TP
+.B -v
+verbose mode.
+.TP
+.B -t
+plot terminals with a cross.
+.TP
+.B "-o\fImasklist\fR"
+process only the masks in \fImasklist\fP.
+\fIMasklist\fP is a comma- or blank-separated list of masknames.
+.TP
+.B "-n\fImasklist\fR"
+exclude the masks in \fImasklist\fP from processing.
+.TP
+.B -e
+Assume the layout is already expanded,
+do not run the makeboxl and makegln preprocessors.
+.SH DESCRIPTION
+.I Mplot
+is a program that creates a plotfile from a layout.
+This file may then be send to a plotter for obtaining
+hardcopy.
+.PP
+The plotfile contains a description of the contour (``outline'')
+of the layout geometry.
+Unlike preplot (1ICD),
+mplot also finds the contour of layout containing oblique geometry.
+It works on the "gln" representation of a cell.
+.SH FILES
+.TP
+\fCNELSISPROJECT/plotfile\fP
+output file
+.AU "N.P. van der Meijs"
+.SH SEE ALSO
+preplot (1ICD),
+plotfile(4ICD).

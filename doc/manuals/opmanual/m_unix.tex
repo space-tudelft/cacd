@@ -1,0 +1,739 @@
+\section{Enkele Gegevens over X-windows en UNIX}
+\label{UNIX en X-windows}
+\subsection{X-windows}
+\subsubsection{Het scherm}
+\label{Het scherm}
+
+Wanneer u eenmaal bent ingelogd ziet het scherm eruit
+als in figuur~\ref{display_look}.
+Op het scherm ziet u de effecten van een aantal X-window clients.
+Dit zijn programma's die iets zichtbaars opleveren op het scherm.
+Rechtsonder ziet u een knoppenbalk.
+Deze balk wordt
+gegenereerd door een zogenaamde {\em window manager}
+(is een beetje te vergelijken met
+datgene wat Windows 95 op het scherm zet).
+Zo'n balk wordt gebruikt om snel standaard applicaties te kunnen starten.
+Verder dient de balk als frame voor ge{\ii}conificeerde
+processen zoals de klok.
+De X-client xclock is een programma wat een klok op het scherm zet.
+De {\em fvwm window manager} neemt die
+grafische informatie en stopt deze binnen een veld van de balk.
+Linksboven in de hoek verschijnt een {\em xterm}.\index{xterm}
+Hierin draait een {\em c-shell} of een variatie daarvan.
+De laatste client,
+de al genoemde {\em fvwm window manager} valt niet direct zo op als de
+andere clients,
+maar het is echter wel een belangrijke.
+Het meest zichtbare dat de {\em fvwm window manager} oplevert
+zijn de kaders rond de andere clients en de knoppenbalk.
+
+\begin{figure}[bth]
+\centerline{\callpsfig{display.ps}{width=1.0\textwidth}}
+\caption{Het scherm na login
+\label{display_look}}
+\end{figure}
+
+\subsubsection{Objecten op het scherm}
+\label{Objecten op het scherm}
+Alles wat u kunt zien op het scherm, behalve de achtergrond, heeft te
+maken met objecten. Een object op het scherm wordt meestal een window
+of {\em X-window} genoemd.  Een window is altijd het gevolg van een
+draaiend programma.  Een programma wat een object of window
+veroorzaakt op het scherm wordt ook wel een {\em X-client} genoemd.
+De objecten op het scherm worden dus meestal aangeduid met een {\em
+X-window} of een {\em X-client}.  In de volgende paragrafen zullen
+enkele van de belangrijkste {\em X-clients} worden behandeld.
+
+\paragraph{De fvwm window manager}
+\label{De fvwm window manager}
+{\em De fvwm window manager} is een {\em X-client} welke tot doel
+heeft om alle andere {\em X-clients} te managen.  Hiermee wordt
+bedoeld dat de window manager in staat moet zijn om {\em X-clients} te
+vergroten, verkleinen, verplaatsen, iconificeren, etc.
+Bovendien moet de {\em fvwm window manager}, welke overigens maar \'e\'en
+implementatie is van een hele serie van window managers, in staat zijn
+om nieuwe {\em X-clients} op te starten en oude weg te gooien. Een
+window manager in het algemeen bepaald de ``look and feel'' van het
+scherm.  In de volgende paragrafen zullen de belangrijkste
+mogelijkheden en effecten van de {\em fvwm window manager} worden
+belicht. Alleen de meest voor de hand liggende methodes om
+bepaalde zaken met de window manager te doen worden genoemd.
+
+\paragraph{Kaders}
+Het meest zichtbare effect van elke window manager zijn de
+kaders die om iedere {\em X-client} worden geplaatst.
+De kaders zijn duidelijk te zien  in figuur~\ref{display_look} en~\ref{kaders}.
+Niet ieder window krijgt hetzelfde kader. Soms is het onzinnig om
+een {\em X-client} te vergroten of te verkleinen, in dat geval
+biedt het kader minder mogelijkheden aan de gebruiker.
+De kaders van de {\em fvwm window manager} bevatten  een aantal basisfuncties.
+\begin{figure}[bth]
+\centerline{\callpsfig{kaders.ps}{width=0.6\textwidth}}
+\caption{Een klein window met fvwm kaders
+\label{kaders}}
+\end{figure}
+
+In het midden boven het window wordt in de zogenaamde titelbalk
+de naam van het window geplaatst.
+Vaak is dit de naam van de {\em X-client}. Er kan
+echter ook een andere tekst staan die bovendien kan worden aangepast.
+Een goed voorbeeld hiervan is de {\em c-shell - xterm}
+constructie. Deze kan de tekst in de titel
+balk vervangen door b.v.\ de naam van de machine waar de c-shell draait en
+de naam van de current working directory. Zo kunt u altijd zien waar
+u bezig bent.
+
+De kaders zijn ook bedoeld om het window eenvoudig te kunnen vergroten en
+verkleinen.
+Verder zijn links en rechts
+van de titelbalk enkele knoppen geplaatst met speciale functies.
+\paragraph{Het vergroten van windows}
+\label{Het vergroten van windows}
+Het vergroten en verkleinen van de afmeting van een window gaat vrijwel
+op dezelfde manier zodat we beter kunnen spreken van het veranderen van
+de grootte van een window.
+
+De meest eenvoudige manier om een window te veranderen in grootte is
+d.m.v.\ het uitrekken van het kader.
+Dit kan door met de linker-muisknop
+op \'e\'en van de zijdes van het kader te klikken en vast te houden.
+Hierdoor ontstaat een rubberen rand, of rubber box, welke door het bewegen
+van de muis kan worden opgerekt of ingekrompen. Wanneer de muisknop weer
+wordt losgelaten, zal de X-client de grootte van het nieuwe kader aannemen.
+Wanneer \'e\'en van de hoeken wordt geklikt kan de grootte van 2 zijden ineens
+worden veranderd.
+
+Soms moet een window net zo groot worden als het scherm toelaat.
+Voor dat geval is er een speciale knop, pijltje omhoog, die zich bevindt uiterst rechts van de titelbalk
+in het kader. De knop met het pijltje naar beneden zal het window iconificeren.
+\paragraph{Het verplaatsen van windows}
+Het verplaatsen van een window kan door met de linker-muisknop op
+de titelbalk van het kader te klikken en vast te houden. Er verschijnt 
+dan een dun kader dat het window omvat. Deze kan worden verplaatst door 
+de muis te bewegen. Wanneer de muisknop wordt losgelaten, wordt het window
+naar de nieuwe plaats van het kader verplaatst.
+\paragraph{Overlappende windows}
+Vaak overlappen windows elkaar.
+Voor de functie van die windows of de {\em X-clients} maakt het
+niet uit of ze al dan niet zichtbaar zijn.
+\begin{figure}
+\centerline{\callpsfig{overlap.ps}{width=0.7\textwidth}}
+\caption{Twee overlappende windows
+\label{overlap}}
+\end{figure}
+Een window dat wordt afgedekt door een ander window kunnen we naar de 
+voorgrond halen door op de gedeeltelijk zichtbare rand te klikken
+met de linker-muisknop.
+Als een window helemaal niet meer zichtbaar is, moeten de bovenliggende
+windows naar beneden worden gedrukt. Dit is iets meer werk. Links naast
+de titelbalk in het kader is een knop welke een zogenaamd popup menu
+activeert. Door op de knop te klikken met de linker-muisknop verschijnt
+het popup menu. 
+E\'en van de velden in dit popup menu bevat een knop ''lower''. 
+Als hier de muisknop wordt losgelaten zal het betreffende window onder
+het(de) andere window(s) zakken.
+\paragraph{Iconen}
+Windows kunnen worden ge{\ii}conificeerd. Het window verdwijnt dan van het 
+scherm en een icoon verschijnt rechtsboven in de hoek. \index{icoon}
+Een icoon voor een {\em xterm} ziet er uit als in figuur~\ref{xterm_icon}.
+\begin{figure}[bth]
+\centerline{\callpsfig{xterm_icon.ps}{width=0.2\textwidth}}
+\caption{Het icoon van een xterm
+\label{xterm_icon}}
+\end{figure}
+Een window kan ge{\ii}conificeerd worden door op de knop met het
+pijltje naar beneden te klikken rechts naast de titelbalk.
+Een window krijgt zijn oorspronkelijke vorm terug wanneer u dubbel 
+klikt op het icoon. Dubbel klikken wil zeggen dat u snel 2 maal achter elkaar
+klikt.
+\paragraph{Popup menu's}
+Popup menu's worden door de {\em fvwm} window manager gebruikt om 
+speciale functies te activeren. Een voorbeeld is het popup menu dat verschijnt
+wanneer u op de knop links van de titelbalk in een kader klikt. 
+Afhankelijk van de {\em X-client} waar het kader omheen staat, verschijnen
+enkele functies die worden geactiveerd wanneer u daar de muisknop
+weer los laat.
+Ook kunt u door te klikken op het donkere achtergrondscherm enkele 
+popup menu's met speciale functies krijgen.
+Iedere muisknop heeft hier een ander popup menu tot gevolg.
+\paragraph{Het cre\"eren van nieuwe windows}
+Nieuwe windows ontstaan wanneer een programma een verzoek indient bij
+de {\em X-server} voor een window. Dergelijke programma's heten
+{\em X-clients}.
+X-clients kunnen op meerdere manieren worden opgestart.
+\paragraph{Via een shell commando}
+Een {\em X-client} kan worden opgestart door de naam van het programma 
+in te tikken in de c-shell. B.v.\ {\em xclock} of {\em xload}.
+De meeste {\em X-clients} hebben een hele serie van opties, en hoewel de 
+default meestal al een aardig resultaat geeft is het vaak toch veel 
+tikwerk, zoals het volgende voorbeeld laat zien.
+\begin{verbatim}
+   % xterm -fg yellow -bg black -fn courr18 -e rlogin idaard &
+\end{verbatim}
+Dan is het beter om dergelijke commando's in de window manager in te 
+bouwen.
+
+In de meeste gevallen zal er na het opstarten een kader op het scherm
+verschijnen dat door de muis verplaatst kan worden. De window manager
+laat meestal aan u over waar u het nieuwe window geplaatst wilt hebben.
+Alleen als er ruimte genoeg is op het scherm wordt het window automatisch
+geplaatst.
+Door met de linker-muisknop ergens de klikken legt u de positie van
+het nieuwe window vast en wordt het window geplaatst.
+\paragraph{Via een popup menu}
+Het popup menu dat verschijnt wanneer u op de achtergrond klikt met
+de linker-muisknop geeft u de mogelijkheid om simpel enkele
+windows te cre\"eren. De linker-muisknop doet een popup menu verschijnen
+voor het cre\"eren van nieuwe xterm's. 
+Wanneer u de knop weer loslaat boven het veld met de tekst
+{\tt idaard}, wordt een xterm gecre\"eerd 
+met daarin een c-shell op {\tt idaard}.
+Deze is dan gelijk aan de xterm waar u mee begon.
+Als u de knop loslaat boven {\em telnet} verschijnt er een xterm met daarin
+het programma {\em telnet}.
+Dit programma stelt u in staat om een connectie te leggen naar een willekeurige
+machine op het Internet. 
+\paragraph{Via de fvwm knoppenbalk}
+Het kan nog simpeler door op het icoon ``{\tt idaard}'' te klikken in de knoppenbalk linksonder.
+\paragraph{Xterm, een in- en uitvoer window}
+\label{xterm}
+Een xterm is een algemeen in- en uitvoer {\em X-client}.
+In de meeste gevallen wordt een xterm gebruikt om een c-shell in te draaien.
+Een c-shell is het programma wat u instaat stelt om met het operating
+systeem van de computer te praten. 
+Soms echter wordt een xterm ook gebruikt om foutmeldingen door
+te geven van programma's die in de achtergrond draaien. 
+Een goed voorbeeld hiervan is de layout editor {\em seadali}.
+\subsection{UNIX}
+\label{UNIX}
+UNIX is een operating systeem (OS) voor werkstations en mini
+computers net zoals MS-DOS dat is voor PC's.
+UNIX heeft echter een aantal eigenschappen die het geschikt maakt
+voor een breed toepassingsgebied. Een UNIX-machine kan de basis
+zijn voor het ontwikkelen van een ingewikkeld softwarepakket, maar
+zij kan ook gebruikt worden als een tekstverwerkingsmachine voor
+de doorsnee gebruiker.
+
+UNIX is multi-user en multi-tasking, wat wil zeggen dat meerdere
+gebruikers, meerdere dingen tegelijk kunnen doen. Een andere eigenschap
+van UNIX is de zogenaamde shell. De shell is de user interface naar UNIX.
+De gebruiker praat niet direct tegen UNIX maar tegen een shell-programma.
+De shell praat weer met het operating systeem.
+Als de gebruiker meerdere shell programma's start kan hij of zij
+dus meerdere ingangen naar UNIX hebben.
+Nog een interessante eigenschap van UNIX is de manier waarop het tegen
+de periferie aankijkt. De periferie wordt behandeld door UNIX als was
+het een normale file. Een gebruiker kan in principe gewoon zo'n file
+openen, er in schrijven en weer afsluiten. Het gebruik van de periferie
+behoeft dus geen speciale behandeling.
+
+De meeste van de UNIX machines binnen elektrotechniek
+zijn zogenaamde werkstations.
+Dit zijn over het algemeen machines met een (al dan niet kleuren)
+scherm van ongeveer 1000x1000 pixels.
+Vele applicaties hebben een dergelijk grafisch scherm nodig.
+Tegenwoordig wordt veel gebruik gemaakt van de zogenaamde windowing systemen.
+Dit zijn applicaties die de gebruiker een mooie en functionele
+interface naar de computer geven. In dit soort systemen worden delen van
+het scherm (windows) gebruikt om bepaalde applicaties in te draaien,
+b.v.\ een shell.
+\subsubsection{De c-shell}
+\label{De c-shell}
+De shell is een programma dat u in staat stelt om het OS opdrachten
+te geven.
+Er zijn verschillende shells in omloop waarvan de meeste bekende
+de c--shell, de Korn--shell en de Bourne--shell zijn.
+In het practicum wordt gebruikt gemaakt van de c--shell.
+Eigenlijk is dit de tc--shell ({\tt tcsh}),
+een variant van de c--shell ({\tt csh}).
+\paragraph{De c-shell prompt}
+\label{De c-shell prompt}
+In de c--shell is het mogelijk om de standaard prompt,
+een ''{\tt \%}'', te vervangen door een andere string.
+De keuze van deze string is uiteraard persoonlijk.\\
+Er bestaat echter een gewoonte om de prompt op te bouwen uit
+de naam van de machine waarop wordt gewerkt en de directory
+waarin wordt gewerkt.
+Enkele voorbeelden hiervan zijn:
+\begin{verbatim}
+        idaard: /usrI1/op/op1/op1u4 %
+        idaard: op1/op1u4 %
+\end{verbatim}
+U kunt uw prompt veranderen met het commando ''mkprompt'' (make prompt).
+U hebt dan de keuze uit een aantal prompt namen.
+Tik het commando in zonder specificatie om de lijst met mogelijke prompts
+te zien.
+\begin{verbatim}
+        [idaard:op1u4] mkprompt practprompt
+        idaard:/usrI1/op/op1/op1u4 # mkprompt fast
+        [idaard 22] mkprompt msdos
+        /usrI1/op/op1/op1u4> mkprompt short
+        [idaard:op1u4] mkprompt short2
+        [idaard:op1/op1u4] 
+\end{verbatim}
+\paragraph{Het intypen van commando's}
+\label{Het intypen van commando's}
+In het algemeen moeten alle commando's in kleine letters gegeven worden
+en moeten alle commando regels afgesloten worden met een {\em Return}.
+Bijvoorbeeld:
+\begin{verbatim}
+        /usr1/vlsi/optest % date
+\end{verbatim}
+Om een tikfout te herstellen worden de volgende tekens gebruikt:
+\begin{description}
+\item[Backspace] Ga een positie terug met de tekst-cursor.
+\item[Ctrl-U] Wis de gehele ingetikte regel. Voor wanneer het echt 
+een puinhoop is geworden.
+\end{description}
+\paragraph{Speciale shell-tekens}
+\label{Speciale shell tekens}
+Sommige tekens hebben een speciale betekenis voor de shell
+waarmee u werkt.
+Bijvoorbeeld: ''{\tt $\ast$}'', ''{\tt ;}'', ''{\tt $|$}'', ''{\tt \$}''. 
+
+Speciale tekens worden door de shell ge{\ii}nterpreteerd tenzij ze worden
+ontdaan van hun betekenis. 
+Ze moeten dan worden voorafgegaan
+door een backslash ''{\tt $\setminus$}'' teken.
+\paragraph{Het afbreken van een commando}
+Het afbreken van een commando of
+een programma kunt u doen door aan het proces een bepaald signaal te geven.
+Een voorgrondproces (zie paragraaf ~\ref{Voor- en achtergrondprocessen}) 
+kan worden afgebroken door {\em Ctrl-C} in te tikken
+(het ''interrupt'' signaal).
+
+Een voorgrondproces kan ook tijdelijk worden onderbroken met {\em Ctrl-Z}
+(het ''stop'' signaal).
+Later kan het  weer kan worden vervolgd met het
+commando ''fg'' (foreground).
+
+Een achtergrondproces (zie paragraaf ~\ref{Voor- en achtergrondprocessen})
+kunt u afbreken met het ''kill'' commando.
+Dit is een programma dat gebruikt wordt om andere programma's een signaal te geven.
+Binnen UNIX bestaat een hele serie verschillende signalen,
+waarvan de bekendste het ''terminate'' signaal is.
+Alle draaiende programma's binnen UNIX hebben een
+zogenaamd {\em process identification number} of {\em pid}.
+Door het programma ''kill'' zo'n {\em pid} mee te geven
+kunt u een programma be\"eindigen.
+U kunt het {\em pid} van alle onder uw naam draaiende programma's te weten komen met
+het commando ''ps' (process status).
+In het volgende voorbeeld heeft u een simulatie (sls) in de achtergrond lopen,
+maar u ontdekt dat u een simulatieduur van 5 jaar heeft opgegeven.
+U vermoedt dat de simulatie iets te lang gaat duren
+en zult deze willen afbreken.
+Als volgt:
+\begin{verbatim}
+        /usr1/vlsi/optest % ps
+           PID TTY      TIME COMMAND
+         24010 ttyv2    0:09 tcsh  
+         24080 ttyv2    0:00 ps 
+         24039 ttyv2    0:36 sls
+         24008 ttyv2    0:09 rlogind
+        /usr1/vlsi/optest % kill 24039
+        [1]    Terminated  sls ...
+\end{verbatim}
+\paragraph{Voor- en achtergrondprocessen}
+\label{Voor- en achtergrondprocessen}
+Programma's kunnen zowel in de voorgrond als in de
+achtergrond worden gedraaid.
+Normaal gesproken worden programma's in de voorgrond gedraaid.
+D.w.z.\ wanneer een commando wordt ingetikt, wordt het onmiddellijk uitgevoerd
+en komt de shell prompt pas weer terug als het commando klaar is.
+Output van het programma verschijnt gewoon op het scherm.
+Wanneer een commando of programma veel tijd nodig heeft, kan het ook
+in de achtergrond worden gedraaid.
+Er moet dan een ''{\tt \&}'' worden getikt achter
+het eigenlijke commando. Hierdoor krijgt men de prompt van
+de shell terug onmiddellijk nadat de {\em Return} wordt ingedrukt.
+Output van het programma verschijnt ook nu nog gewoon op het scherm.
+Men heeft echter wel weer direct de beschikking over de shell.
+Een in de voorgrond draaiend process kan ook naar de achtergrond worden
+verhuisd als het programma onverhoopt langer duurt dan men had verwacht.
+Hiervoor moet men {\em Ctrl-Z} gebruiken.
+\begin{verbatim}
+        /usr1/vlsi/optest % ls            (voorgrond)
+         file2   file3
+        /usr1/vlsi/optest % sleep 10000 & (achtergrond)
+        [1] 14783 (job nummer en process id)
+        /usr1/vlsi/optest % sleep 5000    (voorgrond)
+        ^Z         (stop de sleep)
+        Suspended
+        /usr1/vlsi/optest % jobs      (status van achtergrondprocessen)
+        [1]  - Running    sleep 10000
+        [2]  + Suspended  sleep 5000
+        /usr1/vlsi/optest % bg     (verhuis process 2 naar achtergrond)
+        /usr1/vlsi/optest % jobs
+        [1]  + Running    sleep 10000
+        [2]    Running    sleep 5000
+        /usr1/vlsi/optest % kill %1 %2    (beeindig de processen)
+        [2]    Terminated sleep 5000
+        [1]    Terminated sleep 10000
+\end{verbatim}
+\paragraph{Het history-mechanisme}
+\label{Het history mechanisme}
+Als het laatste commando in de shell herhaald moet worden kunt u dit
+ook doen door ''!!'' in te typen. Met het commando ''h'' (history)
+worden de laatste 15 (of meer) commando's die gebruikt zijn geprint.
+Door ''!'' in te typen gevolgd door een nummer uit de history list
+wordt het commando dat daarbij hoort opnieuw uitgevoerd.
+Een extra feature van de tc--shell is dat de pijltjestoetsen gebruikt kunnen worden om
+door eerdere commando's heen te stappen.
+\paragraph{In- en uitvoer redirectie; Pipes}
+\label{In- en uitvoer redirectie; Pipes}
+Programma's die onder UNIX draaien hebben te maken met in- en uitvoer
+kanalen. Er zijn 3 van dit soort kanalen standaard aanwezig.
+De {\em stdin} standaard invoer, deze komt van uw toetsenbord,
+de {\em stdout} standaard uitvoer, deze gaat naar uw beeldscherm,
+en {\em stderr} standaard foutmeldingen, deze gaan ook standaard naar
+uw beeldscherm.
+De 3 in- en uitvoer kanalen kunnen m.b.v.\ de c-shell eenvoudig aan
+iets anders dan uw beeldscherm of toetsenbord worden geknoopt.
+Denk b.v.\ aan de printer of een modem of een file.
+Bij een pipe ''{\tt $|$}'' wordt de {\em stdout} van het eerste proces
+doorgegeven als {\em stdin} voor het volgende proces.
+
+\index{cat|(}
+Voorbeelden van I/O redirectie:
+\begin{verbatim}
+           (ls uitvoer naar een file:)
+        % ls > file_list
+           (3 files worden gelist en komen samen in een file:)
+        % cat f1 f2 f3 > temp
+           (3 files worden gelist en worden toegevoegd aan een file:)
+        % cat f[1-3] >> temp
+           (ed laat de commando's uit "ed_cmds" los op een file:)
+        % ed - file < ed_cmds
+           (stuur de file uitnodiging naar jan, piet en klaas:)
+        % mail jan piet klaas < uitnodiging
+           (verwerk alle file die beginnen met chap en stuur de
+            output naar de printer:)
+        % pr chap* | lp
+           (tel het aantal karakters, woorden en regels:)
+        % cat file | wc
+           (tel het aantal karakters, woorden en regels:)
+        % wc < file
+           (tel het aantal karakters, woorden en regels:)
+        % wc file
+\end{verbatim}
+\index{cat|)} \index{lp}
+Opmerking:
+
+De invoer en uitvoer redirecties worden gedaan door de shell,
+daar heeft het programma geen weet van.
+\paragraph{File namen en wildcards}
+\label{File namen en wildcards}
+U kunt bijna ieder karakter (teken) gebruiken in een file naam.
+Files worden vaak voor een bepaalde toepassing gebruikt
+en zijn dan voorzien van een bepaalde toevoeging (zgn.\ extentie)
+om ze te kunnen herkennen (zgn.\ file-type).
+Omdat sommige karakters een speciale betekenis hebben
+kunt u deze beter niet gebruiken, ook kunt u een file beter
+niet laten beginnen met een ''-'' (dan wordt de file ten onrechte
+voor een optie argument aangezien).
+In ieder geval kunt u de volgende karakters zonder meer
+gebruiken om file namen samen te stellen: kleine letters,
+grote letters, cijfers, punt (.) en underscore (\_).
+
+Voor het refereren aan files hoeft meestal niet de volledige naam
+van een file te worden ingetikt. 
+Als u bijvoorbeeld de hoofdstukken van een boek in de volgende
+files bewaart ({\tt chap1.1},
+{\tt chap1.2}, {\tt chap2.1}, {\tt chap2.2}, {\tt chap2.3}, enz.),
+dan kunt u bijvoorbeeld de volgende commando's geven:
+
+Print alle files die met ''{\tt chap}'' beginnen op het scherm:
+\begin{verbatim}
+        /usr1/vlsi/optest % pr chap*
+\end{verbatim}
+Print alle files die beginnen met ''{\tt chap1}'' of ''{\tt chap2}''
+op het scherm:
+\begin{verbatim}
+        /usr1/vlsi/optest % pr chap[12]*
+\end{verbatim}
+Print alle files die beginnen met ''{\tt chap2.}''
+en precies \'e\'en cijfer in de 
+range van 1 t/m 9 achter de punt hebben, op het scherm:
+\begin{verbatim}
+        /usr1/vlsi/optest % pr chap2.[1-9]
+\end{verbatim}
+Print alle files die beginnen met ''{\tt chap}'',
+\'e\'en karakter tussen ''{\tt chap}''
+en de punt hebben en het cijfer 1 achter de punt hebben, op het scherm:
+\begin{verbatim}
+        /usr1/vlsi/optest % pr chap?.1
+\end{verbatim}
+Deze file naam expansie wordt gedaan door de shell,
+zonder dat het programma waaraan de file naam argumenten
+worden doorgegeven hiermee bekend is.
+De volgende speciale shell-karakters en hun betekenis
+moet u onthouden:
+\begin{description}
+\item[*      ]       staat voor nul of meer willekeurige karakters
+\item[{[]}]    Wat tussen de blokhaken staat, stel \'e\'en karakter voor die
+in de range moet vallen die wordt aangegeven.
+B.v.\ [a-dA-F], alle karakters van a t/m d en de hoofdletters A t/m F.
+\item[?]       een willekeurig karakter
+\end{description}
+Het commando ''{\tt rm chap $\ast$}'' kan aanleiding geven tot veel
+ellende als er een spatie tussen ''{\tt chap}'' en
+de asterisk ''{\tt $\ast$}'' staat.
+Dit laatste karakter staat hier voor alle files (behalve die met een
+punt beginnen).
+
+\subsubsection{Batch jobs in de nacht}
+\label{Batch jobs in de nacht}
+Als uw programma's overdag het systeem te zwaar belasten kunt u overwegen
+om ze 's~nachts te laten draaien.
+U moet hierbij denken aan simulaties
+zoals \tool{sls} en \tool{spice}.
+Het is voor de gewone gebruiker moeilijk te bepalen of het zinvol is om
+bepaalde jobs 's~nachts te draaien.
+Het gevoel dat hiervoor nodig is 
+krijgt u echter snel als u enkele dagen in een druk practicum heeft gewerkt.
+U heeft dan niet meer het systeem of een ziedende systeem-beheerder nodig
+om u te vertellen dat het juist uw job is die de boel ophangt.
+
+Nu dat u heeft bepaald dat u uw job in de nacht wilt draaien splitst zich 
+de actie in twee delen.
+Eerst moet u bepalen welk commando u moet uitvoeren. Dit valt niet altijd
+mee, aangezien sommige van de ergste programma's niet door uzelf, maar door
+andere programma's worden opgestart. Denk hierbij aan \tool{simeye}. 
+Dit programma kan zowel \tool{sls}-simulaties als \tool{spice}-simulaties
+opstarten. Dit is eigenlijk een ander probleem.
+Als u weet wat u precies 's~nachts wilt draaien kunt u het commando {\em at}
+gebruiken.
+
+Met {\em at} kunt u een job op een later tijdstip executeren.
+Om het gebruik van {\em at} te demonstreren gaan we het {\em date} commando
+uitvoeren om 02:30. U kunt dit gewoon uitproberen.
+{\em At} werkt als volgt. U geeft een tijd op als parameter aan {\em at} en op
+de volgende regel(s) tikt u uw job in, en u sluit af met een {\em Ctrl-D}.
+Het aantal tijdsomschrijvingen dat {\em at} herkent is groot.
+U kunt b.v.\ intikken "02:30", "0230", "midnight + 2 hour", etc.
+Bestudeer hiervoor de manual page van {\em at}.
+Voorbeeld:
+\begin{verbatim}
+        idaard:optest % at 02:30
+        date > date_exam_file
+        ^D
+        warning: commands will be executed using /bin/sh
+        job 723238440.a at Fri Aug 15 02:30:00 1997
+        idaard:optest %
+\end{verbatim}
+Nadat u {\em Ctrl-D} (het ''eof'' signaal voor {\em stdin})
+heeft ingetikt meldt {\em at} dat het de commando's zal uitvoeren
+gebruikmakend van de {\tt /bin/sh} shell.
+Maak u niet ongerust, zolang u geen
+c-shell achtige zaken gebruikt gaat dat goed.
+Meestal wilt u toch maar 1 commando uitvoeren.
+Verder geeft {\em at} u nog de tijd en het nummer van de job.
+Als we de volgende ochtend in de file "{\tt date\_exam\_file}"
+kijken zien we het volgende:
+\begin{verbatim}
+        idaard:optest % cat date_exam_file
+        Fri Aug 15 02:30:00 MET 1997
+        idaard:optest %
+\end{verbatim}
+Het is duidelijk dat het commando om half drie 's~nachts is uitgevoerd.
+
+\subsubsection{Teksteditors}
+\label{Tekst editors}
+Teksteditors \index{jet|(bold}
+zijn programma's waarmee tekst wordt ingevoerd.
+Er wordt een ASCII file gegenereerd welke er precies zo uitziet
+als hij wordt ingetikt. Er wordt niets zonder medeweten van de
+gebruiker toegevoegd of weggehaald. Deze teksteditors worden 
+veel gebruikt voor het genereren van invoerfiles voor andere
+programma's. 
+
+Binnen UNIX zijn momenteel verschillende editors bruikbaar.
+De oudste, overigens nog steeds bruikbare editors, zijn de 
+line-editors. Deze editors voeren operaties uit op \'e\'en regel van de tekst.
+Voorbeelden hiervan zijn {\em ed} en {\em ex}.
+De meest gebruikte editor tot nu toe binnen UNIX is/was {\em vi}.
+Dit is een scherm geori\"enteerde editor.
+D.w.z.\ dat steeds zo'n deel van de tekst wordt getoond dat nog
+net op het scherm past.  Deze editor kan omgaan
+met vrijwel ieder type terminal. Hij is echter door de cryptische 
+commando's lastig te leren.
+Een andere scherm geori\"enteerde editor is {\em emacs}.
+Deze editor bevat naast de mogelijkheid om tekst te editen
+nog een aantal aardige features.
+Bovengenoemde editors zijn allen aanwezig op het systeem en 
+kunnen zonder meer worden gebruikt.
+
+Voor het practicum wordt de {\em jet} editor aanbevolen
+(de {\em axe} editor wordt niet meer gebruikt).
+Dit is ook een scherm geori\"enteerde editor maar hij moet
+wel zijn windows op een X-server kunnen openen.
+Hij is dan ook ongeschikt om via een ouderwetse ASCII terminal gebruikt te
+worden.
+\index{jet|)}
+
+\subsubsection{Tekstverwerkers}
+Tekstverwerkers verwerken zoals de naam al zegt tekst.
+Het is altijd de bedoeling van een tekstverwerker om uitgaande
+van een ASCII file of ander type file een 
+menselijk leesbaar en gewenst resultaat op te leveren.
+
+Bekende voorbeelden van een tekstverwerker zijn {\em WordPerfect} en {\em Word}.
+Er zijn echter meer tekstverwerkers onder de zon.
+De trend is momenteel om zgn.\ ''{\em what you see is what you get}''
+tekstverwerkers te gebruiken. Hierbij stelt het scherm een A4'tje voor
+en wordt de tekst meteen nadat het is ingetikt zo op het scherm geplaatst
+als het later op het A4'tje komt.
+
+In de UNIX wereld ligt momenteel het accent op \LaTeX.
+Dit tekstverwerkings pakket gaat uit van een ASCII invoerfile
+waarin stuurcommando's voor \LaTeX~zijn opgenomen.
+Deze manual is b.v.\ geschreven m.b.v.\ \LaTeX~
+
+\subsubsection{Electronic mail}
+\label{domeinnamen}
+Het is mogelijk om elektronische post te versturen.
+Post kan over de hele wereld worden verstuurd,
+mits u het juiste adres van de geadresseerde weet.
+In eerste instantie is de elektronische post
+bedoeld voor communicatie tussen de practicum groepjes onderling en
+hun begeleider.
+Denk eraan dat het sturen van e-mail ondanks uw
+practicum account niet anoniem is.
+De OP practicum accounts zijn
+gelinkt met de studmail accounts.
+Als u iets verstuurt aan {\em opXuY} dan
+gaat dat naar een studmail account op {\tt elektron}.
+Het afzender adres wordt vervangen door uw eigen studmail adres.
+
+Wanneer u ook post verstuurt buiten de directe omgeving
+van het practicum is het nodig om het {\em E-mail address}
+verder te specificeren.
+Dit gebeurt d.m.v.\ {\em domeinnamen}.
+Een domein specificeert een groep 
+van computers die samen een logische eenheid vormen.
+Een domeinnaam is hierarchisch opgebouwd.
+Zo vormt een groep van domeinen weer een nieuw domein.
+Domeinen worden opgedeeld d.m.v.\ punten.
+Hoe verder u zich bevindt van de geadresseerde,
+hoe ingewikkelder het domein.
+Het scheidingsteken tussen gebruikersnaam en domeinnaam is een ''{\em @}''.
+Wanneer u b.v.\ naar een ander groepje post verstuurt,
+is het volgende adres voldoende: {\em opXuY}.
+U moet natuurlijk de {\em X} en {\em Y} vervangen door
+de overeenkomende nummers uit uw eigen account.
+Als u post naar iemand buiten elektrotechniek verstuurt,
+b.v.\ natuurkunde, dan wordt het adres b.v.\ {\em pietje@tn}.
+In dit laatste geval mag er maar \'e\'en {\em pietje} binnen technische natuurkunde
+zijn en moet de boel daar ook zo geregeld zijn dat {\em pietje} zijn post
+krijgt doorgestuurd naar zijn machine.
+Als dat niet het geval is,
+moet u nog verder specificeren. 
+B.v.\ {\em pietje@computertje.vakgroepje.tn}. 
+Normaal gesproken weet u niet hoe een groep zijn post-afhandeling heeft
+georganiseerd en bent u afhankelijk van wat voor adres u krijgt van degene
+die u iets wilt sturen.
+De meeste gebruikers binnen elektrotechniek hebben een volgend adres:
+{\em p.vanzanten@et.tudelft.nl}. 
+
+\subsubsection{Printen en plotten}\index{printen|bold}
+\label{Printen en Plotten}
+Van de meeste files, windows en layouts kan een hardcopy
+worden gemaakt. 
+Hiervoor is een Postscript laserprinter (zwartwit) en
+een Postscript paintjet-printer (kleur) beschikbaar.
+Voor beide apparaten is een zogenaamde print queue aanwezig.
+Om iets te kunnen printen moet een file eerst worden
+geplaatst in \'e\'en van deze queues.
+Dit kan d.m.v.\ een print commando met een file naam als argument.
+Soms zorgen programma's ervoor dat er iets in \'e\'en van de queues
+wordt gezet.
+Het is niet altijd even duidelijk of iets door een programma
+zelf in de queue wordt gezet of dat dit door de gebruiker zelf 
+moet gebeuren.
+
+De printers worden via het commando {\em lp} aangestuurd,
+waarbij een file in \'e\'en van deze queues wordt gezet.
+Normaliter gaan uw print jobs naar de laserprinter ({\tt midlum}).
+Wilt u iets naar de paintjet-printer ({\tt workum}) sturen,
+dan moet u bij {\em lp} de optie {\tt -dworkum} opgeven.\\
+Het standaard {\em lp} commando heeft vele opties,
+zodat er van alles kan worden gespecificeerd (zie de manual page).
+Voor de gevorderde gebruiker is dit handig maar
+voor de onervaren gebruiker niet.
+Daarom zijn een aantal scripts geschreven
+die een interface vormen naar het standaard {\em lp} commando.
+Alles wordt aangestuurd door een lokaal {\em lp} script.
+Tik ''{\tt lp -help}'',
+als u meer wilt weten over de extra opties van {\em lp}.
+De lokale versie van {\em lp} kan in de meeste gevallen zelf bepalen
+wat voor type file u wilt printen.
+
+Gebruik de printers met beleid. 
+
+\paragraph{Het printen van ASCII tekstfiles}\index{printen!tekst}
+U kunt controleren of u inderdaad een ASCII file hebt
+door hem in te lezen in de teksteditor.
+ASCII files worden geprint op de laserprinter.
+Hiertoe worden zij eerst omgezet naar Postscript.
+Het script {\em lp} doet dit allemaal voor u.\index{lp|(bold}
+De file mag echter niet groter zijn dan 1420 regels.
+Deze 1420 regels passen nog net op 5 blaadjes.
+\begin{verbatim}
+        idaard:optest % lp dummy_file
+        Converting your ASCII file to Postscript.
+        request id is midlum-1754 (1 file)
+        idaard:optest % lpq
+        midlum-1754     optest  caslp.21553  54723   bytes
+        midlum-1755     root    bbiwy          200   bytes
+\end{verbatim}
+U kunt ook meerdere files tegelijk printen
+door meerdere file namen op te geven.
+Het commando {\em lpq} kunt u gebruiken om de queue van de
+printer te bekijken.
+In het voorbeeld staan 2 files in de queue.
+
+\paragraph{Het printen van Postscript files}
+\label{lp}
+Postscript files kunnen eveneens geprint worden met het commando {\em lp}.
+U kunt controleren of u te maken heeft met een Postscript file
+door de file eerst te previewen op het scherm.
+Dit kunt u doen m.b.v.\ het {\em gv} (ghostview) programma. 
+Postscript files verkrijgt u voornamelijk wanneer u met tekstverwerking
+bezig bent.
+\begin{verbatim}
+        idaard:optest % lp plaatje.ps
+        request id is midlum-1756 (1 file)
+        idaard:optest % lpq
+        midlum-1756     optest  plaatje.ps   54312   bytes
+        idaard:optest % 
+\end{verbatim} \index{lp|)}
+U ziet dat de Postscript printer queue kan worden bekeken met
+het commando {\em lpq}.\index{lpq}
+
+\paragraph{Het printen van layouts}\index{printen!layout}
+Een layout kan geprint worden op de Postscript printer
+en op de paintjet-printer.
+Hier laten we zien hoe een layout op de zwartwit Postscript laserprinter
+kan worden gezet.
+Eerst moet dan van de layout een Postscript file gemaakt worden.
+Dit kan met het programma \tool{getepslay} als volgt:
+\type{getepslay -t {\bf celnaam}}
+Er wordt nu een file {\bf celnaam.eps} gemaakt die naar de 
+Postscript printer gestuurd kan worden met het commando 
+%\index{lp}
+\tool{lp} (zie pagina~\pageref{lp}).\\
+\tool{getepslay} kent een aantal default instellingen.
+Voor uitgebreidere
+documentatie wordt u verwezen naar \tool{icdman getepslay}.
+
+U kunt ook met het programma \tool{paint} een cel uit de database
+laten printen,
+en dit naar de paintjet-printer {\tt workum} versturen:
+\begin{verbatim}
+        idaard:optest % exp -g celnaam
+        idaard:optest % paint -rotate celnaam
+        idaard:optest % lp -dworkum -hpgl -ohpgl2 paintfile
+        idaard:optest % lpq -dworkum
+\end{verbatim}
+\cleardoublepage

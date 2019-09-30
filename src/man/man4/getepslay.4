@@ -1,0 +1,130 @@
+.if n .po 0
+.TH GETEPSLAY 4ICD "File Formats"
+.UC 4
+.SH NAME
+getepslay - technology file format for the getepslay program
+.SH "CUSTOMIZATION COMMANDS"
+The appearance of layout as plotted by getepslay is controlled by
+the following directives, which are typically included in a file called
+epslay.def in the appropriate section of the ICD technology library.
+.IP "\fB%%Include <\fP\fIfile\fP\fB>\fP"
+Include the file ICDPATH/share/lib/\fIfile\fP.
+\fIFile\fP must be a relative pathname.
+This directive is typically used to include a common PostScript prolog file,
+typically named
+.B epslay.pro,
+that contains the needed PostScript functions.
+Only one level of file inclusion is supported, i.e., a %%Include
+directive in an included file has no effect.
+.tr @"
+.IP "\fB%%Include @\fP\fIfile\fP\fB@\fP"
+.tr @@
+Same as above, but look in the working directory first.
+.IP "\fB%%Order:\fP \fImask1 mask2 mask3 ...\fP"
+Specify the order in which the masks are drawn.
+It is usually best to specify more or less the same order as the order
+in which the masks are actually fabricated.
+However, contact masks can be put later in the list,
+to increase their visibility.
+Masks that are not specified here, will not be plotted (i.e., no default).
+Each mask\fIi\fP must be a maskname as found in the maskdata (4ICD)
+Do not include the (pseudo) terminal masks, with the t_ prefix, here.
+.IP "\fB[ \fImin max lambda fontname \fB] plotFont\fR"
+Specify font name and size for terminal names.
+.PD 0
+.RS \n(INu
+.IP \fImin\fP
+Minimum size of text, in printer's points (1/72").
+.IP \fImax\fP
+Maximum size of text, in printer's points (1/72").
+.IP \fIlambda\fP
+Prefered size of text, in lambda's.
+Based on the scaling of the particular layout in order to fill the
+drawing region,
+the text size is first computed according to this value.
+Then, the \fImin\fP and \fImax\fP limits are applied.
+If those latter limits are identical, the effect is that of a fixed
+text size.
+A value of \fIlambda\fP approximately equal to the size of contact
+windows is often appropriate.
+.IP \fIfontname\fP
+The name of the font to use. Any available PostScript font is acceptable.
+.P
+The default is 8 point non-proportional Helvetica-Bold.
+.RE 1
+.PD
+.IP "\fB[ \fIfactor\fP \fB] patternScale\fP"
+Globally magnify the scale of the stipple patterns by \fIfactor\fP.
+Integral values work best.
+Often useful for rendering on low resolution printers or workstation displays.
+The default pattern scale is 1.
+.IP "\fB[ \fIdx dy\fP \fB] termTextAlignment\fP"
+Specify the alignment of terminal names with respect to the center
+of the terminal.
+The values \fIdx\fP and \fIdy\fP are relative coordinates that
+run from -1 to +1 along the x and y side of the bounding rectangle
+that encloses the text. For example:
+.RS \n(INu
+.PD 0
+.IP "\00\00"
+Center of text at center of terminal.
+.IP "\-1\00"
+Left-hand of text at center of terminal.
+.IP "\00\01"
+Text centered below center of terminal.
+.P
+The default alignment is 0 0.
+.PD
+.RE
+.IP "\fB[ (\fImaskname\fB) \fIpattern scale linewidth\fB ] defineStyle\fR"
+Define the plotting style for each individual mask layer.
+Also include the (pseudo) terminal masks, with the t_ prefix.
+See the example below.
+.RS \n(INu
+.PD 0
+.IP \fImaskname\fP
+The name of the mask for wich this style is defined.
+The styles must be separately defined for terminal layers, by using
+the \fBt_\fImaskname\fR as the maskname.
+.IP \fIpattern\fP
+The name of a stipple pattern as defined in the
+getepslay PostScript prolog file.
+.IP \fIscale\fP
+A magnification factor applied to the stipple pattern.
+Integral values work best.
+.IP \fIlinewidth\fP
+The width of the contour of the mask, specified in lambda's.
+A value of 0 is interpreted as the thinnest line that can
+be rendered at device resolution (i.e. one pixel wide).
+.PD
+.RE
+.SH "EXAMPLE"
+Below, an excerpt of the fish variant of the customization file
+for the c3tu process is given.
+.P
+.RS \n(INu
+.ft C
+.nf
+% getepslay customization for c3tu process,
+% fish variant.
+.sp 0.5
+%%Include <epslay.pro>
+.sp 0.5
+%%Order: od ps in ins con cop cos cps cb
+.sp 0.5
+[5 14 10 /Helvetica-Bold] plotFont
+[-1 1] termTextAlignment
+.sp 0.5
+% mask     pattern  scale  linewidth
+[ (od)     dots2    1.0    0.1 ] defineStyle
+[ (ps)     dots6    1.0    0.1 ] defineStyle
+[ (in)     dots12   1.0    0.1 ] defineStyle
+[ (ins)    dots25   1.0    0.1 ] defineStyle
+[ (con)    black    1.0    0.1 ] defineStyle
+\&...
+[ (t_in)   p16  1.0  0.1 ] defineStyle % in terminal
+[ (t_ins)  p15  1.0  0.1 ] defineStyle % ins terminal
+.RE
+.AU "N.P. van der Meijs"
+.SH SEE ALSO
+getepslay (1ICD)

@@ -1,0 +1,15 @@
+
+This directory contains files for the Space - Helios tutorial.
+See http://www.space.tudelft.nl/documentation/hands_on
+
+----------------+-----------+---------------+-----------------------------
+file		| process   | lambda	    | see document
+----------------+-----------+---------------+-----------------------------
+oscil.gds	| scmos_n   | 0.01 (0.1)    | Space Substrate Res. Extraction *)
+P505.gds	| c3tu      | 0.15	    |
+poly5.gds	| scmos_n   | 0.01 (0.05)   | Space 3D Cap. Extraction *)
+RC.gds		| scmos_n   | 0.01	    |
+switchbox4.gds	| scmos_n   | 0.01 (1.0)    | Space Tutorial
+term3.gds	| scmos_n   | 0.01 (0.1)    | Space Substrate Res. Extraction *)
+----------------+-----------+---------------+-----------------------------
+*) User's Manual

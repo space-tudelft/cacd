@@ -1,0 +1,47 @@
+.TH CREATEGCFORCMAP 5ICD "9/6/88"
+.UC 4
+.SH NAME
+CreateGCforCmap - create a graphics context for use with the CACD colormap
+.SH SYNOPSIS
+.nf
+\fB
+CreateGCforCmap (drawable, pGC)
+Drawable *drawable;
+GC *pGC;
+\fP
+.fi
+.SH PARAMETERS
+.TP 14
+.B drawable
+specifies the drawable for which the GC should be usable.
+.TP 14
+.B pGC
+a pointer to a GC in which the created GC is stored.
+.SH DESCRIPTION
+The function \fBCreateGCforCmap()\fP creates a graphics context
+for use with the Nelsis ICD CACD colormap.
+First it creates the graphics context, whereafter the appropriate
+planemask for the graphics context is set.
+The created graphics context can be used with any destination
+drawable having the same root and depth as the specified drawable.
+.SH DIAGNOSTICS
+If the call to \fBCreateGCforCmap()\fP is successful \fB1\fP is returned.
+If \fBCreateGCforCmap()\fP fails \fB0\fP will be returned
+and \fBcacdcmaperrno\fP will be set to one of the following values:
+.TP 14
+.B NOINIT
+the CACD colormap library was not initialized.
+.TP 14
+.B NOGC
+cannot create a GC.
+.SH SEE ALSO
+CacdCmapIntro(5ICD)
+InitCacdCmap(5ICD)
+CoupleIdToColor(5ICD)
+CoupleIdToRGB(5ICD)
+GetPixelFromId(5ICD)
+SetForegroundFromId(5ICD)
+.SH NOTE
+Clients using the CACD colormap library should \fBNEVER\fP
+set the planemask of a GC themselves, this produces undefined
+graphics results.

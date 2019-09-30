@@ -1,0 +1,3 @@
+source $HOME/.bashrc
+# Because modelsim has problems otherwise, we have start a terminal window
+exec xterm -iconic -geometry 160x10 -e GoWithTheFlow @

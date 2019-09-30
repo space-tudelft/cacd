@@ -1,0 +1,158 @@
+\def\figurename{Figure}
+\section{Testing SOG chips with the Logic Analyzer}
+\label{testingSOG}
+
+\subsection{Introduction}
+In this document we describe how a Sea-Of-Gates chip in a DIL40 package can be tested 
+with the logic analyzer LA-5580. 
+The purpose is to verify if, given a set of input patterns, 
+the tested device produces the same output patterns as a set of reference output patterns. 
+
+A logic analyzer is an instrument that is similar to an oscilloscope:
+both instruments measure output signals (voltage) as a function of time
+after some trigger moment.
+However, important difference are:
+\begin{itemize}
+\item
+A logic analyzer usually only measures two different signal levels: high and low.
+\item
+A logic analyzer is capable of measuring a large number of output signals (e.g. 80).
+\item
+Besides measuring output signals, a logic analyzer can simultaneously apply input signals.
+\end{itemize}
+The logic analyzer LA-5580 is a hardware box that is controlled 
+(via a USB connection) by a graphical interface program LA5000 that is running a PC.
+A picture of the interface is shown in Figure~\ref{la5000}
+\begin{figure}[h]
+\centerline{\callpsfig{la5000.eps}{width=0.95\textwidth}}
+\caption{Graphical Interface for the Logic Analyzer LA-5580}
+\label{la5000}
+\end{figure}
+\subsection{Overview}
+As input we need a file with reference input and output patterns (.ref file) and a file with 
+information about how the pins of the design are connected to the pins of IO buffers of 
+the chip (.buf file).  Typically, both these files have been produced during the design of 
+the chip. Using the program test\_flow, these files are converted into a pattern (.csv)
+file and an initialization (.ini) file that can be used as input for the logic analyzer 
+program,
+and a scheme that shows how the pods of the logic analyzer should be connected to 
+the pins of the package of the SOG chip. 
+Then,
+via the the logic analyzer program LA5000,
+the logic analyzer is used to send the input patterns to the tested SOG device 
+and to collect the resulting output patterns. 
+Finally, the 
+program test\_flow is used to compare the measured output patterns against the reference 
+output patterns.
+\begin{figure}[h]
+\centerline{\callpsfig{testflow.eps}{width=.60\textwidth}}
+\caption{The different steps for testing}
+\label{testflow}
+\end{figure}
+
+\subsection{Obtaining the Reference Files}
+Copy the relevant .ref and .buf files
+that you have created during the design phase to
+a writable directory on the local disk of your PC 
+(e.g. C:$\backslash$wpstmp).
+Note that it is important to store the files on the local disk
+because otherwise the logic analyzer software may have problems to read it.
+Note that the desktop of the PC is usually not on the local disk in our environment.
+
+\subsection{Preparing the Input Data for the Logic Analyzer}
+Start the program test\_flow (T:$\backslash$ET2805$\backslash$common$\backslash$test\_flow.tcl).
+Next click Commands $\rightarrow$ Read\_reffile and open the .ref 
+file.  If the same directory contains a .buf file, you will be asked if it is ok to update the 
+information with this file. In that case, click yes. Otherwise click Commands $\rightarrow$ 
+Update\_with\_buffile and open the appropriate .buf file. To create a window with input 
+patterns and output patterns in csv format, click Commands $\rightarrow$ Make\_csvfile.
+In the new csv window, use the command File $\rightarrow$ Save\_csvfile to create the 
+data files that can be used as input for the logic analyzer.
+
+A wiring scheme for how to connect the clips of the wires of the pods to the pins of the 
+SOG device can be obtained by first selecting the appropriate bondbar number for the 
+package in the upper right corner of the test\_flow window and next using the command 
+Commands $\rightarrow$ Show\_pod\_connections. 
+
+\subsection{Setting up the Logic Analyzer}
+Connect the USB cable of the logic analyzer LA-5580 to the upper USB port at
+the front of your computer.  
+Plug in the pattern generation pods Pod 1A, Pod 2A, etc. in the lower connector rows 
+(label ''board 1'') of the analyzer and the logic (measurement) pods Pod 1B, Pod 2B, 
+etc. in the upper connector rows (label ''board 2'') of the analyzer.  
+Note that the pods 
+have numbers on them. Plug Pod 1 in the leftmost connector, Pod 2 in the second 
+leftmost connector etc.
+
+\subsection{Mounting and connecting the SOG chip}
+Mount the SOG package on the DIL40 connector box.  From the separate IC testbox,
+connect GND (0 Volt) and VDD (5 Volt) to the appropriate connector holes on the 
+DIL40 connector box, using cables with 4mm plugs.
+Connect the clips of the wires of the pods to the pins of the SOG package according to 
+the device-wiring scheme that was generated using test\_flow. Connect at least one black 
+wire of each pod to the GND signal.  The pod input Pod 1B(0) at channel 0 will be used 
+as a trigger signal for the acquisition of data and should directly be connected to an 
+output of a pattern generation pod. 
+This connection is given at the bottom of the wiring 
+scheme that was obtained using test\_flow.
+
+Switch on the power supply for the SOG chip and switch on the power supply for the 
+logic analyzer.  
+Be careful to only reconnect wires to the pins of the device when the 
+power supply for the SOG chip is switched off. 
+
+\subsection{Using the Logic Analyzer}
+Start the Logic Analyzer control program LA5000 Logic Analyzer.
+If the Timing view window is not yet shown, click Timing $\rightarrow$ Timing window.
+
+Besides the .csv file that was created by test\_flow, also a .ini file
+with the same base name was created by test\_flow.
+Click File $\rightarrow$ Open to first open the file .ini file that was created by test\_flow.
+
+Next, click View $\rightarrow$ Clear Data Buffer to clear all signals.
+Then, click File $\rightarrow$ Open to open the .csv file that was generated using test\_flow.
+The option Type 2 CSV file must be enabled during this.
+After reading the .csv file you will see the reference output signals in the Timing window
+and you may inspect the input signals when you click Pod $\rightarrow$ Edit Pattern
+Generator Data (or button EDIT PAT).
+The reference output signals will be overwritten when capturing analysis
+data from the logic analyzer.
+
+Then, click Trigger $\rightarrow$ Go or the Go button to start the analysis. 
+The output of the analysis will appear in the Timing view window. 
+
+To prepare for a more exact comparison using the program test\_flow, 
+export the output signals using File $\rightarrow$ Export. 
+For the Data field, select ''Group outputs'' and select Binary, click OK, and then save the file as 
+type ''Comma Sep (.CSV)''.
+
+\subsection{Comparing the Analyzer Output with the Reference Output}
+In test\_flow, click on Commands $\rightarrow$ Compare. 
+Next, in the compare window, click File $\rightarrow$ Compare csv and select
+the .csv file that was created using the Logic Analyzer.
+After the file has been read,
+the measured output signals will be compared against the reference output signals,
+just before every rising clock edge. 
+On each line you will see from left to right: the time, the clock period number,
+the input signals, the reference output signals and the measured output signals. 
+In case the reference outputs and measured outputs are different, they have a 
+red colour.  
+You can click on a line to list the different output vectors below each other.  
+If you click on a column in this list, the name of the corresponding output terminal will 
+be highlighted at the sub window at the right. 
+You can use commands from the 
+Commands button in the compare window to navigate through the errors.
+
+Default, all output signals and all inout signals will be compared.
+By disabling the toggle button inout, only output signals will be compared.
+
+\subsection{Trouble Shooting}
+When the output signals are not according to as expected, carefully check all
+pod connections. 
+Further you can try to lower the sample rate
+Thirdly, you can try another IC.
+
+\subsection{Further Reading}
+LA 5000 Logic Analyzer Software Manual (see OP Course Documents on blackboard) \\
+Logic Analyzer LA-5000 series, Link Intruments Inc (http://linkinstruments.com)
+\def\figurename{Figuur}

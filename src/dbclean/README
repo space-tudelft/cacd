@@ -1,0 +1,54 @@
+
+If you cannot open old projects anymore (release < 302), then it is
+maybe useful to make it possible to upgrade old projects.
+You must have (of coarse) the correct access rights, to do it.
+
+Dbclean uses a trick to open the old project for the upgrade.
+
+You can do it automatically when option -a is given.
+Of coarse it must be done for ALL cells.
+I have decided to add a new option -u, this option sets -a.
+
+Older releases have shorter names, that gives no upgrade problem.
+Floating point numbers are written in dm_extended_format starting by
+release 301, thus we need only to rewrite release 3 fl.point numbers (F format).
+This format is only used in the layout "nor" stream.
+And in the secundairy "<lay>_nxx" streams (done by makeboxl).
+
+Dbclean shall always clean-up (remove) the secundairy streams.
+This is important, because after the upgrade they are not correct read.
+Thus, only the layout "nor" streams must be upgraded.
+If the "nor" stream does not exist, we shall create an empty one.
+And of coarse the ".dmrc" file of the project must be upgraded.
+
+Note that we do not (and cannot) upgrade `unpacked' projects.
+Dbclean is only compiled (like all other tools) for a `packed' release.
+Unpacked projects can not exist (maybe only for debugging).
+
+If the upgrade fails, we have a problem.
+We can only try to rewind the process to its old situation.
+But still you cannot use the project anymore.
+Maybe you can find out why the upgrade is failing?
+
+Note that if a "cell" directory is not placed in the "celllist" it is NOT updated.
+Maybe we must also check the "layout" directory for these directories.
+It can of coarse by directories for other purposes, but we can check the content.
+
+If a "cell" name is placed in the "celllist" and it does not (more) exist, we give
+a warning message and go on with the next celllist entry.
+If the complete "layout" directory does not exist we give also a warning message.
+We don't create a "layout" directory.
+I hope not that you have renamed it.
+If it exists and is unreadable, we have also an upgrade problem.
+
+Some other notes
+================
+rename (file1, file2) shall rename file1 into file2, if file2 already exists, it is removed
+	if file1 is a symbolic link, the name of the symbolic link shall be changed.
+stat (file1, &sbuf) if file1 is a symbolic link, it shall return info about file2, the
+	file where file1 is linked to (you can't receive info about a symbolic link).
+	Note that a stat can fail, if there are too many symbolic links.
+fopen (file1, "r") if file1 is a symbolic link, you shall not open the symbolic link, but
+	the file where file1 is linked to.
+unlink (file1) if file1 is a symbolic link, you shall delete the symbolic link.
+

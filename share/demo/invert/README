@@ -1,0 +1,64 @@
+# directory: demo/invert
+
+Demonstration of extraction of an inverter with transistor bulk 
+connections and drain/source regions.  The latter are extracted as 
+either non-linear junction capacitances, or drain/source area and 
+perimeter information attached to the MOS transistors.
+
+STEPS
+=====
+
+1.  Make project, use scmos_n technology and lambda = 0.2 (micron)
+    % mkpr -p scmos_n -l 0.2 projectname
+
+Rest assumes that you and your files are in the project directory.
+
+2.  Use cgi to put invert layout into database.
+    % cgi invert.gds
+
+3.  Perform an extraction of the circuit, including coupling capacitances.  
+    The drain/source regions are extracted as non-linear junction capacitances
+    that have parameters 'area' and 'perimeter'.
+    % space -C -Sjun_caps=area-perimeter invert
+
+4.  Look in the file xspicerc to see how the junction capacitances are
+    printed in the netlist output as diodes with parameters 'area' and 
+    'pj', and next get the SPICE circuit description.
+    % xspice -a invert
+
+5.  An alternative is to extract the drain/source regions as 'area and 
+    perimeter' information that is attached to the MOS transistors.
+    This achieved by modifying the transistor definitions in the element
+    definition file.  Therefore, first copy the element definition file
+    from the process directory to the local file elem.s:
+    % cp $ICDPATH/share/lib/process/scmos_n/space.def.s elem.s
+    % chmod +w elem.s
+
+    Change the lines 
+       nenh : cpg caa  csn : cpg caa : @sub  # nenh MOS
+       penh : cpg caa !csn : cpg caa : cwn   # penh MOS
+    into
+       nenh : cpg caa  csn : cpg caa (!cpg caa csn)  : @sub # nenh MOS
+       penh : cpg caa !csn : cpg caa (!cpg caa !csn) : cwn  # penh MOS
+    to describe the drain/source regions.
+
+    Change the lines
+       cond_pa : caa !cpg !csn : caa  : 70  : p    # p+ active area
+       cond_na : caa !cpg  csn : caa  : 50  : n    # n+ active area
+    into
+       cond_pa : caa !cpg !csn : caa  : 0   : p    # p+ active area
+       cond_na : caa !cpg  csn : caa  : 0   : n    # n+ active area
+    to avoid complaints by tecc about the fact the resistance for drain/
+    source regions should be zero (that resistance is already modeled in 
+    the transistor model).
+
+    And remove the 'ndif' and 'pdif' capacitance lists.
+
+    Next, run tecc to compile the new element definition file:
+    % tecc elem.s
+    and run space again with the new element definition file.
+    % space -C -Sjun_caps=area-perimeter -E elem.t invert
+    
+6.  Next watch the SPICE output again.
+    % xspice -a invert
+

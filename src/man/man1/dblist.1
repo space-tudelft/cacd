@@ -1,0 +1,149 @@
+.TH DBLIST 1ICD "1/10/86"
+.UC 4
+.SH NAME
+dblist - list cells in the database
+.SH SYNOPSIS
+.B dblist
+[-lcf] [-h] [-d] [-r] [cell]
+.SH OPTIONS
+.TP 8
+.B -l
+List only cells of the layout view.
+.TP
+.B -c
+List only cells of the circuit view.
+.TP
+.B -f
+List only cells of the floorplan view.
+.TP
+.B -h
+Make a hierarchical listing.
+.TP
+.B -d
+List also device calls in the circuit
+in a hierarchical listing.
+.TP
+.B -r
+List only the roots
+in a hierarchical listing.
+.SH DESCRIPTION
+.I Dblist
+is a program that makes a listing of the cells that are present
+in the IC design database.
+
+When the option -h is specified,
+a hierarchical listing of the cells will be shown.
+In this situation,
+a cell can be specified for which its tree is shown.
+When no cell is specified,
+a listing of all cell trees is made.
+
+When the option -h is not specified,
+a cell name or regular expression ('?', '*' or '[]') may be
+specified and only the matching cell names are listed.
+.SH EXAMPLES
+The first example lists all cells
+that are present in a database:
+.nf
+
+% dblist
+
+layout:
+feedback    mod2_fb    sel_reg8    xmc?
+latch       rand_cnt   select      xyz!
+
+circuit:
+feedback    mod2_fb    rand_cnt    select
+latch       multplex   sel_reg8    total
+function:
+f_latch
+imported:
+Xlatch      Xselect
+
+floorplan:
+
+.fi
+Note that for a cell name followed with a '?' the "mc" file
+is not found.
+And for a cell name with '!' the cell directory is not found.
+
+The second example lists only the cells of the layout view:
+.nf
+
+% dblist -l
+feedback    mod2_fb    sel_reg8    xmc?
+latch       rand_cnt   select      xyz!
+
+.fi
+The third example lists only the cells of the layout view,
+which begin with the letter 's':
+.nf
+
+% dblist -l 's*'
+sel_reg8    select
+
+.fi
+The fourth example lists only the cells of the layout view,
+but in a single column if stdout is redirected:
+.nf
+
+% dblist -l | cat -n
+    1  feedback
+    2  latch
+    3  mod2_fb
+    4  rand_cnt
+    5  sel_reg8
+    6  select
+    7  xmc?
+    8  xyz!
+
+.fi
+The fifth example lists the cell tree of cell "rand_cnt"
+for the layout view:
+.nf
+
+% dblist -lh rand_cnt
+1 - rand_cnt    (2)
+    2 - sel_reg8        1 (2)
+        3 - latch            8 (0)
+        3 - select           8 (0)
+    2 - feedback        1 (3)
+        3 - mod2_fb          3 (0)
+
+.fi
+The first number on a line is the level of the corresponding cell in
+the cell tree.
+The second number (if present) is the total number of times (incl. copies)
+the cell is used,
+and the third or last number (between parenthesis)
+is the number of sub cells.
+For example,
+cell "sel_reg8" is on level 2,
+it is used 1 time by "rand_cnt",
+and it has 2 sub cells.
+One of the sub cells is "latch",
+which is used 8 times by "sel_reg8",
+and which has no sub cells itself.
+(It is a leaf cell).
+Because "sel_reg8" has only 2 sub cells,
+there must have been used a cell copy statement (array
+specification) to get 8 "latch" cells.
+.PP
+For the circuit view,
+the third or last number (between parenthesis) counts also
+the device cell calls.
+When a cell call is a call to a function block (if file "fterm" exists)
+the third number for this cell will be replaced by 'function'.
+.SH AUTHOR
+S. de Graaf
+.SH FILES
+.TP
+proj_dir/\fIview\fP/celllist
+(input file)
+.TP
+proj_dir/\fIview\fP/\fIcell\fP/mc
+(input file)
+.TP
+proj_dir/circuit/\fIcell\fP/fterm
+(input file)
+

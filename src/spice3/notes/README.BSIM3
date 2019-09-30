@@ -1,0 +1,42 @@
+This directory contains patches and source code for the BSIM3 models.
+The BSIM3 Model is copyrighted by The University of California.
+(See the file B3TERMS_OF_USE included in the source code distribution)
+
+                  The BSIM3 model has it's own web page:
+                http://www-device.eecs.berkeley.edu/~bsim3
+
+The web site contains the model's manuals, latest info on it's development and 
+authors' contact information. If you are going to use these models, give a
+look to it.
+
+		 
+Directory structure:
+ 
+    bsim3v3.1:      Berkeley's Short channel Insulated gate Mosfet 
+                    model 3v3.1 source code. 
+    patches:        patches to the bsim3v3.1 model.
+    V322code.tar.Z: BSIM3v3.2.2 model. 
+    
+    
+NOTES on BSIM3v3.2.2 Model Porting.
+-----------------------------------
+
+The model did not use the 3f4(5) device interface (the BSIM3unsetup function), 
+so I have applied the patches for the bsim3v3.1 model I found in this 
+tarball (only those concerning the bsim3* and b3* files). The patches were 
+applied successfully. I have run the simulations on the test files provided 
+with the model and the outputs matched with the reference one. For those of
+you who want to rerun the tests I have left them in the examples/bsim3v3.2.2 
+directory. 
+
+To do the tests you need to run spice in batch mode:
+
+                 spice -b -o <my_output_file.out> <testfile>
+
+and then you should run a diff between your output and the provided one to 
+check for diffrences. Please note: the files ARE different, the headers and 
+simulation info depends on your machine, you need to check that no 
+differences emerges in the values. 
+
+Paolo Nenzi 04-Jul-1999
+p.nenzi@ieee.org

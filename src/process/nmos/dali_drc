@@ -1,0 +1,10 @@
+# Dali design rule file for the standard 4u nmos process.
+# mask  width   gap     sh_gap  crit_length
+0       2       2       2       5
+1       2       2       2       5
+2       3       2       1       5
+3       2       0       0       5
+4       2       0       0       5
+5       2       0       0       5
+6       2       0       0       5
+7       2       0       0       5

@@ -1,0 +1,7392 @@
+%!PS-Adobe-1.0
+%%BoundingBox: 29 217 567 619
+%%Pages: 1
+%%EndComments
+%% getepslay prolog for c3tu process, fish variant.
+
+% begin inclusion of /usr/cacd/lib/epslay.pro
+%
+% Author: N.P. van der Meijs.
+%
+% This is the common part of the eps prolog for getepslay,
+% the process-specific part is still to be added.
+% This is to be done with %%Include directive of getepslay.
+
+/fillBigPaths {/bigPathFill exch def} def
+
+  true  fillBigPaths   % Goes well if poly has no holes.
+% false fillBigPaths   % Uncomment this line if poly has holes that are
+		       % plotted incorrectly. The result is that the masks
+		       % that contain such polygons are not filled
+		       % (contour only), but the layout is otherwise
+		       % plotted normally.
+
+% Assumes three pass plotting:
+% pass 1: filled mask layers
+% pass 2: contour of mask layers, and other stroked paths
+% pass 3: text, so it is on top of everyting.
+
+/EPSLayDict 140 dict def EPSLayDict begin
+/Style 40 dict def
+0 setlinewidth
+
+% The following has to do with pathLimit of (Level 1) Postscript.
+/pathCount 0 def
+/pathLimit 1000 def
+/pathLimitExceeded false def
+
+% First, some procedure definitions for defining overal appearance,
+% and setting of defaults.
+
+% [min max lambda fontname] plotFont -
+/plotFont {
+    aload pop
+    /FontName exch def
+    /LambdaFs exch def
+    /MaxFs    exch def
+    /MinFs    exch def
+    % [(FontName) FontName (LambdaFs) LambdaFs (MaxFs) MaxFs (MinFs) MinFs] ==
+    % /FontSize MinFs def % avoid use before define
+} def
+[8 8 1 /Helvetica-Bold] plotFont % default 8 point non-proportional
+
+% [factor] plotPatScale -
+/patternScale {aload pop /Bfreq exch def} def
+[1] patternScale % default
+
+% bool plotRotate
+/plotRotate {/Rotate exch def} def
+false plotRotate % default
+
+% Defaults
+/Tailwd    1 def % width of arrow tails, in points
+/Tipwd     6 def % width of arrow heads, in points
+
+/plotPass {/passnumber exch def} def
+1 plotPass
+
+% Drawing patterns.
+%
+/basketweave  [1 8 <d1e3c5885c3e1d88>] def
+/fishscale    [1 8 <3e418080e3140808>] def
+
+/p2 [2 16 <1010200840048002000100000000000010100820044002800100000000000000>]
+def
+/p4 [2 16 <18000c00040000000004000c00180030006000c0008000008000c00060003000>]
+def
+/p5 [2 16 <c071c00101e001e001e0e001e001e3c103c003c0000f1c0f1c0f1c000070c071>]
+def
+/p6 [2 16 <1000001000000200000040000008010000000000100200000000004000000001>]
+def
+/p7 [2 16 <002100210021ffe1e1e1e1e1e1ffe1ff210021002100e1ffe1e1e1e1ffe1ffe1>]
+def
+/p8 [2 16 <0000000080c0c0c160033006180c0c1806300360c1c0c08000000000cccccccc>]
+def
+/p9 [2 16 <00000000c0c0c0c00000000000c000c000000000cccccccc0000000000c000c0>]
+def
+/p13 [2 16 <00ff00ff00ff00ff00ff00ff00ff00ffff00ff00ff00ff00ff00ff00ff00ff00>]
+def
+/p15 [2 16 <ffff0202040408081010202040408080ffff4040202010100808040402020101>]
+def
+/p16 [2 16 <4040202010100808040402020101808040402020101008080404020201018080>]
+def
+/p17 [2 16 <c0c06060303018180c0c060603038181c0c06060303018180c0c060603038181>]
+def
+/p18 [2 16 <0180024004200810100820044002800180014002200410080810042002400180>]
+def
+/p19 [2 16 <8080808080808080808080808080808080808080808080808080808080808080>]
+def
+
+/lines0    [1 8 <ff000000ff000000>] def % lines 0 degrees inclined (horiz)
+/lines45   [1 8 <0102040810204080>] def % lines 45 degrees inclined (/)
+/lines90   [1 8 <1111111111111111>] def % lines 90 degrees inclined (vert)
+/lines135  [1 8 <8040201008040201>] def % lines 135 degrees inclined (\)
+/flines0   [1 8 <ffff000000000000>] def % fat lines 0 dg. inclined (horiz)
+/flines45  [1 8 <03060C183060C081>] def % fat lines 45 dg. inclined (/)
+/flines90  [1 8 <3333333333333333>] def % fat lines 90 dg. inclined (vert)
+/flines135 [1 8 <81C06030180C0603>] def % fat lines 135 dg. inclined (\)
+/cross0    [1 8 <ff01010101010101>] def % lines 0 and 90
+/cross45   [1 8 <110a040a11a040a0>] def % lines 45 and 135
+/fcross45  [1 8 <331e0c1e33e1c0e1>] def % lines 45 and 135
+/black     [1 8 <ffffffffffffffff>] def % black (or dots 100%)
+/dots50    [1 8 <aa55aa55aa55aa55>] def % dots 50%
+/dots25    [1 8 <8822882288228822>] def % dots 25%
+/dots12    [1 8 <8800220088002200>] def % dots ~12% (1 of 8)
+/dots6     [1 8 <8800000088000000>] def % dots ~ 6% (1 of 16)
+/dots3     [1 8 <8000000080000000>] def % dots ~ 3% (1 of 32)
+/dots2     [1 8 <8000000000000000>] def % dots ~ 2% (1 of 64)
+/white     [1 8 <0000000000000000>] def % white (or dots 0%)
+
+/bitison {
+    /ybit exch def /xbit exch def
+    bstring ybit bwidth mul
+    xbit 8 idiv add get
+    1 7 xbit 8 mod sub bitshift
+    and 0 ne
+} def
+
+/setpattern {
+    /bstring exch def
+    /onbits 0 def /offbits 0 def
+    freq 0 {
+      /y exch def /x exch def
+      /xindex x 1 add 2 div bpside mul cvi def
+      /yindex y 1 add 2 div bpside mul cvi def
+      xindex yindex bitison
+        {/onbits onbits 1 add def 1}
+        {/offbits offbits 1 add def 0}
+        ifelse
+    } setscreen
+    {} settransfer
+    offbits offbits onbits add div setgray
+} def
+
+% Adapted from cookbook example program.
+% x1 y1 x2 y2 Tailwd headwd headlen type arrow
+/arrow {
+    0 begin
+    /ArrowType exch def 
+    /headlength exch def
+    /halfheadthickness exch 2 div def
+    /halfthickness exch 2 div def
+    /tipy exch def /tipx exch def
+    /taily exch def /tailx exch def
+    /dx tipx tailx sub def
+    /dy tipy taily sub def
+    /arrowlength dx dx mul dy dy mul add sqrt def
+    /angle dy dx atan def
+    /base arrowlength headlength sub def
+                                                            
+    /savematrix matrix currentmatrix def
+    tailx taily translate
+    angle rotate
+
+    /Forward false def
+    /Backward false def
+    ArrowType 1 eq {/Forward  true def} if
+    ArrowType 3 eq {/Forward  true def} if
+    ArrowType 2 eq {/Backward true def} if
+    ArrowType 3 eq {/Backward true def} if
+    0 0 moveto
+
+    Backward {
+        headlength halfheadthickness neg lineto
+        headlength halfthickness neg lineto
+    } { 0 halfthickness neg lineto
+    } ifelse
+
+    Forward {
+        base halfthickness neg lineto
+        base halfheadthickness neg lineto
+        arrowlength 0 lineto
+        base halfheadthickness lineto
+        base halfthickness lineto
+    } { arrowlength halfthickness neg lineto
+        arrowlength halfthickness lineto
+    } ifelse
+
+    Backward {
+        headlength halfthickness lineto
+        headlength halfheadthickness lineto
+    } { 0 halfthickness lineto
+    } ifelse
+
+    closepath savematrix setmatrix end
+} def
+/arrow load 0 16 dict put
+
+% x y dx dy text Text -
+% Shows string with (dx,dy) relative to bounding box at (x,y)
+% Dx and dy work same as in mathematica
+% On white background.
+/Text {
+    0 begin
+    /text exch def
+    /dy exch def /dx exch def
+    /Y exch def /X exch def
+    text stringwidth pop /W exch def
+    /H FontSize def
+
+    % center text
+    /Y Y FontSize 2 div sub def
+    /X X W 2 div sub def
+
+    % adjust according to dx,dy
+    /X X dx W mul 2 div sub def
+    /Y Y dy H mul 2 div sub def
+
+    gsave
+	% determine bbox of text.
+	newpath X Y moveto text true charpath pathbbox
+	/st exch def /sr exch def /sb exch def /sl exch def
+
+	% define a margin around bbox of text
+	/Margin st sb sub 0.2 mul def
+	/sb sb Margin sub def
+	/sl sl Margin sub def
+	/sr sr Margin add def
+	/st st Margin add def
+
+	% construct path corresponding to bbox
+	newpath sl sb moveto sr sb lineto sr st lineto sl st lineto
+	closepath
+
+	% make it white.
+	gsave 1 setgray fill grestore
+
+	% stroke outline
+	gsave 0 setlinewidth stroke grestore
+
+    grestore
+
+    % print text.
+    X Y moveto text show
+
+    end
+} def
+/Text load 0 20 dict put
+
+/BeginLayout {
+    /EPSLayGC save def
+    /TForm exch def % TForm ==
+
+    /bbxl TForm 4 get def
+    /bbxr TForm 6 get def
+    /bbyb TForm 5 get def
+    /bbyt TForm 7 get def
+    /Resolution TForm 8 get def
+
+    % Rotate if necessary
+    Rotate {
+        /xl TForm 7 get neg def
+        /xr TForm 5 get neg def
+        /yb TForm 4 get def
+        /yt TForm 6 get def
+
+        TForm 4 xl put
+        TForm 6 xr put
+        TForm 5 yb put
+        TForm 7 yt put
+    } if % TForm ==
+
+    /DrawWd TForm 2 get TForm 0 get sub def
+    /DrawHt TForm 3 get TForm 1 get sub def
+
+    /PicHt TForm 7 get TForm 5 get sub def
+    /PicWd TForm 6 get TForm 4 get sub def   
+
+    /WdScale DrawWd PicWd div def
+    /HtScale DrawHt PicHt div def
+
+    /ScaleFactor
+        WdScale HtScale lt {WdScale} {HtScale} ifelse def
+
+    % now move to center
+    TForm 0 get DrawWd PicWd ScaleFactor mul sub 2 div add
+    TForm 1 get DrawHt PicHt ScaleFactor mul sub 2 div add
+    translate
+
+    % Finally, perform scaling.  [(ScaleFactor) ScaleFactor] ==
+    ScaleFactor ScaleFactor scale
+
+    % but following items should not be scaled, so undo it.
+    /Tailwd Tailwd ScaleFactor div def
+    /Tipwd Tipwd ScaleFactor div def
+
+    % Compute {min,max}fontsize and target fontsize in scaled coordinates.
+    /MinFs MinFs ScaleFactor div def
+    /MaxFs MaxFs ScaleFactor div def
+    /FontSize LambdaFs Resolution mul def
+    % [MinFs MaxFs FontSize] ==
+
+    % Apply min and max, and set font
+    FontSize MinFs lt {/FontSize MinFs def} if
+    FontSize MaxFs gt {/FontSize MaxFs def} if
+    FontName findfont FontSize scalefont setfont
+
+    % set user origin
+    TForm 4 get neg TForm 5 get neg translate
+    Rotate {90 rotate} if
+} def
+
+/SetClipPath {
+    newpath
+    bbxl bbyb moveto
+    bbxr bbyb lineto
+    bbxr bbyt lineto
+    bbxl bbyt lineto
+    closepath
+    clip
+} def
+
+/SetLayer {
+    /Layer exch def
+    gsave
+    passnumber 1 eq {SetClipPath} if
+    SetStyle clear newpath
+    /pathLimitExceeded false def
+} def
+
+/EndLayer {
+    pathCount 0 gt {DrawPolygons} if
+    grestore
+} def
+
+% Start a polygon: x0 y0 P -
+/P {moveto /pathCount pathCount 1 add def} def
+
+% Continue a polygon: x y T -
+/T {lineto /pathCount pathCount 1 add def} def
+
+% Close a polygon: x y L -
+/L {
+    T closepath
+    pathCount pathLimit gt {
+	/pathLimitExceeded true def DrawPolygons
+    } if
+} def
+
+% Rectangular box: x0 y0 w h B -
+/B {
+    /dy exch def /dx exch def /yb exch def /xl exch def
+    /xr xl dx add def
+    /yt yb dy add def
+    xl yb P xr yb T xr yt T xl yt L
+} def
+
+/R {
+    /dy exch def /dx exch def /y0 exch def /x0 exch def
+    x0 y0 P dx 0 rlineto 0 dy rlineto
+    /pathCount pathCount 2 add def
+} def
+
+/X {
+    exch 0 rlineto 0 exch rlineto
+    /pathCount pathCount 2 add def
+} def
+
+/C {
+    exch 0 rlineto 0 exch rlineto
+    % [(current) currentpoint (x0) x0 (y0) y0 ] ==
+    x0 currentpoint pop sub 0 rlineto
+    closepath
+    /pathCount pathCount 4 add def
+    pathCount pathLimit gt {
+	/pathLimitExceeded true def DrawPolygons
+    } if
+} def
+
+/EndLayout {
+    EndLayer showpage
+    % EPSLayDict length =
+    EPSLayGC restore
+    end
+} def
+
+/DrawPolygons {
+    % pathLimitExceeded { [(pathLimitExceeded) pathCount Layer] == } if
+    passnumber 1 eq {
+	pathLimitExceeded false eq bigPathFill true eq or {
+	    gsave FillPolygons grestore
+	} if
+    } if
+    % Always stroke polygon boundaries, because a mask
+    % might be skipped in pass 2.
+    OutlinePolygons 
+    /pathCount 0 def
+} def
+
+/FillPolygons {FillPattern setpattern fill} def
+
+/OutlinePolygons {
+    /bwidth 1    def
+    /bpside 8    def
+    <ffffffffffffffff> setpattern
+    LineWd setlinewidth
+    0 setgray
+    stroke
+} def
+
+/SetStyle {
+    Style Layer get aload pop
+    /LineWd exch Resolution mul def % in lambda's
+    /Pfreq exch def
+    aload pop
+    /FillPattern exch def
+    /bpside exch def
+    /bwidth exch def
+    /freq 300 bpside div Pfreq div Bfreq div def
+    % [(bpside, bwidth, freq) bpside bwidth freq (FillPattern) FillPattern]==
+} def
+
+% x1 y1 x2 y2 ArrowType plotArrow
+% ArrowType has meaning as defined in dali/comment.h
+/plotArrow {
+    /ArrowType exch def
+    /y2 exch def
+    /x2 exch def
+    /y1 exch def
+    /x1 exch def
+    newpath
+    x1 y1 x2 y2 Tailwd Tipwd Tipwd 2 mul ArrowType arrow
+    fill
+} def
+
+/align false def
+%[dx dy] termTextAlignment
+/termTextAlignment {
+    aload pop
+    /ady exch def
+    /adx exch def
+    /align true def
+} def
+
+% xl xr yb yt dx dy termname plotTerminal
+/plotTerminal {
+    /name exch def
+    /dy exch def /dx exch def
+    /yt exch def /yb exch def /xr exch def /xl exch def
+    passnumber 2 eq {
+	LineWd setlinewidth
+	newpath
+	xl yb moveto xr yb lineto xr yt lineto xl yt lineto
+	closepath stroke
+	newpath xl yb moveto xr yt lineto stroke
+	newpath xr yb moveto xl yt lineto stroke
+    } if
+    passnumber 3 eq {
+	align true eq {/dx adx def /dy ady def} if
+        xl xr add 2 div yb yt add 2 div dx dy name Text
+    } if
+} def
+
+/PlotBBox {
+    passnumber 2 eq {
+	1 setlinewidth newpath
+	bbxl bbyb moveto
+	bbxr bbyb lineto
+	bbxr bbyt lineto
+	bbxl bbyt lineto
+	closepath stroke
+    } if
+} def
+
+% [ (maskname) pattern pfreq linewidth ] defineStyle -
+/defineStyle {
+    /stylearg exch def
+    Style stylearg 0 get stylearg 1 3 getinterval put
+} def
+% end inclusion of /usr/cacd/lib/epslay.pro
+
+%%Order: nn pp ps in ins co cos cot cb
+
+[5 14 15 /Helvetica-Bold] plotFont
+[-1 1] termTextAlignment
+
+%% mask   patt      pscale linewidth
+[ (bb)     white    1.0    0.1 ] defineStyle
+[ (sdi)    white    1.0    0.1 ] defineStyle
+[ (sp)     white    1.0    0.1 ] defineStyle
+[ (sn)     white    1.0    0.1 ] defineStyle
+[ (te)     white    1.0    0.1 ] defineStyle
+[ (cb)     white    1.0    0.1 ] defineStyle
+[ (nw)     white    1.0    0.1 ] defineStyle
+[ (od)     white    1.0    0.1 ] defineStyle
+[ (xa)     white    1.0    0.1 ] defineStyle
+[ (xb)     white    1.0    0.1 ] defineStyle
+[ (nn)     dots2    1.0    0.1 ] defineStyle
+[ (pp)     dots2    1.0    0.1 ] defineStyle
+[ (cos)    fcross45 1.0    2.0 ] defineStyle
+[ (cot)    fcross45 1.0    2.0 ] defineStyle
+[ (int)    dots50   1.0    0.1 ] defineStyle
+[ (ins)    dots25   1.0    0.1 ] defineStyle
+[ (in)     dots12   1.0    0.1 ] defineStyle
+[ (co)     black    1.0    0.1 ] defineStyle
+[ (ps)     dots6    1.0    0.1 ] defineStyle
+[ (t_ps)   p18      1.0    0.1 ] defineStyle
+[ (t_in)   p16      1.0    0.1 ] defineStyle
+[ (t_ins)  p15      1.0    0.1 ] defineStyle
+[29 217 567 619 0 0 8000 5984 4] BeginLayout
+1 plotPass
+(nn) SetLayer
+512 224 P
+432 224 T
+368 288 T
+368 368 T
+288 368 T
+224 432 T
+224 512 T
+0 512 T
+0 432 T
+32 432 T
+32 368 T
+0 368 T
+0 288 T
+80 288 T
+144 224 T
+144 144 T
+224 144 T
+288 80 T
+288 0 T
+368 0 T
+368 32 T
+432 32 T
+432 0 T
+512 0 L
+512 1952 P
+432 1952 T
+432 1920 T
+368 1920 T
+368 1952 T
+288 1952 T
+288 1872 T
+224 1808 T
+144 1808 T
+144 1728 T
+80 1664 T
+0 1664 T
+0 1584 T
+32 1584 T
+32 1520 T
+0 1520 T
+0 1440 T
+224 1440 T
+224 1520 T
+288 1584 T
+368 1584 T
+368 1664 T
+432 1728 T
+512 1728 L
+512 2240 P
+432 2240 T
+368 2304 T
+368 2384 T
+288 2384 T
+224 2448 T
+224 2528 T
+0 2528 T
+0 2448 T
+32 2448 T
+32 2384 T
+0 2384 T
+0 2304 T
+80 2304 T
+144 2240 T
+144 2160 T
+224 2160 T
+288 2096 T
+288 2016 T
+368 2016 T
+368 2048 T
+432 2048 T
+432 2016 T
+512 2016 L
+512 3968 P
+432 3968 T
+432 3936 T
+368 3936 T
+368 3968 T
+288 3968 T
+288 3888 T
+224 3824 T
+144 3824 T
+144 3744 T
+80 3680 T
+0 3680 T
+0 3600 T
+32 3600 T
+32 3536 T
+0 3536 T
+0 3456 T
+224 3456 T
+224 3536 T
+288 3600 T
+368 3600 T
+368 3680 T
+432 3744 T
+512 3744 L
+512 4256 P
+432 4256 T
+368 4320 T
+368 4400 T
+288 4400 T
+224 4464 T
+224 4544 T
+0 4544 T
+0 4464 T
+32 4464 T
+32 4400 T
+0 4400 T
+0 4320 T
+80 4320 T
+144 4256 T
+144 4176 T
+224 4176 T
+288 4112 T
+288 4032 T
+368 4032 T
+368 4064 T
+432 4064 T
+432 4032 T
+512 4032 L
+512 5984 P
+432 5984 T
+432 5952 T
+368 5952 T
+368 5984 T
+288 5984 T
+288 5904 T
+224 5840 T
+144 5840 T
+144 5760 T
+80 5696 T
+0 5696 T
+0 5616 T
+32 5616 T
+32 5552 T
+0 5552 T
+0 5472 T
+224 5472 T
+224 5552 T
+288 5616 T
+368 5616 T
+368 5696 T
+432 5760 T
+512 5760 L
+1952 512 P
+1728 512 T
+1728 432 T
+1664 368 T
+1584 368 T
+1584 288 T
+1520 224 T
+1440 224 T
+1440 0 T
+1520 0 T
+1520 32 T
+1584 32 T
+1584 0 T
+1664 0 T
+1664 80 T
+1728 144 T
+1808 144 T
+1808 224 T
+1872 288 T
+1952 288 T
+1952 368 T
+1920 368 T
+1920 432 T
+1952 432 L
+1952 1664 P
+1872 1664 T
+1808 1728 T
+1808 1808 T
+1728 1808 T
+1664 1872 T
+1664 1952 T
+1584 1952 T
+1584 1920 T
+1520 1920 T
+1520 1952 T
+1440 1952 T
+1440 1728 T
+1520 1728 T
+1584 1664 T
+1584 1584 T
+1664 1584 T
+1728 1520 T
+1728 1440 T
+1952 1440 T
+1952 1520 T
+1920 1520 T
+1920 1584 T
+1952 1584 L
+1952 2528 P
+1728 2528 T
+1728 2448 T
+1664 2384 T
+1584 2384 T
+1584 2304 T
+1520 2240 T
+1440 2240 T
+1440 2016 T
+1520 2016 T
+1520 2048 T
+1584 2048 T
+1584 2016 T
+1664 2016 T
+1664 2096 T
+1728 2160 T
+1808 2160 T
+1808 2240 T
+1872 2304 T
+1952 2304 T
+1952 2384 T
+1920 2384 T
+1920 2448 T
+1952 2448 L
+1952 3680 P
+1872 3680 T
+1808 3744 T
+1808 3824 T
+1728 3824 T
+1664 3888 T
+1664 3968 T
+1584 3968 T
+1584 3936 T
+1520 3936 T
+1520 3968 T
+1440 3968 T
+1440 3744 T
+1520 3744 T
+1584 3680 T
+1584 3600 T
+1664 3600 T
+1728 3536 T
+1728 3456 T
+1952 3456 T
+1952 3536 T
+1920 3536 T
+1920 3600 T
+1952 3600 L
+1952 4544 P
+1728 4544 T
+1728 4464 T
+1664 4400 T
+1584 4400 T
+1584 4320 T
+1520 4256 T
+1440 4256 T
+1440 4032 T
+1520 4032 T
+1520 4064 T
+1584 4064 T
+1584 4032 T
+1664 4032 T
+1664 4112 T
+1728 4176 T
+1808 4176 T
+1808 4256 T
+1872 4320 T
+1952 4320 T
+1952 4400 T
+1920 4400 T
+1920 4464 T
+1952 4464 L
+1952 5696 P
+1872 5696 T
+1808 5760 T
+1808 5840 T
+1728 5840 T
+1664 5904 T
+1664 5984 T
+1584 5984 T
+1584 5952 T
+1520 5952 T
+1520 5984 T
+1440 5984 T
+1440 5760 T
+1520 5760 T
+1584 5696 T
+1584 5616 T
+1664 5616 T
+1728 5552 T
+1728 5472 T
+1952 5472 T
+1952 5552 T
+1920 5552 T
+1920 5616 T
+1952 5616 L
+2528 224 P
+2448 224 T
+2384 288 T
+2384 368 T
+2304 368 T
+2240 432 T
+2240 512 T
+2016 512 T
+2016 432 T
+2048 432 T
+2048 368 T
+2016 368 T
+2016 288 T
+2096 288 T
+2160 224 T
+2160 144 T
+2240 144 T
+2304 80 T
+2304 0 T
+2384 0 T
+2384 32 T
+2448 32 T
+2448 0 T
+2528 0 L
+2528 1952 P
+2448 1952 T
+2448 1920 T
+2384 1920 T
+2384 1952 T
+2304 1952 T
+2304 1872 T
+2240 1808 T
+2160 1808 T
+2160 1728 T
+2096 1664 T
+2016 1664 T
+2016 1584 T
+2048 1584 T
+2048 1520 T
+2016 1520 T
+2016 1440 T
+2240 1440 T
+2240 1520 T
+2304 1584 T
+2384 1584 T
+2384 1664 T
+2448 1728 T
+2528 1728 L
+2528 2240 P
+2448 2240 T
+2384 2304 T
+2384 2384 T
+2304 2384 T
+2240 2448 T
+2240 2528 T
+2016 2528 T
+2016 2448 T
+2048 2448 T
+2048 2384 T
+2016 2384 T
+2016 2304 T
+2096 2304 T
+2160 2240 T
+2160 2160 T
+2240 2160 T
+2304 2096 T
+2304 2016 T
+2384 2016 T
+2384 2048 T
+2448 2048 T
+2448 2016 T
+2528 2016 L
+2528 3968 P
+2448 3968 T
+2448 3936 T
+2384 3936 T
+2384 3968 T
+2304 3968 T
+2304 3888 T
+2240 3824 T
+2160 3824 T
+2160 3744 T
+2096 3680 T
+2016 3680 T
+2016 3600 T
+2048 3600 T
+2048 3536 T
+2016 3536 T
+2016 3456 T
+2240 3456 T
+2240 3536 T
+2304 3600 T
+2384 3600 T
+2384 3680 T
+2448 3744 T
+2528 3744 L
+2528 4256 P
+2448 4256 T
+2384 4320 T
+2384 4400 T
+2304 4400 T
+2240 4464 T
+2240 4544 T
+2016 4544 T
+2016 4464 T
+2048 4464 T
+2048 4400 T
+2016 4400 T
+2016 4320 T
+2096 4320 T
+2160 4256 T
+2160 4176 T
+2240 4176 T
+2304 4112 T
+2304 4032 T
+2384 4032 T
+2384 4064 T
+2448 4064 T
+2448 4032 T
+2528 4032 L
+2528 5984 P
+2448 5984 T
+2448 5952 T
+2384 5952 T
+2384 5984 T
+2304 5984 T
+2304 5904 T
+2240 5840 T
+2160 5840 T
+2160 5760 T
+2096 5696 T
+2016 5696 T
+2016 5616 T
+2048 5616 T
+2048 5552 T
+2016 5552 T
+2016 5472 T
+2240 5472 T
+2240 5552 T
+2304 5616 T
+2384 5616 T
+2384 5696 T
+2448 5760 T
+2528 5760 L
+3968 512 P
+3744 512 T
+3744 432 T
+3680 368 T
+3600 368 T
+3600 288 T
+3536 224 T
+3456 224 T
+3456 0 T
+3536 0 T
+3536 32 T
+3600 32 T
+3600 0 T
+3680 0 T
+3680 80 T
+3744 144 T
+3824 144 T
+3824 224 T
+3888 288 T
+3968 288 T
+3968 368 T
+3936 368 T
+3936 432 T
+3968 432 L
+3968 1664 P
+3888 1664 T
+3824 1728 T
+3824 1808 T
+3744 1808 T
+3680 1872 T
+3680 1952 T
+3600 1952 T
+3600 1920 T
+3536 1920 T
+3536 1952 T
+3456 1952 T
+3456 1728 T
+3536 1728 T
+3600 1664 T
+3600 1584 T
+3680 1584 T
+3744 1520 T
+3744 1440 T
+3968 1440 T
+3968 1520 T
+3936 1520 T
+3936 1584 T
+3968 1584 L
+3968 2528 P
+3744 2528 T
+3744 2448 T
+3680 2384 T
+3600 2384 T
+3600 2304 T
+3536 2240 T
+3456 2240 T
+3456 2016 T
+3536 2016 T
+3536 2048 T
+3600 2048 T
+3600 2016 T
+3680 2016 T
+3680 2096 T
+3744 2160 T
+3824 2160 T
+3824 2240 T
+3888 2304 T
+3968 2304 T
+3968 2384 T
+3936 2384 T
+3936 2448 T
+3968 2448 L
+3968 3680 P
+3888 3680 T
+3824 3744 T
+3824 3824 T
+3744 3824 T
+3680 3888 T
+3680 3968 T
+3600 3968 T
+3600 3936 T
+3536 3936 T
+3536 3968 T
+3456 3968 T
+3456 3744 T
+3536 3744 T
+3600 3680 T
+3600 3600 T
+3680 3600 T
+3744 3536 T
+3744 3456 T
+3968 3456 T
+3968 3536 T
+3936 3536 T
+3936 3600 T
+3968 3600 L
+3968 4544 P
+3744 4544 T
+3744 4464 T
+3680 4400 T
+3600 4400 T
+3600 4320 T
+3536 4256 T
+3456 4256 T
+3456 4032 T
+3536 4032 T
+3536 4064 T
+3600 4064 T
+3600 4032 T
+3680 4032 T
+3680 4112 T
+3744 4176 T
+3824 4176 T
+3824 4256 T
+3888 4320 T
+3968 4320 T
+3968 4400 T
+3936 4400 T
+3936 4464 T
+3968 4464 L
+3968 5696 P
+3888 5696 T
+3824 5760 T
+3824 5840 T
+3744 5840 T
+3680 5904 T
+3680 5984 T
+3600 5984 T
+3600 5952 T
+3536 5952 T
+3536 5984 T
+3456 5984 T
+3456 5760 T
+3536 5760 T
+3600 5696 T
+3600 5616 T
+3680 5616 T
+3744 5552 T
+3744 5472 T
+3968 5472 T
+3968 5552 T
+3936 5552 T
+3936 5616 T
+3968 5616 L
+4544 224 P
+4464 224 T
+4400 288 T
+4400 368 T
+4320 368 T
+4256 432 T
+4256 512 T
+4032 512 T
+4032 432 T
+4064 432 T
+4064 368 T
+4032 368 T
+4032 288 T
+4112 288 T
+4176 224 T
+4176 144 T
+4256 144 T
+4320 80 T
+4320 0 T
+4400 0 T
+4400 32 T
+4464 32 T
+4464 0 T
+4544 0 L
+4544 1952 P
+4464 1952 T
+4464 1920 T
+4400 1920 T
+4400 1952 T
+4320 1952 T
+4320 1872 T
+4256 1808 T
+4176 1808 T
+4176 1728 T
+4112 1664 T
+4032 1664 T
+4032 1584 T
+4064 1584 T
+4064 1520 T
+4032 1520 T
+4032 1440 T
+4256 1440 T
+4256 1520 T
+4320 1584 T
+4400 1584 T
+4400 1664 T
+4464 1728 T
+4544 1728 L
+4544 2240 P
+4464 2240 T
+4400 2304 T
+4400 2384 T
+4320 2384 T
+4256 2448 T
+4256 2528 T
+4032 2528 T
+4032 2448 T
+4064 2448 T
+4064 2384 T
+4032 2384 T
+4032 2304 T
+4112 2304 T
+4176 2240 T
+4176 2160 T
+4256 2160 T
+4320 2096 T
+4320 2016 T
+4400 2016 T
+4400 2048 T
+4464 2048 T
+4464 2016 T
+4544 2016 L
+4544 3968 P
+4464 3968 T
+4464 3936 T
+4400 3936 T
+4400 3968 T
+4320 3968 T
+4320 3888 T
+4256 3824 T
+4176 3824 T
+4176 3744 T
+4112 3680 T
+4032 3680 T
+4032 3600 T
+4064 3600 T
+4064 3536 T
+4032 3536 T
+4032 3456 T
+4256 3456 T
+4256 3536 T
+4320 3600 T
+4400 3600 T
+4400 3680 T
+4464 3744 T
+4544 3744 L
+4544 4256 P
+4464 4256 T
+4400 4320 T
+4400 4400 T
+4320 4400 T
+4256 4464 T
+4256 4544 T
+4032 4544 T
+4032 4464 T
+4064 4464 T
+4064 4400 T
+4032 4400 T
+4032 4320 T
+4112 4320 T
+4176 4256 T
+4176 4176 T
+4256 4176 T
+4320 4112 T
+4320 4032 T
+4400 4032 T
+4400 4064 T
+4464 4064 T
+4464 4032 T
+4544 4032 L
+4544 5984 P
+4464 5984 T
+4464 5952 T
+4400 5952 T
+4400 5984 T
+4320 5984 T
+4320 5904 T
+4256 5840 T
+4176 5840 T
+4176 5760 T
+4112 5696 T
+4032 5696 T
+4032 5616 T
+4064 5616 T
+4064 5552 T
+4032 5552 T
+4032 5472 T
+4256 5472 T
+4256 5552 T
+4320 5616 T
+4400 5616 T
+4400 5696 T
+4464 5760 T
+4544 5760 L
+5984 512 P
+5760 512 T
+5760 432 T
+5696 368 T
+5616 368 T
+5616 288 T
+5552 224 T
+5472 224 T
+5472 0 T
+5552 0 T
+5552 32 T
+5616 32 T
+5616 0 T
+5696 0 T
+5696 80 T
+5760 144 T
+5840 144 T
+5840 224 T
+5904 288 T
+5984 288 T
+5984 368 T
+5952 368 T
+5952 432 T
+5984 432 L
+5984 1664 P
+5904 1664 T
+5840 1728 T
+5840 1808 T
+5760 1808 T
+5696 1872 T
+5696 1952 T
+5616 1952 T
+5616 1920 T
+5552 1920 T
+5552 1952 T
+5472 1952 T
+5472 1728 T
+5552 1728 T
+5616 1664 T
+5616 1584 T
+5696 1584 T
+5760 1520 T
+5760 1440 T
+5984 1440 T
+5984 1520 T
+5952 1520 T
+5952 1584 T
+5984 1584 L
+5984 2528 P
+5760 2528 T
+5760 2448 T
+5696 2384 T
+5616 2384 T
+5616 2304 T
+5552 2240 T
+5472 2240 T
+5472 2016 T
+5552 2016 T
+5552 2048 T
+5616 2048 T
+5616 2016 T
+5696 2016 T
+5696 2096 T
+5760 2160 T
+5840 2160 T
+5840 2240 T
+5904 2304 T
+5984 2304 T
+5984 2384 T
+5952 2384 T
+5952 2448 T
+5984 2448 L
+5984 3680 P
+5904 3680 T
+5840 3744 T
+5840 3824 T
+5760 3824 T
+5696 3888 T
+5696 3968 T
+5616 3968 T
+5616 3936 T
+5552 3936 T
+5552 3968 T
+5472 3968 T
+5472 3744 T
+5552 3744 T
+5616 3680 T
+5616 3600 T
+5696 3600 T
+5760 3536 T
+5760 3456 T
+5984 3456 T
+5984 3536 T
+5952 3536 T
+5952 3600 T
+5984 3600 L
+5984 4544 P
+5760 4544 T
+5760 4464 T
+5696 4400 T
+5616 4400 T
+5616 4320 T
+5552 4256 T
+5472 4256 T
+5472 4032 T
+5552 4032 T
+5552 4064 T
+5616 4064 T
+5616 4032 T
+5696 4032 T
+5696 4112 T
+5760 4176 T
+5840 4176 T
+5840 4256 T
+5904 4320 T
+5984 4320 T
+5984 4400 T
+5952 4400 T
+5952 4464 T
+5984 4464 L
+5984 5696 P
+5904 5696 T
+5840 5760 T
+5840 5840 T
+5760 5840 T
+5696 5904 T
+5696 5984 T
+5616 5984 T
+5616 5952 T
+5552 5952 T
+5552 5984 T
+5472 5984 T
+5472 5760 T
+5552 5760 T
+5616 5696 T
+5616 5616 T
+5696 5616 T
+5760 5552 T
+5760 5472 T
+5984 5472 T
+5984 5552 T
+5952 5552 T
+5952 5616 T
+5984 5616 L
+6560 224 P
+6480 224 T
+6416 288 T
+6416 368 T
+6336 368 T
+6272 432 T
+6272 512 T
+6048 512 T
+6048 432 T
+6080 432 T
+6080 368 T
+6048 368 T
+6048 288 T
+6128 288 T
+6192 224 T
+6192 144 T
+6272 144 T
+6336 80 T
+6336 0 T
+6416 0 T
+6416 32 T
+6480 32 T
+6480 0 T
+6560 0 L
+6560 1952 P
+6480 1952 T
+6480 1920 T
+6416 1920 T
+6416 1952 T
+6336 1952 T
+6336 1872 T
+6272 1808 T
+6192 1808 T
+6192 1728 T
+6128 1664 T
+6048 1664 T
+6048 1584 T
+6080 1584 T
+6080 1520 T
+6048 1520 T
+6048 1440 T
+6272 1440 T
+6272 1520 T
+6336 1584 T
+6416 1584 T
+6416 1664 T
+6480 1728 T
+6560 1728 L
+6560 2240 P
+6480 2240 T
+6416 2304 T
+6416 2384 T
+6336 2384 T
+6272 2448 T
+6272 2528 T
+6048 2528 T
+6048 2448 T
+6080 2448 T
+6080 2384 T
+6048 2384 T
+6048 2304 T
+6128 2304 T
+6192 2240 T
+6192 2160 T
+6272 2160 T
+6336 2096 T
+6336 2016 T
+6416 2016 T
+6416 2048 T
+6480 2048 T
+6480 2016 T
+6560 2016 L
+6560 3968 P
+6480 3968 T
+6480 3936 T
+6416 3936 T
+6416 3968 T
+6336 3968 T
+6336 3888 T
+6272 3824 T
+6192 3824 T
+6192 3744 T
+6128 3680 T
+6048 3680 T
+6048 3600 T
+6080 3600 T
+6080 3536 T
+6048 3536 T
+6048 3456 T
+6272 3456 T
+6272 3536 T
+6336 3600 T
+6416 3600 T
+6416 3680 T
+6480 3744 T
+6560 3744 L
+6560 4256 P
+6480 4256 T
+6416 4320 T
+6416 4400 T
+6336 4400 T
+6272 4464 T
+6272 4544 T
+6048 4544 T
+6048 4464 T
+6080 4464 T
+6080 4400 T
+6048 4400 T
+6048 4320 T
+6128 4320 T
+6192 4256 T
+6192 4176 T
+6272 4176 T
+6336 4112 T
+6336 4032 T
+6416 4032 T
+6416 4064 T
+6480 4064 T
+6480 4032 T
+6560 4032 L
+6560 5984 P
+6480 5984 T
+6480 5952 T
+6416 5952 T
+6416 5984 T
+6336 5984 T
+6336 5904 T
+6272 5840 T
+6192 5840 T
+6192 5760 T
+6128 5696 T
+6048 5696 T
+6048 5616 T
+6080 5616 T
+6080 5552 T
+6048 5552 T
+6048 5472 T
+6272 5472 T
+6272 5552 T
+6336 5616 T
+6416 5616 T
+6416 5696 T
+6480 5760 T
+6560 5760 L
+8000 512 P
+7776 512 T
+7776 432 T
+7712 368 T
+7632 368 T
+7632 288 T
+7568 224 T
+7488 224 T
+7488 0 T
+7568 0 T
+7568 32 T
+7632 32 T
+7632 0 T
+7712 0 T
+7712 80 T
+7776 144 T
+7856 144 T
+7856 224 T
+7920 288 T
+8000 288 T
+8000 368 T
+7968 368 T
+7968 432 T
+8000 432 L
+8000 1664 P
+7920 1664 T
+7856 1728 T
+7856 1808 T
+7776 1808 T
+7712 1872 T
+7712 1952 T
+7632 1952 T
+7632 1920 T
+7568 1920 T
+7568 1952 T
+7488 1952 T
+7488 1728 T
+7568 1728 T
+7632 1664 T
+7632 1584 T
+7712 1584 T
+7776 1520 T
+7776 1440 T
+8000 1440 T
+8000 1520 T
+7968 1520 T
+7968 1584 T
+8000 1584 L
+8000 2528 P
+7776 2528 T
+7776 2448 T
+7712 2384 T
+7632 2384 T
+7632 2304 T
+7568 2240 T
+7488 2240 T
+7488 2016 T
+7568 2016 T
+7568 2048 T
+7632 2048 T
+7632 2016 T
+7712 2016 T
+7712 2096 T
+7776 2160 T
+7856 2160 T
+7856 2240 T
+7920 2304 T
+8000 2304 T
+8000 2384 T
+7968 2384 T
+7968 2448 T
+8000 2448 L
+8000 3680 P
+7920 3680 T
+7856 3744 T
+7856 3824 T
+7776 3824 T
+7712 3888 T
+7712 3968 T
+7632 3968 T
+7632 3936 T
+7568 3936 T
+7568 3968 T
+7488 3968 T
+7488 3744 T
+7568 3744 T
+7632 3680 T
+7632 3600 T
+7712 3600 T
+7776 3536 T
+7776 3456 T
+8000 3456 T
+8000 3536 T
+7968 3536 T
+7968 3600 T
+8000 3600 L
+8000 4544 P
+7776 4544 T
+7776 4464 T
+7712 4400 T
+7632 4400 T
+7632 4320 T
+7568 4256 T
+7488 4256 T
+7488 4032 T
+7568 4032 T
+7568 4064 T
+7632 4064 T
+7632 4032 T
+7712 4032 T
+7712 4112 T
+7776 4176 T
+7856 4176 T
+7856 4256 T
+7920 4320 T
+8000 4320 T
+8000 4400 T
+7968 4400 T
+7968 4464 T
+8000 4464 L
+8000 5696 P
+7920 5696 T
+7856 5760 T
+7856 5840 T
+7776 5840 T
+7712 5904 T
+7712 5984 T
+7632 5984 T
+7632 5952 T
+7568 5952 T
+7568 5984 T
+7488 5984 T
+7488 5760 T
+7568 5760 T
+7632 5696 T
+7632 5616 T
+7712 5616 T
+7776 5552 T
+7776 5472 T
+8000 5472 T
+8000 5552 T
+7968 5552 T
+7968 5616 T
+8000 5616 L
+EndLayer
+(pp) SetLayer
+944 656 P
+928 656 T
+800 784 T
+800 800 T
+784 800 T
+656 928 T
+656 944 T
+576 944 T
+576 912 T
+512 912 T
+512 944 T
+144 944 T
+144 720 T
+304 720 T
+432 592 T
+432 576 T
+576 576 T
+576 432 T
+592 432 T
+720 304 T
+720 144 T
+944 144 T
+944 512 T
+912 512 T
+912 576 T
+944 576 L
+944 1808 P
+720 1808 T
+720 1648 T
+592 1520 T
+576 1520 T
+576 1376 T
+432 1376 T
+432 1360 T
+304 1232 T
+144 1232 T
+144 1008 T
+512 1008 T
+512 1040 T
+576 1040 T
+576 1008 T
+656 1008 T
+656 1024 T
+784 1152 T
+800 1152 T
+800 1168 T
+928 1296 T
+944 1296 T
+944 1376 T
+912 1376 T
+912 1440 T
+944 1440 L
+944 2672 P
+928 2672 T
+800 2800 T
+800 2816 T
+784 2816 T
+656 2944 T
+656 2960 T
+576 2960 T
+576 2928 T
+512 2928 T
+512 2960 T
+144 2960 T
+144 2736 T
+304 2736 T
+432 2608 T
+432 2592 T
+576 2592 T
+576 2448 T
+592 2448 T
+720 2320 T
+720 2160 T
+944 2160 T
+944 2528 T
+912 2528 T
+912 2592 T
+944 2592 L
+944 3824 P
+720 3824 T
+720 3664 T
+592 3536 T
+576 3536 T
+576 3392 T
+432 3392 T
+432 3376 T
+304 3248 T
+144 3248 T
+144 3024 T
+512 3024 T
+512 3056 T
+576 3056 T
+576 3024 T
+656 3024 T
+656 3040 T
+784 3168 T
+800 3168 T
+800 3184 T
+928 3312 T
+944 3312 T
+944 3392 T
+912 3392 T
+912 3456 T
+944 3456 L
+944 4688 P
+928 4688 T
+800 4816 T
+800 4832 T
+784 4832 T
+656 4960 T
+656 4976 T
+576 4976 T
+576 4944 T
+512 4944 T
+512 4976 T
+144 4976 T
+144 4752 T
+304 4752 T
+432 4624 T
+432 4608 T
+576 4608 T
+576 4464 T
+592 4464 T
+720 4336 T
+720 4176 T
+944 4176 T
+944 4544 T
+912 4544 T
+912 4608 T
+944 4608 L
+944 5840 P
+720 5840 T
+720 5680 T
+592 5552 T
+576 5552 T
+576 5408 T
+432 5408 T
+432 5392 T
+304 5264 T
+144 5264 T
+144 5040 T
+512 5040 T
+512 5072 T
+576 5072 T
+576 5040 T
+656 5040 T
+656 5056 T
+784 5184 T
+800 5184 T
+800 5200 T
+928 5328 T
+944 5328 T
+944 5408 T
+912 5408 T
+912 5472 T
+944 5472 L
+1808 944 P
+1440 944 T
+1440 912 T
+1376 912 T
+1376 944 T
+1296 944 T
+1296 928 T
+1168 800 T
+1152 800 T
+1152 784 T
+1024 656 T
+1008 656 T
+1008 576 T
+1040 576 T
+1040 512 T
+1008 512 T
+1008 144 T
+1232 144 T
+1232 304 T
+1360 432 T
+1376 432 T
+1376 576 T
+1520 576 T
+1520 592 T
+1648 720 T
+1808 720 L
+1808 1232 P
+1648 1232 T
+1520 1360 T
+1520 1376 T
+1376 1376 T
+1376 1520 T
+1360 1520 T
+1232 1648 T
+1232 1808 T
+1008 1808 T
+1008 1440 T
+1040 1440 T
+1040 1376 T
+1008 1376 T
+1008 1296 T
+1024 1296 T
+1152 1168 T
+1152 1152 T
+1168 1152 T
+1296 1024 T
+1296 1008 T
+1376 1008 T
+1376 1040 T
+1440 1040 T
+1440 1008 T
+1808 1008 L
+1808 2960 P
+1440 2960 T
+1440 2928 T
+1376 2928 T
+1376 2960 T
+1296 2960 T
+1296 2944 T
+1168 2816 T
+1152 2816 T
+1152 2800 T
+1024 2672 T
+1008 2672 T
+1008 2592 T
+1040 2592 T
+1040 2528 T
+1008 2528 T
+1008 2160 T
+1232 2160 T
+1232 2320 T
+1360 2448 T
+1376 2448 T
+1376 2592 T
+1520 2592 T
+1520 2608 T
+1648 2736 T
+1808 2736 L
+1808 3248 P
+1648 3248 T
+1520 3376 T
+1520 3392 T
+1376 3392 T
+1376 3536 T
+1360 3536 T
+1232 3664 T
+1232 3824 T
+1008 3824 T
+1008 3456 T
+1040 3456 T
+1040 3392 T
+1008 3392 T
+1008 3312 T
+1024 3312 T
+1152 3184 T
+1152 3168 T
+1168 3168 T
+1296 3040 T
+1296 3024 T
+1376 3024 T
+1376 3056 T
+1440 3056 T
+1440 3024 T
+1808 3024 L
+1808 4976 P
+1440 4976 T
+1440 4944 T
+1376 4944 T
+1376 4976 T
+1296 4976 T
+1296 4960 T
+1168 4832 T
+1152 4832 T
+1152 4816 T
+1024 4688 T
+1008 4688 T
+1008 4608 T
+1040 4608 T
+1040 4544 T
+1008 4544 T
+1008 4176 T
+1232 4176 T
+1232 4336 T
+1360 4464 T
+1376 4464 T
+1376 4608 T
+1520 4608 T
+1520 4624 T
+1648 4752 T
+1808 4752 L
+1808 5264 P
+1648 5264 T
+1520 5392 T
+1520 5408 T
+1376 5408 T
+1376 5552 T
+1360 5552 T
+1232 5680 T
+1232 5840 T
+1008 5840 T
+1008 5472 T
+1040 5472 T
+1040 5408 T
+1008 5408 T
+1008 5328 T
+1024 5328 T
+1152 5200 T
+1152 5184 T
+1168 5184 T
+1296 5056 T
+1296 5040 T
+1376 5040 T
+1376 5072 T
+1440 5072 T
+1440 5040 T
+1808 5040 L
+2960 656 P
+2944 656 T
+2816 784 T
+2816 800 T
+2800 800 T
+2672 928 T
+2672 944 T
+2592 944 T
+2592 912 T
+2528 912 T
+2528 944 T
+2160 944 T
+2160 720 T
+2320 720 T
+2448 592 T
+2448 576 T
+2592 576 T
+2592 432 T
+2608 432 T
+2736 304 T
+2736 144 T
+2960 144 T
+2960 512 T
+2928 512 T
+2928 576 T
+2960 576 L
+2960 1808 P
+2736 1808 T
+2736 1648 T
+2608 1520 T
+2592 1520 T
+2592 1376 T
+2448 1376 T
+2448 1360 T
+2320 1232 T
+2160 1232 T
+2160 1008 T
+2528 1008 T
+2528 1040 T
+2592 1040 T
+2592 1008 T
+2672 1008 T
+2672 1024 T
+2800 1152 T
+2816 1152 T
+2816 1168 T
+2944 1296 T
+2960 1296 T
+2960 1376 T
+2928 1376 T
+2928 1440 T
+2960 1440 L
+2960 2672 P
+2944 2672 T
+2816 2800 T
+2816 2816 T
+2800 2816 T
+2672 2944 T
+2672 2960 T
+2592 2960 T
+2592 2928 T
+2528 2928 T
+2528 2960 T
+2160 2960 T
+2160 2736 T
+2320 2736 T
+2448 2608 T
+2448 2592 T
+2592 2592 T
+2592 2448 T
+2608 2448 T
+2736 2320 T
+2736 2160 T
+2960 2160 T
+2960 2528 T
+2928 2528 T
+2928 2592 T
+2960 2592 L
+2960 3824 P
+2736 3824 T
+2736 3664 T
+2608 3536 T
+2592 3536 T
+2592 3392 T
+2448 3392 T
+2448 3376 T
+2320 3248 T
+2160 3248 T
+2160 3024 T
+2528 3024 T
+2528 3056 T
+2592 3056 T
+2592 3024 T
+2672 3024 T
+2672 3040 T
+2800 3168 T
+2816 3168 T
+2816 3184 T
+2944 3312 T
+2960 3312 T
+2960 3392 T
+2928 3392 T
+2928 3456 T
+2960 3456 L
+2960 4688 P
+2944 4688 T
+2816 4816 T
+2816 4832 T
+2800 4832 T
+2672 4960 T
+2672 4976 T
+2592 4976 T
+2592 4944 T
+2528 4944 T
+2528 4976 T
+2160 4976 T
+2160 4752 T
+2320 4752 T
+2448 4624 T
+2448 4608 T
+2592 4608 T
+2592 4464 T
+2608 4464 T
+2736 4336 T
+2736 4176 T
+2960 4176 T
+2960 4544 T
+2928 4544 T
+2928 4608 T
+2960 4608 L
+2960 5840 P
+2736 5840 T
+2736 5680 T
+2608 5552 T
+2592 5552 T
+2592 5408 T
+2448 5408 T
+2448 5392 T
+2320 5264 T
+2160 5264 T
+2160 5040 T
+2528 5040 T
+2528 5072 T
+2592 5072 T
+2592 5040 T
+2672 5040 T
+2672 5056 T
+2800 5184 T
+2816 5184 T
+2816 5200 T
+2944 5328 T
+2960 5328 T
+2960 5408 T
+2928 5408 T
+2928 5472 T
+2960 5472 L
+3824 944 P
+3456 944 T
+3456 912 T
+3392 912 T
+3392 944 T
+3312 944 T
+3312 928 T
+3184 800 T
+3168 800 T
+3168 784 T
+3040 656 T
+3024 656 T
+3024 576 T
+3056 576 T
+3056 512 T
+3024 512 T
+3024 144 T
+3248 144 T
+3248 304 T
+3376 432 T
+3392 432 T
+3392 576 T
+3536 576 T
+3536 592 T
+3664 720 T
+3824 720 L
+3824 1232 P
+3664 1232 T
+3536 1360 T
+3536 1376 T
+3392 1376 T
+3392 1520 T
+3376 1520 T
+3248 1648 T
+3248 1808 T
+3024 1808 T
+3024 1440 T
+3056 1440 T
+3056 1376 T
+3024 1376 T
+3024 1296 T
+3040 1296 T
+3168 1168 T
+3168 1152 T
+3184 1152 T
+3312 1024 T
+3312 1008 T
+3392 1008 T
+3392 1040 T
+3456 1040 T
+3456 1008 T
+3824 1008 L
+3824 2960 P
+3456 2960 T
+3456 2928 T
+3392 2928 T
+3392 2960 T
+3312 2960 T
+3312 2944 T
+3184 2816 T
+3168 2816 T
+3168 2800 T
+3040 2672 T
+3024 2672 T
+3024 2592 T
+3056 2592 T
+3056 2528 T
+3024 2528 T
+3024 2160 T
+3248 2160 T
+3248 2320 T
+3376 2448 T
+3392 2448 T
+3392 2592 T
+3536 2592 T
+3536 2608 T
+3664 2736 T
+3824 2736 L
+3824 3248 P
+3664 3248 T
+3536 3376 T
+3536 3392 T
+3392 3392 T
+3392 3536 T
+3376 3536 T
+3248 3664 T
+3248 3824 T
+3024 3824 T
+3024 3456 T
+3056 3456 T
+3056 3392 T
+3024 3392 T
+3024 3312 T
+3040 3312 T
+3168 3184 T
+3168 3168 T
+3184 3168 T
+3312 3040 T
+3312 3024 T
+3392 3024 T
+3392 3056 T
+3456 3056 T
+3456 3024 T
+3824 3024 L
+3824 4976 P
+3456 4976 T
+3456 4944 T
+3392 4944 T
+3392 4976 T
+3312 4976 T
+3312 4960 T
+3184 4832 T
+3168 4832 T
+3168 4816 T
+3040 4688 T
+3024 4688 T
+3024 4608 T
+3056 4608 T
+3056 4544 T
+3024 4544 T
+3024 4176 T
+3248 4176 T
+3248 4336 T
+3376 4464 T
+3392 4464 T
+3392 4608 T
+3536 4608 T
+3536 4624 T
+3664 4752 T
+3824 4752 L
+3824 5264 P
+3664 5264 T
+3536 5392 T
+3536 5408 T
+3392 5408 T
+3392 5552 T
+3376 5552 T
+3248 5680 T
+3248 5840 T
+3024 5840 T
+3024 5472 T
+3056 5472 T
+3056 5408 T
+3024 5408 T
+3024 5328 T
+3040 5328 T
+3168 5200 T
+3168 5184 T
+3184 5184 T
+3312 5056 T
+3312 5040 T
+3392 5040 T
+3392 5072 T
+3456 5072 T
+3456 5040 T
+3824 5040 L
+4976 656 P
+4960 656 T
+4832 784 T
+4832 800 T
+4816 800 T
+4688 928 T
+4688 944 T
+4608 944 T
+4608 912 T
+4544 912 T
+4544 944 T
+4176 944 T
+4176 720 T
+4336 720 T
+4464 592 T
+4464 576 T
+4608 576 T
+4608 432 T
+4624 432 T
+4752 304 T
+4752 144 T
+4976 144 T
+4976 512 T
+4944 512 T
+4944 576 T
+4976 576 L
+4976 1808 P
+4752 1808 T
+4752 1648 T
+4624 1520 T
+4608 1520 T
+4608 1376 T
+4464 1376 T
+4464 1360 T
+4336 1232 T
+4176 1232 T
+4176 1008 T
+4544 1008 T
+4544 1040 T
+4608 1040 T
+4608 1008 T
+4688 1008 T
+4688 1024 T
+4816 1152 T
+4832 1152 T
+4832 1168 T
+4960 1296 T
+4976 1296 T
+4976 1376 T
+4944 1376 T
+4944 1440 T
+4976 1440 L
+4976 2672 P
+4960 2672 T
+4832 2800 T
+4832 2816 T
+4816 2816 T
+4688 2944 T
+4688 2960 T
+4608 2960 T
+4608 2928 T
+4544 2928 T
+4544 2960 T
+4176 2960 T
+4176 2736 T
+4336 2736 T
+4464 2608 T
+4464 2592 T
+4608 2592 T
+4608 2448 T
+4624 2448 T
+4752 2320 T
+4752 2160 T
+4976 2160 T
+4976 2528 T
+4944 2528 T
+4944 2592 T
+4976 2592 L
+4976 3824 P
+4752 3824 T
+4752 3664 T
+4624 3536 T
+4608 3536 T
+4608 3392 T
+4464 3392 T
+4464 3376 T
+4336 3248 T
+4176 3248 T
+4176 3024 T
+4544 3024 T
+4544 3056 T
+4608 3056 T
+4608 3024 T
+4688 3024 T
+4688 3040 T
+4816 3168 T
+4832 3168 T
+4832 3184 T
+4960 3312 T
+4976 3312 T
+4976 3392 T
+4944 3392 T
+4944 3456 T
+4976 3456 L
+4976 4688 P
+4960 4688 T
+4832 4816 T
+4832 4832 T
+4816 4832 T
+4688 4960 T
+4688 4976 T
+4608 4976 T
+4608 4944 T
+4544 4944 T
+4544 4976 T
+4176 4976 T
+4176 4752 T
+4336 4752 T
+4464 4624 T
+4464 4608 T
+4608 4608 T
+4608 4464 T
+4624 4464 T
+4752 4336 T
+4752 4176 T
+4976 4176 T
+4976 4544 T
+4944 4544 T
+4944 4608 T
+4976 4608 L
+4976 5840 P
+4752 5840 T
+4752 5680 T
+4624 5552 T
+4608 5552 T
+4608 5408 T
+4464 5408 T
+4464 5392 T
+4336 5264 T
+4176 5264 T
+4176 5040 T
+4544 5040 T
+4544 5072 T
+4608 5072 T
+4608 5040 T
+4688 5040 T
+4688 5056 T
+4816 5184 T
+4832 5184 T
+4832 5200 T
+4960 5328 T
+4976 5328 T
+4976 5408 T
+4944 5408 T
+4944 5472 T
+4976 5472 L
+5840 944 P
+5472 944 T
+5472 912 T
+5408 912 T
+5408 944 T
+5328 944 T
+5328 928 T
+5200 800 T
+5184 800 T
+5184 784 T
+5056 656 T
+5040 656 T
+5040 576 T
+5072 576 T
+5072 512 T
+5040 512 T
+5040 144 T
+5264 144 T
+5264 304 T
+5392 432 T
+5408 432 T
+5408 576 T
+5552 576 T
+5552 592 T
+5680 720 T
+5840 720 L
+5840 1232 P
+5680 1232 T
+5552 1360 T
+5552 1376 T
+5408 1376 T
+5408 1520 T
+5392 1520 T
+5264 1648 T
+5264 1808 T
+5040 1808 T
+5040 1440 T
+5072 1440 T
+5072 1376 T
+5040 1376 T
+5040 1296 T
+5056 1296 T
+5184 1168 T
+5184 1152 T
+5200 1152 T
+5328 1024 T
+5328 1008 T
+5408 1008 T
+5408 1040 T
+5472 1040 T
+5472 1008 T
+5840 1008 L
+5840 2960 P
+5472 2960 T
+5472 2928 T
+5408 2928 T
+5408 2960 T
+5328 2960 T
+5328 2944 T
+5200 2816 T
+5184 2816 T
+5184 2800 T
+5056 2672 T
+5040 2672 T
+5040 2592 T
+5072 2592 T
+5072 2528 T
+5040 2528 T
+5040 2160 T
+5264 2160 T
+5264 2320 T
+5392 2448 T
+5408 2448 T
+5408 2592 T
+5552 2592 T
+5552 2608 T
+5680 2736 T
+5840 2736 L
+5840 3248 P
+5680 3248 T
+5552 3376 T
+5552 3392 T
+5408 3392 T
+5408 3536 T
+5392 3536 T
+5264 3664 T
+5264 3824 T
+5040 3824 T
+5040 3456 T
+5072 3456 T
+5072 3392 T
+5040 3392 T
+5040 3312 T
+5056 3312 T
+5184 3184 T
+5184 3168 T
+5200 3168 T
+5328 3040 T
+5328 3024 T
+5408 3024 T
+5408 3056 T
+5472 3056 T
+5472 3024 T
+5840 3024 L
+5840 4976 P
+5472 4976 T
+5472 4944 T
+5408 4944 T
+5408 4976 T
+5328 4976 T
+5328 4960 T
+5200 4832 T
+5184 4832 T
+5184 4816 T
+5056 4688 T
+5040 4688 T
+5040 4608 T
+5072 4608 T
+5072 4544 T
+5040 4544 T
+5040 4176 T
+5264 4176 T
+5264 4336 T
+5392 4464 T
+5408 4464 T
+5408 4608 T
+5552 4608 T
+5552 4624 T
+5680 4752 T
+5840 4752 L
+5840 5264 P
+5680 5264 T
+5552 5392 T
+5552 5408 T
+5408 5408 T
+5408 5552 T
+5392 5552 T
+5264 5680 T
+5264 5840 T
+5040 5840 T
+5040 5472 T
+5072 5472 T
+5072 5408 T
+5040 5408 T
+5040 5328 T
+5056 5328 T
+5184 5200 T
+5184 5184 T
+5200 5184 T
+5328 5056 T
+5328 5040 T
+5408 5040 T
+5408 5072 T
+5472 5072 T
+5472 5040 T
+5840 5040 L
+6992 656 P
+6976 656 T
+6848 784 T
+6848 800 T
+6832 800 T
+6704 928 T
+6704 944 T
+6624 944 T
+6624 912 T
+6560 912 T
+6560 944 T
+6192 944 T
+6192 720 T
+6352 720 T
+6480 592 T
+6480 576 T
+6624 576 T
+6624 432 T
+6640 432 T
+6768 304 T
+6768 144 T
+6992 144 T
+6992 512 T
+6960 512 T
+6960 576 T
+6992 576 L
+6992 1808 P
+6768 1808 T
+6768 1648 T
+6640 1520 T
+6624 1520 T
+6624 1376 T
+6480 1376 T
+6480 1360 T
+6352 1232 T
+6192 1232 T
+6192 1008 T
+6560 1008 T
+6560 1040 T
+6624 1040 T
+6624 1008 T
+6704 1008 T
+6704 1024 T
+6832 1152 T
+6848 1152 T
+6848 1168 T
+6976 1296 T
+6992 1296 T
+6992 1376 T
+6960 1376 T
+6960 1440 T
+6992 1440 L
+6992 2672 P
+6976 2672 T
+6848 2800 T
+6848 2816 T
+6832 2816 T
+6704 2944 T
+6704 2960 T
+6624 2960 T
+6624 2928 T
+6560 2928 T
+6560 2960 T
+6192 2960 T
+6192 2736 T
+6352 2736 T
+6480 2608 T
+6480 2592 T
+6624 2592 T
+6624 2448 T
+6640 2448 T
+6768 2320 T
+6768 2160 T
+6992 2160 T
+6992 2528 T
+6960 2528 T
+6960 2592 T
+6992 2592 L
+6992 3824 P
+6768 3824 T
+6768 3664 T
+6640 3536 T
+6624 3536 T
+6624 3392 T
+6480 3392 T
+6480 3376 T
+6352 3248 T
+6192 3248 T
+6192 3024 T
+6560 3024 T
+6560 3056 T
+6624 3056 T
+6624 3024 T
+6704 3024 T
+6704 3040 T
+6832 3168 T
+6848 3168 T
+6848 3184 T
+6976 3312 T
+6992 3312 T
+6992 3392 T
+6960 3392 T
+6960 3456 T
+6992 3456 L
+6992 4688 P
+6976 4688 T
+6848 4816 T
+6848 4832 T
+6832 4832 T
+6704 4960 T
+6704 4976 T
+6624 4976 T
+6624 4944 T
+6560 4944 T
+6560 4976 T
+6192 4976 T
+6192 4752 T
+6352 4752 T
+6480 4624 T
+6480 4608 T
+6624 4608 T
+6624 4464 T
+6640 4464 T
+6768 4336 T
+6768 4176 T
+6992 4176 T
+6992 4544 T
+6960 4544 T
+6960 4608 T
+6992 4608 L
+6992 5840 P
+6768 5840 T
+6768 5680 T
+6640 5552 T
+6624 5552 T
+6624 5408 T
+6480 5408 T
+6480 5392 T
+6352 5264 T
+6192 5264 T
+6192 5040 T
+6560 5040 T
+6560 5072 T
+6624 5072 T
+6624 5040 T
+6704 5040 T
+6704 5056 T
+6832 5184 T
+6848 5184 T
+6848 5200 T
+6976 5328 T
+6992 5328 T
+6992 5408 T
+6960 5408 T
+6960 5472 T
+6992 5472 L
+7856 944 P
+7488 944 T
+7488 912 T
+7424 912 T
+7424 944 T
+7344 944 T
+7344 928 T
+7216 800 T
+7200 800 T
+7200 784 T
+7072 656 T
+7056 656 T
+7056 576 T
+7088 576 T
+7088 512 T
+7056 512 T
+7056 144 T
+7280 144 T
+7280 304 T
+7408 432 T
+7424 432 T
+7424 576 T
+7568 576 T
+7568 592 T
+7696 720 T
+7856 720 L
+7856 1232 P
+7696 1232 T
+7568 1360 T
+7568 1376 T
+7424 1376 T
+7424 1520 T
+7408 1520 T
+7280 1648 T
+7280 1808 T
+7056 1808 T
+7056 1440 T
+7088 1440 T
+7088 1376 T
+7056 1376 T
+7056 1296 T
+7072 1296 T
+7200 1168 T
+7200 1152 T
+7216 1152 T
+7344 1024 T
+7344 1008 T
+7424 1008 T
+7424 1040 T
+7488 1040 T
+7488 1008 T
+7856 1008 L
+7856 2960 P
+7488 2960 T
+7488 2928 T
+7424 2928 T
+7424 2960 T
+7344 2960 T
+7344 2944 T
+7216 2816 T
+7200 2816 T
+7200 2800 T
+7072 2672 T
+7056 2672 T
+7056 2592 T
+7088 2592 T
+7088 2528 T
+7056 2528 T
+7056 2160 T
+7280 2160 T
+7280 2320 T
+7408 2448 T
+7424 2448 T
+7424 2592 T
+7568 2592 T
+7568 2608 T
+7696 2736 T
+7856 2736 L
+7856 3248 P
+7696 3248 T
+7568 3376 T
+7568 3392 T
+7424 3392 T
+7424 3536 T
+7408 3536 T
+7280 3664 T
+7280 3824 T
+7056 3824 T
+7056 3456 T
+7088 3456 T
+7088 3392 T
+7056 3392 T
+7056 3312 T
+7072 3312 T
+7200 3184 T
+7200 3168 T
+7216 3168 T
+7344 3040 T
+7344 3024 T
+7424 3024 T
+7424 3056 T
+7488 3056 T
+7488 3024 T
+7856 3024 L
+7856 4976 P
+7488 4976 T
+7488 4944 T
+7424 4944 T
+7424 4976 T
+7344 4976 T
+7344 4960 T
+7216 4832 T
+7200 4832 T
+7200 4816 T
+7072 4688 T
+7056 4688 T
+7056 4608 T
+7088 4608 T
+7088 4544 T
+7056 4544 T
+7056 4176 T
+7280 4176 T
+7280 4336 T
+7408 4464 T
+7424 4464 T
+7424 4608 T
+7568 4608 T
+7568 4624 T
+7696 4752 T
+7856 4752 L
+7856 5264 P
+7696 5264 T
+7568 5392 T
+7568 5408 T
+7424 5408 T
+7424 5552 T
+7408 5552 T
+7280 5680 T
+7280 5840 T
+7056 5840 T
+7056 5472 T
+7088 5472 T
+7088 5408 T
+7056 5408 T
+7056 5328 T
+7072 5328 T
+7200 5200 T
+7200 5184 T
+7216 5184 T
+7344 5056 T
+7344 5040 T
+7424 5040 T
+7424 5072 T
+7488 5072 T
+7488 5040 T
+7856 5040 L
+EndLayer
+(ps) SetLayer
+224 656 -224 -80 R
+96 -160 X
+-96 -32 X
+128 192 C
+224 1376 -96 192 R
+-128 -32 X
+96 -160 X
+-96 -80 C
+224 2672 -224 -80 R
+96 -160 X
+-96 -32 X
+128 192 C
+224 3392 -96 192 R
+-128 -32 X
+96 -160 X
+-96 -80 C
+224 4688 -224 -80 R
+96 -160 X
+-96 -32 X
+128 192 C
+224 5408 -96 192 R
+-128 -32 X
+96 -160 X
+-96 -80 C
+368 512 P
+288 512 T
+288 456 T
+264 432 T
+56 224 T
+0 224 T
+0 144 T
+80 144 T
+80 200 T
+312 432 T
+368 432 L
+368 1520 P
+312 1520 T
+80 1752 T
+80 1808 T
+0 1808 T
+0 1728 T
+56 1728 T
+288 1496 T
+288 1440 T
+368 1440 L
+368 2528 P
+288 2528 T
+288 2472 T
+264 2448 T
+56 2240 T
+0 2240 T
+0 2160 T
+80 2160 T
+80 2216 T
+312 2448 T
+368 2448 L
+368 3536 P
+312 3536 T
+80 3768 T
+80 3824 T
+0 3824 T
+0 3744 T
+56 3744 T
+288 3512 T
+288 3456 T
+368 3456 L
+368 4544 P
+288 4544 T
+288 4488 T
+264 4464 T
+56 4256 T
+0 4256 T
+0 4176 T
+80 4176 T
+80 4232 T
+312 4464 T
+368 4464 L
+368 5552 P
+312 5552 T
+80 5784 T
+80 5840 T
+0 5840 T
+0 5760 T
+56 5760 T
+288 5528 T
+288 5472 T
+368 5472 L
+512 368 P
+432 368 T
+432 312 T
+408 288 T
+200 80 T
+144 80 T
+144 0 T
+224 0 T
+224 56 T
+456 288 T
+512 288 L
+512 1664 P
+456 1664 T
+224 1896 T
+224 1952 T
+144 1952 T
+144 1872 T
+200 1872 T
+432 1640 T
+432 1584 T
+512 1584 L
+512 2384 P
+432 2384 T
+432 2328 T
+408 2304 T
+200 2096 T
+144 2096 T
+144 2016 T
+224 2016 T
+224 2072 T
+456 2304 T
+512 2304 L
+512 3680 P
+456 3680 T
+224 3912 T
+224 3968 T
+144 3968 T
+144 3888 T
+200 3888 T
+432 3656 T
+432 3600 T
+512 3600 L
+512 4400 P
+432 4400 T
+432 4344 T
+408 4320 T
+200 4112 T
+144 4112 T
+144 4032 T
+224 4032 T
+224 4088 T
+456 4320 T
+512 4320 L
+512 5696 P
+456 5696 T
+224 5928 T
+224 5984 T
+144 5984 T
+144 5904 T
+200 5904 T
+432 5672 T
+432 5616 T
+512 5616 L
+560 944 -32 -96 R
+-448 96 X
+-80 -224 X
+80 96 C
+560 1136 -480 96 R
+-80 -224 X
+80 96 X
+448 -96 C
+560 2960 -32 -96 R
+-448 96 X
+-80 -224 X
+80 96 C
+560 3152 -480 96 R
+-80 -224 X
+80 96 X
+448 -96 C
+560 4976 -32 -96 R
+-448 96 X
+-80 -224 X
+80 96 C
+560 5168 -480 96 R
+-80 -224 X
+80 96 X
+448 -96 C
+656 224 -80 -96 R
+-192 -128 X
+32 96 X
+160 -96 C
+656 1952 -80 -96 R
+-160 96 X
+-32 -128 X
+192 -96 C
+656 2240 -80 -96 R
+-192 -128 X
+32 96 X
+160 -96 C
+656 3968 -80 -96 R
+-160 96 X
+-32 -128 X
+192 -96 C
+656 4256 -80 -96 R
+-192 -128 X
+32 96 X
+160 -96 C
+656 5984 -80 -96 R
+-160 96 X
+-32 -128 X
+192 -96 C
+800 944 P
+720 944 T
+720 888 T
+696 864 T
+472 640 T
+408 704 T
+392 704 T
+352 664 T
+344 656 T
+288 656 T
+288 576 T
+368 576 T
+368 632 T
+400 664 T
+464 600 T
+480 600 T
+744 864 T
+800 864 L
+800 1088 P
+744 1088 T
+480 1352 T
+464 1352 T
+400 1288 T
+368 1320 T
+368 1376 T
+288 1376 T
+288 1296 T
+344 1296 T
+392 1248 T
+408 1248 T
+472 1312 T
+720 1064 T
+720 1008 T
+800 1008 L
+800 2960 P
+720 2960 T
+720 2904 T
+696 2880 T
+472 2656 T
+408 2720 T
+392 2720 T
+352 2680 T
+344 2672 T
+288 2672 T
+288 2592 T
+368 2592 T
+368 2648 T
+400 2680 T
+464 2616 T
+480 2616 T
+744 2880 T
+800 2880 L
+800 3104 P
+744 3104 T
+480 3368 T
+464 3368 T
+400 3304 T
+368 3336 T
+368 3392 T
+288 3392 T
+288 3312 T
+344 3312 T
+392 3264 T
+408 3264 T
+472 3328 T
+720 3080 T
+720 3024 T
+800 3024 L
+800 4976 P
+720 4976 T
+720 4920 T
+696 4896 T
+472 4672 T
+408 4736 T
+392 4736 T
+352 4696 T
+344 4688 T
+288 4688 T
+288 4608 T
+368 4608 T
+368 4664 T
+400 4696 T
+464 4632 T
+480 4632 T
+744 4896 T
+800 4896 L
+800 5120 P
+744 5120 T
+480 5384 T
+464 5384 T
+400 5320 T
+368 5352 T
+368 5408 T
+288 5408 T
+288 5328 T
+344 5328 T
+392 5280 T
+408 5280 T
+472 5344 T
+720 5096 T
+720 5040 T
+800 5040 L
+944 560 -128 -480 R
+-96 -80 X
+224 80 X
+-96 448 C
+944 800 P
+864 800 T
+864 744 T
+840 720 T
+600 480 T
+600 464 T
+664 400 T
+656 392 T
+632 368 T
+576 368 T
+576 288 T
+656 288 T
+656 344 T
+704 392 T
+704 408 T
+640 472 T
+888 720 T
+944 720 L
+944 1232 P
+888 1232 T
+640 1480 T
+704 1544 T
+704 1560 T
+656 1608 T
+656 1664 T
+576 1664 T
+576 1584 T
+632 1584 T
+664 1552 T
+600 1488 T
+600 1472 T
+864 1208 T
+864 1152 T
+944 1152 L
+944 1952 -224 -80 R
+96 -480 X
+128 32 X
+-96 448 C
+944 2576 -128 -480 R
+-96 -80 X
+224 80 X
+-96 448 C
+944 2816 P
+864 2816 T
+864 2760 T
+840 2736 T
+600 2496 T
+600 2480 T
+664 2416 T
+656 2408 T
+632 2384 T
+576 2384 T
+576 2304 T
+656 2304 T
+656 2360 T
+704 2408 T
+704 2424 T
+640 2488 T
+888 2736 T
+944 2736 L
+944 3248 P
+888 3248 T
+640 3496 T
+704 3560 T
+704 3576 T
+656 3624 T
+656 3680 T
+576 3680 T
+576 3600 T
+632 3600 T
+664 3568 T
+600 3504 T
+600 3488 T
+864 3224 T
+864 3168 T
+944 3168 L
+944 3968 -224 -80 R
+96 -480 X
+128 32 X
+-96 448 C
+944 4592 -128 -480 R
+-96 -80 X
+224 80 X
+-96 448 C
+944 4832 P
+864 4832 T
+864 4776 T
+840 4752 T
+600 4512 T
+600 4496 T
+664 4432 T
+656 4424 T
+632 4400 T
+576 4400 T
+576 4320 T
+656 4320 T
+656 4376 T
+704 4424 T
+704 4440 T
+640 4504 T
+888 4752 T
+944 4752 L
+944 5264 P
+888 5264 T
+640 5512 T
+704 5576 T
+704 5592 T
+656 5640 T
+656 5696 T
+576 5696 T
+576 5616 T
+632 5616 T
+664 5584 T
+600 5520 T
+600 5504 T
+864 5240 T
+864 5184 T
+944 5184 L
+944 5984 -224 -80 R
+96 -480 X
+128 32 X
+-96 448 C
+1232 80 -96 480 R
+-128 -32 X
+96 -448 X
+-96 -80 C
+1232 1952 -224 -80 R
+96 -448 X
+-96 -32 X
+128 480 C
+1232 2096 -96 480 R
+-128 -32 X
+96 -448 X
+-96 -80 C
+1232 3968 -224 -80 R
+96 -448 X
+-96 -32 X
+128 480 C
+1232 4112 -96 480 R
+-128 -32 X
+96 -448 X
+-96 -80 C
+1232 5984 -224 -80 R
+96 -448 X
+-96 -32 X
+128 480 C
+1376 368 P
+1320 368 T
+1288 400 T
+1352 464 T
+1352 480 T
+1088 744 T
+1088 800 T
+1008 800 T
+1008 720 T
+1064 720 T
+1312 472 T
+1248 408 T
+1248 392 T
+1296 344 T
+1296 288 T
+1376 288 L
+1376 1664 P
+1296 1664 T
+1296 1608 T
+1272 1584 T
+1248 1560 T
+1248 1544 T
+1312 1480 T
+1304 1472 T
+1064 1232 T
+1008 1232 T
+1008 1152 T
+1088 1152 T
+1088 1208 T
+1352 1472 T
+1352 1488 T
+1288 1552 T
+1320 1584 T
+1376 1584 L
+1376 2384 P
+1320 2384 T
+1288 2416 T
+1352 2480 T
+1352 2496 T
+1088 2760 T
+1088 2816 T
+1008 2816 T
+1008 2736 T
+1064 2736 T
+1312 2488 T
+1248 2424 T
+1248 2408 T
+1296 2360 T
+1296 2304 T
+1376 2304 L
+1376 3680 P
+1296 3680 T
+1296 3624 T
+1272 3600 T
+1248 3576 T
+1248 3560 T
+1312 3496 T
+1304 3488 T
+1064 3248 T
+1008 3248 T
+1008 3168 T
+1088 3168 T
+1088 3224 T
+1352 3488 T
+1352 3504 T
+1288 3568 T
+1320 3600 T
+1376 3600 L
+1376 4400 P
+1320 4400 T
+1288 4432 T
+1352 4496 T
+1352 4512 T
+1088 4776 T
+1088 4832 T
+1008 4832 T
+1008 4752 T
+1064 4752 T
+1312 4504 T
+1248 4440 T
+1248 4424 T
+1296 4376 T
+1296 4320 T
+1376 4320 L
+1376 5696 P
+1296 5696 T
+1296 5640 T
+1272 5616 T
+1248 5592 T
+1248 5576 T
+1312 5512 T
+1304 5504 T
+1064 5264 T
+1008 5264 T
+1008 5184 T
+1088 5184 T
+1088 5240 T
+1352 5504 T
+1352 5520 T
+1288 5584 T
+1320 5616 T
+1376 5616 L
+1568 128 -192 96 R
+-80 -224 X
+80 96 X
+160 -96 C
+1568 1952 -32 -96 R
+-160 96 X
+-80 -224 X
+80 96 C
+1568 2144 -192 96 R
+-80 -224 X
+80 96 X
+160 -96 C
+1568 3968 -32 -96 R
+-160 96 X
+-80 -224 X
+80 96 C
+1568 4160 -192 96 R
+-80 -224 X
+80 96 X
+160 -96 C
+1568 5984 -32 -96 R
+-160 96 X
+-80 -224 X
+80 96 C
+1664 656 P
+1608 656 T
+1560 704 T
+1544 704 T
+1480 640 T
+1232 888 T
+1232 944 T
+1152 944 T
+1152 864 T
+1208 864 T
+1472 600 T
+1488 600 T
+1552 664 T
+1584 632 T
+1584 576 T
+1664 576 L
+1664 1376 P
+1584 1376 T
+1584 1320 T
+1560 1296 T
+1552 1288 T
+1488 1352 T
+1472 1352 T
+1432 1312 T
+1208 1088 T
+1152 1088 T
+1152 1008 T
+1232 1008 T
+1232 1064 T
+1480 1312 T
+1544 1248 T
+1560 1248 T
+1608 1296 T
+1664 1296 L
+1664 2672 P
+1608 2672 T
+1560 2720 T
+1544 2720 T
+1480 2656 T
+1232 2904 T
+1232 2960 T
+1152 2960 T
+1152 2880 T
+1208 2880 T
+1472 2616 T
+1488 2616 T
+1552 2680 T
+1584 2648 T
+1584 2592 T
+1664 2592 L
+1664 3392 P
+1584 3392 T
+1584 3336 T
+1560 3312 T
+1552 3304 T
+1488 3368 T
+1472 3368 T
+1432 3328 T
+1208 3104 T
+1152 3104 T
+1152 3024 T
+1232 3024 T
+1232 3080 T
+1480 3328 T
+1544 3264 T
+1560 3264 T
+1608 3312 T
+1664 3312 L
+1664 4688 P
+1608 4688 T
+1560 4736 T
+1544 4736 T
+1480 4672 T
+1232 4920 T
+1232 4976 T
+1152 4976 T
+1152 4896 T
+1208 4896 T
+1472 4632 T
+1488 4632 T
+1552 4696 T
+1584 4664 T
+1584 4608 T
+1664 4608 L
+1664 5408 P
+1584 5408 T
+1584 5352 T
+1560 5328 T
+1552 5320 T
+1488 5384 T
+1472 5384 T
+1432 5344 T
+1208 5120 T
+1152 5120 T
+1152 5040 T
+1232 5040 T
+1232 5096 T
+1480 5344 T
+1544 5280 T
+1560 5280 T
+1608 5328 T
+1664 5328 L
+1808 80 P
+1752 80 T
+1520 312 T
+1520 368 T
+1440 368 T
+1440 288 T
+1496 288 T
+1728 56 T
+1728 0 T
+1808 0 L
+1808 1952 P
+1728 1952 T
+1728 1896 T
+1704 1872 T
+1496 1664 T
+1440 1664 T
+1440 1584 T
+1520 1584 T
+1520 1640 T
+1752 1872 T
+1808 1872 L
+1808 2096 P
+1752 2096 T
+1520 2328 T
+1520 2384 T
+1440 2384 T
+1440 2304 T
+1496 2304 T
+1728 2072 T
+1728 2016 T
+1808 2016 L
+1808 3968 P
+1728 3968 T
+1728 3912 T
+1704 3888 T
+1496 3680 T
+1440 3680 T
+1440 3600 T
+1520 3600 T
+1520 3656 T
+1752 3888 T
+1808 3888 L
+1808 4112 P
+1752 4112 T
+1520 4344 T
+1520 4400 T
+1440 4400 T
+1440 4320 T
+1496 4320 T
+1728 4088 T
+1728 4032 T
+1808 4032 L
+1808 5984 P
+1728 5984 T
+1728 5928 T
+1704 5904 T
+1496 5696 T
+1440 5696 T
+1440 5616 T
+1520 5616 T
+1520 5672 T
+1752 5904 T
+1808 5904 L
+1952 224 P
+1896 224 T
+1664 456 T
+1664 512 T
+1584 512 T
+1584 432 T
+1640 432 T
+1872 200 T
+1872 144 T
+1952 144 L
+1952 656 -224 -80 R
+96 -192 X
+128 32 X
+-96 160 C
+1952 944 -80 -96 R
+-448 96 X
+-32 -128 X
+480 -96 C
+1952 1232 -80 -96 R
+-480 -128 X
+32 96 X
+448 -96 C
+1952 1568 -128 -192 R
+-96 -80 X
+224 80 X
+-96 160 C
+1952 1808 P
+1872 1808 T
+1872 1752 T
+1848 1728 T
+1640 1520 T
+1584 1520 T
+1584 1440 T
+1664 1440 T
+1664 1496 T
+1896 1728 T
+1952 1728 L
+1952 2240 P
+1896 2240 T
+1664 2472 T
+1664 2528 T
+1584 2528 T
+1584 2448 T
+1640 2448 T
+1872 2216 T
+1872 2160 T
+1952 2160 L
+1952 2672 -224 -80 R
+96 -192 X
+128 32 X
+-96 160 C
+1952 2960 -80 -96 R
+-448 96 X
+-32 -128 X
+480 -96 C
+1952 3248 -80 -96 R
+-480 -128 X
+32 96 X
+448 -96 C
+1952 3584 -128 -192 R
+-96 -80 X
+224 80 X
+-96 160 C
+1952 3824 P
+1872 3824 T
+1872 3768 T
+1848 3744 T
+1640 3536 T
+1584 3536 T
+1584 3456 T
+1664 3456 T
+1664 3512 T
+1896 3744 T
+1952 3744 L
+1952 4256 P
+1896 4256 T
+1664 4488 T
+1664 4544 T
+1584 4544 T
+1584 4464 T
+1640 4464 T
+1872 4232 T
+1872 4176 T
+1952 4176 L
+1952 4688 -224 -80 R
+96 -192 X
+128 32 X
+-96 160 C
+1952 4976 -80 -96 R
+-448 96 X
+-32 -128 X
+480 -96 C
+1952 5264 -80 -96 R
+-480 -128 X
+32 96 X
+448 -96 C
+1952 5600 -128 -192 R
+-96 -80 X
+224 80 X
+-96 160 C
+1952 5840 P
+1872 5840 T
+1872 5784 T
+1848 5760 T
+1640 5552 T
+1584 5552 T
+1584 5472 T
+1664 5472 T
+1664 5528 T
+1896 5760 T
+1952 5760 L
+2240 656 -224 -80 R
+96 -160 X
+-96 -32 X
+128 192 C
+2240 1376 -96 192 R
+-128 -32 X
+96 -160 X
+-96 -80 C
+2240 2672 -224 -80 R
+96 -160 X
+-96 -32 X
+128 192 C
+2240 3392 -96 192 R
+-128 -32 X
+96 -160 X
+-96 -80 C
+2240 4688 -224 -80 R
+96 -160 X
+-96 -32 X
+128 192 C
+2240 5408 -96 192 R
+-128 -32 X
+96 -160 X
+-96 -80 C
+2384 512 P
+2304 512 T
+2304 456 T
+2280 432 T
+2072 224 T
+2016 224 T
+2016 144 T
+2096 144 T
+2096 200 T
+2328 432 T
+2384 432 L
+2384 1520 P
+2328 1520 T
+2096 1752 T
+2096 1808 T
+2016 1808 T
+2016 1728 T
+2072 1728 T
+2304 1496 T
+2304 1440 T
+2384 1440 L
+2384 2528 P
+2304 2528 T
+2304 2472 T
+2280 2448 T
+2072 2240 T
+2016 2240 T
+2016 2160 T
+2096 2160 T
+2096 2216 T
+2328 2448 T
+2384 2448 L
+2384 3536 P
+2328 3536 T
+2096 3768 T
+2096 3824 T
+2016 3824 T
+2016 3744 T
+2072 3744 T
+2304 3512 T
+2304 3456 T
+2384 3456 L
+2384 4544 P
+2304 4544 T
+2304 4488 T
+2280 4464 T
+2072 4256 T
+2016 4256 T
+2016 4176 T
+2096 4176 T
+2096 4232 T
+2328 4464 T
+2384 4464 L
+2384 5552 P
+2328 5552 T
+2096 5784 T
+2096 5840 T
+2016 5840 T
+2016 5760 T
+2072 5760 T
+2304 5528 T
+2304 5472 T
+2384 5472 L
+2528 368 P
+2448 368 T
+2448 312 T
+2424 288 T
+2216 80 T
+2160 80 T
+2160 0 T
+2240 0 T
+2240 56 T
+2472 288 T
+2528 288 L
+2528 1664 P
+2472 1664 T
+2240 1896 T
+2240 1952 T
+2160 1952 T
+2160 1872 T
+2216 1872 T
+2448 1640 T
+2448 1584 T
+2528 1584 L
+2528 2384 P
+2448 2384 T
+2448 2328 T
+2424 2304 T
+2216 2096 T
+2160 2096 T
+2160 2016 T
+2240 2016 T
+2240 2072 T
+2472 2304 T
+2528 2304 L
+2528 3680 P
+2472 3680 T
+2240 3912 T
+2240 3968 T
+2160 3968 T
+2160 3888 T
+2216 3888 T
+2448 3656 T
+2448 3600 T
+2528 3600 L
+2528 4400 P
+2448 4400 T
+2448 4344 T
+2424 4320 T
+2216 4112 T
+2160 4112 T
+2160 4032 T
+2240 4032 T
+2240 4088 T
+2472 4320 T
+2528 4320 L
+2528 5696 P
+2472 5696 T
+2240 5928 T
+2240 5984 T
+2160 5984 T
+2160 5904 T
+2216 5904 T
+2448 5672 T
+2448 5616 T
+2528 5616 L
+2576 944 -32 -96 R
+-448 96 X
+-80 -224 X
+80 96 C
+2576 1136 -480 96 R
+-80 -224 X
+80 96 X
+448 -96 C
+2576 2960 -32 -96 R
+-448 96 X
+-80 -224 X
+80 96 C
+2576 3152 -480 96 R
+-80 -224 X
+80 96 X
+448 -96 C
+2576 4976 -32 -96 R
+-448 96 X
+-80 -224 X
+80 96 C
+2576 5168 -480 96 R
+-80 -224 X
+80 96 X
+448 -96 C
+2672 224 -80 -96 R
+-192 -128 X
+32 96 X
+160 -96 C
+2672 1952 -80 -96 R
+-160 96 X
+-32 -128 X
+192 -96 C
+2672 2240 -80 -96 R
+-192 -128 X
+32 96 X
+160 -96 C
+2672 3968 -80 -96 R
+-160 96 X
+-32 -128 X
+192 -96 C
+2672 4256 -80 -96 R
+-192 -128 X
+32 96 X
+160 -96 C
+2672 5984 -80 -96 R
+-160 96 X
+-32 -128 X
+192 -96 C
+2816 944 P
+2736 944 T
+2736 888 T
+2712 864 T
+2488 640 T
+2424 704 T
+2408 704 T
+2368 664 T
+2360 656 T
+2304 656 T
+2304 576 T
+2384 576 T
+2384 632 T
+2416 664 T
+2480 600 T
+2496 600 T
+2760 864 T
+2816 864 L
+2816 1088 P
+2760 1088 T
+2496 1352 T
+2480 1352 T
+2416 1288 T
+2384 1320 T
+2384 1376 T
+2304 1376 T
+2304 1296 T
+2360 1296 T
+2408 1248 T
+2424 1248 T
+2488 1312 T
+2736 1064 T
+2736 1008 T
+2816 1008 L
+2816 2960 P
+2736 2960 T
+2736 2904 T
+2712 2880 T
+2488 2656 T
+2424 2720 T
+2408 2720 T
+2368 2680 T
+2360 2672 T
+2304 2672 T
+2304 2592 T
+2384 2592 T
+2384 2648 T
+2416 2680 T
+2480 2616 T
+2496 2616 T
+2760 2880 T
+2816 2880 L
+2816 3104 P
+2760 3104 T
+2496 3368 T
+2480 3368 T
+2416 3304 T
+2384 3336 T
+2384 3392 T
+2304 3392 T
+2304 3312 T
+2360 3312 T
+2408 3264 T
+2424 3264 T
+2488 3328 T
+2736 3080 T
+2736 3024 T
+2816 3024 L
+2816 4976 P
+2736 4976 T
+2736 4920 T
+2712 4896 T
+2488 4672 T
+2424 4736 T
+2408 4736 T
+2368 4696 T
+2360 4688 T
+2304 4688 T
+2304 4608 T
+2384 4608 T
+2384 4664 T
+2416 4696 T
+2480 4632 T
+2496 4632 T
+2760 4896 T
+2816 4896 L
+2816 5120 P
+2760 5120 T
+2496 5384 T
+2480 5384 T
+2416 5320 T
+2384 5352 T
+2384 5408 T
+2304 5408 T
+2304 5328 T
+2360 5328 T
+2408 5280 T
+2424 5280 T
+2488 5344 T
+2736 5096 T
+2736 5040 T
+2816 5040 L
+2960 560 -128 -480 R
+-96 -80 X
+224 80 X
+-96 448 C
+2960 800 P
+2880 800 T
+2880 744 T
+2856 720 T
+2616 480 T
+2616 464 T
+2680 400 T
+2672 392 T
+2648 368 T
+2592 368 T
+2592 288 T
+2672 288 T
+2672 344 T
+2720 392 T
+2720 408 T
+2656 472 T
+2904 720 T
+2960 720 L
+2960 1232 P
+2904 1232 T
+2656 1480 T
+2720 1544 T
+2720 1560 T
+2672 1608 T
+2672 1664 T
+2592 1664 T
+2592 1584 T
+2648 1584 T
+2680 1552 T
+2616 1488 T
+2616 1472 T
+2880 1208 T
+2880 1152 T
+2960 1152 L
+2960 1952 -224 -80 R
+96 -480 X
+128 32 X
+-96 448 C
+2960 2576 -128 -480 R
+-96 -80 X
+224 80 X
+-96 448 C
+2960 2816 P
+2880 2816 T
+2880 2760 T
+2856 2736 T
+2616 2496 T
+2616 2480 T
+2680 2416 T
+2672 2408 T
+2648 2384 T
+2592 2384 T
+2592 2304 T
+2672 2304 T
+2672 2360 T
+2720 2408 T
+2720 2424 T
+2656 2488 T
+2904 2736 T
+2960 2736 L
+2960 3248 P
+2904 3248 T
+2656 3496 T
+2720 3560 T
+2720 3576 T
+2672 3624 T
+2672 3680 T
+2592 3680 T
+2592 3600 T
+2648 3600 T
+2680 3568 T
+2616 3504 T
+2616 3488 T
+2880 3224 T
+2880 3168 T
+2960 3168 L
+2960 3968 -224 -80 R
+96 -480 X
+128 32 X
+-96 448 C
+2960 4592 -128 -480 R
+-96 -80 X
+224 80 X
+-96 448 C
+2960 4832 P
+2880 4832 T
+2880 4776 T
+2856 4752 T
+2616 4512 T
+2616 4496 T
+2680 4432 T
+2672 4424 T
+2648 4400 T
+2592 4400 T
+2592 4320 T
+2672 4320 T
+2672 4376 T
+2720 4424 T
+2720 4440 T
+2656 4504 T
+2904 4752 T
+2960 4752 L
+2960 5264 P
+2904 5264 T
+2656 5512 T
+2720 5576 T
+2720 5592 T
+2672 5640 T
+2672 5696 T
+2592 5696 T
+2592 5616 T
+2648 5616 T
+2680 5584 T
+2616 5520 T
+2616 5504 T
+2880 5240 T
+2880 5184 T
+2960 5184 L
+2960 5984 -224 -80 R
+96 -480 X
+128 32 X
+-96 448 C
+3248 80 -96 480 R
+-128 -32 X
+96 -448 X
+-96 -80 C
+3248 1952 -224 -80 R
+96 -448 X
+-96 -32 X
+128 480 C
+3248 2096 -96 480 R
+-128 -32 X
+96 -448 X
+-96 -80 C
+3248 3968 -224 -80 R
+96 -448 X
+-96 -32 X
+128 480 C
+3248 4112 -96 480 R
+-128 -32 X
+96 -448 X
+-96 -80 C
+3248 5984 -224 -80 R
+96 -448 X
+-96 -32 X
+128 480 C
+3392 368 P
+3336 368 T
+3304 400 T
+3368 464 T
+3368 480 T
+3104 744 T
+3104 800 T
+3024 800 T
+3024 720 T
+3080 720 T
+3328 472 T
+3264 408 T
+3264 392 T
+3312 344 T
+3312 288 T
+3392 288 L
+3392 1664 P
+3312 1664 T
+3312 1608 T
+3288 1584 T
+3264 1560 T
+3264 1544 T
+3328 1480 T
+3320 1472 T
+3080 1232 T
+3024 1232 T
+3024 1152 T
+3104 1152 T
+3104 1208 T
+3368 1472 T
+3368 1488 T
+3304 1552 T
+3336 1584 T
+3392 1584 L
+3392 2384 P
+3336 2384 T
+3304 2416 T
+3368 2480 T
+3368 2496 T
+3104 2760 T
+3104 2816 T
+3024 2816 T
+3024 2736 T
+3080 2736 T
+3328 2488 T
+3264 2424 T
+3264 2408 T
+3312 2360 T
+3312 2304 T
+3392 2304 L
+3392 3680 P
+3312 3680 T
+3312 3624 T
+3288 3600 T
+3264 3576 T
+3264 3560 T
+3328 3496 T
+3320 3488 T
+3080 3248 T
+3024 3248 T
+3024 3168 T
+3104 3168 T
+3104 3224 T
+3368 3488 T
+3368 3504 T
+3304 3568 T
+3336 3600 T
+3392 3600 L
+3392 4400 P
+3336 4400 T
+3304 4432 T
+3368 4496 T
+3368 4512 T
+3104 4776 T
+3104 4832 T
+3024 4832 T
+3024 4752 T
+3080 4752 T
+3328 4504 T
+3264 4440 T
+3264 4424 T
+3312 4376 T
+3312 4320 T
+3392 4320 L
+3392 5696 P
+3312 5696 T
+3312 5640 T
+3288 5616 T
+3264 5592 T
+3264 5576 T
+3328 5512 T
+3320 5504 T
+3080 5264 T
+3024 5264 T
+3024 5184 T
+3104 5184 T
+3104 5240 T
+3368 5504 T
+3368 5520 T
+3304 5584 T
+3336 5616 T
+3392 5616 L
+3584 128 -192 96 R
+-80 -224 X
+80 96 X
+160 -96 C
+3584 1952 -32 -96 R
+-160 96 X
+-80 -224 X
+80 96 C
+3584 2144 -192 96 R
+-80 -224 X
+80 96 X
+160 -96 C
+3584 3968 -32 -96 R
+-160 96 X
+-80 -224 X
+80 96 C
+3584 4160 -192 96 R
+-80 -224 X
+80 96 X
+160 -96 C
+3584 5984 -32 -96 R
+-160 96 X
+-80 -224 X
+80 96 C
+3680 656 P
+3624 656 T
+3576 704 T
+3560 704 T
+3496 640 T
+3248 888 T
+3248 944 T
+3168 944 T
+3168 864 T
+3224 864 T
+3488 600 T
+3504 600 T
+3568 664 T
+3600 632 T
+3600 576 T
+3680 576 L
+3680 1376 P
+3600 1376 T
+3600 1320 T
+3576 1296 T
+3568 1288 T
+3504 1352 T
+3488 1352 T
+3448 1312 T
+3224 1088 T
+3168 1088 T
+3168 1008 T
+3248 1008 T
+3248 1064 T
+3496 1312 T
+3560 1248 T
+3576 1248 T
+3624 1296 T
+3680 1296 L
+3680 2672 P
+3624 2672 T
+3576 2720 T
+3560 2720 T
+3496 2656 T
+3248 2904 T
+3248 2960 T
+3168 2960 T
+3168 2880 T
+3224 2880 T
+3488 2616 T
+3504 2616 T
+3568 2680 T
+3600 2648 T
+3600 2592 T
+3680 2592 L
+3680 3392 P
+3600 3392 T
+3600 3336 T
+3576 3312 T
+3568 3304 T
+3504 3368 T
+3488 3368 T
+3448 3328 T
+3224 3104 T
+3168 3104 T
+3168 3024 T
+3248 3024 T
+3248 3080 T
+3496 3328 T
+3560 3264 T
+3576 3264 T
+3624 3312 T
+3680 3312 L
+3680 4688 P
+3624 4688 T
+3576 4736 T
+3560 4736 T
+3496 4672 T
+3248 4920 T
+3248 4976 T
+3168 4976 T
+3168 4896 T
+3224 4896 T
+3488 4632 T
+3504 4632 T
+3568 4696 T
+3600 4664 T
+3600 4608 T
+3680 4608 L
+3680 5408 P
+3600 5408 T
+3600 5352 T
+3576 5328 T
+3568 5320 T
+3504 5384 T
+3488 5384 T
+3448 5344 T
+3224 5120 T
+3168 5120 T
+3168 5040 T
+3248 5040 T
+3248 5096 T
+3496 5344 T
+3560 5280 T
+3576 5280 T
+3624 5328 T
+3680 5328 L
+3824 80 P
+3768 80 T
+3536 312 T
+3536 368 T
+3456 368 T
+3456 288 T
+3512 288 T
+3744 56 T
+3744 0 T
+3824 0 L
+3824 1952 P
+3744 1952 T
+3744 1896 T
+3720 1872 T
+3512 1664 T
+3456 1664 T
+3456 1584 T
+3536 1584 T
+3536 1640 T
+3768 1872 T
+3824 1872 L
+3824 2096 P
+3768 2096 T
+3536 2328 T
+3536 2384 T
+3456 2384 T
+3456 2304 T
+3512 2304 T
+3744 2072 T
+3744 2016 T
+3824 2016 L
+3824 3968 P
+3744 3968 T
+3744 3912 T
+3720 3888 T
+3512 3680 T
+3456 3680 T
+3456 3600 T
+3536 3600 T
+3536 3656 T
+3768 3888 T
+3824 3888 L
+3824 4112 P
+3768 4112 T
+3536 4344 T
+3536 4400 T
+3456 4400 T
+3456 4320 T
+3512 4320 T
+3744 4088 T
+3744 4032 T
+3824 4032 L
+3824 5984 P
+3744 5984 T
+3744 5928 T
+3720 5904 T
+3512 5696 T
+3456 5696 T
+3456 5616 T
+3536 5616 T
+3536 5672 T
+3768 5904 T
+3824 5904 L
+3968 224 P
+3912 224 T
+3680 456 T
+3680 512 T
+3600 512 T
+3600 432 T
+3656 432 T
+3888 200 T
+3888 144 T
+3968 144 L
+3968 656 -224 -80 R
+96 -192 X
+128 32 X
+-96 160 C
+3968 944 -80 -96 R
+-448 96 X
+-32 -128 X
+480 -96 C
+3968 1232 -80 -96 R
+-480 -128 X
+32 96 X
+448 -96 C
+3968 1568 -128 -192 R
+-96 -80 X
+224 80 X
+-96 160 C
+3968 1808 P
+3888 1808 T
+3888 1752 T
+3864 1728 T
+3656 1520 T
+3600 1520 T
+3600 1440 T
+3680 1440 T
+3680 1496 T
+3912 1728 T
+3968 1728 L
+3968 2240 P
+3912 2240 T
+3680 2472 T
+3680 2528 T
+3600 2528 T
+3600 2448 T
+3656 2448 T
+3888 2216 T
+3888 2160 T
+3968 2160 L
+3968 2672 -224 -80 R
+96 -192 X
+128 32 X
+-96 160 C
+3968 2960 -80 -96 R
+-448 96 X
+-32 -128 X
+480 -96 C
+3968 3248 -80 -96 R
+-480 -128 X
+32 96 X
+448 -96 C
+3968 3584 -128 -192 R
+-96 -80 X
+224 80 X
+-96 160 C
+3968 3824 P
+3888 3824 T
+3888 3768 T
+3864 3744 T
+3656 3536 T
+3600 3536 T
+3600 3456 T
+3680 3456 T
+3680 3512 T
+3912 3744 T
+3968 3744 L
+3968 4256 P
+3912 4256 T
+3680 4488 T
+3680 4544 T
+3600 4544 T
+3600 4464 T
+3656 4464 T
+3888 4232 T
+3888 4176 T
+3968 4176 L
+3968 4688 -224 -80 R
+96 -192 X
+128 32 X
+-96 160 C
+3968 4976 -80 -96 R
+-448 96 X
+-32 -128 X
+480 -96 C
+3968 5264 -80 -96 R
+-480 -128 X
+32 96 X
+448 -96 C
+3968 5600 -128 -192 R
+-96 -80 X
+224 80 X
+-96 160 C
+3968 5840 P
+3888 5840 T
+3888 5784 T
+3864 5760 T
+3656 5552 T
+3600 5552 T
+3600 5472 T
+3680 5472 T
+3680 5528 T
+3912 5760 T
+3968 5760 L
+4256 656 -224 -80 R
+96 -160 X
+-96 -32 X
+128 192 C
+4256 1376 -96 192 R
+-128 -32 X
+96 -160 X
+-96 -80 C
+4256 2672 -224 -80 R
+96 -160 X
+-96 -32 X
+128 192 C
+4256 3392 -96 192 R
+-128 -32 X
+96 -160 X
+-96 -80 C
+4256 4688 -224 -80 R
+96 -160 X
+-96 -32 X
+128 192 C
+4256 5408 -96 192 R
+-128 -32 X
+96 -160 X
+-96 -80 C
+4400 512 P
+4320 512 T
+4320 456 T
+4296 432 T
+4088 224 T
+4032 224 T
+4032 144 T
+4112 144 T
+4112 200 T
+4344 432 T
+4400 432 L
+4400 1520 P
+4344 1520 T
+4112 1752 T
+4112 1808 T
+4032 1808 T
+4032 1728 T
+4088 1728 T
+4320 1496 T
+4320 1440 T
+4400 1440 L
+4400 2528 P
+4320 2528 T
+4320 2472 T
+4296 2448 T
+4088 2240 T
+4032 2240 T
+4032 2160 T
+4112 2160 T
+4112 2216 T
+4344 2448 T
+4400 2448 L
+4400 3536 P
+4344 3536 T
+4112 3768 T
+4112 3824 T
+4032 3824 T
+4032 3744 T
+4088 3744 T
+4320 3512 T
+4320 3456 T
+4400 3456 L
+4400 4544 P
+4320 4544 T
+4320 4488 T
+4296 4464 T
+4088 4256 T
+4032 4256 T
+4032 4176 T
+4112 4176 T
+4112 4232 T
+4344 4464 T
+4400 4464 L
+4400 5552 P
+4344 5552 T
+4112 5784 T
+4112 5840 T
+4032 5840 T
+4032 5760 T
+4088 5760 T
+4320 5528 T
+4320 5472 T
+4400 5472 L
+4544 368 P
+4464 368 T
+4464 312 T
+4440 288 T
+4232 80 T
+4176 80 T
+4176 0 T
+4256 0 T
+4256 56 T
+4488 288 T
+4544 288 L
+4544 1664 P
+4488 1664 T
+4256 1896 T
+4256 1952 T
+4176 1952 T
+4176 1872 T
+4232 1872 T
+4464 1640 T
+4464 1584 T
+4544 1584 L
+4544 2384 P
+4464 2384 T
+4464 2328 T
+4440 2304 T
+4232 2096 T
+4176 2096 T
+4176 2016 T
+4256 2016 T
+4256 2072 T
+4488 2304 T
+4544 2304 L
+4544 3680 P
+4488 3680 T
+4256 3912 T
+4256 3968 T
+4176 3968 T
+4176 3888 T
+4232 3888 T
+4464 3656 T
+4464 3600 T
+4544 3600 L
+4544 4400 P
+4464 4400 T
+4464 4344 T
+4440 4320 T
+4232 4112 T
+4176 4112 T
+4176 4032 T
+4256 4032 T
+4256 4088 T
+4488 4320 T
+4544 4320 L
+4544 5696 P
+4488 5696 T
+4256 5928 T
+4256 5984 T
+4176 5984 T
+4176 5904 T
+4232 5904 T
+4464 5672 T
+4464 5616 T
+4544 5616 L
+4592 944 -32 -96 R
+-448 96 X
+-80 -224 X
+80 96 C
+4592 1136 -480 96 R
+-80 -224 X
+80 96 X
+448 -96 C
+4592 2960 -32 -96 R
+-448 96 X
+-80 -224 X
+80 96 C
+4592 3152 -480 96 R
+-80 -224 X
+80 96 X
+448 -96 C
+4592 4976 -32 -96 R
+-448 96 X
+-80 -224 X
+80 96 C
+4592 5168 -480 96 R
+-80 -224 X
+80 96 X
+448 -96 C
+4688 224 -80 -96 R
+-192 -128 X
+32 96 X
+160 -96 C
+4688 1952 -80 -96 R
+-160 96 X
+-32 -128 X
+192 -96 C
+4688 2240 -80 -96 R
+-192 -128 X
+32 96 X
+160 -96 C
+4688 3968 -80 -96 R
+-160 96 X
+-32 -128 X
+192 -96 C
+4688 4256 -80 -96 R
+-192 -128 X
+32 96 X
+160 -96 C
+4688 5984 -80 -96 R
+-160 96 X
+-32 -128 X
+192 -96 C
+4832 944 P
+4752 944 T
+4752 888 T
+4728 864 T
+4504 640 T
+4440 704 T
+4424 704 T
+4384 664 T
+4376 656 T
+4320 656 T
+4320 576 T
+4400 576 T
+4400 632 T
+4432 664 T
+4496 600 T
+4512 600 T
+4776 864 T
+4832 864 L
+4832 1088 P
+4776 1088 T
+4512 1352 T
+4496 1352 T
+4432 1288 T
+4400 1320 T
+4400 1376 T
+4320 1376 T
+4320 1296 T
+4376 1296 T
+4424 1248 T
+4440 1248 T
+4504 1312 T
+4752 1064 T
+4752 1008 T
+4832 1008 L
+4832 2960 P
+4752 2960 T
+4752 2904 T
+4728 2880 T
+4504 2656 T
+4440 2720 T
+4424 2720 T
+4384 2680 T
+4376 2672 T
+4320 2672 T
+4320 2592 T
+4400 2592 T
+4400 2648 T
+4432 2680 T
+4496 2616 T
+4512 2616 T
+4776 2880 T
+4832 2880 L
+4832 3104 P
+4776 3104 T
+4512 3368 T
+4496 3368 T
+4432 3304 T
+4400 3336 T
+4400 3392 T
+4320 3392 T
+4320 3312 T
+4376 3312 T
+4424 3264 T
+4440 3264 T
+4504 3328 T
+4752 3080 T
+4752 3024 T
+4832 3024 L
+4832 4976 P
+4752 4976 T
+4752 4920 T
+4728 4896 T
+4504 4672 T
+4440 4736 T
+4424 4736 T
+4384 4696 T
+4376 4688 T
+4320 4688 T
+4320 4608 T
+4400 4608 T
+4400 4664 T
+4432 4696 T
+4496 4632 T
+4512 4632 T
+4776 4896 T
+4832 4896 L
+4832 5120 P
+4776 5120 T
+4512 5384 T
+4496 5384 T
+4432 5320 T
+4400 5352 T
+4400 5408 T
+4320 5408 T
+4320 5328 T
+4376 5328 T
+4424 5280 T
+4440 5280 T
+4504 5344 T
+4752 5096 T
+4752 5040 T
+4832 5040 L
+4976 560 -128 -480 R
+-96 -80 X
+224 80 X
+-96 448 C
+4976 800 P
+4896 800 T
+4896 744 T
+4872 720 T
+4632 480 T
+4632 464 T
+4696 400 T
+4688 392 T
+4664 368 T
+4608 368 T
+4608 288 T
+4688 288 T
+4688 344 T
+4736 392 T
+4736 408 T
+4672 472 T
+4920 720 T
+4976 720 L
+4976 1232 P
+4920 1232 T
+4672 1480 T
+4736 1544 T
+4736 1560 T
+4688 1608 T
+4688 1664 T
+4608 1664 T
+4608 1584 T
+4664 1584 T
+4696 1552 T
+4632 1488 T
+4632 1472 T
+4896 1208 T
+4896 1152 T
+4976 1152 L
+4976 1952 -224 -80 R
+96 -480 X
+128 32 X
+-96 448 C
+4976 2576 -128 -480 R
+-96 -80 X
+224 80 X
+-96 448 C
+4976 2816 P
+4896 2816 T
+4896 2760 T
+4872 2736 T
+4632 2496 T
+4632 2480 T
+4696 2416 T
+4688 2408 T
+4664 2384 T
+4608 2384 T
+4608 2304 T
+4688 2304 T
+4688 2360 T
+4736 2408 T
+4736 2424 T
+4672 2488 T
+4920 2736 T
+4976 2736 L
+4976 3248 P
+4920 3248 T
+4672 3496 T
+4736 3560 T
+4736 3576 T
+4688 3624 T
+4688 3680 T
+4608 3680 T
+4608 3600 T
+4664 3600 T
+4696 3568 T
+4632 3504 T
+4632 3488 T
+4896 3224 T
+4896 3168 T
+4976 3168 L
+4976 3968 -224 -80 R
+96 -480 X
+128 32 X
+-96 448 C
+4976 4592 -128 -480 R
+-96 -80 X
+224 80 X
+-96 448 C
+4976 4832 P
+4896 4832 T
+4896 4776 T
+4872 4752 T
+4632 4512 T
+4632 4496 T
+4696 4432 T
+4688 4424 T
+4664 4400 T
+4608 4400 T
+4608 4320 T
+4688 4320 T
+4688 4376 T
+4736 4424 T
+4736 4440 T
+4672 4504 T
+4920 4752 T
+4976 4752 L
+4976 5264 P
+4920 5264 T
+4672 5512 T
+4736 5576 T
+4736 5592 T
+4688 5640 T
+4688 5696 T
+4608 5696 T
+4608 5616 T
+4664 5616 T
+4696 5584 T
+4632 5520 T
+4632 5504 T
+4896 5240 T
+4896 5184 T
+4976 5184 L
+4976 5984 -224 -80 R
+96 -480 X
+128 32 X
+-96 448 C
+5264 80 -96 480 R
+-128 -32 X
+96 -448 X
+-96 -80 C
+5264 1952 -224 -80 R
+96 -448 X
+-96 -32 X
+128 480 C
+5264 2096 -96 480 R
+-128 -32 X
+96 -448 X
+-96 -80 C
+5264 3968 -224 -80 R
+96 -448 X
+-96 -32 X
+128 480 C
+5264 4112 -96 480 R
+-128 -32 X
+96 -448 X
+-96 -80 C
+5264 5984 -224 -80 R
+96 -448 X
+-96 -32 X
+128 480 C
+5408 368 P
+5352 368 T
+5320 400 T
+5384 464 T
+5384 480 T
+5120 744 T
+5120 800 T
+5040 800 T
+5040 720 T
+5096 720 T
+5344 472 T
+5280 408 T
+5280 392 T
+5328 344 T
+5328 288 T
+5408 288 L
+5408 1664 P
+5328 1664 T
+5328 1608 T
+5304 1584 T
+5280 1560 T
+5280 1544 T
+5344 1480 T
+5336 1472 T
+5096 1232 T
+5040 1232 T
+5040 1152 T
+5120 1152 T
+5120 1208 T
+5384 1472 T
+5384 1488 T
+5320 1552 T
+5352 1584 T
+5408 1584 L
+5408 2384 P
+5352 2384 T
+5320 2416 T
+5384 2480 T
+5384 2496 T
+5120 2760 T
+5120 2816 T
+5040 2816 T
+5040 2736 T
+5096 2736 T
+5344 2488 T
+5280 2424 T
+5280 2408 T
+5328 2360 T
+5328 2304 T
+5408 2304 L
+5408 3680 P
+5328 3680 T
+5328 3624 T
+5304 3600 T
+5280 3576 T
+5280 3560 T
+5344 3496 T
+5336 3488 T
+5096 3248 T
+5040 3248 T
+5040 3168 T
+5120 3168 T
+5120 3224 T
+5384 3488 T
+5384 3504 T
+5320 3568 T
+5352 3600 T
+5408 3600 L
+5408 4400 P
+5352 4400 T
+5320 4432 T
+5384 4496 T
+5384 4512 T
+5120 4776 T
+5120 4832 T
+5040 4832 T
+5040 4752 T
+5096 4752 T
+5344 4504 T
+5280 4440 T
+5280 4424 T
+5328 4376 T
+5328 4320 T
+5408 4320 L
+5408 5696 P
+5328 5696 T
+5328 5640 T
+5304 5616 T
+5280 5592 T
+5280 5576 T
+5344 5512 T
+5336 5504 T
+5096 5264 T
+5040 5264 T
+5040 5184 T
+5120 5184 T
+5120 5240 T
+5384 5504 T
+5384 5520 T
+5320 5584 T
+5352 5616 T
+5408 5616 L
+5600 128 -192 96 R
+-80 -224 X
+80 96 X
+160 -96 C
+5600 1952 -32 -96 R
+-160 96 X
+-80 -224 X
+80 96 C
+5600 2144 -192 96 R
+-80 -224 X
+80 96 X
+160 -96 C
+5600 3968 -32 -96 R
+-160 96 X
+-80 -224 X
+80 96 C
+5600 4160 -192 96 R
+-80 -224 X
+80 96 X
+160 -96 C
+5600 5984 -32 -96 R
+-160 96 X
+-80 -224 X
+80 96 C
+5696 656 P
+5640 656 T
+5592 704 T
+5576 704 T
+5512 640 T
+5264 888 T
+5264 944 T
+5184 944 T
+5184 864 T
+5240 864 T
+5504 600 T
+5520 600 T
+5584 664 T
+5616 632 T
+5616 576 T
+5696 576 L
+5696 1376 P
+5616 1376 T
+5616 1320 T
+5592 1296 T
+5584 1288 T
+5520 1352 T
+5504 1352 T
+5464 1312 T
+5240 1088 T
+5184 1088 T
+5184 1008 T
+5264 1008 T
+5264 1064 T
+5512 1312 T
+5576 1248 T
+5592 1248 T
+5640 1296 T
+5696 1296 L
+5696 2672 P
+5640 2672 T
+5592 2720 T
+5576 2720 T
+5512 2656 T
+5264 2904 T
+5264 2960 T
+5184 2960 T
+5184 2880 T
+5240 2880 T
+5504 2616 T
+5520 2616 T
+5584 2680 T
+5616 2648 T
+5616 2592 T
+5696 2592 L
+5696 3392 P
+5616 3392 T
+5616 3336 T
+5592 3312 T
+5584 3304 T
+5520 3368 T
+5504 3368 T
+5464 3328 T
+5240 3104 T
+5184 3104 T
+5184 3024 T
+5264 3024 T
+5264 3080 T
+5512 3328 T
+5576 3264 T
+5592 3264 T
+5640 3312 T
+5696 3312 L
+5696 4688 P
+5640 4688 T
+5592 4736 T
+5576 4736 T
+5512 4672 T
+5264 4920 T
+5264 4976 T
+5184 4976 T
+5184 4896 T
+5240 4896 T
+5504 4632 T
+5520 4632 T
+5584 4696 T
+5616 4664 T
+5616 4608 T
+5696 4608 L
+5696 5408 P
+5616 5408 T
+5616 5352 T
+5592 5328 T
+5584 5320 T
+5520 5384 T
+5504 5384 T
+5464 5344 T
+5240 5120 T
+5184 5120 T
+5184 5040 T
+5264 5040 T
+5264 5096 T
+5512 5344 T
+5576 5280 T
+5592 5280 T
+5640 5328 T
+5696 5328 L
+5840 80 P
+5784 80 T
+5552 312 T
+5552 368 T
+5472 368 T
+5472 288 T
+5528 288 T
+5760 56 T
+5760 0 T
+5840 0 L
+5840 1952 P
+5760 1952 T
+5760 1896 T
+5736 1872 T
+5528 1664 T
+5472 1664 T
+5472 1584 T
+5552 1584 T
+5552 1640 T
+5784 1872 T
+5840 1872 L
+5840 2096 P
+5784 2096 T
+5552 2328 T
+5552 2384 T
+5472 2384 T
+5472 2304 T
+5528 2304 T
+5760 2072 T
+5760 2016 T
+5840 2016 L
+5840 3968 P
+5760 3968 T
+5760 3912 T
+5736 3888 T
+5528 3680 T
+5472 3680 T
+5472 3600 T
+5552 3600 T
+5552 3656 T
+5784 3888 T
+5840 3888 L
+5840 4112 P
+5784 4112 T
+5552 4344 T
+5552 4400 T
+5472 4400 T
+5472 4320 T
+5528 4320 T
+5760 4088 T
+5760 4032 T
+5840 4032 L
+5840 5984 P
+5760 5984 T
+5760 5928 T
+5736 5904 T
+5528 5696 T
+5472 5696 T
+5472 5616 T
+5552 5616 T
+5552 5672 T
+5784 5904 T
+5840 5904 L
+5984 224 P
+5928 224 T
+5696 456 T
+5696 512 T
+5616 512 T
+5616 432 T
+5672 432 T
+5904 200 T
+5904 144 T
+5984 144 L
+5984 656 -224 -80 R
+96 -192 X
+128 32 X
+-96 160 C
+5984 944 -80 -96 R
+-448 96 X
+-32 -128 X
+480 -96 C
+5984 1232 -80 -96 R
+-480 -128 X
+32 96 X
+448 -96 C
+5984 1568 -128 -192 R
+-96 -80 X
+224 80 X
+-96 160 C
+5984 1808 P
+5904 1808 T
+5904 1752 T
+5880 1728 T
+5672 1520 T
+5616 1520 T
+5616 1440 T
+5696 1440 T
+5696 1496 T
+5928 1728 T
+5984 1728 L
+5984 2240 P
+5928 2240 T
+5696 2472 T
+5696 2528 T
+5616 2528 T
+5616 2448 T
+5672 2448 T
+5904 2216 T
+5904 2160 T
+5984 2160 L
+5984 2672 -224 -80 R
+96 -192 X
+128 32 X
+-96 160 C
+5984 2960 -80 -96 R
+-448 96 X
+-32 -128 X
+480 -96 C
+5984 3248 -80 -96 R
+-480 -128 X
+32 96 X
+448 -96 C
+5984 3584 -128 -192 R
+-96 -80 X
+224 80 X
+-96 160 C
+5984 3824 P
+5904 3824 T
+5904 3768 T
+5880 3744 T
+5672 3536 T
+5616 3536 T
+5616 3456 T
+5696 3456 T
+5696 3512 T
+5928 3744 T
+5984 3744 L
+5984 4256 P
+5928 4256 T
+5696 4488 T
+5696 4544 T
+5616 4544 T
+5616 4464 T
+5672 4464 T
+5904 4232 T
+5904 4176 T
+5984 4176 L
+5984 4688 -224 -80 R
+96 -192 X
+128 32 X
+-96 160 C
+5984 4976 -80 -96 R
+-448 96 X
+-32 -128 X
+480 -96 C
+5984 5264 -80 -96 R
+-480 -128 X
+32 96 X
+448 -96 C
+5984 5600 -128 -192 R
+-96 -80 X
+224 80 X
+-96 160 C
+5984 5840 P
+5904 5840 T
+5904 5784 T
+5880 5760 T
+5672 5552 T
+5616 5552 T
+5616 5472 T
+5696 5472 T
+5696 5528 T
+5928 5760 T
+5984 5760 L
+6272 656 -224 -80 R
+96 -160 X
+-96 -32 X
+128 192 C
+6272 1376 -96 192 R
+-128 -32 X
+96 -160 X
+-96 -80 C
+6272 2672 -224 -80 R
+96 -160 X
+-96 -32 X
+128 192 C
+6272 3392 -96 192 R
+-128 -32 X
+96 -160 X
+-96 -80 C
+6272 4688 -224 -80 R
+96 -160 X
+-96 -32 X
+128 192 C
+6272 5408 -96 192 R
+-128 -32 X
+96 -160 X
+-96 -80 C
+6416 512 P
+6336 512 T
+6336 456 T
+6312 432 T
+6104 224 T
+6048 224 T
+6048 144 T
+6128 144 T
+6128 200 T
+6360 432 T
+6416 432 L
+6416 1520 P
+6360 1520 T
+6128 1752 T
+6128 1808 T
+6048 1808 T
+6048 1728 T
+6104 1728 T
+6336 1496 T
+6336 1440 T
+6416 1440 L
+6416 2528 P
+6336 2528 T
+6336 2472 T
+6312 2448 T
+6104 2240 T
+6048 2240 T
+6048 2160 T
+6128 2160 T
+6128 2216 T
+6360 2448 T
+6416 2448 L
+6416 3536 P
+6360 3536 T
+6128 3768 T
+6128 3824 T
+6048 3824 T
+6048 3744 T
+6104 3744 T
+6336 3512 T
+6336 3456 T
+6416 3456 L
+6416 4544 P
+6336 4544 T
+6336 4488 T
+6312 4464 T
+6104 4256 T
+6048 4256 T
+6048 4176 T
+6128 4176 T
+6128 4232 T
+6360 4464 T
+6416 4464 L
+6416 5552 P
+6360 5552 T
+6128 5784 T
+6128 5840 T
+6048 5840 T
+6048 5760 T
+6104 5760 T
+6336 5528 T
+6336 5472 T
+6416 5472 L
+6560 368 P
+6480 368 T
+6480 312 T
+6456 288 T
+6248 80 T
+6192 80 T
+6192 0 T
+6272 0 T
+6272 56 T
+6504 288 T
+6560 288 L
+6560 1664 P
+6504 1664 T
+6272 1896 T
+6272 1952 T
+6192 1952 T
+6192 1872 T
+6248 1872 T
+6480 1640 T
+6480 1584 T
+6560 1584 L
+6560 2384 P
+6480 2384 T
+6480 2328 T
+6456 2304 T
+6248 2096 T
+6192 2096 T
+6192 2016 T
+6272 2016 T
+6272 2072 T
+6504 2304 T
+6560 2304 L
+6560 3680 P
+6504 3680 T
+6272 3912 T
+6272 3968 T
+6192 3968 T
+6192 3888 T
+6248 3888 T
+6480 3656 T
+6480 3600 T
+6560 3600 L
+6560 4400 P
+6480 4400 T
+6480 4344 T
+6456 4320 T
+6248 4112 T
+6192 4112 T
+6192 4032 T
+6272 4032 T
+6272 4088 T
+6504 4320 T
+6560 4320 L
+6560 5696 P
+6504 5696 T
+6272 5928 T
+6272 5984 T
+6192 5984 T
+6192 5904 T
+6248 5904 T
+6480 5672 T
+6480 5616 T
+6560 5616 L
+6608 944 -32 -96 R
+-448 96 X
+-80 -224 X
+80 96 C
+6608 1136 -480 96 R
+-80 -224 X
+80 96 X
+448 -96 C
+6608 2960 -32 -96 R
+-448 96 X
+-80 -224 X
+80 96 C
+6608 3152 -480 96 R
+-80 -224 X
+80 96 X
+448 -96 C
+6608 4976 -32 -96 R
+-448 96 X
+-80 -224 X
+80 96 C
+6608 5168 -480 96 R
+-80 -224 X
+80 96 X
+448 -96 C
+6704 224 -80 -96 R
+-192 -128 X
+32 96 X
+160 -96 C
+6704 1952 -80 -96 R
+-160 96 X
+-32 -128 X
+192 -96 C
+6704 2240 -80 -96 R
+-192 -128 X
+32 96 X
+160 -96 C
+6704 3968 -80 -96 R
+-160 96 X
+-32 -128 X
+192 -96 C
+6704 4256 -80 -96 R
+-192 -128 X
+32 96 X
+160 -96 C
+6704 5984 -80 -96 R
+-160 96 X
+-32 -128 X
+192 -96 C
+6848 944 P
+6768 944 T
+6768 888 T
+6744 864 T
+6520 640 T
+6456 704 T
+6440 704 T
+6400 664 T
+6392 656 T
+6336 656 T
+6336 576 T
+6416 576 T
+6416 632 T
+6448 664 T
+6512 600 T
+6528 600 T
+6792 864 T
+6848 864 L
+6848 1088 P
+6792 1088 T
+6528 1352 T
+6512 1352 T
+6448 1288 T
+6416 1320 T
+6416 1376 T
+6336 1376 T
+6336 1296 T
+6392 1296 T
+6440 1248 T
+6456 1248 T
+6520 1312 T
+6768 1064 T
+6768 1008 T
+6848 1008 L
+6848 2960 P
+6768 2960 T
+6768 2904 T
+6744 2880 T
+6520 2656 T
+6456 2720 T
+6440 2720 T
+6400 2680 T
+6392 2672 T
+6336 2672 T
+6336 2592 T
+6416 2592 T
+6416 2648 T
+6448 2680 T
+6512 2616 T
+6528 2616 T
+6792 2880 T
+6848 2880 L
+6848 3104 P
+6792 3104 T
+6528 3368 T
+6512 3368 T
+6448 3304 T
+6416 3336 T
+6416 3392 T
+6336 3392 T
+6336 3312 T
+6392 3312 T
+6440 3264 T
+6456 3264 T
+6520 3328 T
+6768 3080 T
+6768 3024 T
+6848 3024 L
+6848 4976 P
+6768 4976 T
+6768 4920 T
+6744 4896 T
+6520 4672 T
+6456 4736 T
+6440 4736 T
+6400 4696 T
+6392 4688 T
+6336 4688 T
+6336 4608 T
+6416 4608 T
+6416 4664 T
+6448 4696 T
+6512 4632 T
+6528 4632 T
+6792 4896 T
+6848 4896 L
+6848 5120 P
+6792 5120 T
+6528 5384 T
+6512 5384 T
+6448 5320 T
+6416 5352 T
+6416 5408 T
+6336 5408 T
+6336 5328 T
+6392 5328 T
+6440 5280 T
+6456 5280 T
+6520 5344 T
+6768 5096 T
+6768 5040 T
+6848 5040 L
+6992 560 -128 -480 R
+-96 -80 X
+224 80 X
+-96 448 C
+6992 800 P
+6912 800 T
+6912 744 T
+6888 720 T
+6648 480 T
+6648 464 T
+6712 400 T
+6704 392 T
+6680 368 T
+6624 368 T
+6624 288 T
+6704 288 T
+6704 344 T
+6752 392 T
+6752 408 T
+6688 472 T
+6936 720 T
+6992 720 L
+6992 1232 P
+6936 1232 T
+6688 1480 T
+6752 1544 T
+6752 1560 T
+6704 1608 T
+6704 1664 T
+6624 1664 T
+6624 1584 T
+6680 1584 T
+6712 1552 T
+6648 1488 T
+6648 1472 T
+6912 1208 T
+6912 1152 T
+6992 1152 L
+6992 1952 -224 -80 R
+96 -480 X
+128 32 X
+-96 448 C
+6992 2576 -128 -480 R
+-96 -80 X
+224 80 X
+-96 448 C
+6992 2816 P
+6912 2816 T
+6912 2760 T
+6888 2736 T
+6648 2496 T
+6648 2480 T
+6712 2416 T
+6704 2408 T
+6680 2384 T
+6624 2384 T
+6624 2304 T
+6704 2304 T
+6704 2360 T
+6752 2408 T
+6752 2424 T
+6688 2488 T
+6936 2736 T
+6992 2736 L
+6992 3248 P
+6936 3248 T
+6688 3496 T
+6752 3560 T
+6752 3576 T
+6704 3624 T
+6704 3680 T
+6624 3680 T
+6624 3600 T
+6680 3600 T
+6712 3568 T
+6648 3504 T
+6648 3488 T
+6912 3224 T
+6912 3168 T
+6992 3168 L
+6992 3968 -224 -80 R
+96 -480 X
+128 32 X
+-96 448 C
+6992 4592 -128 -480 R
+-96 -80 X
+224 80 X
+-96 448 C
+6992 4832 P
+6912 4832 T
+6912 4776 T
+6888 4752 T
+6648 4512 T
+6648 4496 T
+6712 4432 T
+6704 4424 T
+6680 4400 T
+6624 4400 T
+6624 4320 T
+6704 4320 T
+6704 4376 T
+6752 4424 T
+6752 4440 T
+6688 4504 T
+6936 4752 T
+6992 4752 L
+6992 5264 P
+6936 5264 T
+6688 5512 T
+6752 5576 T
+6752 5592 T
+6704 5640 T
+6704 5696 T
+6624 5696 T
+6624 5616 T
+6680 5616 T
+6712 5584 T
+6648 5520 T
+6648 5504 T
+6912 5240 T
+6912 5184 T
+6992 5184 L
+6992 5984 -224 -80 R
+96 -480 X
+128 32 X
+-96 448 C
+7280 80 -96 480 R
+-128 -32 X
+96 -448 X
+-96 -80 C
+7280 1952 -224 -80 R
+96 -448 X
+-96 -32 X
+128 480 C
+7280 2096 -96 480 R
+-128 -32 X
+96 -448 X
+-96 -80 C
+7280 3968 -224 -80 R
+96 -448 X
+-96 -32 X
+128 480 C
+7280 4112 -96 480 R
+-128 -32 X
+96 -448 X
+-96 -80 C
+7280 5984 -224 -80 R
+96 -448 X
+-96 -32 X
+128 480 C
+7424 368 P
+7368 368 T
+7336 400 T
+7400 464 T
+7400 480 T
+7136 744 T
+7136 800 T
+7056 800 T
+7056 720 T
+7112 720 T
+7360 472 T
+7296 408 T
+7296 392 T
+7344 344 T
+7344 288 T
+7424 288 L
+7424 1664 P
+7344 1664 T
+7344 1608 T
+7320 1584 T
+7296 1560 T
+7296 1544 T
+7360 1480 T
+7352 1472 T
+7112 1232 T
+7056 1232 T
+7056 1152 T
+7136 1152 T
+7136 1208 T
+7400 1472 T
+7400 1488 T
+7336 1552 T
+7368 1584 T
+7424 1584 L
+7424 2384 P
+7368 2384 T
+7336 2416 T
+7400 2480 T
+7400 2496 T
+7136 2760 T
+7136 2816 T
+7056 2816 T
+7056 2736 T
+7112 2736 T
+7360 2488 T
+7296 2424 T
+7296 2408 T
+7344 2360 T
+7344 2304 T
+7424 2304 L
+7424 3680 P
+7344 3680 T
+7344 3624 T
+7320 3600 T
+7296 3576 T
+7296 3560 T
+7360 3496 T
+7352 3488 T
+7112 3248 T
+7056 3248 T
+7056 3168 T
+7136 3168 T
+7136 3224 T
+7400 3488 T
+7400 3504 T
+7336 3568 T
+7368 3600 T
+7424 3600 L
+7424 4400 P
+7368 4400 T
+7336 4432 T
+7400 4496 T
+7400 4512 T
+7136 4776 T
+7136 4832 T
+7056 4832 T
+7056 4752 T
+7112 4752 T
+7360 4504 T
+7296 4440 T
+7296 4424 T
+7344 4376 T
+7344 4320 T
+7424 4320 L
+7424 5696 P
+7344 5696 T
+7344 5640 T
+7320 5616 T
+7296 5592 T
+7296 5576 T
+7360 5512 T
+7352 5504 T
+7112 5264 T
+7056 5264 T
+7056 5184 T
+7136 5184 T
+7136 5240 T
+7400 5504 T
+7400 5520 T
+7336 5584 T
+7368 5616 T
+7424 5616 L
+7616 128 -192 96 R
+-80 -224 X
+80 96 X
+160 -96 C
+7616 1952 -32 -96 R
+-160 96 X
+-80 -224 X
+80 96 C
+7616 2144 -192 96 R
+-80 -224 X
+80 96 X
+160 -96 C
+7616 3968 -32 -96 R
+-160 96 X
+-80 -224 X
+80 96 C
+7616 4160 -192 96 R
+-80 -224 X
+80 96 X
+160 -96 C
+7616 5984 -32 -96 R
+-160 96 X
+-80 -224 X
+80 96 C
+7712 656 P
+7656 656 T
+7608 704 T
+7592 704 T
+7528 640 T
+7280 888 T
+7280 944 T
+7200 944 T
+7200 864 T
+7256 864 T
+7520 600 T
+7536 600 T
+7600 664 T
+7632 632 T
+7632 576 T
+7712 576 L
+7712 1376 P
+7632 1376 T
+7632 1320 T
+7608 1296 T
+7600 1288 T
+7536 1352 T
+7520 1352 T
+7480 1312 T
+7256 1088 T
+7200 1088 T
+7200 1008 T
+7280 1008 T
+7280 1064 T
+7528 1312 T
+7592 1248 T
+7608 1248 T
+7656 1296 T
+7712 1296 L
+7712 2672 P
+7656 2672 T
+7608 2720 T
+7592 2720 T
+7528 2656 T
+7280 2904 T
+7280 2960 T
+7200 2960 T
+7200 2880 T
+7256 2880 T
+7520 2616 T
+7536 2616 T
+7600 2680 T
+7632 2648 T
+7632 2592 T
+7712 2592 L
+7712 3392 P
+7632 3392 T
+7632 3336 T
+7608 3312 T
+7600 3304 T
+7536 3368 T
+7520 3368 T
+7480 3328 T
+7256 3104 T
+7200 3104 T
+7200 3024 T
+7280 3024 T
+7280 3080 T
+7528 3328 T
+7592 3264 T
+7608 3264 T
+7656 3312 T
+7712 3312 L
+7712 4688 P
+7656 4688 T
+7608 4736 T
+7592 4736 T
+7528 4672 T
+7280 4920 T
+7280 4976 T
+7200 4976 T
+7200 4896 T
+7256 4896 T
+7520 4632 T
+7536 4632 T
+7600 4696 T
+7632 4664 T
+7632 4608 T
+7712 4608 L
+7712 5408 P
+7632 5408 T
+7632 5352 T
+7608 5328 T
+7600 5320 T
+7536 5384 T
+7520 5384 T
+7480 5344 T
+7256 5120 T
+7200 5120 T
+7200 5040 T
+7280 5040 T
+7280 5096 T
+7528 5344 T
+7592 5280 T
+7608 5280 T
+7656 5328 T
+7712 5328 L
+7856 80 P
+7800 80 T
+7568 312 T
+7568 368 T
+7488 368 T
+7488 288 T
+7544 288 T
+7776 56 T
+7776 0 T
+7856 0 L
+7856 1952 P
+7776 1952 T
+7776 1896 T
+7752 1872 T
+7544 1664 T
+7488 1664 T
+7488 1584 T
+7568 1584 T
+7568 1640 T
+7800 1872 T
+7856 1872 L
+7856 2096 P
+7800 2096 T
+7568 2328 T
+7568 2384 T
+7488 2384 T
+7488 2304 T
+7544 2304 T
+7776 2072 T
+7776 2016 T
+7856 2016 L
+7856 3968 P
+7776 3968 T
+7776 3912 T
+7752 3888 T
+7544 3680 T
+7488 3680 T
+7488 3600 T
+7568 3600 T
+7568 3656 T
+7800 3888 T
+7856 3888 L
+7856 4112 P
+7800 4112 T
+7568 4344 T
+7568 4400 T
+7488 4400 T
+7488 4320 T
+7544 4320 T
+7776 4088 T
+7776 4032 T
+7856 4032 L
+7856 5984 P
+7776 5984 T
+7776 5928 T
+7752 5904 T
+7544 5696 T
+7488 5696 T
+7488 5616 T
+7568 5616 T
+7568 5672 T
+7800 5904 T
+7856 5904 L
+8000 224 P
+7944 224 T
+7712 456 T
+7712 512 T
+7632 512 T
+7632 432 T
+7688 432 T
+7920 200 T
+7920 144 T
+8000 144 L
+8000 656 -224 -80 R
+96 -192 X
+128 32 X
+-96 160 C
+8000 944 -80 -96 R
+-448 96 X
+-32 -128 X
+480 -96 C
+8000 1232 -80 -96 R
+-480 -128 X
+32 96 X
+448 -96 C
+8000 1568 -128 -192 R
+-96 -80 X
+224 80 X
+-96 160 C
+8000 1808 P
+7920 1808 T
+7920 1752 T
+7896 1728 T
+7688 1520 T
+7632 1520 T
+7632 1440 T
+7712 1440 T
+7712 1496 T
+7944 1728 T
+8000 1728 L
+8000 2240 P
+7944 2240 T
+7712 2472 T
+7712 2528 T
+7632 2528 T
+7632 2448 T
+7688 2448 T
+7920 2216 T
+7920 2160 T
+8000 2160 L
+8000 2672 -224 -80 R
+96 -192 X
+128 32 X
+-96 160 C
+8000 2960 -80 -96 R
+-448 96 X
+-32 -128 X
+480 -96 C
+8000 3248 -80 -96 R
+-480 -128 X
+32 96 X
+448 -96 C
+8000 3584 -128 -192 R
+-96 -80 X
+224 80 X
+-96 160 C
+8000 3824 P
+7920 3824 T
+7920 3768 T
+7896 3744 T
+7688 3536 T
+7632 3536 T
+7632 3456 T
+7712 3456 T
+7712 3512 T
+7944 3744 T
+8000 3744 L
+8000 4256 P
+7944 4256 T
+7712 4488 T
+7712 4544 T
+7632 4544 T
+7632 4464 T
+7688 4464 T
+7920 4232 T
+7920 4176 T
+8000 4176 L
+8000 4688 -224 -80 R
+96 -192 X
+128 32 X
+-96 160 C
+8000 4976 -80 -96 R
+-448 96 X
+-32 -128 X
+480 -96 C
+8000 5264 -80 -96 R
+-480 -128 X
+32 96 X
+448 -96 C
+8000 5600 -128 -192 R
+-96 -80 X
+224 80 X
+-96 160 C
+8000 5840 P
+7920 5840 T
+7920 5784 T
+7896 5760 T
+7688 5552 T
+7632 5552 T
+7632 5472 T
+7712 5472 T
+7712 5528 T
+7944 5760 T
+8000 5760 L
+EndLayer
+(in) SetLayer
+224 800 -80 -80 R
+12 -64 X
+-12 -80 X
+12 -64 X
+-12 -80 X
+80 80 X
+-12 64 X
+12 80 X
+-12 64 C
+512 2096 -80 -12 R
+-420 -200 X
+132 -12 X
+12 -64 X
+-12 -80 X
+80 80 X
+-12 64 X
+12 80 X
+-12 76 X
+220 -12 C
+512 2528 -80 -12 R
+-64 12 X
+-12 64 X
+12 80 X
+-80 -80 X
+12 -64 X
+-12 -80 X
+80 12 X
+64 -12 C
+512 3968 -512 -80 R
+144 -144 X
+80 144 C
+656 2528 -80 -80 R
+12 -64 X
+-12 -12 X
+-64 12 X
+-80 -80 X
+80 12 X
+64 -12 X
+80 80 X
+-12 64 C
+800 2528 -12 132 R
+-144 144 X
+-132 12 X
+-80 -12 X
+-64 12 X
+-80 -12 X
+-64 12 X
+-80 -80 X
+12 -64 X
+-12 -12 X
+-64 12 X
+-80 -80 X
+80 12 X
+64 -12 X
+12 -64 X
+-12 -80 X
+80 80 X
+-12 64 X
+12 80 X
+-12 64 X
+12 12 X
+64 -12 X
+80 12 X
+64 -12 X
+80 12 X
+76 -144 X
+144 -76 X
+-12 -80 X
+12 -64 X
+-12 -80 X
+80 80 X
+-12 64 C
+944 1808 -80 -12 R
+-64 12 X
+-80 -12 X
+-208 12 X
+-80 -80 X
+80 12 X
+208 -12 X
+80 12 X
+64 -12 C
+944 2240 -80 -12 R
+-208 12 X
+-80 -80 X
+12 -64 X
+-12 -80 X
+80 12 X
+64 -12 X
+80 80 X
+-12 76 X
+76 -12 C
+1088 1232 -12 132 R
+-488 -144 X
+-288 -288 X
+-288 -56 X
+288 -220 X
+-12 -80 X
+12 -64 X
+-12 -80 X
+80 80 X
+-12 64 X
+12 80 X
+-12 508 X
+288 144 X
+376 -76 X
+-12 -80 C
+1088 1664 -80 -12 R
+-352 12 X
+-80 -12 X
+-64 12 X
+-80 -80 X
+80 12 X
+64 -12 X
+80 12 X
+352 -12 C
+1088 3680 -80 -12 R
+-352 12 X
+-224 -80 X
+224 12 X
+352 -12 C
+1232 3968 -80 -12 R
+-208 12 X
+-80 -12 X
+-64 12 X
+-224 -80 X
+224 12 X
+64 -12 X
+80 12 X
+208 -12 C
+1376 2096 -224 -80 R
+12 -64 X
+-12 -12 X
+-784 12 X
+-80 -80 X
+80 12 X
+784 -12 X
+80 80 X
+-12 64 C
+1376 2960 -80 -12 R
+-76 76 X
+12 224 X
+-80 -144 X
+-144 -12 X
+-64 156 X
+-224 -12 X
+-708 -56 X
+708 -12 X
+144 -144 X
+12 -220 X
+-76 12 X
+-80 -80 X
+80 12 X
+76 -220 X
+-12 -80 X
+80 80 X
+-12 220 X
+76 -12 X
+224 80 X
+-12 76 X
+76 -12 C
+1520 224 -80 -12 R
+-64 12 X
+-80 -12 X
+-64 12 X
+-80 -80 X
+80 12 X
+64 -12 X
+80 12 X
+64 -12 C
+1520 1088 -80 -12 R
+-208 12 X
+-12 64 X
+12 80 X
+-80 -80 X
+12 -64 X
+-12 -12 X
+-220 144 X
+-132 12 X
+-80 -80 X
+80 12 X
+76 -232 X
+-144 -132 X
+-12 -80 X
+80 12 X
+352 -12 X
+80 80 X
+-12 76 X
+144 144 X
+76 -12 C
+1664 1232 -80 -12 R
+-64 12 X
+-12 64 X
+12 80 X
+-80 -12 X
+-220 76 X
+12 80 X
+-12 64 X
+12 80 X
+-12 64 X
+12 12 X
+208 -12 X
+80 80 X
+-80 -12 X
+-208 12 X
+-80 -80 X
+12 -64 X
+-12 -80 X
+12 -64 X
+-12 -80 X
+12 -132 X
+144 -144 X
+132 -12 X
+80 12 X
+64 -12 C
+1664 1520 -80 -12 R
+-208 12 X
+-80 -80 X
+80 12 X
+208 -12 X
+12 -64 X
+-12 -80 X
+80 80 X
+-12 64 C
+1664 1664 -80 -12 R
+-64 12 X
+-80 -12 X
+-64 12 X
+-80 -80 X
+80 12 X
+64 -12 X
+80 12 X
+64 -12 C
+1664 3536 -80 -224 R
+12 -508 X
+-288 -144 X
+-144 -420 X
+-156 -80 X
+512 80 X
+-300 364 X
+144 144 X
+288 564 C
+1808 656 -80 -12 R
+-1140 -276 X
+-12 -12 X
+-64 12 X
+-80 -12 X
+-420 -56 X
+420 -12 X
+80 12 X
+64 -12 X
+80 80 X
+-12 220 X
+1084 -12 C
+1808 2384 -80 -12 R
+-208 12 X
+-224 -80 X
+224 12 X
+208 -12 C
+1728 3024 80 512 B
+1808 3680 -80 -12 R
+-220 144 X
+-564 12 X
+-512 -80 X
+512 12 X
+508 -144 X
+276 -12 C
+1952 368 -80 -12 R
+-352 12 X
+-80 -12 X
+-64 12 X
+-80 -80 X
+80 12 X
+64 -12 X
+80 12 X
+352 -12 C
+1952 3968 -80 -12 R
+-352 12 X
+-80 -80 X
+80 12 X
+220 -76 X
+-12 -80 X
+144 -288 C
+2096 3392 -80 -12 R
+-64 12 X
+-80 -224 X
+80 156 X
+64 -12 C
+2240 2240 -80 -12 R
+-64 12 X
+-80 -80 X
+80 12 X
+64 -12 C
+2384 656 -80 -80 R
+12 -64 X
+-12 -80 X
+80 80 X
+-12 64 C
+2384 2672 -80 -80 R
+12 -64 X
+-12 -80 X
+80 80 X
+-12 64 C
+2528 80 -80 -12 R
+-652 76 X
+12 80 X
+-80 -80 X
+12 -76 X
+-940 12 X
+-80 -12 X
+-508 76 X
+12 80 X
+-80 -12 X
+-132 -200 X
+708 -12 X
+80 12 X
+1648 -12 C
+2528 2096 -80 -12 R
+-496 12 X
+-144 144 X
+-80 -144 X
+-288 -80 X
+12 -64 X
+-12 -80 X
+80 12 X
+364 -364 X
+-12 -80 X
+80 80 X
+-12 364 X
+232 -76 X
+-12 -80 X
+80 80 X
+-12 220 X
+220 -12 C
+2672 512 -80 -80 R
+12 -64 X
+-12 -12 X
+-64 12 X
+-80 -12 X
+-208 12 X
+-80 -80 X
+80 12 X
+208 -12 X
+80 12 X
+64 -12 X
+80 80 X
+-12 64 C
+2672 1664 -80 -12 R
+-64 12 X
+-80 -12 X
+-352 12 X
+-80 -80 X
+80 12 X
+352 -12 X
+80 12 X
+64 -12 C
+2672 2384 -80 -12 R
+-64 12 X
+-80 -12 X
+-496 12 X
+-80 -80 X
+80 12 X
+496 -12 X
+80 12 X
+64 -12 C
+2816 80 -80 -12 R
+-64 12 X
+-12 64 X
+12 80 X
+-80 -12 X
+-508 288 X
+-144 508 X
+12 80 X
+-12 64 X
+12 80 X
+-12 64 X
+12 80 X
+-80 -80 X
+12 -64 X
+-12 -12 X
+-64 12 X
+-80 -80 X
+80 12 X
+64 -12 X
+12 -64 X
+-12 -80 X
+12 -508 X
+-1152 -276 X
+-12 -12 X
+-208 12 X
+-80 -80 X
+80 12 X
+208 -12 X
+80 80 X
+-12 220 X
+1240 -288 X
+564 -12 X
+12 -64 X
+-12 -80 X
+80 12 X
+64 -12 C
+2816 512 -12 132 R
+-144 144 X
+-132 12 X
+-80 -12 X
+-64 12 X
+-80 -12 X
+-64 12 X
+-80 -80 X
+12 -64 X
+-12 -80 X
+12 -64 X
+-12 -80 X
+80 80 X
+-12 64 X
+12 80 X
+-12 64 X
+12 12 X
+64 -12 X
+80 12 X
+64 -12 X
+80 12 X
+76 -144 X
+144 -76 X
+-12 -80 X
+12 -64 X
+-12 -80 X
+80 80 X
+-12 64 C
+2816 944 -80 -12 R
+-64 12 X
+-80 -80 X
+80 12 X
+64 -12 C
+2816 2528 -12 132 R
+-144 144 X
+-132 12 X
+-80 -12 X
+-64 12 X
+-80 -12 X
+-64 12 X
+-80 -80 X
+12 -208 X
+-12 -12 X
+-496 12 X
+-80 -80 X
+80 12 X
+496 -12 X
+80 80 X
+-12 208 X
+12 12 X
+64 -12 X
+80 12 X
+64 -12 X
+80 12 X
+76 -144 X
+144 -76 X
+-12 -80 X
+12 -64 X
+-12 -80 X
+80 80 X
+-12 64 C
+2960 1952 -80 -12 R
+-64 12 X
+-12 64 X
+12 80 X
+-80 -12 X
+-64 12 X
+-12 64 X
+12 80 X
+-80 -12 X
+-64 12 X
+-80 -80 X
+80 12 X
+64 -12 X
+12 -64 X
+-12 -80 X
+12 -64 X
+-12 -80 X
+80 12 X
+64 -12 X
+80 12 X
+64 -12 C
+2960 2528 -12 420 R
+-276 12 X
+-80 -80 X
+80 12 X
+76 -76 X
+-12 -80 X
+80 12 X
+76 -220 X
+-12 -80 C
+3104 1376 -80 -80 R
+12 -64 X
+-12 -80 X
+80 80 X
+-12 64 C
+3392 80 -80 -12 R
+-64 12 X
+-80 -12 X
+-64 12 X
+-80 -12 X
+-64 12 X
+-80 -80 X
+80 12 X
+64 -12 X
+80 12 X
+64 -12 X
+80 12 X
+64 -12 C
+3536 224 -80 -12 R
+-208 12 X
+-80 -80 X
+80 12 X
+208 -12 X
+12 -64 X
+-12 -80 X
+80 80 X
+-12 64 C
+3536 368 -80 -12 R
+-64 12 X
+-80 -12 X
+-420 -144 X
+-76 12 X
+-80 -80 X
+80 12 X
+132 144 X
+364 -12 X
+80 12 X
+64 -12 C
+3536 1088 -80 -12 R
+-220 76 X
+12 80 X
+-80 -80 X
+12 -76 X
+-232 364 X
+12 80 X
+-80 -80 X
+12 -220 X
+-76 12 X
+-80 -12 X
+-208 12 X
+-80 -80 X
+80 12 X
+208 -12 X
+80 12 X
+76 -376 X
+-76 12 X
+-80 -80 X
+80 12 X
+76 -220 X
+-12 -80 X
+80 12 X
+64 -12 X
+80 80 X
+-12 220 X
+76 -12 X
+80 80 X
+-80 -12 X
+-76 232 X
+364 -12 C
+3536 1664 -80 -12 R
+-64 12 X
+-80 -80 X
+80 12 X
+64 -12 C
+3680 1520 -80 -80 R
+12 -64 X
+-12 -12 X
+-64 12 X
+-80 -80 X
+80 12 X
+64 -12 X
+80 80 X
+-12 64 C
+3956 68 -132 12 R
+-12 64 X
+12 80 X
+-80 -80 X
+12 -64 X
+-12 -80 X
+80 12 C
+3956 1076 -144 144 R
+-132 12 X
+-80 -12 X
+-64 12 X
+-80 -12 X
+-76 144 X
+-144 76 X
+12 80 X
+-12 64 X
+12 80 X
+-12 64 X
+12 12 X
+208 -12 X
+80 80 X
+-80 -12 X
+-208 12 X
+-80 -80 X
+12 -64 X
+-12 -80 X
+12 -64 X
+-12 -80 X
+12 -132 X
+144 -144 X
+132 -12 X
+80 12 X
+64 -12 X
+80 12 X
+76 -144 C
+3968 1376 -80 -12 R
+-64 12 X
+-12 276 X
+-144 288 X
+-632 -144 X
+-220 12 X
+-80 -12 X
+-220 76 X
+12 80 X
+-80 -80 X
+12 -132 X
+276 -12 X
+80 12 X
+276 144 X
+520 -288 X
+144 -220 X
+-12 -80 X
+80 12 X
+64 -12 X
+12 -64 X
+-12 -80 X
+80 80 X
+-12 64 C
+3968 1520 -12 420 R
+-56 -144 X
+-76 12 X
+-80 -80 X
+80 12 X
+76 -220 X
+-12 -80 C
+EndLayer
+(ins) SetLayer
+216 3960 -64 -64 R
+8 -1952 X
+-8 -64 X
+8 -80 X
+-8 -64 X
+64 64 X
+-8 80 X
+8 64 X
+-8 1952 C
+360 1944 -64 -64 R
+8 -664 X
+-144 -568 X
+-8 -64 X
+64 64 X
+-8 520 X
+144 712 C
+504 2520 -64 -64 R
+8 -1664 X
+-8 -64 X
+64 64 X
+-8 1664 C
+648 2664 -64 -64 R
+8 -80 X
+-8 -64 X
+64 64 X
+-8 80 C
+792 1800 -64 -64 R
+8 -1664 X
+-8 -64 X
+64 64 X
+-8 1664 C
+936 1800 -64 -64 R
+8 -656 X
+-8 -64 X
+64 64 X
+-8 656 C
+936 2376 -64 -64 R
+8 -80 X
+-8 -64 X
+64 64 X
+-8 80 C
+1080 3672 -64 -64 R
+8 -1664 X
+-8 -64 X
+8 -224 X
+-8 -64 X
+64 64 X
+-8 224 X
+8 64 X
+-8 1664 C
+1224 3960 -64 -64 R
+8 -1952 X
+-8 -64 X
+64 64 X
+-8 1952 C
+1368 2952 -64 -64 R
+8 -1096 X
+-144 -424 X
+-8 -64 X
+8 -224 X
+-8 -64 X
+64 64 X
+-8 224 X
+8 64 X
+-8 376 X
+144 1144 C
+1512 1512 -64 -64 R
+8 -80 X
+-8 -64 X
+64 64 X
+-8 80 C
+1512 3960 -64 -64 R
+8 -1952 X
+-8 -64 X
+8 -80 X
+-8 -64 X
+64 64 X
+-8 80 X
+8 64 X
+-8 1952 C
+1656 2088 -64 -64 R
+8 -368 X
+-8 -64 X
+64 64 X
+-8 368 C
+1656 2520 -64 -64 R
+8 -80 X
+-8 -64 X
+64 64 X
+-8 80 C
+1800 2376 -64 -64 R
+8 -1088 X
+-8 -64 X
+64 64 X
+-8 1088 C
+1800 3240 -64 -64 R
+8 -512 X
+-8 -64 X
+64 64 X
+-8 512 C
+1944 2376 -64 -64 R
+8 -1240 X
+-528 376 X
+8 64 X
+-64 -64 X
+8 -1232 X
+-8 -64 X
+64 64 X
+-8 808 X
+576 1288 C
+2088 1656 -64 -64 R
+8 -664 X
+-288 -280 X
+-8 -64 X
+64 64 X
+-8 232 X
+288 712 C
+2088 3384 -64 -8 R
+-88 144 X
+-144 88 X
+8 64 X
+-64 -64 X
+8 -136 X
+144 -144 X
+136 -8 C
+2232 360 -64 -8 R
+-224 8 X
+-64 -64 X
+64 8 X
+224 -8 C
+2232 792 -64 -64 R
+8 -80 X
+-8 -64 X
+64 64 X
+-8 80 C
+2232 2232 -64 -64 R
+8 -80 X
+-8 -64 X
+64 64 X
+-8 80 C
+2520 2232 -64 -64 R
+8 -224 X
+-8 -64 X
+64 64 X
+-8 224 C
+2664 1080 -64 -64 R
+8 -80 X
+-8 -64 X
+64 64 X
+-8 80 C
+2664 2952 -64 -64 R
+8 -1528 X
+-88 8 X
+-64 -64 X
+8 -80 X
+-8 -64 X
+64 64 X
+-8 80 X
+8 8 X
+136 1576 C
+2808 216 -8 280 R
+-136 8 X
+-64 -64 X
+64 8 X
+88 -232 X
+-8 -64 X
+8 -136 X
+48 136 C
+2952 1944 -64 -64 R
+8 -1808 X
+-8 -64 X
+64 64 X
+-8 1808 C
+3096 1512 -64 -64 R
+8 -80 X
+-8 -64 X
+64 64 X
+-8 80 C
+3528 1368 -64 -64 R
+8 -1088 X
+-8 -64 X
+64 64 X
+-8 1088 C
+3816 1800 -64 -8 R
+-80 8 X
+-64 -64 X
+64 8 X
+80 -8 X
+8 -1664 X
+-8 -64 X
+64 64 X
+-8 1664 C
+EndLayer
+(co) SetLayer
+28 2620 24 24 B
+172 172 24 24 B
+172 460 24 24 B
+172 748 24 24 B
+172 1756 24 24 B
+172 2476 24 24 B
+172 2620 24 24 B
+172 2764 24 24 B
+172 3772 24 24 B
+316 460 24 24 B
+316 604 24 24 B
+316 2476 24 24 B
+316 2620 24 24 B
+316 2764 24 24 B
+460 172 24 24 B
+460 316 24 24 B
+460 1612 24 24 B
+460 1756 24 24 B
+460 2044 24 24 B
+460 2332 24 24 B
+460 2764 24 24 B
+460 3628 24 24 B
+460 3772 24 24 B
+460 3916 24 24 B
+604 316 24 24 B
+604 1612 24 24 B
+604 2044 24 24 B
+604 2188 24 24 B
+604 2332 24 24 B
+604 3628 24 24 B
+604 3916 24 24 B
+748 172 24 24 B
+748 748 24 24 B
+748 1180 24 24 B
+748 1756 24 24 B
+748 2044 24 24 B
+748 2332 24 24 B
+748 2476 24 24 B
+748 2764 24 24 B
+748 3196 24 24 B
+748 3916 24 24 B
+892 2476 24 24 B
+892 3772 24 24 B
+892 3916 24 24 B
+1036 1180 24 24 B
+1036 2188 24 24 B
+1180 172 24 24 B
+1180 748 24 24 B
+1180 1180 24 24 B
+1180 1468 24 24 B
+1180 1612 24 24 B
+1180 1756 24 24 B
+1180 2044 24 24 B
+1180 2764 24 24 B
+1180 3196 24 24 B
+1324 316 24 24 B
+1324 1612 24 24 B
+1324 2044 24 24 B
+1324 2332 24 24 B
+1468 172 24 24 B
+1468 316 24 24 B
+1468 1036 24 24 B
+1468 1180 24 24 B
+1468 1612 24 24 B
+1468 1756 24 24 B
+1468 2044 24 24 B
+1468 2188 24 24 B
+1468 2332 24 24 B
+1612 1180 24 24 B
+1612 1324 24 24 B
+1612 1468 24 24 B
+1612 3340 24 24 B
+1612 3484 24 24 B
+1756 172 24 24 B
+1756 2188 24 24 B
+1756 3052 24 24 B
+1756 3484 24 24 B
+1756 3772 24 24 B
+1900 1036 24 24 B
+1900 1180 24 24 B
+1900 1324 24 24 B
+1900 1468 24 24 B
+1900 3196 24 24 B
+1900 3340 24 24 B
+1900 3484 24 24 B
+2044 2188 24 24 B
+2188 460 24 24 B
+2188 748 24 24 B
+2188 1756 24 24 B
+2188 2476 24 24 B
+2188 2764 24 24 B
+2332 460 24 24 B
+2332 604 24 24 B
+2332 748 24 24 B
+2332 2476 24 24 B
+2332 2620 24 24 B
+2332 2764 24 24 B
+2476 28 24 24 B
+2476 316 24 24 B
+2476 748 24 24 B
+2476 1612 24 24 B
+2476 1900 24 24 B
+2476 2044 24 24 B
+2476 2332 24 24 B
+2476 2764 24 24 B
+2620 28 24 24 B
+2620 172 24 24 B
+2620 316 24 24 B
+2620 1612 24 24 B
+2620 1900 24 24 B
+2620 2044 24 24 B
+2620 2188 24 24 B
+2620 2332 24 24 B
+2764 28 24 24 B
+2764 316 24 24 B
+2764 460 24 24 B
+2764 748 24 24 B
+2764 892 24 24 B
+2764 1180 24 24 B
+2764 1756 24 24 B
+2764 1900 24 24 B
+2764 2044 24 24 B
+2764 2332 24 24 B
+2764 2476 24 24 B
+2764 2764 24 24 B
+2908 460 24 24 B
+2908 1468 24 24 B
+2908 2476 24 24 B
+3052 28 24 24 B
+3052 460 24 24 B
+3052 1180 24 24 B
+3196 28 24 24 B
+3196 172 24 24 B
+3196 748 24 24 B
+3196 1180 24 24 B
+3196 1468 24 24 B
+3196 1612 24 24 B
+3196 1756 24 24 B
+3340 28 24 24 B
+3340 316 24 24 B
+3340 1612 24 24 B
+3484 28 24 24 B
+3484 316 24 24 B
+3484 1036 24 24 B
+3484 1180 24 24 B
+3484 1612 24 24 B
+3484 1756 24 24 B
+3628 1180 24 24 B
+3628 1324 24 24 B
+3628 1468 24 24 B
+3772 172 24 24 B
+3772 1324 24 24 B
+3916 1180 24 24 B
+3916 1324 24 24 B
+3916 1468 24 24 B
+EndLayer
+(cos) SetLayer
+168 600 32 32 B
+168 1896 32 32 B
+168 3912 32 32 B
+312 1896 32 32 B
+456 2472 32 32 B
+600 2472 32 32 B
+744 24 32 32 B
+888 1752 32 32 B
+888 2184 32 32 B
+1032 1608 32 32 B
+1032 3624 32 32 B
+1176 1032 32 32 B
+1176 1896 32 32 B
+1176 3912 32 32 B
+1320 168 32 32 B
+1320 1464 32 32 B
+1320 2904 32 32 B
+1464 1320 32 32 B
+1464 1896 32 32 B
+1464 3912 32 32 B
+1608 1608 32 32 B
+1608 2472 32 32 B
+1752 600 32 32 B
+1752 1176 32 32 B
+1752 2328 32 32 B
+1752 3192 32 32 B
+1752 3624 32 32 B
+1896 312 32 32 B
+1896 2328 32 32 B
+2040 1608 32 32 B
+2040 3336 32 32 B
+2184 312 32 32 B
+2184 600 32 32 B
+2184 2184 32 32 B
+2472 1176 32 32 B
+2472 2184 32 32 B
+2616 456 32 32 B
+2616 888 32 32 B
+2616 2904 32 32 B
+2760 168 32 32 B
+2904 24 32 32 B
+2904 1896 32 32 B
+3048 1320 32 32 B
+3480 168 32 32 B
+3480 1320 32 32 B
+3768 24 32 32 B
+3768 1752 32 32 B
+EndLayer
+(cot) SetLayer
+168 1752 32 32 B
+456 744 32 32 B
+600 2616 32 32 B
+744 1752 32 32 B
+888 1032 32 32 B
+888 2328 32 32 B
+1032 1896 32 32 B
+1176 1320 32 32 B
+1464 1464 32 32 B
+1464 1752 32 32 B
+1608 2040 32 32 B
+1608 2328 32 32 B
+1752 2616 32 32 B
+2184 744 32 32 B
+2184 2040 32 32 B
+2472 1320 32 32 B
+2472 1896 32 32 B
+2616 1032 32 32 B
+3048 1464 32 32 B
+3624 1752 32 32 B
+EndLayer
+(cb) SetLayer
+EndLayer
+2 plotPass
+3 plotPass
+EndLayout

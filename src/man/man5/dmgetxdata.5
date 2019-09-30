@@ -1,0 +1,61 @@
+.TH DMGETXDATA 5ICD "DMI User's Manual"
+.SH NAME
+dmGetXData - get next extraction status entry
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+int dmGetXData (FILE *fp, DM_XDATA *xdata);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "FILE *fp"
+a file pointer obtained from dmOpenXData().
+.TP
+.B "DM_XDATA *xdata"
+a pointer to a \fBDM_XDATA\fP structure.
+.SH DESCRIPTION
+Function
+.B dmGetXData
+gets the next available extraction state information of a cell.
+.PP
+You must give a \fBDM_XDATA\fP structure to the function.
+.PP
+When successful,
+a filled \fBDM_XDATA\fP structure is returned,
+containing extraction status information about a particular cell.
+.PP
+The \fBDM_XDATA\fP structure has the following members:
+.PP
+.nf
+.if n .ta 4 11 29
+.if t .ta 1c 2c 6c
+	char *	\fBname\fP	cell name
+	long	\fBtimestamp\fP	last modified date
+	short	\fBcelltype\fP	type of cell
+	short	\fBinterfacetype\fP	type of interface
+	char *	\fBmasks\fP	list of masks
+.SH DIAGNOSTICS
+If \fBdmGetXData()\fP is successful,
+\fB1\fP will be returned.
+The \fBname\fP and \fBmasks\fP members points to a static buffer.
+This static buffer is re-used by each call.
+The \fBmasks\fP member can contain a list of mask identifiers (>= 0).
+.PP
+If \fBdmGetXData()\fP detects EOF,
+\fB0\fP will be returned.
+The \fBDM_XDATA\fP structure is not filled.
+.PP
+If \fBdmGetXData()\fP fails,
+\fB-1\fP is returned after dmError() has been called.
+.if t .br
+This may happen in the following case:
+.TP 16
+.B DME_GET
+Data read error.
+.SH SEE ALSO
+dmGetCellStatus(5ICD),
+dmOpenXData(5ICD),
+xcontrol(1ICD).

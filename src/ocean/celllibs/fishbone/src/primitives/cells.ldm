@@ -1,0 +1,173 @@
+:: use cldm without -o
+:: project = /usr5/cacd/celllibs/fishbone/primitives
+:: process = fishbone
+:: lambda = 0.2
+:: extraction of all cells
+ms fishbonec3tu2
+box ps 60 68 576 732
+box ps 60 68 816 940
+box ps 60 68 290 446
+box ps 60 68 82 206
+box od 24 92 494 528
+box od 24 90 580 728
+box od 24 90 820 936
+box od 24 90 988 1022
+box od 24 92 494 528
+box od 24 90 294 442
+box od 24 90 86 202
+box od 24 90 0 34
+box in 24 92 494 528
+box in 24 90 988 1022
+box in 24 92 494 528
+box in 24 90 0 34
+box nw 0 114 480 752
+box nw 0 114 270 542
+box sn 14 100 810 946
+box sn 14 102 484 538
+box sn 14 102 484 538
+box sn 14 100 76 212
+box sp 14 100 570 738
+box sp 14 100 978 1032
+box sp 14 100 284 452
+box sp 14 100 -10 44
+poly ps 34 558.5 54 558.5 55.5 560 34 560 34 558.5
+poly ps 34 540 54 540 54 558.5 34 558.5 34 540
+poly ps 44 560 55.5 560 68 572.5 56.5 572.5 44 560
+poly ps 56.5 572.5 68 572.5 68 576 60 576 56.5 572.5
+poly ps 34 750.5 54 750.5 54 768 34 768 34 750.5
+poly ps 34 748 56.5 748 54 750.5 34 750.5 34 748
+poly ps 55.5 736.5 68 736.5 56.5 748 44 748 55.5 736.5
+poly ps 60 732 68 732 68 736.5 55.5 736.5 60 732
+poly ps 55.5 944.5 68 944.5 56.5 956 44 956 55.5 944.5
+poly ps 60 940 68 940 68 944.5 55.5 944.5 60 940
+poly ps 34 956 56.5 956 54 958.5 34 958.5 34 956
+poly ps 34 958.5 54 958.5 54 976 34 976 34 958.5
+poly ps 34 798.5 54 798.5 55.5 800 34 800 34 798.5
+poly ps 34 780 54 780 54 798.5 34 798.5 34 780
+poly ps 44 800 55.5 800 68 812.5 56.5 812.5 44 800
+poly ps 56.5 812.5 68 812.5 68 816 60 816 56.5 812.5
+poly ps 34 462 55.5 462 54 463.5 34 463.5 34 462
+poly ps 34 463.5 54 463.5 54 482 34 482 34 463.5
+poly ps 56.5 449.5 68 449.5 55.5 462 44 462 56.5 449.5
+poly ps 60 446 68 446 68 449.5 56.5 449.5 60 446
+poly ps 34 254 54 254 54 271.5 34 271.5 34 254
+poly ps 34 271.5 54 271.5 56.5 274 34 274 34 271.5
+poly ps 44 274 56.5 274 68 285.5 55.5 285.5 44 274
+poly ps 55.5 285.5 68 285.5 68 290 60 290 55.5 285.5
+poly ps 44 66 56.5 66 68 77.5 55.5 77.5 44 66
+poly ps 55.5 77.5 68 77.5 68 82 60 82 55.5 77.5
+poly ps 34 63.5 54 63.5 56.5 66 34 66 34 63.5
+poly ps 34 46 54 46 54 63.5 34 63.5 34 46
+poly ps 34 222 55.5 222 54 223.5 34 223.5 34 222
+poly ps 34 223.5 54 223.5 54 242 34 242 34 223.5
+poly ps 56.5 209.5 68 209.5 55.5 222 44 222 56.5 209.5
+poly ps 60 206 68 206 68 209.5 56.5 209.5 60 206
+me
+ms Nenh
+term in 38 50 50 62 g
+term in 38 50 186 198 s
+term in 78 90 186 198 d
+box in 78 90 11 62
+box con 79 89 187 197
+box in 74 94 182 202
+box con 39 49 187 197
+box in 34 54 182 202
+box cps 79 89 51 61
+box in 74 94 46 66
+box cps 39 49 51 61
+box in 34 54 46 66
+mc <IMAGE> fishbonec3tu2 0 -10 cx 40 2
+me
+ms Via_in_ins
+box in 0 20 0 20
+box ins 0 20 0 20
+box cos 5 15 5 15
+me
+ms Error_Marker
+box bb 38 50 11 23
+me
+ms Penh
+term in 78 90 298 310 d
+term in 38 50 298 310 s
+term in 38 50 466 478 g
+box in 78 90 466 517
+box in 34 54 294 314
+box in 74 94 294 314
+box in 34 54 462 482
+box in 74 94 462 482
+box cop 39 49 299 309
+box cop 79 89 299 309
+box cps 39 49 467 477
+box cps 79 89 467 477
+me
+ms Via_on_in
+box in 0 20 0 20
+box con 5 15 5 15
+me
+ms Via_op_in
+box in 0 20 0 20
+box cop 5 15 5 15
+me
+ms Via_ps_in
+box in 0 20 0 20
+box cps 5 15 5 15
+me
+ms cap
+term in 38 50 50 62 p
+term in 38 50 466 478 n
+box in 38 50 226 270
+box cps 39 49 467 477
+box in 34 54 462 482
+box cps 39 49 259 269
+box in 34 54 254 274
+box cps 39 49 227 237
+box in 34 54 222 242
+box cps 39 49 51 61
+box in 34 54 46 66
+me
+ms nenh
+term in 78 90 186 198 d
+term in 38 50 186 198 s
+term in 38 50 50 62 g
+box in 34 54 46 66
+box in 74 94 46 66
+box in 34 54 182 202
+box in 74 94 182 202
+box in 78 90 11 62
+box con 39 49 187 197
+box con 79 89 187 197
+box cps 39 49 51 61
+box cps 79 89 51 61
+me
+ms penh
+term in 78 90 298 310 d
+term in 38 50 298 310 s
+term in 38 50 466 478 g
+box in 78 90 466 517
+box in 34 54 294 314
+box in 74 94 294 314
+box in 34 54 462 482
+box in 74 94 462 482
+box cop 39 49 299 309
+box cop 79 89 299 309
+box cps 39 49 467 477
+box cps 79 89 467 477
+me
+ms res
+term in 38 50 50 62 p
+term in 38 50 466 478 n
+box in 38 50 226 270
+box cps 39 49 467 477
+box in 34 54 462 482
+box cps 39 49 259 269
+box in 34 54 254 274
+box cps 39 49 227 237
+box in 34 54 222 242
+box cps 39 49 51 61
+box in 34 54 46 66
+me
+ms empty_fbcell
+term in 38 50 505 517 vdd
+term in 38 50 11 23 vss
+me
+:: eof

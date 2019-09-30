@@ -1,0 +1,6 @@
+device ram
+begin spicemod
+* terminals addr[4] in[8] out[8] rw phi1 phi2
+.subckt ram addr0 addr1 addr2 addr3 in0 in1 in2 in3 in4 in5 in6 in7 out0 out1 out2 out3 out4 out5 out6 out7 rw phi1 phi2
+.ends ram
+end

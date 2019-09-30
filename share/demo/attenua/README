@@ -1,0 +1,54 @@
+# directory: demo/attenua
+
+Demonstration of an attenuator circuit in the bipolar DIMES-01 process.
+
+After extraction, the circuit can be simulated using PSPICE.
+
+See also, 
+  "Low-voltage Low-power Controlled Attenuator for Hearing Aids"
+  A. van Staveren and A.H.M. van Roermund, Electronic Letters,
+  22nd. July 1993, Vol. 29, No. 15, pp. 1355-1356.
+
+STEPS
+=====
+
+1.  Make project, use dimes01 technology and lambda = 0.1 (micron)
+    % mkpr -p dimes01 -l 0.1 projectname
+
+Rest assumes that you and your files are in the project directory.
+
+2.  Use cgi to put attenuator layout into the database.
+    % cgi attenua.gds
+
+3.  Perform a flat extraction of cell attenua.
+    % space -vF attenua
+
+4.  Inspect circuit.
+    % xspice -a attenua
+
+Try out the options -c, -C, -r and -z for capacitance and resistance 
+extraction.  
+
+If you have PSPICE, you can perform a circuit simulation (after 
+customizing the script nspice) as follows:
+
+5.  % nspice attenua attenua.cmd
+
+
+You can compare the extracted circuit against a reference circuit
+using match.
+
+6.  First add device descriptions for the bipolar transistors to the 
+    database so that the reference circuit can be stored into the database
+    using cspice
+    % putdevmod pnpWP.dev npnBW.dev
+    % xcontrol -device pnpWP npnBW
+    % cspice att_ref.spc
+
+7.  Extract cell attenua, possibly after an error has been added to the 
+    layout.
+    % space -vF attenua
+
+8.  Compare the extracted circuit against the reference circuit.
+    % match -bindings att_ref attenua 
+

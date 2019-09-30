@@ -1,0 +1,80 @@
+Memo: 0901
+From: Simon de Graaf
+Date: Wed Nov 18 13:20:28 CET 2009
+
+Subject: Net coordinates by backannotation
+
+See "src/space/lump/out.c":
+
+Private void outNode (node_t *n)
+{
+    ...
+
+    if (optBackInfo) {
+	if (n -> names && !n -> names -> instName)
+	    addCoorXY (buf, n -> names -> x, n -> names -> y);
+	else
+	    addCoorXY (buf, n -> node_x, n -> node_y);
+    }
+
+    ...
+}
+
+The coordinates of a net are not always equal to the node x,y coordinates.
+The node x,y coordinates are the coordinates of the first x,y point.
+The lowest x position and at that position the lowest y position.
+Thus there can be lower y positions at higher x positions.
+
+The coordinates of the complete net are only outputted, when the net has no
+n->names. Only in that case you can know the lowest x,y coordinates in the net.
+
+When the net has n->names (it does no matter what for name it is), then the
+x,y coordinates of that name are taken. It can happen, that this name is not
+used for the net head, because it is the name of a sub-cell instance or
+the net name is based on parameter "net_pos_name" or a group name with
+group separator and index is used.
+
+Q: When is a group name with group separator and index used?
+A: By resistance extraction, when a node group has more than one node,
+   can the group name only be in one of the nodes of the group.
+   The other nodes of the group gets a special generated group name.
+
+Q: What can be a group name?
+A: Default, only the first label found is taken as group name.
+   That is the label with lowest coordinates.
+   In case there are long and short labels, then the first short
+   label is used (that is a label of the extracted cell).
+   By using parameter "term_is_netname" also terminals of the extracted
+   cell in the group are used for the group name.
+   The first terminal/label is used (equal preference).
+
+When a terminal or label is in the net, then the x,y coordinates of the
+first terminal/label is chosen.
+Thus the x,y coordinates printed does not always belong to the head net.
+Thus, the x,y coordinates of the head label/terminal are lost.
+This, because terminals and labels have equal preference in n->names.
+The x,y coordinates of the first terminal/label found in n->names is used.
+However, n->names is pourly sorted (not on coordinates).
+Thus the coordinates taken, are not always the lowest coordinates.
+And in case it is sorted on coordinates, then there can be lower coordinates,
+because terminals of instances can have lower coordinates.
+
+Because in the above code only the first node name is examend, therefor the
+names must be in certain order, because if there is a terminal/label then
+it must be in the front of any connected names with an instance name.
+
+Thus, in the case there is a terminal/label, the node x,y coordinates
+are lost and not used for backannotation.
+Therefor it is maybe better not to output a terminal/label as the first net.
+
+In the circuit/mc stream there are x,y coordinates for every element/device/subcell.
+
+In the circuit/term stream there are no x,y coordinates.
+Maybe the x,y coordinates of terminals can also be put there.
+
+In the circuit/net stream there are no x,y coordinates for all sub-nets.
+Only the sub-nets of the node "names" list are outputted with x,y coordinates.
+Also the terminals of subcells.
+However, the pins/ports of elements/devices are not outputted with x,y coordinates.
+Maybe it is possible to give each net-equivalence also a x,y coordinate.
+

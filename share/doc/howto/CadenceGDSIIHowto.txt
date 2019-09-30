@@ -1,0 +1,234 @@
+
+                    CADENCE AND GDSII HOWTO
+                    =======================
+
+
+Introduction
+============
+
+This file describes how to create a CACD process description from a Cadence
+process description, as well as how to obtain layout data from a Cadence
+repository.
+
+NOTE: This file is under development, and at the moment only covers the
+conversion of visual mask styles and the conversion of layout information
+using GDSII files. We are also looking into the possibility of automating
+(part of) the conversion.
+
+
+Visual styles
+=============
+
+In the Cadence process directory, there exists a "draw file" named
+"display.drf", which describes how elements (masks etc.) are visualized in
+the various Cadence tools. We will roughly describe here how this file is
+structured, so that you can convert the visual information to our CACD format.
+
+The file "display.drf" contains a number of sections. Each section starts
+with a name, and the contents of each section have been placed between
+parentheses; semicolons are used to introduce a comment.
+Use your text editor/ viewer to examine this file.
+
+The section "drDesignPacket" relates four style parameters to a symbolic
+name (a "packet" name). The four style parameters are (1) the stipple,
+(2) the line-style, (3) the fill, and (4) the outline of the element being
+visualized.  These style parameters are further defined in different
+sections of the "display.drf" file.
+
+An example of the "drDefinePacket" section is given below:
+
+   drDefinePacket(
+    ;( DisplayName  PacketName  Stipple  LineStyle  Fill   Outline )
+     ( display      dots_white  dots     solid      white  white )
+     ( display      packet2     solid    solid      black  black )
+     ( display      packet3     blank    solid      slate  slate )
+     ( display      packet4     blank    solid      white  white )
+     ...
+   )
+
+Thus when you refer to a packet name (e.g. "dots_white") you refer to the
+specific style defined for that name (e.g. white dotted fill, with white
+outline).
+
+The valid values for the "fill" and "outline" parts are described in a
+"drDefineColor" section:
+
+   drDefineColor(
+    ;( DisplayName  ColorName  Red   Green   Blue   Blink )
+     ( display      white      255    255    255 )
+     ( display      yellow     255    255    0   )
+     ( display      slate      140    140    166 )
+     ( display      black      0      0      0   )
+     ( display      blinkRed   255    000    000    t )
+     ...
+   )
+
+The format of the color-descriptions should be self-explanatory.
+Note that a "t" in the last column can be used to make the color blink.
+
+The possible values for the stipple pattern are described in a
+"drDefineStipple" section. We will not describe the format here, since it
+is quite self-explanatory. Just have a look at that section using your text
+editor/viewer. The possible values for the line-style are described in the
+"drDefineLineStyle" section, which is also not described in this document.
+
+Now, have a look at the Cadence technology file. This is a file in the
+process directory, with extension ".tf". The basic format is similar to
+that of the draw file (i.e., sections start with a name, and their contents
+are between parentheses).
+
+The "layerDefinitions" section describes the layer names, and relates these
+names to the "packets" which we descibed above. The section contains some
+more information (necessary for Cadence tools), but we will focus here
+merely on the information we need in our CACD process description.
+
+The "layerDefinitions" section contains a subsection "techLayers",
+describing the layer names, and their internal numbers used by Cadence.
+An example is given below:
+
+   layerDefinitions(
+    techLayers(
+    ;( LayerName   Layer#   Abbreviation )
+    ;( ---------   ------   ------------ )
+     ( nw          10       nw  )
+     ( co          11       co  )
+     ( cos         21       cos )
+     ( ins         22       ic  )
+     ...
+    )
+   )
+
+Note that the layer numbers given here are NOT the numbers used in the
+GDSII stream (those numbers are in the "streamLayers" subsection of the
+"layerRules" section, as described below).
+
+The "techDisplays" subsection relates layer names to a visual style,
+using the packet name.
+
+   layerDefinitions(
+    techDisplays(
+    ;( LayerName  Purpose  Packet      Vis Sel Con2ChgLy DrgEnbl Valid )
+    ;( ---------  -------  ------      --- --- --------- ------- ----- )
+     ( nw         drawing  dots_white  t t t t t )
+     ( co         drawing  packet2     t t t t t )
+     ( cos        drawing  packet3     t t t t t )
+     ( ins        drawing  packet2     t t t t t )
+     ...
+    )
+   )
+
+The lines containing the keyword "drawing" in the second column define the
+normal drawing style for each layer. We will ignore here columns 4 through 8
+(containing the characters "t" in this example).
+
+In order to convert the visual style from a Cadence process description
+into the CACD format, you should consider the following information:
+
+  1. In the "*.tf" file, look for the "techDisplays" subsection of the
+     "layerDefinitions" section.
+  2. Look at the layer name (in the first column), and look at the packet
+     name (in the third column). Ignore lines containing something other
+     than "drawing" in the second column.
+  3. In the "display.drf" file, look for the "drDefinePacket" section, and
+     look for the packet names found in step 2.
+
+If you use "spock" to create your CACD process description, then you can
+enter the visual style in the graphical user-interface. Note that the CACD
+format does not have the descriptive power of the Cadence format, and hence
+you should make an approximation (e.g., only one shade of blue is allowed
+in the "dali" editor, thus you should map different shades of blue to either
+different colors, or to different fill patterns; some creativity is required).
+
+If you do not wish to use "spock", then you will have to create a "maskdata"
+file containing the visual information. How this is done is described
+elsewhere (see the file "process.pdf", in the share/doc directory, or
+click the link "Introducing a New Process" at:
+
+   http://www.space.tudelft.nl/documentation
+
+Also, you can type "icdman maskdata" for information about the maskdata format.
+
+
+Importing GDSII files from Cadence
+==================================
+
+When you wish to import a GDSII file into our CACD environment, you need
+to use the tool "cgi". Type "icdman cgi" for detailed information.
+
+Unfortunately, a GDSII file does not contain layer names, but it uses
+numbers instead. Thus, in order to read a GDSII file, we will need to map
+these numbers to layer names. This mapping is specified in the file "*.tf"
+in the Cadence process directory. Look for the subsection "streamLayers"
+of the section "layerDefinitions". An example is given below:
+
+   layerDefinitions(
+    streamLayers(
+    ;( layer   streamNumber   dataType   translate )
+    ;( -----   ------------   --------   --------- )
+     ( nw          10             0          t     )
+     ( co          11             0          t     )
+     ( cos         21             0          t     )
+     ( ins         22             0          t     )
+     ...
+    )
+   )
+
+We are mostly interested in the first two columns of this description.
+The first column contains the layer name, and the second column contains
+the corresponding number used in the GDSII file. The third column contains
+the "datatype", which is usually 0, but you may also encounter different
+values.
+
+Now, you can again use "spock", or edit the relevant information manually.
+In the CACD process directory, a file named "bmlist.gds" defines the
+mapping for the CACD tools. This file contains a line per layer.
+Each line starts with the layer name, and is followed by the stream number.
+An example is given below. This example corresponds to the exact same
+description in the Cadence format above.
+
+   nw       10
+   co       11
+   cos      21
+   ins      22
+
+(You may use a "#" mark to start a comment.)
+Thus, you can see that basically the "bmlist.gds" file comprises the first
+and second data column from the "streamLayers" section above.
+
+Beware that if you are using both "spock" and manual editing, your manual
+editing work may be overwritten when you re-generate your process files
+using "spock". If you use only manual editing, or only use "spock", then
+this is irrelevant.
+
+Note that each layer name referenced in this file must also appear in the
+"maskdata" file. Failure to do so will result in errors by the "cgi" tool.
+
+For records in the GDSII stream containing a datatype other than 0, you may
+specify the datatype after the stream number:
+
+   ext:label 24 9
+
+Usually, when the datatype is nonzero, a suffix ":label" is appended to the
+mask name, to signify that these GDSII records should be mapped to a label
+on the specified layer. A suffix ":term" can also be used, and indicates
+that these GDSII records are mapped to a terminal on the specified layer.
+Type "icdman bmlist" for details.
+
+Now, with a proper "maskdata" and "bmlist.gds" file in place, we can import
+a stream from a file named "file.gds" using the "cgi" tool. Simply change
+to your project directory, and type:
+
+   % cgi file.gds
+
+Furthermore, note that when you merely have a GDSII file, you can use the
+"cga" tool to get an ascii translation of the records contained in the file
+(type "icdman cga" for information). If you filter out the lines containing
+the word "LAYER", you get an overview of the gds layer numbers contained in
+the file.  Example:
+
+   % cga file.gds | grep LAYER | sort -u
+
+However, in this way you cannot obtain any information on the mapping of
+the layer numbers.
+
+

@@ -1,0 +1,258 @@
+\section{Het schrijven van ''synthetiseerbare'' VHDL code}
+\label{syn_vhdl}
+
+\subsection{Inleiding}
+
+Tijdens het ontwerpproces is het belangrijk om VHDL code te schrijven
+die niet alleen de gewenste simulatieresultaten vertoont, maar die
+ook geschikt om door de logic synthesiser te worden omgezet in
+een schakeling die realiseerbaar is, en die daarna tijdens
+simulatie nog steeds het gewenste gedrag vertoont.
+In dit gedeelte zullen enkele richtlijnen worden gegeven
+om dit zo succesvol mogelijk te laten verlopen.
+Belangrijk hierbij is dat men zich tijdens het ontwikkelen
+van de VHDL code realiseert hoe de structuur van de schakeling 
+zal zijn waarvoor men het gedrag beschrijft.
+Dit in ogenschouw nemende zullen we de volgende typen van VHDL 
+code onderscheiden en apart behandelen.
+\begin{itemize}
+\item
+Gedragsbeschrijving combinatorische schakeling
+\item
+Gedragsbeschrijving sequenti\"ele schakeling
+\item
+Structuurbeschrijving van een schakeling
+\end{itemize}
+
+\subsection{Gedragsbeschrijving combinatorische schakelingen}
+
+Een gedragsbeschrijving van een combinatorische schakeling bestaat
+uit een architecture body met daarin concurrent statements zoals
+process statements en dataflow statements. 
+Bij combinatorische schakelingen is het belangrijk om te zorgen
+dat elk uitgangsignaal een waarde krijgt voor elke combinatie
+van ingangsignalen.
+
+Hieronder volgt een voorbeeld van een combinatorische schakeling 
+met een process statement.
+\begin{verbatim}
+library IEEE;
+use IEEE.std_logic_1164.ALL;
+
+architecture behaviour of combinatorial is
+begin
+   -- a, b and c are input signals, y is output signal
+   lbl1: process (a, b, c)
+   -- All input signals must be in the sensitivity list
+   begin
+      -- Compute output value(s) based on input values
+      -- Important: for every input combination, each 
+      -- output should receive a value !
+      if ((a = '1' or b = '1') and c = '0') then
+         y <= '1';
+      else
+         y <= '0';
+      end if;
+   end process;
+end behaviour;
+\end{verbatim}
+
+Hier is dezelfde combinatorische schakeling
+op meer compacte wijze beschreven m.b.v. een dataflow statement:
+\begin{verbatim}
+architecture behaviour of combinatorial is
+begin
+   y <= (a or b) and (not c);
+end behaviour;
+\end{verbatim}
+
+\subsection{Gedragsbeschrijving sequenti\"ele schakeling}
+
+We gaan er van uit dat elke sequenti\"ele schakeling die we
+ontwerpen beschreven wordt door een Moore machine 
+zoals in figuur \ref{figuur:vhdlfsm}.
+Zie ook figuur \ref{figuur:moore_mod}, waarbij $\delta$ en $\gamma$
+zijn samen genomen in een ''combinatorial'' blok, en $Q$ gelijk is
+aan het ''statereg'' blok.
+\begin{figure}[bth]
+\centerline{\callpsfig{vhdlfsm.eps}{width=0.60\textwidth}}
+\caption{Blokschema voor het Moore model.}
+\label{figuur:vhdlfsm}
+\end{figure}
+Bij het beschrijven van een sequenti\"ele schakeling maken we daarom 
+onderscheid tussen een register gedeelte dat 
+de toestand onthoudt (''statereg'') en een combinatorisch gedeelte dat 
+de nieuwe toestand en de waarden van de uitgangsignalen berekent aan de hand
+van de ingangsignalen en de huidige state (''combinatorial'').
+Hoe de combinatorische schakeling ''combinatorial'' beschreven kan worden 
+hebben we gezien in de voorafgaande sectie. 
+Bij de beschrijving van het gedeelte dat de toestand onthoudt
+moeten we ons realiseren dat we in de Sea-of-Gates cellenbibliotheek
+de beschikking hebben over positive-edge triggered flipflops.
+Deze flipflops zijn uitgevoerd zonder reset, met een synchrone
+reset of met een asynchrone reset.
+Ook op het Altera bord bevinden zich flipflops van deze types.
+Wanneer ''state'' de huidige toestand weergeeft, ''new\_state''
+de volgende toestand, ''RESET\_STATE'' de reset toestand, ''clk''
+het klok signaal en ''res'' het reset signaal, en wanneer we
+uitgaan van een synchrone reset, dan kunnen
+we het gedeelte voor het opslaan van de toestand beschrijven met
+\begin{verbatim}
+   statereg: process (clk)
+   begin
+      if (clk'event and clk = '1') then
+         if res = '1' then
+            state <= RESET_STATE;
+         else
+            state <= new_state;
+         end if;
+      end if;
+   end process;
+\end{verbatim}
+
+Een compleet voorbeeld voor een beschrijving voor een 
+sequenti\"ele schakeling wordt dan:
+\begin{verbatim}
+library IEEE;
+use IEEE.std_logic_1164.ALL;
+
+architecture behaviour of fsm is
+   type state_type is (STATE1, STATE2);
+   signal state, new_state: state_type;
+begin     
+   statereg: process (clk)
+   begin
+      -- Because we use positive-edge triggered memory elements 
+      -- (flipflops) with synchronous reset, we assign a new 
+      -- state when clock goes to '1' 
+      if (clk'event and clk = '1') then
+         if res = '1' then
+            -- assign reset state
+            state <= STATE1;
+         else
+            state <= new_state;
+         end if;
+      end if;
+   end process;
+   combinatorial: process (state, input1)
+   begin
+      -- Assign output values based on state (for Moore machine
+      -- the outputs are independent from the input signals) and
+      -- compute new_state based on current state and input signals.
+      -- Important: for all possible states, every output should 
+      -- receive a value and new_state should be defined.
+      case state is
+         when STATE1 =>
+            output1 <= '0';
+            if (input1 = '0') then
+               new_state <= STATE2;
+            else  
+               new_state <= STATE1;
+            end if;
+         when STATE2 =>
+            output1 <= '1';
+            new_state <= STATE1;
+      end case;
+   end process;
+end behaviour;
+\end{verbatim}
+
+Wanneer we zouden kiezen voor een asynchrone reset dan 
+zou het eerste process er als volgt uitzien:
+\end{verbatim}
+      if res = '1' then
+         -- assign reset state
+         state <= STATE1;
+      elsif (clk'event and clk = '1') then
+         state <= new_state;
+      end if;
+\end{verbatim}
+
+Een ander voorbeeld van een 
+sequenti\"ele schakeling die op bovenstaande wijze beschreven is,
+is de hotel schakeling die als voorbeeld wordt gegeven
+bij de inwerkopdrachten.
+Nog een ander voorbeeld is een 4 bits teller zoals die hieronder is gegeven.
+Merk op dat in dit geval de toestand wordt gevormd door 
+de 4 bits van de std\_logic\_vector count
+en dat de uitgangen gevormd worden door de 4 bits van
+de vector a die hier rechtstreeks van worden afgeleid.
+\begin{verbatim}
+library IEEE;
+use IEEE.std_logic_1164.ALL;
+use IEEE.std_logic_arith.ALL;
+use IEEE.std_logic_unsigned.ALL;
+
+architecture behaviour of counter is
+   signal count, new_count : std_logic_vector(3 downto 0);
+begin
+   statereg: process (clk)
+   begin
+      if (clk'event and clk = '1') then
+         if reset = '1' then
+            count <= (others => '0');
+         else
+            count <= new_count;
+         end if;
+      end if;
+   end process;
+   combinatorial: process (count, enable)
+   begin
+      a <= std_logic_vector(count);
+      if (enable = '1') then
+         new_count <= count + 1;
+      else
+         new_count <= count;
+      end if;
+   end process;
+end behaviour;
+\end{verbatim}
+
+\subsection{Structuurbeschrijving van een schakeling}
+
+Een structuurbeschrijving kan gezien worden als een
+fysiek netwerk/circuit van componenten en de verbindingen
+daartussen.
+Afhankelijk van welke componenten er in zijn opgenomen
+zal de structuurbeschrijving een combinatorische
+of een sequenti\"ele schakeling beschrijven.
+De componenten zijn representaties voor entities en
+architecturen van andere delen
+uit het ontwerp.
+Eventueel kunnen kunnen de componenten ook
+cellen uit de Sea-of-Gates cellenbibliotheek zijn,
+wanneer de beschrijving alleen voor de Sea-of-Gates chip 
+bedoeld is en niet op het Altera bord wordt afgebeeld.
+Het is niet nodig om een structuurbeschrijving te synthetiseren.
+Wanneer ook alle componenten op structuurniveau bekend zijn, 
+dan kan direkt vanuit de structuurbeschrijving een layout 
+aangemaakt worden.
+
+Hieronder volgt een voorbeeld van een structuurbeschrijving.
+Naast het tekstueel invoeren van de VHDL code kan een
+VHDL structuurbeschrijving ook op eenvoudige wijze worden
+aangemaakt met een schematic editor zoals Schentry.
+\begin{verbatim}
+library IEEE;
+use IEEE.std_logic_1164.ALL;
+
+architecture circuit of network is
+   -- First the declaration of the components used
+   component comp1
+      port (x: in std_logic; y: out std_logic);
+   end component;
+   component comp2
+      port (p, q: in std_logic; r: out std_logic);
+   end component;
+   -- second the declaration of the nets (internal nodes)
+   signal net1, net2, net3 : std_logic;
+begin
+   -- connections between nets and pins
+   output1 <= net2;
+   -- instances of components and their connections 
+   comp1_1: comp1 port map (x=>net1, y=>net3);
+   comp1_2: comp1 port map (x=>net2, y=>net1);
+   comp2_1: comp2 port map (p=>net3, q=>input1, r=>net2);
+end circuit;
+\end{verbatim}
+\cleardoublepage

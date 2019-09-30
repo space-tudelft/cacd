@@ -1,0 +1,95 @@
+#!/bin/csh -f
+#
+# This is a front end to the sis (Berkeley Logic Synthesis System)
+# which allows us to automatically  generate a sls input file for given FSM
+# machine in file kiss2 format.
+#
+######################## these things you may want to change ##############
+
+set  sis_prog = sis              # sis program name
+
+set  blif2sls_prog = blif2sls    # blif2sls  program name
+
+set  proto_file  = oplib1_93.ext # a file with sls library networks prototypes
+
+set  genlib_file = oplib1_93.genlib # a file with oplib library description in genlib format
+
+set  script_file = $ICDPATH/src/ocean/blif2sls/script.ocean # input script for sis
+
+######################## end of configuration area #######################
+
+if ( $#argv == 1 && $1 != '-h') then
+   set  model = `basename $1 .kiss2`     # name of the model
+else
+   goto help
+endif
+
+set  input_file = $model.kiss2   # input file
+
+set  output_file = tmpFile.out
+
+set  blif_file = $model.blif     # output file from sis in blif format
+
+set  sls_file = $model.sls       # output file in sls format
+
+######################## checkin' if all files are present ###############
+
+if (-e $input_file) then
+  echo "Taking input from" $input_file
+else
+  echo "Could not find input file -" $input_file "is missing.."
+  goto help
+endif
+
+if (-e $genlib_file) then
+  echo "Taking library description from" $genlib_file
+else
+  echo "Could not find library description file -" $genlib_file "is missing.."
+  goto help
+endif
+
+if (-e $proto_file) then
+  echo "Taking sls prototypes from" $proto_file
+else
+  echo "Could not find sls prototypes file -" $proto_file "is missing.."
+  goto help
+endif
+
+if (-e $script_file) then
+  echo "Taking sis script from" $script_file
+else
+  echo "Could not find sis script file -" $script_file "is missing.."
+  goto help
+endif
+
+################ ok ... let's start doing sm'thg #########################
+
+$sis_prog -f $script_file -t kiss -T none $input_file
+rm $blif_file
+mv $output_file $blif_file
+
+echo "Converting to sls format ..."
+
+$blif2sls_prog $model
+
+echo "----- DONE -----"
+echo "Your circuit has been written to file" \"$sls_file\".
+exit 0
+
+help:
+echo
+echo "  Usage: sea_sis [options] model_name"
+echo
+echo "  Options:"
+echo "              -h   - display help info (what you see now)"
+echo
+echo "  To run properly the command requires that the following"
+echo "  files are present in your current directory:"
+echo
+echo "  "\"$proto_file\""    - file with sls library networks prototypes"
+echo "  "\"$genlib_file\"" - file with oplib library description in genlib format"
+echo "  "\"model_name.kiss2\"" - input file with FSM description in kiss2 format"
+echo
+echo "  Results will be written into: "\"model_name.sls\"" file."
+echo
+exit 1

@@ -1,0 +1,268 @@
+\chapter{sub3term Example of Substrate Resistance Extraction}
+\section{Introduction}
+\label{STintro}
+In this example, we will be studying a configuration of 3 substrate terminals.
+We will see how Space is used to compute the 3D substrate resistances.
+See also the "Space Substrate Resistance Extraction User's Manual".
+\\[1 ex]
+The layout looks as follows (such a figure can be printed using \io{getepslay}, see
+\manualpage{getepslay}):
+
+\begin{figure}[h]
+\centerline{\epsfig{figure=sub3term/sub3term.eps, width=8cm}}
+\end{figure}
+
+\section{Files}
+This tutorial is located in the directory \CACDTOP{demo/sub3term}.
+Initially, it contains the following files:
+\begin{filelist}
+\item[README] A file containing information about the demo.
+\item[sub3term.gds] The layout of the sub3term design.
+\item[elem.s] The technology file for Space. See Section \ref{STtech}.
+\item[param.p] The parameter settings file for Space. See Section \ref{STparam}.
+\item[script.sh] A file containing the commands for executing all
+steps of the demo in sequence.
+\end{filelist}
+
+\section{Technology File}
+\label{STtech}
+The technology file that we will use is the file \io{elem.s}, see listing below.
+
+\small \begin{Verbatim}[frame=single]
+listing of file elem.s
+   3    #
+   4    # space element definition file for metal substrate terminals
+   5    #
+   6
+   7    colors :
+   8        cmf   blue
+   9        @sub  pink
+  10
+  11    conductors :
+  12      # name     : condition : mask : resistivity : type
+  13        cond_cmf : cmf       : cmf  : 0.0         : m
+  14
+  15    contacts :
+  16      # name     : condition : lay1 lay2 : resistivity
+  17        cont_cmf : cmf       : cmf  @sub : 0.0
+  18
+  19    sublayers :
+  20      # name       conductivity  top
+  21        epi        6.7           0.0
+  22        substrate  2.0e3        -7.0
+  23
+  24    #EOF
+\end{Verbatim}
+\normalsize
+Please note that the masks to be used in this file have already been defined
+in the \io{maskdata} file in the process library \CACDTOP{lib/process}.
+In this example, we will only use the first metal mask (\io{cmf}).
+
+When we look to the file, we first see on line \io{7} the \io{colors} specification.
+The color of the \io{cmf} mask is chosen to be \io{blue}.
+The color for the \io{@sub} mesh is chosen to be \io{pink}.
+Note that this info is only used by the visualization tool \io{Xspace}.
+
+Starting on line \io{11} we find the \io{conductors} definitions.
+This is an important section, because without this we can not specify
+element pins and contacts.
+The conductor value is for this example unimportant,
+because we don't extract interconnect resistances.
+
+Starting on line \io{15} we find the \io{contacts} definitions.
+This is also an important section,
+because here is the connection between first metal and the substrate specified.
+These nodes are also called substrate terminals.
+However, substrate terminals can also be bulk regions or pins of capacitances.
+
+For 3D substrate resistance extraction, we need only one additional section.
+Starting on line \io{19} we find the \io{sublayers} definitions.
+These definitions specify for each substrate layer the conductivity (in $S / m$)
+and the starting position (in $\mu m$).
+Note that the last layer (on line \io{22}) extends to minus infinity.
+
+\section{Parameter File}
+\label{STparam}
+The parameter file \io{param.p} is controlling the extraction, see listing below.
+
+\small \begin{Verbatim}[frame=single]
+listing of file param.p
+  3
+  4  BEGIN sub3d
+  5  be_mode         0c   # piecewise constant collocation
+  6  max_be_area     1.0  # max. size of interior elements in sq. microns
+  7  edge_be_ratio   0.05 # max. size edge elem. / max size inter. elem.
+  8  edge_be_split   0.2  # split fraction for edge elements
+  9  be_window     inf    # infinite window, all resistances
+ 10  END sub3d
+ 11
+ 12  disp.save_prepass_image   on
+\end{Verbatim}
+\normalsize
+In the above listing, we see a \io{sub3d} block from line \io{4} to line \io{10}.
+These parameters are only used for controlling the substrate 3D extraction.
+The \io{max\_be\_area} (in $\mu m^2$) and \io{be\_window} (width in $\mu m$) parameter
+needs always to be specified.
+On line \io{5}, you find also the \io{be\_mode} parameter.
+However, this boundary element mode is the default.
+On line \io{9}, you see that the \io{be\_window} parameter is chosen to be infinity.
+That means, that all substrate terminal nodes are in the same strip,
+and are all connected with each other.
+See for an explanation of the parameters also the "Space Substrate Extraction User's Manual".
+
+On line \io{12}, you find a parameter for the visualization tool \io{Xspace}.
+It means, that the image of the prepass may not be cleared
+when starting drawing the image of the last pass.
+See for an explanation also the "Xspace User's Manual".
+
+\section{Running the Extractor}
+The file \io{script.sh} is a batch file for running all the commands for this example.
+First, it changes the current working directory '.' into a project directory:
+\small
+\begin{Verbatim}
+% mkpr -p scmos_n -l 0.1 .
+\end{Verbatim}
+\normalsize
+We use a lambda value (option \io{-l}) of $0.1 \mu m$.
+For the CMOS technology, we use the \io{scmos\_n} process from the technology library.
+We use the mask names as defined in the \io{maskdata} file of the library.
+But, we are not using the default technology
+file \io{space.def.s} and parameter file \io{space.def.p} of the library.
+Thus, the local technology file \io{elem.s} needs to be compiled with \io{tecc} to the format
+(a \io{.t} file) which is used by the extractor:
+\small
+\begin{Verbatim}
+% tecc elem.s
+\end{Verbatim}
+\normalsize
+Second, the layout description is put into the project database.
+The layout is supplied in a GDS2 file, which can be converted to
+internal database format with the \io{cgi} program:
+\small
+\begin{Verbatim}
+% cgi sub3term.gds
+\end{Verbatim}
+\normalsize
+Now, we can extract a circuit description for the layout of the \io{sub3term} cell, as follows:
+\small
+\begin{Verbatim}
+% space3d -vB -E elem.t -P param.p sub3term
+\end{Verbatim}
+\normalsize
+We use the verbose option (\io{-v}) to see what the extractor program is doing.
+Second, we use option \io{-B} to perform a 3D substrate resistance extraction.
+The substrate resistances are calculated, using a 3D mesh method (BEM).
+The calculated resistance values are assigned between substrate terminals and between the substrate
+terminals and the substrate plane (node SUBSTR).
+\\[1 ex]
+The extracted circuit can be inspected using the \io{xspice} program.
+We use option \io{-a} to get alpha-numeric node names.
+\small
+\begin{Verbatim}
+% xspice -a sub3term
+\end{Verbatim}
+\normalsize
+The output of the SPICE circuit is listed below.
+
+\small \begin{Verbatim}[frame=single]
+   1    sub3term
+   2
+   3    * Generated by: xspice 2.39 25-Jan-2006
+   4    * Date: 21-Jun-06 14:56:15 GMT
+   5    * Path: /users/simon/sub3term
+   6    * Language: SPICE
+   7
+   8    * circuit sub3term c b a
+   9    r1 c a 1.265872meg
+  10    r2 c b 679.1891k
+  11    r3 c SUBSTR 75.86724k
+  12    r4 a b 679.1891k
+  13    r5 a SUBSTR 75.86724k
+  14    r6 b SUBSTR 49.44378k
+  15    * end sub3term
+\end{Verbatim}
+\normalsize
+Below, you find a drawing of the listing of the extracted circuit.
+
+\begin{figure}[h]
+\centerline{\epsfig{figure=sub3term/circuit.eps, width=9cm}}
+\end{figure}
+
+Note that there are substrate resistances between all nodes of the circuit.
+This happens, because the chosen \io{be\_window} has a width of infinity.
+Each node has also a substrate resistance to the substrate plane (node \io{SUBSTR}).
+
+\section{Running the Visualization Tool}
+When you want to see the boundary element mesh,
+which is used for the substrate terminal regions,
+you must use the visualization tool \io{Xspace}.
+It runs the \io{space3d} extractor in the background and requests for graphical output.
+The extractor writes this graphical output to a "display.out" file, which \io{Xspace} is reading.
+The advantage of the output file is, that you can playback it again without running the extractor.
+And it makes zooming and panning on the image very easy.
+For additional information, consult the "Xspace User's Manual".
+
+Note that you can playback only the file "display.out" and that \io{Xspace} needs the color
+information of the used technology file.
+To show something, you need to set items in the "Display" menu.
+Note that you can only show items, which are written to the file "display.out".
+To start a playback, use hotkey 'a' (or click on "extract again" in the "Extract" menu).
+
+Now, we shall extract a circuit description for the layout of the \io{sub3term} cell,
+using the visualization tool as follows:
+\small
+\begin{Verbatim}
+% Xspace -vB -E elem.t -P param.p sub3term
+\end{Verbatim}
+\normalsize
+You don't need to set the cell name in the "Database" menu and
+also don't need to set the extract options in the "Options" menu,
+because that is already specified on the command line.
+
+\noindent
+You need only to set some display options.
+Go to the "Display" menu and click on button "DrawBEMesh".
+To run the extractor, go to the "Extract" menu and click on "extract" (or use hotkey 'e').
+
+\noindent
+You get the following picture:
+\begin{figure}[h]
+\centerline{\epsfig{figure=sub3term/xspace1.eps, width=12cm}}
+\end{figure}
+
+\noindent
+You see three substrate terminals, which are meshed into a number of area's.
+The complete area of terminal "a" and "c" is $1.0 \mu m^2$.
+The area of terminal "b" is $2.0 \mu m^2$.
+\\[1 ex]
+When you look to the space parameter file "param.p",
+you see that the maximum size of an interior element may be $1.0 \mu m^2$
+(parameter \io{max\_be\_area}).
+The maximum size of an edge element, however, may be $0.05 * 1.0 \mu m^2$
+(parameter \io{edge\_be\_ratio}).
+When we edit the file "param.p" and change the \io{edge\_be\_ratio} to its default value of $1.0$
+(or make the line to be a comment line by placing a '\#' before it),
+then we shall see what happens.
+\\[1 ex]
+We can now run the visualization tool again.
+Or better, when you have put it in the background, hit the extract key 'e' again.
+\\[1 ex]
+You get the following picture:
+\newpage
+\begin{figure}[h]
+\centerline{\epsfig{figure=sub3term/xspace2.eps, width=10cm}}
+\end{figure}
+
+\noindent
+And indeed, we get another mesh for the 3 substrate terminals.
+\\[1 ex]
+Below you see what happens, if we don't change the \io{edge\_be\_ratio},
+but the \io{edge\_be\_split} parameter instead (set this fraction to its default value of $0.5$).
+You get the following picture:
+\begin{figure}[h]
+\centerline{\epsfig{figure=sub3term/xspace3.eps, width=10cm}}
+\end{figure}
+
+\noindent
+The accuracy of the extraction result is depended of the mesh you chose.
+And, how finer the mesh, how more computation time is needed to calculate the result.

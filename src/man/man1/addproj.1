@@ -1,0 +1,42 @@
+.TH ADDPROJ 1ICD "3/30/87"
+.UC 4
+.SH NAME
+addproj - add library project to current project
+.SH SYNOPSIS
+\fBaddproj\fP [-c] project
+.SH PARAMETERS
+.TP
+.I project
+Absolute or relative path of the library project
+to be added.
+.SH OPTIONS
+.TP
+.B -c
+Normally addproj checks the process identifier and the lambda value
+of the project to be added.
+The -c flag inhibits these checks.
+.SH DESCRIPTION
+.I Addproj
+makes the library project known to the current project
+by adding it to the "projlist".
+The program checks if this is a legal transaction.
+The current working directory must be a legal project directory.
+.PP
+By default
+.I addproj
+checks whether the process identifier
+and the lambda value of the project to be added correspond to the
+process identifier and lambda value of the current project.
+This check can be inhibited with the -c option.
+.SH EXAMPLES
+addproj ../other_proj
+.br
+addproj /usr/cacd/design_libs/cmos/logic_gates
+.SH AUTHOR
+S. de Graaf
+.SH FILES
+.TP
+\fCproj_dir/projlist\fP
+.SH SEE ALSO
+impcell(1ICD),
+mkpr(1ICD).

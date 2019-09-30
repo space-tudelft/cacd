@@ -1,0 +1,122 @@
+.TH CIG 1ICD "User Commands"
+.UC 4
+.SH NAME
+cig - convert layout from ICD project to GDS II
+.SH SYNOPSIS
+.B cig
+maincell
+[\fB-ailrTuv\fP]
+[\fB-F\fP uu]
+[\fB-f\fP mf]
+[\fB-L\fP libname]
+.if n .br
+.if n .in +4
+[\fB-m\fP mlist]
+.SH OPTIONS
+.TP
+.B -a
+No AREF generation (they are expanded into SREFs).
+.TP
+\fB-F\fP uu
+For specification of a \fIfixed\fP user unit.
+.TP
+\fB-f\fP mf
+For specification of an alternate \fImultiplication factor\fP (default: 1000).
+.TP
+.B -i
+Also processing of \fIimported\fP cells.
+.TP
+\fB-L\fP libname
+Use specified \fIlibname\fP string in place of maincell.
+.TP
+.B -l
+Use \fIlambda\fP as user unit.
+.TP
+\fB-m\fP mlist
+Use this \fImask list\fP instead of the default mask list.
+.TP
+.B -r
+Try to use \fIremote\fP cell names for alias names.
+.TP
+.B -T
+Output only the \fItop\fP cell (maincell).
+.TP
+.B -u
+Convert the cell names to UPPERCASE.
+.TP
+.B -v
+Enable \fIverbose\fP mode.
+.SH DESCRIPTION
+.I Cig
+converts data from the ICD database to GDS II format.
+The output is written into the file \fImaincell\fP.gds.
+.PP
+The co-ordinates in a GDS file are specified in GDS database units.
+This unit is normally 1/1000 of a user unit (i.e. your lambda value).
+Thus,
+if you make a new project,
+you have to choice a suitable lambda value (in microns).
+If you want to change lambda,
+use the \fIclambda\fP program.
+Note that the program normally multiplies all values with 1000.
+This may result in too big or too small values.
+In that case take a smaller multiplication factor.
+It is better to use always a value >= 4,
+because elements in the "nor" files may be on 1/4 lambda grid.
+.PP
+Default, the first value in the UNITS record specifies an user unit of 1 micron.
+Thus, the user unit of the GDS file is not equal to the lambda value.
+With option \fB-l\fP you can set the user unit equal to lambda.
+If needed, with option \fB-F\fP you can set another first value.
+Note that the
+.I cgi
+program is not using the information of the first value.
+.PP
+The layers of the used process are mapped to GDS layer numbers
+by a mask list file.
+Default this file is the file \fIbmlist.gds\fP in the process directory,
+but an alternative file can be specified using the option -m.
+For a description of the contents of the mask list file,
+see bmlist(4ICD).
+Each line of this file contains a mask name, a GDS layer number
+and (optionally) a GDS data type or text type number.
+Besides that it is specified in this file how layout
+from the project is mapped to GDS layout records,
+it is also specified in this file how
+terminals (pins) and labels (net names)
+are mapped to GDS text structures.
+If the mapping of a terminal or label to a text structure
+is not defined, the terminal or label can be specified in the
+GDS file as a property with a boundary element
+(see \fIcgi(1ICD)\fP).
+.SH BUGS AND CAVEATS
+When the mapping for certain layout elements is not specified,
+then these layout elements are \fIskipped\fP.
+If this happens for the first time, a warning message is given.
+.SH AUTHOR(S)
+R. Paulussen, S. de Graaf, A.J. van Genderen
+.SH LIMITATIONS
+GDS layer numbers must be in the range of 0 to 255.
+.SH FILES
+.ta 42
+.if t .ta 3i
+.nf
+ICDPATH/share/lib/process/\fIproc\fP/bmlist.gds	(def. basic mask list)
+NELSISPROJECT/.dmrc	(input file)
+NELSISPROJECT/layout/celllist	(input file)
+.PP
+For each \fIcell\fP read:
+.PP
+NELSISPROJECT/layout/\fIcell\fP/box	(input file)
+NELSISPROJECT/layout/\fIcell\fP/info	(input file)
+NELSISPROJECT/layout/\fIcell\fP/mc	(input file)
+NELSISPROJECT/layout/\fIcell\fP/nor	(input file)
+NELSISPROJECT/layout/\fIcell\fP/term	(input file)
+.PP
+\&./\fImaincell\fP.gds[.\fIvolume-nr\fP]	(output file(s))
+.SH SEE ALSO
+cga(1ICD),
+cgi(1ICD),
+clambda(1ICD),
+mkpr(1ICD),
+bmlist(4ICD).

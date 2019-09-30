@@ -1,0 +1,32 @@
+# This is a maptable for nelsis <--> seadif conversion,
+# generated manually for library generation
+# Each line contains the name of a nelsis cell and its corresponding seadif cell
+# The status field may contain the following values:
+#    'written'       the cell was succesfully written into seadif resp. nelsis
+#    'primitive'     the cell is a primitive which should not be read or converted
+#    [anything else] the cell will be written if necessary
+#
+#    N E L S I S     |                   S E A D I F                     | nelsis->sdf sdf->nelsis
+# view    cellname   | library      function     circuit      layout     |   status      status
+#--------------------+---------------------------------------------------+------------------------
+ layout bond_ring      ringlib8_04 bond_ring bond_ring bond_ring
+ layout comparator_B2a ringlib8_04 comparator_B2a comparator_B2a comparator_B2a
+ layout comparator_T2a ringlib8_04 comparator_T2a comparator_T2a comparator_T2a
+ layout opamp_B2a      ringlib8_04 opamp_B2a opamp_B2a opamp_B2a
+ layout opamp_L9a      ringlib8_04 opamp_L9a opamp_L9a opamp_L9a
+ layout opamp_T2a      ringlib8_04 opamp_T2a opamp_T2a opamp_T2a
+ layout r100k_B2a      ringlib8_04 r100k_B2a r100k_B2a r100k_B2a
+ layout r10k_B2a       ringlib8_04 r10k_B2a r10k_B2a r10k_B2a
+ layout r10k_B2b       ringlib8_04 r10k_B2b r10k_B2b r10k_B2b
+ layout r200k_B2a      ringlib8_04 r200k_B2a r200k_B2a r200k_B2a
+ layout r200k_L9a      ringlib8_04 r200k_L9a r200k_L9a r200k_L9a
+ layout r20k_B1a      ringlib8_04 r20k_B1a r20k_B1a r20k_B1a
+ layout r20k_B1b      ringlib8_04 r20k_B1b r20k_B1b r20k_B1b
+ layout r20k_B1c      ringlib8_04 r20k_B1c r20k_B1c r20k_B1c
+ layout r20k_B2a      ringlib8_04 r20k_B2a r20k_B2a r20k_B2a
+ layout r20k_B2b      ringlib8_04 r20k_B2b r20k_B2b r20k_B2b
+ layout r50k_B2a      ringlib8_04 r50k_B2a r50k_B2a r50k_B2a
+ layout r50k_B2b      ringlib8_04 r50k_B2b r50k_B2b r50k_B2b
+ layout r50k_L9a      ringlib8_04 r50k_L9a r50k_L9a r50k_L9a
+ layout r50k_L9b      ringlib8_04 r50k_L9b r50k_L9b r50k_L9b
+ layout rladder_B1a   ringlib8_04 rladder_B1a rladder_B1a rladder_B1a

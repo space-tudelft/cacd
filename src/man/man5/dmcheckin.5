@@ -1,0 +1,96 @@
+.TH DMCHECKIN 5ICD "DMI User's Manual"
+.SH NAME
+dmCheckIn - terminate a cell transaction
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+int dmCheckIn (DM_CELL *cellkey, int mode);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "DM_CELL *cellkey"
+is a pointer to a valid \fBDM_CELL\fP as obtained from dmCheckOut().
+.TP
+.B "int mode"
+is an integer selecting a specific behavior of dmCheckIn().
+Valid modes as pre-defined in "dmincl.h" are:
+.sp
+\fBCOMPLETE\fP -
+'in +3
+The data at the 'scratch' node is 'flushed' to the database,
+and the \fBcellkey\fP is destroyed.
+The transaction \fBcommits\fP.
+The data lock is removed.
+.in -3
+\fBQUIT\fP -
+'in +3
+The data at the 'scratch' node is deleted,
+and the \fBcellkey\fP is destroyed.
+The transaction \fBrewinds\fP.
+The lock on the data is removed.
+.in -3
+\fBCONTINUE\fP -
+'in +3
+The data at the 'scratch' node is 'flushed' to the database,
+but the \fBcellkey\fP is \fBnot\fP destroyed.
+The running transaction is \fBcommitted\fP and a new transaction
+is \fBinitiated\fP immediately.
+The lock on the data is \fBnot\fP removed.
+.in -3
+.SH DESCRIPTION
+Function
+.B dmCheckIn
+terminates a cell transaction
+initiated with dmCheckOut(),
+except when mode is \%\fBCONTINUE\fP.
+The precise actions depend also upon the version and mode parameters
+of dmCheckOut().
+.PP
+Function
+.B dmCheckIn
+closes all streams that have been opened with
+.B cellkey
+and have not yet been closed.
+The mode used for these close-streams is
+.B COMPLETE
+if
+.B mode
+is
+.B COMPLETE
+or
+.B CONTINUE
+and is
+.B QUIT
+if
+.B mode
+is
+.BR QUIT .
+.SH DIAGNOSTICS
+If properly executed,
+.B dmCheckIn
+will return \fB0\fP.
+If
+.B dmCheckIn
+fails \fB-1\fP will be returned.
+The external variable
+.B dmerrno
+will be set to indicate the error,
+and a call to function dmError() will be done.
+.PP
+This may happen in the following cases:
+.TP 14
+.B DME_BADARG
+No valid mode argument given.
+.TP
+.B DME_BADKEY
+No valid cell access key given.
+.TP
+.B DME_SYS
+System error (dmCloseStream).
+.SH SEE ALSO
+dmCheckOut(5ICD),
+dmCkinAll(5ICD),
+dmCloseStream(5ICD).

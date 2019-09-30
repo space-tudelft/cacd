@@ -1,0 +1,289 @@
+\chapter{switchbox Example of Space Tutorial}
+\section{Introduction}
+\label{SOintro}
+In this example, we will be studying a switchbox design.
+We will see how the Space system can be used.
+See also the "Space Tutorial" document.
+\\[1 ex]
+The layout looks as follows, using the layout editor \io{dali} (see \manualpage{dali}):
+
+\begin{figure}[h]
+\centerline{\epsfig{figure=switchbox/swbox.eps, width=11cm}}
+\end{figure}
+
+\section{Files}
+This tutorial is located in the directory \CACDTOP{demo/switchbox}.
+Initially, it contains the following files:
+\begin{filelist}
+\item[README] A file containing information about the demo.
+\item[switchbox4.gds] The GDS2 file of the switchbox layout.
+\item[switchbox4\_f.gds] The GDS2 file of the flat switchbox layout.
+\item[swbox\_ref.spc] SPICE file of the switchbox reference circuit.
+\item[script.sh] A file containing the commands for executing all
+steps of the demo in sequence.
+\end{filelist}
+
+\section{Running a Hierarchical Extraction}
+Before we can run a hierarchical extraction on the "switchbox" layout, we need a project directory.
+The file \io{script.sh} is a batch file for running all the commands for this example, which you can use.
+First, it changes the current working directory '.' into a project directory:
+\small
+\begin{Verbatim}
+% mkpr -p scmos_n -l 1 .
+\end{Verbatim}
+\normalsize
+We use a lambda value (option \io{-l}) of $1 \mu m$.
+For the CMOS technology, we use the \io{scmos\_n} process from the technology library.
+
+Second, the layout description is put into the project database.
+The layout is supplied in a GDS2 file, which can be converted to
+internal database format with the \io{cgi} program:
+\small
+\begin{Verbatim}
+% cgi switchbox4.gds
+\end{Verbatim}
+\normalsize
+Third, we can list the contents of the project database.
+To get a hierarchical cell listing, use the \io{dblist} program as follows:
+\small
+\begin{Verbatim}
+% dblist -h
+\end{Verbatim}
+\normalsize
+\small \begin{Verbatim}[frame=single]
+
+layout:
+1 - switchbox4      (4)
+    2 - dec1of4           4 (6)
+        3 - nan4rout          1 (0)
+        3 - nan3              4 (0)
+        3 - dubinv            1 (0)
+
+circuit:
+
+floorplan:
+
+\end{Verbatim}
+\normalsize
+You see, that the layout of the "switchbox" design is hierarchical.
+There are 3 hierarchical levels.
+The top cell is \io{switchbox4}, it calls 4 times sub cell \io{dec1of4}.
+The cell \io{dec1of4} has also 3 sub cells (the cell \io{nan3} is used 4 times).
+To inspect the layout of the design, use the layout editor/viewer \io{dali}.
+Type the following command:
+\small
+\begin{Verbatim}
+% dali
+\end{Verbatim}
+\normalsize
+Click on the "DB\_menu" menu item and use the "read\_cell" command
+to read the different cells.
+To see more hierarchical levels of the cell, use the number keys.
+Type for example '3' to expand the cell to 3 levels deep.
+\\[1 ex]
+Now, we can extract a circuit description for the layout of each cell.
+Because the layout is hierarchical,
+we can perform a hierarchical extraction of the \io{switchbox4} top cell.
+Each cell is individual extracted, because the flat option is not used.
+We start the extractor with the verbose option, as follows:
+\small
+\begin{Verbatim}
+% space -v switchbox4
+\end{Verbatim}
+\normalsize
+Note that \io{space} is using the default technology file \io{space.def.s} and
+the default parameter file \io{space.def.p} of the \io{scmos\_n} example process.
+The output of the hierarchical extraction is listed below.
+
+\small \begin{Verbatim}[frame=single]
+Version 5.3.1, compiled on Fri Feb 03 12:45:53 GMT 2006
+See http://www.space.tudelft.nl
+parameter file: $ICDPATH/share/lib/process/scmos_n/space.def.p
+technology file: $ICDPATH/share/lib/process/scmos_n/space.def.t
+extract hierarchy of switchbox4
+preprocessing nan4rout (phase 1)
+preprocessing nan4rout (phase 2 - removing overlap)
+extracting nan4rout
+
+extraction statistics for layout nan4rout:
+	capacitances        : 0
+	resistances         : 0
+	nodes               : 10
+	mos transistors     : 8
+	...
+
+preprocessing nan3 (phase 1)
+preprocessing nan3 (phase 2 - removing overlap)
+extracting nan3
+
+extraction statistics for layout nan3:
+	capacitances        : 0
+	resistances         : 0
+	nodes               : 8
+	mos transistors     : 6
+	...
+
+preprocessing dubinv (phase 1)
+preprocessing dubinv (phase 2 - removing overlap)
+extracting dubinv
+
+extraction statistics for layout dubinv:
+	capacitances        : 0
+	resistances         : 0
+	nodes               : 6
+	mos transistors     : 4
+	...
+
+preprocessing dec1of4 (phase 1)
+preprocessing dec1of4 (phase 2 - removing overlap)
+extracting dec1of4
+
+extraction statistics for layout dec1of4:
+	capacitances        : 0
+	resistances         : 0
+	nodes               : 51
+	mos transistors     : 0
+	...
+
+preprocessing switchbox4 (phase 1)
+preprocessing switchbox4 (phase 2 - removing overlap)
+extracting switchbox4
+
+extraction statistics for layout switchbox4:
+	capacitances        : 0
+	resistances         : 0
+	nodes               : 42
+	mos transistors     : 0
+	...
+
+overall resource utilization:
+	memory allocation  : 0.233 Mbyte
+	user time          :         0.0
+	system time        :         0.0
+	real time          :         7.1   0%
+
+space: --- Finished ---
+\end{Verbatim}
+\normalsize
+We make again a hierarchical cell listing of the project database.
+\small
+\begin{Verbatim}
+% dblist -h
+\end{Verbatim}
+\normalsize
+\small \begin{Verbatim}[frame=single]
+
+layout:
+1 - switchbox4      (4)
+    2 - dec1of4           4 (6)
+        3 - nan4rout          1 (0)
+        3 - nan3              4 (0)
+        3 - dubinv            1 (0)
+
+circuit:
+1 - switchbox4      (4)
+    2 - dec1of4           4 (6)
+        3 - dubinv            1 (4)
+        3 - nan3              4 (6)
+        3 - nan4rout          1 (8)
+
+floorplan:
+
+\end{Verbatim}
+\normalsize
+We see, that the extracted circuit cells have also a hierarchical structure.
+
+\section{Running a Circuit Comparison}
+The following demonstrates the use of the circuit comparison program \io{match}.
+
+First, add a reference circuit description for the "switchbox" circuit
+to the database using the program \io{cspice}.
+\small
+\begin{Verbatim}
+% cspice swbox_ref.spc
+\end{Verbatim}
+\normalsize
+\small \begin{Verbatim}[frame=single]
+File swbox_ref.spc:
+Parsing network: swbox_ref
+\end{Verbatim}
+\normalsize
+This reference circuit is a flat circuit description of the "switchbox".
+Compare this reference circuit with the hierarchical description, type:
+\small
+\begin{Verbatim}
+% match swbox_ref switchbox4
+\end{Verbatim}
+\normalsize
+\small \begin{Verbatim}[frame=single]
+
+match: Succeeded.
+
+\end{Verbatim}
+\normalsize
+If you want, you can use the \io{-fullbindings} option to get more information.
+\\[1 ex]
+You can also perform a flat extraction of the "switchbox4" cell and do the compare again.
+This must also give a succesfull match.
+\small
+\begin{Verbatim}
+% space -F switchbox4
+% match swbox_ref switchbox4
+\end{Verbatim}
+\normalsize
+Second, use \io{cgi} to put a flat version of the "switchbox" layout into the
+database and extract the circuit and do the compare again.
+\small
+\begin{Verbatim}
+% cgi switchbox4_f.gds
+% space switchbox4_f
+% match switchbox4 switchbox4_f
+\end{Verbatim}
+\normalsize
+This must also give a succesfull \io{match} result.
+Now, use the program \io{match} to compare the extracted circuit against the
+reference circuit.
+\small
+\begin{Verbatim}
+% match swbox_ref switchbox4_f
+\end{Verbatim}
+\normalsize
+\small \begin{Verbatim}[frame=single]
+
+match: Succeeded.
+
+\end{Verbatim}
+\normalsize
+The result shows that the circuits are identical.
+\\[1 ex]
+We use the flat layout, because it is more easy to change.
+Now, make an error in the layout of "switchbox4\_f" using \io{dali} (e.g. remove
+some metal) and run the programs \io{space} and \io{match} again.
+\small
+\begin{Verbatim}
+% dali switchbox4_f
+% space switchbox4_f
+% match swbox_ref switchbox4_f
+\end{Verbatim}
+\normalsize
+\small \begin{Verbatim}[frame=single]
+
+match: Failed.
+
+\end{Verbatim}
+\normalsize
+The result shows that the circuits are not more identical.
+\\[1 ex]
+Now, use the option \io{-fullbindings} to see which network parts are matched.
+\small
+\begin{Verbatim}
+% match -fullbindings swbox_ref switchbox4_f
+\end{Verbatim}
+\normalsize
+
+\section{Layout Back-Annotation}
+You can use the layout back-annotation option \io{-x} of \io{space} to see with the layout viewer \io{dali}
+which conductors are high-lighted.
+Using \io{match} and after that the high-light tool \io{highlay}, you can write
+a cell "HIGH\_OUT" to inspect the unmatched condcutors.
+See also section 9 of the "Space Tutorial" document.

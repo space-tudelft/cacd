@@ -1,0 +1,8 @@
+
+B 150 100 660 400 fadder
+
+T in  CI 155 185
+T in  B  155 265
+T in  A  155 345
+T out CO 655 185
+T out S  655 345

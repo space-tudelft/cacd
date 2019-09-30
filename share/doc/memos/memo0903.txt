@@ -1,0 +1,51 @@
+Memo: 0903
+From: Simon de Graaf
+Date: Thu Dec 10 10:18:20 CET 2009
+
+Subject: Space technology connect elements
+
+A connect element is used to connect different conductors to each other.
+Note that equal conductors have the same conductor number.
+However, equal conductors can have a different carrier-type.
+For example an active area conductor (scmos process):
+
+conductors :
+ # name    : condition     : mask : resval : type
+   cond_pa : caa !cpg !csn : caa  : 70     : p    # p+ active area
+   cond_na : caa !cpg  csn : caa  : 50     : n    # n+ active area
+
+The two active area conductors "caa" cannot both be in the same tile.
+The mask "csn" is used in the condition to make the difference.
+
+Note that the extractor (space) always connect equal conductors
+with each other and that space is not testing the carrier-type.
+See enumPair, if newerTile gets a subnode in cons[cx], then subnodeCopy
+is used if the neighbor tile has a subnode on position cons[cx].
+Thus, both subnodes points to the same node.
+Note that polnodeCopy is only done when both carrier-type are equal,
+else polnodeAdd is done. Thus, one node can have different polnodes.
+Note that different polnodes can also be in the same node if there
+are contact elements. In that case the node join is ok.
+
+A contact element is used to vertically connect different conductors
+to each other.  A contact element has always a contact resistivity.
+However, this contact resistivity may have a low resistivity or zero
+value or is not used because no resistivity extraction is done.
+When the resistivity value is not used, then the nodes of both conductors
+are joined with each other (like a vertical connect element).
+
+However, a vertical connect element does not have a resistivity value
+and may only be used to connect different conductors which have the
+same carrier-type.  Conductors with a different carrier-type (p/n)
+form a p/n-junction and can be modelled as diode or capacitor.
+In practice, a vertical connect is only possible, if both layers
+are directly above each other.
+
+Therefor, a horizontal connect element does not imply also a vertical
+connection.
+
+Note that subnodeCopy and subnodeJoin are used for joining conductors
+in the horizontal situation (for conductors with the same numbers).
+However, the subnodeJoin function can be used for the vertical situation
+because of a vert./hor. connect element or a contact element.
+

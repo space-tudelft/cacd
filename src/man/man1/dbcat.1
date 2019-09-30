@@ -1,0 +1,79 @@
+.TH DBCAT 1ICD "2/9/87"
+.UC 4
+.SH NAME
+dbcat - list stream data from ICD data base
+.SH SYNOPSIS
+.ie n .ta 30
+.el .ta 0
+\fBdbcat\fP [\fB-abv4\fP] [\fB-c\fP|\fB-f\fP] [\fB-s\fP dbstream] [\fB-n\fP name]
+.if n .br
+	[\fB-t\fP attr] [\fB-w\fP N] [cell ...]
+.SH PARAMETERS
+.TP
+.I cell
+Process only the named cells.
+.if !n .br
+If this argument is not specified
+option
+.B -a
+must be specified.
+.SH OPTIONS
+.TP
+.B -a
+List stream data of all cells.
+.TP
+.B -b
+Brief circuit listing.
+.TP
+.B -v
+Verbose mode.
+.TP
+.B -4
+Divide coordinates by 4.
+.TP
+.B -c
+List only data of the circuit view.
+.TP
+.B -f
+List only data of the floorplan view.
+.TP
+\fB-s\fP \fIdbstream\fP
+List only data of named stream.
+.TP
+\fB-n\fP \fIname\fP
+List only that part of the data of the stream,
+which matches this name (or net).
+.TP
+\fB-t\fP \fIattr\fP
+List only net's with attribute \fIattr\fP.
+.TP
+\fB-w\fP \fIN\fP
+.br
+List nethead coordinates with min. width \fIN\fP (default 5).
+.SH DESCRIPTION
+.I Dbcat
+is a program to list the contents of the ICD data base.
+Default the contents of the primary streams of the layout view are listed.
+With option \fB-c\fP (\fB-f\fP) the primary streams
+of the \fIcircuit\fP (\fIfloorplan\fP) view can be listed.
+With option \fB-s\fP one specific stream (or set of streams, like "vln")
+can be listed,
+which need not to be a primary stream.
+Note if the stream data is packed,
+this is the only method to show this data on your terminal screen
+in readable form.
+.SH NOTE
+Special \fIcircuit\fP view streams "mc..." and "net..." can now be listed
+with option \fB-s\fP.
+.SH EXAMPLES
+dbcat -c flip_flop
+.br
+dbcat -a -s term
+.br
+dbcat -cs nethead flip_flop
+.br
+dbcat -cs netsub flip_flop
+.br
+dbcat -cs mc2 flip_flop
+.SH AUTHOR
+S. de Graaf

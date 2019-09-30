@@ -1,0 +1,16 @@
+
+maxkeys 13
+
+colors :
+    cpg   red
+    caa   green
+    cmf   blue
+    cms   gold
+    cca   black
+    ccp   black
+    cva   black
+    cwn   glass
+    csn   glass
+    cog   glass
+    cx    glass
+

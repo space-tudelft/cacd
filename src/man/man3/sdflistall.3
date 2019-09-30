@@ -1,0 +1,33 @@
+.ll 77
+.hy
+.TH SDFLISTALL 3SDF "THE SEADIF PROGRAMMERS MANUAL"
+.SH NAME
+sdflistalllay, sdflistallcir - set of seadif calls that read
+all the meta-children of an object and their children
+
+.SH SYNOPSIS
+ #include <sealib.h>
+
+ int sdflistalllay(long what, CIRCUITPTR circuit);
+
+ int sdflistallcir(long what, FUNCTIONPTR function);
+
+.SH DESCRIPTION
+Sdflistalllay reads all the layouts associated with a circuit and recursively
+all the children of these layouts.
+Sdflistallcir reads all the circuits
+associated with a function and recursively all the children of these circuits.
+
+Both functions require a first argument specifying in detail what to get
+from the database.
+Refer to sdfread(3SDF) to see what values are allowed for this parameter.
+
+.SH "RETURN VALUE"
+A successful call to any of the functions returns TRUE.
+On failure NIL is returned.
+
+.SH AUTHOR
+Paul Stravers, Delft University of Technology.
+
+.SH "SEE ALSO"
+sdfread(3SDF), sdflist(3SDF).

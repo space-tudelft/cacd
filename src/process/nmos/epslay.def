@@ -1,0 +1,21 @@
+%% getepslay prolog for nmos process.
+
+%%Include "./epslay.pro"
+
+%%Order: ni nb nx nd np nm ng
+
+[5 14 3 /Helvetica-Bold] plotFont
+
+%%mask   pattern    pscale linewidth
+[ (np)   dots25     1.0    0.1 ] defineStyle
+[ (nd)   dots12     1.0    0.1 ] defineStyle
+[ (nm)   dots50     1.0    0.1 ] defineStyle
+[ (ni)   dots6      1.0    0.1 ] defineStyle
+[ (nb)   dots6      1.0    0.3 ] defineStyle
+[ (nx)   white      1.0    0.3 ] defineStyle
+[ (ng)   white      1.0    0.1 ] defineStyle
+[ (nc)   black      1.0    0.1 ] defineStyle
+[ (t_np) dots25     1.0    0.3 ] defineStyle
+[ (t_nd) dots12     1.0    0.3 ] defineStyle
+[ (t_nm) dots50     1.0    0.3 ] defineStyle
+[ (bb)   white      1.0    0.3 ] defineStyle

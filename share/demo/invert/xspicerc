@@ -1,0 +1,17 @@
+# directory: demo/invert
+
+include_library spice3f3.lib
+include_library jun.lib
+
+model nenh_0 nenh nmos ()
+model penh_0 penh pmos ()
+model ndif  ndif  d ()
+model nwell nwell d ()
+model pdif  pdif  d ()
+
+bulk nmos 0.0
+bulk pmos 5.0
+
+params ndif  { area=$area pj=$perim }
+params nwell { area=$area pj=$perim }
+params pdif  { area=$area pj=$perim }

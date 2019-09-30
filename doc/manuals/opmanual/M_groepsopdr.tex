@@ -1,0 +1,802 @@
+\section{De Groepsopdracht}
+
+\subsection{Inleiding}
+
+In dit hoofdstuk worden beschrijvingen gegeven van de mogelijke
+hoofdopdrachten:
+\begin{itemize}
+\item
+de Dialmemo,
+\item
+de Avant-Garde Klok,
+\item
+de Infrarood-Besturing,
+\item
+de Reactiemeter,
+\item
+de Pong Spelcomputer,
+\item
+Alternatieve opdracht.
+\end{itemize}
+E\'en van deze opdrachten zult u met uw groep gaan ontwerpen.\\
+Naast de beschrijvingen van de opdrachten vind u ook bij elke opdracht
+een aantal specificaties waaraan de schakelingen moeten voldoen.
+Deze specificaties zijn niet volledig, maar bedoeld als eerste aanzet.
+Zelf zult u nauwkeuriger moeten specificeren. \\
+Nadat de opdrachten afzonderlijk zijn beschreven worden er er vervolgens nog
+enige algemene randvoorwaarden aangegeven waar u bij het ontwerpen terdege
+rekening mee dient te houden.\\
+Tenslotte volgen nog een paragraaf met enige
+adviezen over hoe u de systeemspecificatie
+het best aan kunt pakken, een paragraaf over de beschikbare ruimte
+op de chip, een paragraaf die beschrijft hoe tijdens het ontwerpen
+al rekening moet worden gehouden met het testen dat later plaatsvindt,
+en een paragraaf
+over de afronding van het ontwerp. \\
+Voor analoge deelschakelingen die mogelijk voorkomen in 
+het ontwerp wordt men verwezen naar appendix \ref{analoog}.
+
+\subsection{De Dialmemo}
+
+\subsubsection{Inleiding}
+
+Beeld u eens in dat u werkt bij de firma TECHNOGADGET.
+Zoals de naam al suggereert zit uw bedrijf in de
+relatiegeschenkenbranche. 
+Een aantal jaren geleden vond de oprichter van TECHNOGADGET
+(een oud-TU-student) de alom bekende ''keyfinder'' uit. De keyfinder
+is een groot model sleutelhanger (met firma-opdruk) die gaat piepen
+bij een plotseling hard geluid (b.v.\ fluiten). Het succes van dit idee
+was zo enorm dat deze student z'n lelijke eend al spoedig kon
+inwisselen voor een glimmende Porsche.\\
+Elke doorgewinterde beursbezoeker heeft ondertussen al hele
+sleutelbossen vol keyfinders. De markt raakt daardoor een beetje
+verzadigd en bovendien is het nieuwtje er langzamerhand een beetje van
+af. Als gevolg daarvan gaan de zaken voor TECHNOGADGET momenteel
+slecht. Het is duidelijk dat het bedrijf snel een nieuw produkt nodig
+heeft, anders moet binnenkort de lelijke eend weer van stal gehaald
+worden.\\
+Op een blauwe maandagmorgen kreeg de directeur weer een briljant idee:
+de DIALMEMO. Het is weer een groot model sleutelhanger, maar deze keer
+bevat hij een heel klein telefoontje.
+De DIALMEMO bestaat uit een toetsenbord van een druktoets-telefoon,
+een chipje, een luidsprekertje en een batterij, alles in een klein
+elegant huisje met firma-opdruk. Door het apparaatje tegen de
+microfoonkant van een telefoonhoorn te houden en vervolgens op een
+knop te drukken, wordt het firma-nummer automatisch gebeld. Ook is het
+met de DIALMEMO mogelijk om een draaischijf-telefoon als
+druktoets-telefoon te gebruiken.
+Technisch is het principe eenvoudig. Moderne telefoon-centrales werken
+met een toonkies-systeem. Hierbij wekt elke knop van een
+druktoets-telefoon een specifieke toon-combinatie op die in de centrale
+herkend wordt. In plaats van de toetsen \'e\'en voor \'e\'en in te
+drukken, fluit de DIALMEMO het nummer rechtstreeks in de microfoon van
+de hoorn. Door de eenvoudige opbouw moet de DIALMEMO voor rond de
+1 euro per stuk in China te produceren zijn. \\
+Het is duidelijk dat dit een revolutionaire vinding is. Zo kan
+bijvoorbeeld de slogan ''even Apeldoorn bellen'' een volledig nieuwe
+dimensie krijgen. Iedere verzekerde krijgt nu als welkomsgeschenk een
+DIALMEMO met daarin opgeslagen het nummer in Apeldoorn. Centraal
+Beheer Verzekeringen was waanzinnig enthousiast!\\
+Voor allerlei andere
+bedrijven die sterk van de telefoon afhankelijk zijn, is de DIALMEMO
+een uitkomst. Vooral voor 06-nummers ligt een enorme markt braak. Zo
+zou de exploitant van ''Harry's gay box'' (een homo-babbelbox) er al
+over denken om een DIALMEMO (met daarin zijn nummer) gratis toe te
+sturen aan alle abonnees van de gay-krant. Bij gemiddeld 15 minuten
+babbelen (\`a 50 cent per minuut) per DIALMEMO is de exploitant al uit
+de kosten!\\
+U krijgt als groep de opdracht van TECHNOGADGET om de chip te maken
+die het hart vormt van de DIALMEMO.
+
+
+\subsubsection{Specificaties Dialmemo-chip}
+
+
+\begin{itemize}
+\item
+Als invoer dient een toetsenbord, een losse druktoets en een
+aan/uit-schakelaar. Het toetsenbord heeft de bekende telefoon-layout,
+d.w.z.\ de cijfers 0 t/m 9, \# en *. De laatste toetsen dragen in ons
+geval resp. de namen ''read'' en ''dial''.
+De losse toets draagt de naam ''store''.\\
+Omdat het toetsenbord en ook de losse druktoets buitengewoon low-cost
+zullen zijn, moet er rekening gehouden worden met het ''denderen'' van
+de contacten. Dit ''denderen'' houdt in dat de impedantie-verandering
+bij het indrukken van een toets niet monotoon verloopt. In de
+paragraaf ''Overige Specificaties'' wordt hier verder op ingegaan. De
+toetsen van het toetsenbord zijn in een 3x4-matrix geschakeld.\\
+De uitgangen van het toetsenbord en de losse druktoets worden direct
+verbonden met de pinnen van de chip.
+\item
+Aan de uitgang van de chip verschijnen toon-combinaties volgens de
+offici\"ele CCITT-norm voor telefonie. Zie hiervoor de ''Overige
+Specificaties''.
+\item
+Om de DIALMEMO als gewone telefoon te gebruiken, dient eerst een
+nummer ingetoetst te worden, waarna door de dial-toets (*) te
+drukken, dit nummer afgespeeld wordt. Als vervolgens nogmaals dial
+wordt gedrukt, wordt het laatst ingetoetste nummer opnieuw afgespeeld.
+Op deze manier is er dus een ''redial''-mogelijkheid.\\
+Dit ''dial-geheugen'' dient maximaal 16 cijfers te kunnen opslaan.\\
+FACULTATIEF: Bij intoetsen van het nummer dienen de betreffende
+toon-combinaties hoorbaar te zijn.
+\item
+De schakeling heeft naast het dial geheugen ook een ''vast'' geheugen
+dat ook een telefoonnummer van 16 cijfers kan opslaan. Dit ''store''
+geheugen kan worden geprogrammeerd door de (losse) store toets in te
+drukken na invoer van een nummer. Oproepen van dit geheugen geschiedt
+door de read toets te drukken.\\
+Het is de bedoeling dat de store toets niet in te drukken is door Jan
+de Beursbezoeker.
+\item
+De DIALMEMO is een wegwerpartikel en zal geen verwisselbare batterij
+hebben. Toch moet het apparaat enkele jaren mee kunnen gaan. Hiervoor
+is vooral in rusttoestand een laag stroomverbruik noodzakelijk.
+\item
+De inhoud van zowel het dial als het store geheugen mag niet verloren
+gaan wanneer het apparaat zich in rusttoestand bevindt of geactiveerd
+wordt.
+\item
+FACULTATIEF: De schakeling moet bestand zijn tegen het tegelijkertijd
+indrukken van meerdere toetsen.\\
+Bedenk zelf wat er moet gebeuren als een telefoonnummer wordt ingetoetst
+dat langer is dan 16 cijfers.
+\end{itemize}
+
+
+
+
+\subsubsection{Overige Specificaties}
+
+\paragraph{CCITT-norm voor telefonie}
+
+Bij het zgn.\ Dual-Tone Multiple-Frequency (DTMF)-systeem voor telefonie hoort bij elke toets een combinatie van een lage en een hoge toon.
+Dit is schematisch in figuur \ref{CCITT} aangegeven.
+
+%figuur CCITT.eps
+\begin{figure}[h]
+\centerline{\callpsfig{CCITT.eps}{width=.22\textwidth}}
+\caption{Frequentie verdeling}
+\label{CCITT}
+\end{figure}
+
+Hiervoor gelden de volgende specificaties:
+\begin{tabbing}
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\=xxxxxxxxxxxxxxx\=xxxxxxx\=\kill
+gebruikte frequenties: 	\>laag: 	\>697, 770, 852, 941 (Hz)\\
+			\>hoog:		\>1209, 1336, 1477 (Hz)\\
+onnauwkeurigheid:	\>$<$ 1.5 \%	\\
+vermogensverschil tussen tonen:  	\>$<$ 6 dB\\
+signaalduur:		\>$>$ 40 ms\>$<$ 2 s\\
+signaalpauze:		\>$>$ 70 ms\>$<$ 2 s\\
+signaal(duur+pauze):	\>$>$ 120 ms\>$<$ 2 s\\
+signaalvermogen:	\>100 $\mu\!$W ($\pm$ 30 \%)\\
+harmonische distorsie:	\>$<$ 0.01 of -20 dB\\
+\end{tabbing}
+
+\paragraph{Kristal-oscillator}
+
+De onnauwkeurigheid van een kristal-oscillator is kleiner dan 1 \%.
+
+
+
+\paragraph{Toetsenbord}
+
+\begin{tabbing}
+xxxxxxxxxxxxxxxxxxxxxxxx\=xxxxxxxxxxxxxxx\=xxxxxxx\=\kill
+vorm:			\>3x4-matrix\\
+impedantie:		\>uit: 		\>$>$ 10 M$\Omega$\\
+			\>aan:		\>$<$ 100 $\Omega$\\
+stabiliseringstijd:	\>$<$ 50 ms\\
+\end{tabbing}
+
+
+
+\paragraph{Luidspreker}
+
+\begin{tabbing}
+xxxxxxxxxxxxxxxxxxxxxxxx\=xxxxxxxxxxxxxxx\=xxxxxxx\=\kill
+impedantie:		\>50 $\Omega$ ($\pm$ 10 \%)\\
+resonantie-frequentie:	\>440 Hz\\
+bandbreedte:		\>350-5000 Hz\\
+vermogen:		\>$<$ 0.3 W\\
+rendement:		\>100 \% (aanname)\\
+\end{tabbing}
+
+
+\subsection{De Avant-Garde Klok}
+
+\subsubsection{Inleiding}
+Klokken zijn behalve technische hoogstandjes ook altijd mode-objecten geweest.
+Iedere periode in de geschiedenis kent zijn eigen karakteristieke uitvoering van een tijdmeter.
+Het ontwerpen van zo\-iets ``gewoons'' als een klok kan daarom nog heel bijzonder zijn.
+De informatie-overdracht van klok naar mens kan op talloze manieren verzorgd worden.
+Dit loopt van de ouderwetse wijzerplaat met wijzers tot aan de elektroden op de grote hersenen met een bionisch RS232-interface.
+Puur technisch gezien wordt van klokken een steeds grotere nauwkeurigheid verlangd.
+Dit alles in beschouwing genomen blijft het nog steeds een uitdaging om een klok te ontwerpen die behalve als functio\-neel technisch object ook zijn plaats in de wereld verdient door zijn uitvoeringsvorm.
+De directeur van TECHNOGADGET had op een druilerige zondagmiddag het idee
+gekregen om een klok met een ultieme nauwkeurigheid te maken. Hij dacht
+ineens aan een zender die in Duitsland staat, die met atoomnauwkeurigheid
+de tijd gedecodeerd uitzendt, de zogenaamde DCF-zender.
+Na verdere ontwikkeling van zijn idee\"en, heeft hij contact opgenomen met
+de beroemde Italiaanse designer Verstamo, om
+een klok te ontwerpen die eeuwigheidswaarde heeft.
+
+Er zijn talloze manieren om de tijd zichtbaar te maken. De ontwerper
+heeft gekozen moderne middelen  te gebruiken, om de dynamiek van
+de techniek op de bezitter van de klok over te dragen. Hiervoor gebruikt hij
+een LED-display voor de aanduiding van de uren, zeven LEDs voor de
+aanduiding van de weekdag en twee draaispoelmeters voor de aanwijzing
+van de minuten en seconden.
+Om de gebruikers te helpen de klok zo te plaatsen dat deze het DCF-signaal
+kan ontvangen, is ook op een strategische plaats een LED aangebracht,
+die aangeeft of het DCF-signaal wordt ontvangen.
+Zo mogelijk zal de klok ieder kwartier het wijsje spelen dat op dat moment ook door de Big Ben in Londen wordt gespeeld.
+Speciaal voor mensen die ooit in Londen geweest zijn maakt dit de klok natuurlijk extra aantrekkelijk.
+
+Helaas heeft Verstamo geen verstand van elektronica, dus de chip die dit alles moet besturen zal door de echte deskundigen ontworpen moeten worden.
+Hier is natuurlijk haast bij, want zoals alle leken denkt ook Verstamo dat elektronisch alles zo maar kan.
+Hij heeft zijn klok dus al verkocht aan een grote fabrikant die reeds een grote reclamecampagne heeft opgezet.
+Verstamo kan dan ook een claim van ongeveer 100 miljoen euro aan ge{\ii}nvesteerd reclamegeld verwachten indien het ontwerp niet op tijd komt.
+Zijn adviseurs hebben hem al gewaarschuwd dat simulaties ter verificatie van de chip veel tijd kunnen gaan kosten.
+Wordt bijvoorbeeld een schakeling gesimuleerd met een klokfrequentie van 6 MHz waaruit een puls per week moet komen, dan moet hij beseffen dat de simulator niet veel meer dan 6 miljoen gebeurtenissen per seconde rekentijd kan simuleren en dat de simulatie dus ook makkelijk een week zal kunnen gaan duren.
+Verder zitten er in een week bijzonder veel seconden, zodat data-opslag voor de simulator ook wel eens een probleem zou kunnen gaan worden.
+Ook later, wanneer de chip uit de fabriek komt zal het ondoenlijk zijn de chip een week lang in een tester te stoppen om te kijken of de weekaanduiding werkt.
+De chip zal niet op een veel hogere klokfrequentie kunnen werken, dus hier zal weinig winst te behalen zijn.
+\\
+{\em Het is daarom zaak ruime aandacht te besteden aan simuleerbaarheid en testbaarheid en niet aan een grote hoeveelheid (ontestbare) elektronische grapjes.}
+Het aanbrengen van verschillende testmogelijkheden zoals het ``opdelen'' van delerketens die los testbaar zijn binnen een redelijke tijd is van zeer groot belang.
+\subsubsection{Specificaties DCF-ontvanger}
+\begin{itemize}
+\item Als invoer dient een antenne-signaal, dat de DCF-code bevat en
+door de al bestaande ontvanger wordt omgezet naar een signaal
+dat direct als invoer kan dienen voor de schakeling, die voor de
+verwerking van dit signaal zorgt.
+Deze signalen hebben logische niveaus die door deze schakeling
+verwerkt kunnen worden, maar
+nog niet gesynchroniseerd en gedecodeerd zijn.
+\item Als uitgang van de DCF-klok dienen enige displays die de
+tijd en ook een luidspreker die de tonen
+van de Big Ben melodie hoorbaar maakt. Bij het
+genereren van deze tonen kunnen verschillende luxe-klassen worden onderscheiden.
+De tonen kunnen een verschillende tijdsduur hebben, maar ook een volume
+dat in de tijd afneemt. Dit geeft het effect of een echt klokkenspel
+wordt bespeeld. Deze opties brengen wel een ingewikkelder en groter
+ontwerp met zich mee!
+\item De nauwkeurigheid van de klok wordt geleverd door de
+beroemde DCF-tijdzender.
+Deze zender zendt op 77.5 kHz een signaal uit in de vorm van een serie bits.
+Elke minuut wordt er een reeks van 59 bits uitgezonden die de complete tijd weergeeft (tijd, dag, maand, jaar en controle-bits).
+De afwijking is ongeveer 1 seconde per 300.000 jaar, dus dat is net voldoende.
+Een bijzonder simpele ontvanger (die niet ontworpen hoeft te worden) levert aan de uitgang een digitaal signaal (pulsen van 100 ms en 200 ms), waaruit de tijd bepaald kan worden.
+\item De ontvangst van het DCF-signaal zal doorgaans goed zijn.
+Als de zender echter niet ontvangen wordt, of als er storingen
+worden gedetecteerd, dan zal de klok moeten besluiten het voorlopig
+maar met het eigen kristal te doen.
+Zodra goede ontvangst weer mogelijk is, zal de klok zich weer
+precies gelijk zetten.
+Wanneer een DCF-signaal wordt ontvangen, moet de klok dit aangeven
+door het laten branden van een LED.
+\item De firma TECHNOGADGET verwacht dat de eerste serie exclusieve klokken
+nog voor grote bedragen verkocht kunnen worden. Wanneer de klokken bekend
+worden, wil iedereen zo'n klok kopen. Om iedereen in staat te stellen zo'n
+klok te kopen, moeten ook goedkopere versies gemaakt kunnen worden.
+Door verschillende mogelijkheden niet te gebruiken, kan een goedkope versie worden aangeboden.
+Door een modulair ontwerp te maken, is het eenvoudig om bepaalde
+onderdelen weg te laten. Dit heeft als voordeel dat
+de verschillende circuitdelen los van elkaar getest kunnen worden, omdat ze
+ook los van elkaar kunnen werken. Dit is ook prettig voor de fabrikant, omdat
+deze bij uitval tijdens de fabricage, wanneer bijvoorbeeld
+het speelwerk defect is, de klokken kan gebruiken
+in een wat goedkopere versie van de DCF-klok zonder geluid.
+\end{itemize}
+
+\subsubsection{Overige specificaties}
+
+\paragraph{DCF-signaal}
+
+De codering van het DCF-signaal ziet er als volgt uit:
+
+\begin{figure}[bth]
+\centerline{\callpsfig{dcfcode.eps}{width=.6\textwidth}}
+\caption{Codering van het DCF-signaal}
+\label{dcfcode}
+\end{figure}
+
+\begin{itemize}
+\item
+Alle waarden worden gegeven in BCD-code.
+\item
+Er zijn drie pariteitsbits (controle-bits: P1, P2, P3) aanwezig. Deze kunnen
+genegeerd worden.
+\item
+Bij de weekdag is maandag als ''001'' gecodeerd. De overige coderingen zijn
+triviaal.
+\end{itemize}
+\begin{figure}[bth]
+\centerline{\callpsfig{dcfsignaal.eps}{width=.5\textwidth}}
+\caption{Vorm van het DCF-signaal}
+\label{dcfsignaal}
+\end{figure}
+
+
+Het signaal zelf ziet er ongeveer zo uit als bovenaan aangegeven is in figuur
+\ref{dcfsignaal}
+
+Een (overigens vrij eenvoudige) ontvanger, die u niet zelf hoeft te maken, maakt
+ er een signaal van dat lijkt op het middelste signaal. Dit signaal wordt
+aangeboden aan de chip.\\
+De DCF-zender genereert om de seconde een puls
+met een breedte van 100 ms (voor een '0') of 200 ms (voor een '1').
+Op de 60-ste seconde wordt geen puls uitgezonden.\\
+Het onderste signaal geeft aan hoe u dit zou kunnen decoderen.
+
+\paragraph{Big Ben melodie}
+
+de Big Ben melodie ziet er als volgt uit:\\
+
+
+\begin{figure}[bth]
+\centerline{\callpsfig{bigben.ps}{width=.8\textwidth}}
+\caption{Big Ben melodie}
+\label{Big_Ben}
+\end{figure}
+
+
+De toonhoogten die gebruikt worden zijn:
+
+\begin{tabular}{||l|l||} \hline
+C & 1046.5 Hz \\ \hline
+F & 1396.9 Hz \\ \hline
+G & 1567.9 Hz \\ \hline
+A & 1760.0 Hz \\ \hline
+\end{tabular}
+
+
+\paragraph{Draaispoelmeter}
+
+De draaispoelmeters zijn lineair en vragen voor een volledige uitslag
+een stroom van 2 mA. De impedantie is kleiner dan 100 $\Omega$.
+
+\paragraph{Uitgangen}
+
+De uitgangen van de DCF-klok kunnen bij een te grote belasting
+gebufferd worden. Om een goede aansturing van de buffers mogelijk te
+maken, moet de uitgangsstroom van de (analoge) signalen (extern)
+regelbaar zijn.
+
+\paragraph{Toetsen}
+
+\begin{tabbing}
+xxxxxxxxxxxxxxxxxxxxxxxx\=xxxxxxxxxxxxxxx\=xxxxxxx\=\kill
+impedantie:             \>uit:          \>$>$ 10 M$\Omega$\\
+                        \>aan:          \>$<$ 100 $\Omega$\\
+stabiliseringstijd:     \>$<$ 50 ms\\
+\end{tabbing}
+
+
+\paragraph{Luidspreker}
+
+\begin{tabbing}
+xxxxxxxxxxxxxxxxxxxxxxxx\=xxxxxxxxxxxxxxx\=xxxxxxx\=\kill
+impedantie:             \>50 $\Omega$ ($\pm$ 10 \%)\\
+resonantie-frequentie:  \>440 Hz\\
+bandbreedte:            \>350-5000 Hz\\
+vermogen:               \>$<$ 0.3 W\\
+rendement:              \>100 \% (aanname)\\
+\end{tabbing}
+
+
+
+\paragraph{Functies}
+
+Er zijn een aantal duidelijk te onderscheiden functies in de klok
+waardoor de firma TECHNOGADGET in staat is deelontwerpen uit te besteden
+aan verschillende teams:
+\begin{itemize}
+\item
+De DCF-decoder, die in staat is de dcf-pulsen te decoderen en om te zetten in logische niveaus.
+\item
+De schakeling die besluit of er een geldige datareeks is binnengekomen uit
+de ontvanger.
+\item
+Een ``autonome klok'' die parallel de DCF-data kan laden als deze geldig blijkt te zijn, maar die zelfstandig kan lopen in andere gevallen.
+\item
+Een display sectie, die de LEDs en de draaispoelmeters kan aansturen.
+\end{itemize}
+
+\subsection{De Infrarood-Besturing}
+\subsubsection{Inleiding}
+Een instituut beschikt over een ionenbron, die ingesteld wordt m.b.v.
+een vijftal parameters, die alle kunnen worden ingesteld door een
+getal tussen de 0 en 99. Deze ionenbron is geplaatst in een afgeschermde
+ruimte omdat hij op een hoge spanning moet zijn aangesloten.
+Probleem is nu, dat steeds wanneer voor een proef met deze bron een
+bepaalde parameter moet worden gewijzigd, de gehele opstelling moet worden
+uitgeschakeld om de betreffende parameter te kunnen instellen.
+Gelukkig voor dit instituut liep er een slimme TUD-student stage, die
+het idee opperde om een infrarood kanaal te maken, waarmee de waarden voor
+de parameters naar de bron-opstelling zouden kunnen worden overgebracht,
+zonder de opstelling uit te schakelen.
+Hij merkte op dat de devices voor het instellen van de parameters
+reeds een busaansluiting hadden, waarop, in binaire code de waarde van
+de parameter kon worden geplaatst, waarna deze waarde werd overgenomen wanneer
+de enable lijn van het betreffende device gedurende tenminste
+100 us 'hoog' werd.
+Bovendien wist hij (hij had het ontwerppracticum met goed gevolg doorlopen
+en toen gepoogd een dialmemo te maken), dat er van die handige telefoon-
+toetsenbordjes bestaan, die heel goed als invoermedium van gegevens kunnen
+dienen.\\
+Helaas, toen dit allemaal bedacht en besproken was met de directie van het
+instituut (waar veel tijd in ging zitten), was zijn stagetijd om.
+Maar gelukkig kan een nieuwe op-goep uitkomst brengen door dit
+infrarood kanaal te realiseren, door een zend- en een ontvang-chip
+voor dit probleem te maken met de onderstaande specificaties.
+\subsubsection{Specificaties infrarood-kanaal}
+\begin{itemize}
+\item Het infrarood-kanaal zal bestaan uit twee chips: een zender-chip,
+      die een pulsreeks uitzend om de parameters in te stellen, en een
+      ontvanger-chip die de uitgezonden pulsreeks decodeert en de
+      parameters de juiste waarden geeft.
+\item Als invoermedium voor het kanaal zal gebruik worden gemaakt van een
+      telefoon toetsenbord, waarbij de volgende afspraken gelden:
+      \begin{itemize}
+      \item De nummers op het toetsenbord worden gebruikt om de waarden van
+            de parameters op te geven.
+      \item De *-toets wordt gebruikt om het device waarvan de parameter
+            moet worden veranderd aan te geven. Steeds wanneer op deze
+            toets wordt gedrukt zal het volgende device worden aangewezen.
+      \item De \#-toets wordt gebruikt om de opgegeven waarde van de parameter
+            in het aangegeven device te laden.
+      \end{itemize}
+      Bovendien dient er rekening mee te worden gehouden, dat het toetsenbord
+      een ontdendertijd heeft van 40 ms.
+\item De zender moet tevens een uitgang hebben, waarop een 7-segment display
+      kan worden aangesloten, waarop de laatst ingedrukte toets is zichtbaar
+      gemaakt. Hierbij moet de *-toets worden getoond als een 'A' (advance) en
+      de \#-toets als een 'U' (update).
+\item De ontvanger moet een 7-bits brede uitgang hebben,
+      waarop de 7-bits binaire code
+      voor de parameter-waarde wordt geplaatst en een uitgang voor het
+      enable bit van ieder device, waarmee de parameter-waarde in dit device
+      kan worden geplaatst.
+\item De laatst verstuurde waarden van elk device, dit zijn dus de waarden
+      waarop de bron staat ingesteld moeten worden zichtbaar gemaakt op een
+      LCD. Voorts moeten hierop ook de nieuw in te stellen waarde worden
+      getoond, alsmede een indicatie voor het geselecteerde device waarop
+      deze waarde zal worden geplaatst.\\
+      Hiertoe is een LCD aanwezig (met documentatie), waarop  2 regels van elk
+      16 karakters kunnen worden weergegeven.
+\item Daar de zender-chip en ontvanger-chip alleen met elkaar communiceren
+      via het infrarood-kanaal en er verder geen verbinding tussen de twee
+      chips mogelijk is, wordt er dus ook voor het zend- en ontvang-gedeelte
+      gebruik gemaakt van een afzonderlijke klokpuls.\\
+      Er moet dus rekening mee worden gehouden, dat deze twee klokpulsen
+      geen fase-koppeling hebben.
+      Ook moet er rekening worden gehouden met een eventueel verschil in
+      frequentie van beide pulsen van maximaal 5\%.
+\item De pulsduur van de enable-signalen van de devices moet minimaal 100 us
+      bedragen, en gedurende minimaal 50 us voor deze puls tot 50 us
+      na deze puls moet de waarde op de parameter-uitgangen stabiel zijn.
+\end{itemize}
+
+\subsection{Een Reactiemeter}
+\subsubsection{Inleiding}
+Tijdens een feestelijke bijeenkomst raakten een drietal studenten in gesprek
+over hun uiterst snelle reactietijd op een gebeurtenis (zelfs na een aantal
+glazen bier).
+Natuurlijk vond elk van de drie dat hij toch verreweg de kortste reactietijd
+had.
+De discussie liep hoog op, tot \'e\'en van de studenten op het idee kwam om een
+schakeling te maken, die voor eens en altijd kon uitmaken wie van hen werkelijk het snelst was.
+Ze bedachten hierna zo'n schakeling die de hieronder beschreven werking
+zou moeten hebben.
+Helaas is het tot een realisatie van de schakeling nooit meer gekomen.
+Maar hier kan een op-groep wellicht uitkomst brengen.
+
+\subsubsection{Werking reactiemeter}
+De reactiemeter moet twee cijfers weergeven: een in te stellen referentiecijfer
+en een steeds veranderend reactiecijfer.
+Voorts moet voor elke deelnemer een drukknop aanwezig zijn en een
+tijdweergave van hun reactietijd.\\
+Wanneer het referentiecijfer en het reactiecijfer gelijk zijn moeten de
+deelnemers zo snel mogelijk hun drukknop indrukken.
+Wie het eerst heeft gedrukt behoud zijn tot dan toe gebruikte reactietijd.
+Bij de twee andere deelnemers moet het verschil tussen hun reactietijd en de
+reactietijd van de snelste deelnemer bij hun totale reactietijd worden
+opgeteld.
+Wie zijn toegestane totale reactietijd (bijv. 1 seconde) heeft gebruikt valt af.
+Degene die overblijft is de winnaar.\\
+Om te voorkomen, dat 'slimme' deelnemers constant hun drukknop indrukken of
+ingerukt houden moet ook een straftijd aan de reactietijd van een deelnemer
+worden toegevoegd, wanneer hij zijn drukknop indrukt terwijl de cijfers
+niet gelijk zijn.
+
+\subsubsection{Specificaties reactiemeter}
+In verband met het bovenstaande moet de reactiemeter voldoen aan de volgende
+specificaties:
+\begin{itemize}
+\item Er moet een in te stellen referentiecijfer worden weergegeven.
+\item Er moet een reactiecijfer worden gemaakt en getoond, dat om de
+      seconde (pseudo-)random verandert.
+\item Er moet een drietal drukknoppen aanwezig zijn waarop moet worden gedrukt
+      wanneer beide cijfers gelijk zijn.
+\item Er moet een drietal tijdweergaven zijn, waarop de geaccumuleerde
+      reactietijden van de drie deelnemers zichtbaar zijn.
+\item Voor elke deelnemer is een indicatie aanwezig, die aangeeft wanneer
+      een deelnemer zijn totale reactietijd heeft overschreden.
+\item Er moet een reset knop eenwezig zijn, waarmee de schakeling kan worden
+      gereset.
+\item De reactietijden moeten worden gemeten met een nauwkeurigheid
+      van 0.01 seconde.
+\item Voor de klok van de schakeling mag gebruik worden gemaakt van een
+      externe pulsgenerator.
+\item Voor de totale reactietijd die mag worden gebruikt moet een geschikte
+      waarde in de orde van grootte van 1 seconde worden gekozen.
+\item De 'straf' voor het foutief indrukken van de drukknop mag door de
+      ontwerper(s) van de schakeling worden bepaald.
+\end{itemize}
+Voor de weergaven van de genoemde grootheden kan worden gekozen uit twee opties:
+\begin{itemize}
+\item Voor het reactiecijfer en het referentiecijfer wordt gebruik gemaakt
+      van een 7-segments display, de tijdsoverschrijding wordt aangegeven
+      met een led en de waarden van de reactietijden, worden via (op de chip
+      te ontwerpen) digitaal-analoog omzetters door draaispoelmeters aangegeven.
+\item Alle grootheden worden getoond op een lcd-schermpje met een afmeting
+      van 2 regels met elk 16 karakters.
+\end{itemize}
+
+\subsection{De Pong Spelcomputer}
+
+\subsubsection{Inleiding}
+De opdracht is om op een Sea-Of-Gates chip een spelcomputer te maken waarvan de uitgangen
+kunnen worden aangesloten op de VGA-ingang van een monitor en waarmee een spel gespeeld
+kan worden dat populair was in de begintijd van de spelcomputers: ''pong tennis''.
+Zie de afbeelding hier\-onder.
+\begin{figure}[h]
+\centerline{\callpsfig{pongbeeld.eps}{width=.6\textwidth}}
+\caption{Het beeld van de Pong spelcomputer}
+\label{pongbeeld}
+\end{figure}
+Voor meer achtergrondinformatie over ''pong'', zie ook http://www.pong-story.com/intro.htm.
+
+\subsubsection{Het spel}
+Het idee van het spel is dat twee spelers hun racket omhoog en omlaag bewegen om een balletje
+te laten terugkaatsen dat zich schuin over het speelveld beweegt.  Het balletje voert volkomen
+elastische botsing\-en uit tegen de boven en onderwand.  Ook tegen de rackets worden volkomen
+elastische botsing\-en uitgevoerd, echter met het verschil dat wanneer de bal het racket raakt op de
+onderste helft de bal altijd terugkaatst naar beneden en wanneer de bal het racket raakt op de
+bovenste helft de bal altijd terugkaatst naar boven. Elke keer wanneer het balletje botst tegen een
+wand of racket is het geluid ''pong'' te horen. Wanneer een speler de bal mist en de bal achter hem
+passeert krijgt de tegenstander 1 punt erbij.
+Wanneer \'e\'en van de spelers 15 punten heeft, heeft deze speler het spel gewonnen.
+
+\subsubsection{De spelbesturing}
+Elke speler heeft twee drukknopen:
+\'e\'en om het racket omhoog te laten gaan en
+\'e\'en om het racket omlaag te laten gaan.
+Verder zijn er:
+\begin{itemize}
+\item
+een reset knop om de stand op 0 - 0 te zetten en het spel te starten.
+\item
+een schakelaar waarmee 2 verschillende balsnelheden kunnen worden ingesteld:
+\begin{itemize}
+\item
+horizontaal: ongeveer 500 pixels/sec, verticaal: ongeveer 250 pixels/sec.
+\item
+horizontaal: ongeveer 1000 pixels/sec, verticaal: ongeveer 500 pixels/sec.
+\end{itemize}
+\item
+een schakelaar waarmee 2 verschillende afmetingen van de rackets kunnen worden
+ingesteld:
+\begin{itemize}
+\item
+64 pixels verticaal
+\item
+32 pixels verticaal
+\end{itemize}
+\end{itemize}
+
+\subsubsection{De aansturing van de monitor}
+De chip dient een VGA-signaal te genereren voor een beeld van 640x480 pixels.
+Een korte schemati\-sche beschrijving van deze standaard is te zien in
+figuur \ref{vgatiming}.
+Voor verdere informatie,
+zie bijvoorbeeld http://www.epanorama.net/documents/pc/vga\_timing.html.
+\begin{figure}[th]
+\centerline{\callpsfig{VGAtiming.ps}{width=1.1\textwidth}}
+\caption{VGA-timing}
+\label{vgatiming}
+\end{figure}
+Merk op dat 5 uitgangssignalen nodig zijn voor een VGA-signaal: De waarde voor het rode pixel,
+de waarde voor het groene pixel, de waarde voor het blauwe pixel, een horizontaal sync-signaal
+en een verticaal sync-signaal.  De laatste twee signalen zijn digitale signalen van 0 of 5 Volt en
+corresponderen dus met de op de Sea-Of-Gates chip gebruikte waarden voor een logische 0 en 1.
+De RGB pixelwaarden kunnen in principe analoge waarden hebben tussen 0 en 0.7 Volt.
+Voor ons spel zullen we de RGB pixels alleen helemaal aan of helemaal uitzetten
+en zullen er 3 externe
+level-shift schakelingen beschikbaar zijn waarme
+de 5 Volt uitgangswaarde van de Sea-Of-Gates chip
+kan worden omgezet naar 0.7 Volt.
+Hoewel volgens de definitie van de 640x480 pixel mode VGA-standaard een klok van 25.175
+MHz vereist is (om elke klokpuls van 39.7 nsec. een R, G en B pixelwaarde over sturen), blijkt
+deze frequentiewaarde niet zo kritisch te zijn en zullen de meeste VGA-monitors nog werken
+wanneer er een afwijking van 5 \% in de timing optreedt.
+Merk verder op dat wanneer de resolutie
+van de objecten in het spel niet te groot wordt gekozen en elke reeks van n (n  = 2, 4 of 8)
+achtereenvolgende pixels dezelfde waarde hebben er verder ook volstaan kan worden met een n
+keer zo lage klokfrequentie.
+\FloatBarrier
+
+\subsubsection{Het ''pong'' geluid}
+Via een kleine luidspreker van 50 Ohm die direct op de chip wordt
+aangesloten dient het ''pong'' geluid gegenereerd te worden
+(een 1kHz blokgolf signaal).
+
+\subsubsection{De overige randvoorwaarden}
+Voor dit ontwerp mag een chip-oppervlak van 2 bond\_bars worden gebruikt.
+
+\subsection{Alternatieve opdracht}
+Naast bovengenoemde opdrachten kan een groep ook zelf een opdracht bedenken
+en zelf de specificaties opstellen.
+Enige suggesties voor een alternatieve opdracht zijn:
+\begin{itemize}
+\item
+Een ander soort spelcomputer: bijvoorbeeld Snake, Tetris, Packman, etc.
+\item
+Een thermostaat.
+\end{itemize}
+Zo'n soort opdracht dient (1) aan dezelfde algemene randvoorden te voldoen
+als de andere opdrachten (zie sectie 'Algemene Randvoorwaarden' hieronder),
+en (2) eenzelfde complexiteit te hebben 
+(d.w.z. een chip-oppervlak van 1 \`a 2 bond\_bars te omvatten).
+Verder dient de opdracht eerst door de begeleiding te worden 
+goedgekeurd voordat met de verdere uitwerking wordt begonnen.
+
+\subsection{Algemene randvoorwaarden}
+
+\begin{itemize}
+\item
+Voor de FSM's (Finite State Machine) mogen alleen die van het
+Moore-type gebruikt worden. Meer informatie hierover is te vinden in
+\cite{DT}.
+\item
+Als de schakeling geactiveerd wordt moeten alle FSM's in hun
+begintoestand komen door middel van een reset signaal.
+\item
+Er moet bij het ontwerpen rekening gehouden worden met het feit dat de
+schakeling later getest zal worden. Als minimum eis wordt gesteld dat
+alle grote blokken apart getest moeten kunnen worden en dat van de
+verschillende besturingen ook de huidige toestand gelezen moet kunnen
+worden.
+\item
+Voor de opwekking van het kloksignaal kan gebruik gemaakt worden van
+een kristal van 6.144 MHz of 32 kHz.
+\item
+Het streven is om zo weinig mogelijk componenten extern
+te gebruiken. De dissipatie van de chip dient echter ook beperkt
+te zijn. Dit geeft een compromis voor de maximale stroom die de elektronica
+mag dissiperen voor de aansturing van de LEDs, etc.
+\item
+De voedingsspanning van het IC bedraagt 5 Volt.
+\item
+Het IC wordt gemaakt in een semi-custom CMOS proces waarvan de
+specificaties in appendix \ref{SoGchip} vermeld zijn.
+\item
+Het beschikbare chip-oppervlak is circa 0.4 $\,cm^2$,
+hetgeen overeenkomt met ongeveer 40.000 transistor-paren,
+die gelijkelijk zijn verdeeld over 2 bond\_bars (zie bibliotheek cellen)
+\item
+Er zijn op het IC, naast de voedingspinnen, per bond\_bar 32 aansluitingen
+beschikbaar.
+Hoewel een totale schakeling meer dan \'e\'en bond\_bar aan oppervlakte
+kan hebben, kunnen bij de afmontage slechts de aansluitingen
+van \'e\'en bond\_bar worden aangesloten.
+In uitzonderlijke gevallen is het mogelijk om het
+aantal aansluitingen te verhogen d.m.v.\ multiplextechnieken.
+\end{itemize}
+
+\subsection{Aanpak systeemspecificatie}
+
+In de middagen waarin de systeemspecificatie moet worden vastgesteld kunnen
+een aantal taken worden onderscheiden die \'e\'en voor \'e\'en doorlopen moeten worden
+om uiteindelijk tot een eenduidige systeemspecificatie te komen. Hieronder zijn deze taken opgesomd.
+\begin{itemize}
+
+\item    Randvoorwaarden vaststellen vanuit de opdrachtbeschrijving
+(kan thuis worden voorbereid).
+\item    Toevoegen van externe randvoorwaarden, complementeren
+          van randvoorwaarden en specificaties.
+\item    Korte beschrijving in woorden maken wat de schakeling moet doen.
+\item    Verdeling van de schakeling in afzonderlijke deelsystemen.
+\item    Beschrijving in woorden wat de verschillende deelsystemen
+          moeten doen.
+\item    Beschrijving van de interface (communicatie tussen de
+          verschillende deelsystemen).
+\item    Globale uitwerking van de deelsystemen. Vaststellen van de
+          deelsysteemspecificaties en randvoorwaarden. Denk hierbij ook aan
+          de testbaarheid.
+\item    Onderlinge afstemming van de deelsystemen (naamgeving,
+          timing, signalen, frequenties). Vaststellen welke signalen naar
+buiten worden gevoerd (ook voor testdoeleinden). Zorg ervoor dat de verdeling zo is dat de deelsystemen apart testbaar zijn.
+\item    Verdeling van de deelsystemen over de groep, maken van een
+          tijdsplanning. Afspraken maken voor onderling overleg.
+\end{itemize}
+
+\subsection{Beschikbare ruimte}
+
+Per groep is er op de chip een ruimte beschikbaar die gevormd wordt
+door 2 bond\_bars onder elkaar.
+Het ontwerp kan bestaan uit 1 geheel, waarbij er slechts 1 bond\_bar is aangesloten
+en er dus 1 manier van afmonteren zal zijn, of
+het ontwerp kan bestaan uit 2 afzonderlijke gedeelten die elk apart aan een
+bond\_bar zijn aangesloten en er dus 2 manieren van afmonteren zullen zijn.
+Wanneer er gekozen wordt voor 1 geheel zal deze schakeling als geheel moeten kunnen
+functioneren, maar zal deze schakeling het ook moeten toelaten om de afzonderlijke
+deelschakelingen te kunnen testen.
+Wanneer er gekozen wordt voor 2 gedeelten zal normaal gesproken het eerste deel
+als gehele schakeling functioneren en zullen op het twee deel de afzonderlijke
+deelschakelingen nog eens aanwezig zijn om apart getest te kunnen worden.
+
+\input{M_testbaar}
+
+\subsection{Afronding ontwerp}
+Wanneer de uiteindelijke layout gemaakt gaat worden
+dient allereerst aan de totale schakeling de bibliotheekcel osc10 aangesloten
+te worden om het kloksignaal aan te sturen.
+De aansturing van het kloksignaal dient plaats te vinden via terminal F van de osc10 cel.
+De terminals XI en XO dienen als aansluitpinnen
+voor het kristal naar buiten te worden gevoerd 
+(dus aangesloten aan de bond\_bar) 
+en de terminal E kan aan VDD worden vastgemaakt.
+Van het geheel dient nu een layout gemaakt te worden zodanig dat
+deze past op 1 of 2 bond\_bars (afhankelijk van hoe gekozen wordt de
+beschikbare ruimte op de chip te gebruiken).
+Het is vaak handig om deze laatste plaatsing van de deelschakelingen met de hand
+te doen waarbij 1 of 2 bond\_bars op de achtergrond worden geplaatst als
+referentiekader.
+Vergeet dan echter niet om de bond\_bars na afloop weer te verwijderen.
+
+De samenvoeging van de totale ontworpen layout met een bond\_bar dient te
+gebeuren met het commando Add bond\_bar uit het Utility menu van \tool{GoWithTheFlow}.
+Hierbij wordt gespecificeerd welke
+terminals uit het ontwerp vast zitten aan welke IC pinnen.
+Er wordt hierbij een nieuwe circuit cel gegenereerd bestaande uit 2 componenten
+(de hierboven ontworpen layout en de bond\_bar) die dan vervolgens met 
+Place \& route moet worden omgezet in een layout.
+Plaats de ontworpen component hierbij met de hand over de bond\_bar
+en route ze aan elkaar met \tool{trout} zonder de optie border terminals te gebruiken.
+
+Om de kans op een werkende schakeling te vergroten is het
+verder {\bf belangrijk
+dat deze uiteindelijke layout (inclusief bond\_bar)
+altijd als laatste nog eens geverifieerd wordt door er een switch-level
+simulatie voor uit te voeren}.
+Deze switch-level simulatie kan bijvoorbeeld gebaseerd zijn op de testbench
+die later ook gebruikt zal worden voor het testen met de logic analyzer.
+
+Maak tenslotte van de totale layout, inclusief bond\_bar, een ldm file
+met het commando Make ldm.
+
+De files die dan bij de beleiding moeten worden ingeleverd zijn:
+\begin{itemize}
+\item
+De \smc{ldm} file voor de totale layout,
+aangemaakt met het commando Make ldm
+\item
+De bijbehorende .buf file
+met daarin de informatie over hoe de pinnen zijn aangesloten.
+(Deze file wordt automatisch gegenereerd
+tijdens het uitvoeren van Utilities $\rightarrow$ Add bond\_bar.)
+\item
+Een .ref file voor elke test die na fabricage verricht zal
+gaan worden voor de schakeling.
+(Een .ref file
+wordt aangemaakt uit een .lst file met behulp van
+het commando Generate $\rightarrow$ Reference file.)
+Het is gewenst om een voor elke deelschakeling een .ref file 
+te hebben en een .ref voor de totale schakeling.
+\end{itemize}
+\cleardoublepage

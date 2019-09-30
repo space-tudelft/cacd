@@ -1,0 +1,33 @@
+# directory: demo/sram
+
+Demonstration of 3D capacitance extraction for a static RAM cell.
+From the section "Examples" in the Space 3D Capacitance Extraction User's 
+Manual.
+
+STEPS
+=====
+
+1.  Make project, use scmos_n technology and lambda = 0.25 (micron)
+    % mkpr -p scmos_n -l 0.25 projectname
+
+Rest assumes that you and your files are in the project directory.
+
+2.  Use cgi to put sram layout into the database.
+    % cgi sram.gds
+
+3.  Compile element definition file.
+    % tecc sram.s
+
+4.  Perform an extraction of cell sram in batch mode
+    % space3d -C3 -E sram.t -P sram.p sram
+    or interactively
+    % Xspace -E sram.t -P sram.p
+    (Click button "sram" in the menu "Database",
+    click button "coupling cap" and "3D capacitance" in the menu "Options",
+    click button "DrawBEMesh", "DrawGreen" and "3 dimensional" in the
+    menu "Display", and click button "extract" in the menu "Extract".
+    Click button "quit" in menu "Extract" to exit the Xspace program.)
+
+5.  Inspect the extracted circuit.
+    % xspice -a sram
+

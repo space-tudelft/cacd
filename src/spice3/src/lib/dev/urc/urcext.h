@@ -1,0 +1,15 @@
+/**********
+Copyright 1990 Regents of the University of California.  All rights reserved.
+Author: 1985 Thomas L. Quarles
+**********/
+
+extern int URCask(CKTcircuit*,GENinstance*,int,IFvalue*,IFvalue*);
+extern int URCdelete(GENmodel*,IFuid,GENinstance**);
+extern void URCdestroy(GENmodel**);
+extern int URCmAsk(CKTcircuit*,GENmodel*,int,IFvalue*);
+extern int URCmDelete(GENmodel**,IFuid,GENmodel*);
+extern int URCmParam(int,IFvalue*,GENmodel*);
+extern int URCparam(int,IFvalue*,GENinstance*,IFvalue*);
+extern int URCsetup(SMPmatrix*,GENmodel*,CKTcircuit*,int*);
+extern int URCunsetup(GENmodel*,CKTcircuit*);
+

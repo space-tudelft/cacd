@@ -1,0 +1,73 @@
+\subsection{no210}
+
+Function: 2-input nor
+
+Terminals: (A, B, Y, vss, vdd)
+
+
+IEC-symbol:
+%figuur no210.iec.eps
+\begin{figure}[bth]
+\callpsfig{no210.iec.eps}{width=.31\textwidth}
+\end{figure}
+
+\begin{minipage}[t]{0.3\textwidth}
+Function table:\\
+
+\begin{tabular}{|c|c||c|}
+\hline
+A	&B	&Y\\
+\hline
+L	&L	&H\\
+-	&H	&L\\
+H	&-	&L\\
+\hline
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.6\textwidth}
+Timing parameters:\\
+
+\begin{tabular}{|c|cc|ccc|c|}
+\hline
+Parameter		&From	&To	&Min	&Typ	&Max	&Unit\\
+\hline
+T$_{PLH}$               &A     	&Y      &0.23	&0.34	&0.59   &ns\\
+T$_{PHL}$               &A    	&Y      &0.10	&0.25	&0.38   &ns\\
+T$_{PLH}$               &B     	&Y      &0.21	&0.32	&0.59   &ns\\
+T$_{PHL}$               &B    	&Y      &0.10	&0.22	&0.40   &ns\\
+\hline
+$\Delta$T$_{PLH}$       &any    &Y      &-	&-	&1.8   &ns/pF\\
+$\Delta$T$_{PHL}$       &any    &Y      &-	&-	&0.8   &ns/pF\\
+\hline
+C$_{in}$                &any	&vss    &-	&0.12	&0.18   &pF\\
+\hline
+\end{tabular}
+\end{minipage}
+\\
+
+Equivalent chip area: 3
+
+Fanout: 2.4pF
+
+\makebox[0.98\textwidth]{
+%figuur no210.cir.eps
+\begin{minipage}[t]{0.5\textwidth}{
+circuit:\\
+\\
+
+{\callpsfig{no210.cir.eps}{height=3in}}
+}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\textwidth}{
+layout:\\
+\\
+
+%figuur no210.lay.eps
+{\callpsfig{no210.lay.eps}{height=3in}}
+}
+\end{minipage}
+}
+
+\clearpage

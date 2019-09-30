@@ -1,0 +1,15 @@
+
+B 50 20 840 600 3x3_vermenigvuldiger
+
+T in  B0 745 55
+T in  B1 645 55
+T in  B2 545 55
+T in  A0 345 55
+T in  A1 245 55
+T in  A2 145 55
+T out  P5  195 595
+T out  P4  295 595
+T out  P3  395 595
+T out  P2  495 595
+T out  P1  595 595
+T out  P0  695 595

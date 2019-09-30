@@ -1,0 +1,610 @@
+\selectlanguage{british}
+\title{Manual Simeye} \index{simeye|(bold}
+\maketitle
+
+\section{Synopsys}
+{\bf simeye}
+[X options]  [-IRLeh]  [-l$|$-m$|$-c]  [-a$|$-b]  [name]
+
+\section{Options}
+Beside the standard X Toolkit options (e.g. to set the display,
+the geometry, and the foreground color of the program),
+the following other options may be specified:
+\begin{description}
+\item[{\bf -freestateColor {\it color} : }]
+Specifies the color for signal values that are in {\bf free state}.
+\item[{\bf -high\_lowColor {\it color} : }]
+Specifies the color for signal values that are {\bf logic O} or {\bf logic I}.
+\item[{\bf -undefinedColor {\it color} : }]
+Specifies the color for signal values that are {\bf logic X}.
+\item[{\bf -voltsColor {\it color} : }]
+Specifies the color for {\bf analog} signal values.
+\item[{\bf -pointerColor {\it color} : }]
+Specifies another color for the pointer (default: canvas.foreground).
+\item[{\bf -std\_bg {\it color} : }]
+Specifies another color for the standard background (default: grey).
+\item[{\bf -I} :]
+Start \tool{simeye} in input (editing) mode.
+\item[{\bf -R} :]
+Start \tool{simeye} in input (editing) mode
+and set circuit name and command file name
+in order to prepare a simulation run.
+\item[{\bf -L} :]
+Load window settings each time when new signals are read.
+\item[{\bf -e} :]
+Do not add or use extension of specified {\it name}.
+\item[{\bf -h} :]
+Display only help information.
+\item[{\bf -l} :]
+Use {\bf sls-logic} as simulation type (default).
+\item[{\bf -m} :]
+Use {\bf sls-timing} as simulation type.
+\item[{\bf -c} :]
+Use {\bf spice} as simulation type.
+\item[{\bf -a} :]
+Use {\bf analog} representation for {\bf sls} signals.
+\item[{\bf -b} :]
+Use {\bf digital} representation for {\bf sls} signals 
+(default).
+\end{description}
+
+\section{Description}
+\tool{Simeye}
+is an X-window (OSF/Motif) based simulation user interface
+for viewing the results of the
+\tool{sls(1ICD)},and
+\tool{spice(1ICD)}
+simulators.
+The program can be used to inspect the graphical representation of the
+output signals of the simulators and
+it can be used to edit input signals that
+are described in the SLS command file format (see: User's Manual).
+Moreover,
+from 
+\tool{simeye}
+simulations can be run by starting either the
+\tool{sls} or \tool{spice} simulator
+(Note: \tool{spice} via the script \tool{nspice(1ICD)}).
+\par
+{\bf The following program argument may be specified:}
+\begin{description}
+\item[{\it name} :]
+This name specifies the name of the cell or file for
+which simulation signals are displayed and/or edited.
+\end{description}
+The {\it name} argument should be a file name.
+If the {\it name} contains no '.' in it,
+the name is assumed to be a cell name.
+In that case a standard extension is added, based on the specified
+option (precedence order: {\bf -I}, {\bf -c}, {\bf -a}).
+Give option {\bf -e}, if no extension must be added.
+If a file name is specified with a standard extension (from first '.'
+position), this extension type is used (has precedence of options).
+Give option {\bf -e}, if you do not want this feature.
+\\
+\\
+The standard extensions are:
+\\
+''.res''
+for {\bf sls digital} (output) signals (option {\bf -b}).
+\\
+''.plt''
+for {\bf sls analog} or waveform (output) signals (option {\bf -a}.
+\\
+''.ana''
+for {\bf spice} analog (output) signals (option {\bf -c}).
+\\
+''.cmd''
+for simulator {\bf commands} and input signals (option {\bf -I}).
+\\
+\\
+Note that the spice output file should contain the signals
+of a transient analysis in tabular format.
+When running the program \tool{spice}
+directly this is achieved by
+using the card ''.print tran ...'' in the spice input file.
+When running \tool{nspice},
+this is achieved by using
+sls ''plot ...'' commands in the command file.
+
+\section{Commands}
+Commands are organized in six PullDown Menu's (i.e. {\it File},
+{\it Edit}, {\it Simulate}, {\it View}, {\it Options} and {\it Help}).
+This MenuBar buttons can also be activated by typing the $<${\bf Meta}$>$ key
+and the mnemonic character (the mnemonic
+is the character that is underlined).
+Commands in the PullDown Menu's can also be activated by only typing
+a mnemonic character (Note: This mnemonic can be turned off,
+if you are using accelerator keys).
+\\
+Under the MenuBar there is a StatusArea,
+which shows the name
+of the ''editing'' command file or ''viewing'' simulation results file,
+and the simulation setup, and most right the active command (if any).
+You can also turn off an active command by clicking on that field.\\
+\\
+{\bf The commands in the {\it File} PullDown Menu are:}
+\begin{description}
+\item [{\it New :}]
+Start editing of a completely new command file or cell ''cmd'' stream
+after an OK-confirmation has been given.
+\item [{\it Open :}]
+Read {\it cell} command file or stream for editing.
+If this {\it cell} or this command file does not exist,
+\tool{simeye}
+will try to read a default command file called ''simeye.def.d''.
+First, it tries to read this file from the current directory
+and second it tries to read this file from the process directory.
+\item [{\it Save :}]
+Save (update) the edited command file or stream under the same file
+or cell name after an OK-confirmation has been given.
+\item [{\it Save As :}]
+Save the edited command file {\it cell} under a
+different file or cell name after an OK-confirmation has been given.
+\item [{\it Read :}]
+Read a new {\it cell} signal (simulation results) file or stream.
+If the 'read' {\bf Digital} or {\bf Analog} setting is activated
+an \tool{sls} ''res'' or ''plt'' output file/stream is read.
+If the 'read' {\bf Spice} setting is activated
+the \tool{spice} ''ana'' output file is read.
+\item [{\it Read Append :}]
+Append the {\it cell} signal (simulation results) file/stream to the current
+signals.
+Only Digital signals can be appended to Digital signals
+and Analog signals to Analog signals (see {\it Read}).
+\item [{\it Hardcopy :}]
+Generate a hardcopy of the current screen and send it to the printer
+by making an X Window pixel dump (fast, but of low resolution).
+\item [{\it Print :}]
+Make a PostScript-file of the current screen and send it to the printer
+after an OK-confirmation has been given (slow, but of high resolution).
+\item [{\it Exit :}]
+Exit the program after an OK-confirmation has been given.
+\end{description}
+
+{\bf The commands in the {\it Edit} PullDown Menu are:}
+\begin{description}
+\item [{\it Add :}]
+Create a new signal. The user has to enter the name of the new
+signal, and the signal will be placed at the bottom of
+the window.
+\item [{\it Change :}]
+Change (edit) a particular signal by inserting a new logical level
+for a particular time interval (t1, t2).
+The signal description may eventually already be defined for this interval.
+The insertion of the new logical level is done in two steps:
+During the first click of the mouse
+the signal, the new logical level and t1 are selected.
+During the second click t2 is selected and the new signal
+description is drawn.
+To insert an interval that has a free state 
+one should hold the $<$Shift$>$ key pressed down
+while making the first selection.
+\item [{\it Delete :}]
+Delete one or more signals by selecting them with the cursor.
+\item [{\it EraseAll :}]
+Erase all signals after an OK-confirmation has been given.
+\item [{\it Move :}]
+With this command the order of the signals can be changed
+or one signal can be placed over another signal
+in order to compare them.
+First the signal that is moved or that is placed over another signal
+is selected,
+and then the new position of the signal is selected.
+To place the selected signal over another signal one should hold
+the $<$Shift$>$ key down while selecting the new position.
+To remove a signal that is placed over another signal,
+initially select the signal with the $<$Shift$>$ key held down.
+\item [{\it Copy :}]
+Copy the signal description from one signal to another signal.
+\item [{\it ReName :}]
+Change or show the (full) name of the selected signal.
+\item [{\it Yank :}]
+Store a (part of a) signal description in the buffer.
+\item [{\it Put :}]
+Insert a copy of the signal description that is in the buffer onto
+a particular position.
+The user has to select the signal to which the contents
+of the buffer is added and the time from which on the
+new signal description is valid.
+The new signal description may (partly) override the existing
+signal description for the selected signal.
+Furthermore,
+the user is asked to type how may periods of the stored signal part
+are added.
+If a value -1 is specified, the selected signal
+will become a periodical signal and (seemingly)
+an infinite number of periods are added.
+In that case, when the simulation end time is enlarged,
+the signal description will automatically
+be extended according to the periodicity of the signal description.
+A periodical signal is indicated by means of a tilde ($\sim$)
+immediately to the right of the signal description.
+\item [{\it Grid :}]
+Specify the smallest unit for the x-axis (= time axis).
+\item [{\it Speed :}]
+Speed up the signals by some factor.
+If a value $<$ 1 is specified, the signals will be slowed down.
+\item [{\it T\_end :}]
+Update the end time of the input signals (= end time of simulation).
+\end{description}
+
+{\bf The commands in the {\it Simulate} PullDown Menu are:}
+\begin{description}
+\item [{\it Run :}]
+Start the simulation run as set in Prepare menu.
+A simulation may be aborted by typing $<$Control$>$C
+in the \tool{simeye} window
+(place the cursor in the \tool{simeye} window and
+type the character C while holding down the $<$Control$>$ key).
+\item [{\it Edit :}]
+Edit the current command file set in the Prepare menu.
+\item [{\it Prepare :}]
+Prepare a simulation by using either the \tool{sls} or the \tool{spice}
+simulator
+after an OK-confirmation has been given.
+\\
+When 'type' {\bf spice} is set a \tool{spice} simulation is performed.
+The \tool{spice} simulator is run by calling the program \tool{nspice}. 
+After simulation the 'ana' \tool{spice} output file is read.
+\\
+When 'type' {\bf sls-logic} (level 1 or 2) or {\bf sls-timing} (level 3) is set,
+an \tool{sls} simulation at that level is performed.
+When the \tool{sls}
+simulator is run, also intermediate simulation
+results are displayed.
+At the end
+the final simulation results
+are displayed.
+Which results are displayed for \tool{sls} ('res' or 'plt') depends on
+the 'read' {\bf Digital} or {\bf Analog} setting.
+\item [{\it Command :}]
+Display the current simulation command.
+\end{description}
+
+{\bf The commands in the {\it View} PullDown Menu are:}
+\begin{description}
+\item [{\it Measure :}]
+Move a vertical scanline over the display window,
+according to the position of the pointer,
+and show the value of the corresponding x position (and y position).
+When clicking the middle (or right) button of the mouse, one
+may toggle between displaying
+in the right margin (if the number of signals is not too large)
+the y values of the signals at the selected x position.
+To store the value of a particular position, click the left 
+button of the mouse.
+This position will then be subtracted from
+the next positions of the scanline,
+so as to measure delay times and/or voltage differences.
+\item [{\it Redraw :}]
+Redraw the current window.
+\item [{\it Values :}]
+Display the value points (for analog simulation results).
+\item [{\it Full :}]
+Draw all present signals from the beginning of the simulation
+time till the end of the simulation time.
+\item [{\it ZoomIn :}]
+Zoom in on the current window.
+When the $<$Shift$>$ key is held down and the window contains only
+one analog signal,
+also a zoom-in on the y-axis of the signal
+is performed.
+The ScrollBars can be used to
+move the current window left-, right-, up- or down-wards
+respectively.
+\item [{\it ZoomOut :}]
+Zoom out on the current window.
+Use zoom out if you want to add new signal states ({\it Change} command)
+to signals on the right side of the screen.
+\item [{\it Load Window :}]
+Load the current window settings (i.e. start-time, stop-time
+and the names of the signals that are displayed)
+from a file (default: ''simeye.set'').
+The name of this file can be specified in the configuration file.
+\item [{\it Save Window :}]
+Save the current window settings (i.e. start-time, stop-time
+and the names of the signals that are displayed)
+in a file (default: ''simeye.set'').
+The name of this file can be specified in the configuration file.
+\end{description}
+
+{\bf The commands in the {\it Options} PullDown Menu are:}
+\begin{description}
+\item [{\it DetailZoomON :}]
+When the DetailZoomON option is set (see also DETAIL\_ZOOM\_ON)
+the zoom-in function is also defined for the y-axis of a (single analog) signal.
+\item [{\it AutoLoadWin :}]
+When the AutoLoadWin option is set (or by the command line option {\bf -L}),
+the program \tool{simeye} loads the saved window settings each time
+a {\it Read} or {\it Simulate} command is performed.
+See also the {\it Load Window} and {\it Save Window} commands.
+\item [{\it AutoSaveEdit :}]
+When the AutoSaveEdit option is set
+the program \tool{simeye} saves automatically the command file (if changed)
+when a {\it Run} command is given.
+\end{description}
+
+{\bf The working of the {\it Help} MenuBar facility:}
+\begin{description}
+\item [{\it Manual :}]
+When the Manual command is clicked,
+the program \tool{icdman} with the manual page of \tool{simeye} is popped up in a window.
+Type 'q' to quit this program.
+\end{description}
+
+\section{Commandfile}
+For simulation with both \tool{sls} and \tool{spice},
+\tool{simeye} uses a command file called '{\it cell}.cmd'
+This file should contain a description
+of the input signals, values for the simulation control variables,
+and a listing of the terminals for which output should be generated.
+This is explained in more detail in the users manuals of
+the \tool{sls} simulator and the \tool{spice} simulator.
+\\
+The 'set' commands (signals) in this file/stream
+may be edited by enabling the {\it Edit} PullDown Menu of
+\tool{simeye}.
+The new signal descriptions will then be written back
+to the command file when updating
+the command file.
+However,
+when the file contains a 'set' command that is followed by
+the keyword 'no\_edit' between comment signs,
+the signal description of this 'set' command can not be modified.
+Additionally,
+when the command file contains on a separate line
+between comment signs the keyword 'auto\_set',
+\tool{simeye}
+will automatically turn-on or turn-off these 'non-editable' 
+'set' commands according to whether or not
+the node the command refers to is part of the terminal list
+of the cell that is simulated (by {\it Simulate} command).
+This feature may for example be useful to specify default signals for
+one or more input terminals.
+\\
+When the file contains on a separate line
+between comment signs the keyword 'auto\_print' ('auto\_plot'),
+\tool{simeye}
+will automatically add a 'print' ('plot) statement to the
+command file for each terminal of the cell that is simulated.
+The new 'print' ('plot') commands will have a keyword 'auto' between
+comment signs following the keyword 'print' ('plot').
+\\
+An example of a default command file that can be used for
+\tool{sls} and \tool{spice} simulations is:
+\begin{verbatim}
+/* auto_set */
+set /* no_edit */ vdd = h*~
+set /* no_edit */ vss = l*~
+set /* no_edit */ phi1 = (l*110 h*80 l*10)*~
+set /* no_edit */ phi2 = (l*10 h*80 l*110)*~
+option sigunit = 1n
+option outacc = 10p
+option simperiod = 4000
+option level = 3
+/*
+*%
+tstep 0.1n
+trise 0.5n
+tfall 0.5n
+*%
+*%
+*/
+/* auto_print */
+/* auto_plot */
+\end{verbatim}
+
+\section{Configurationfile}
+At start-up of the program,
+\tool{simeye}
+will read some information from a configuration
+file called '.simeyerc'.
+First, it tries to find this file in the current directory.
+Second, it tries to find this file in the home directory of the user.
+Thirdly, it looks for this file in process directory.
+The configuration file may contain the following keywords, followed
+by a specification on the same line if the keyword ends with ':'.
+
+\begin{description}
+\item [SLS:]
+Specifies the command for running the
+\tool{sls}
+simulator.
+\item[SLS\_LOGIC\_LEVEL:]
+Specifies the level of simulation when '{\bf sls-logic}' is selected
+(use 1 or 2).
+\item [SLS\_LOGIC\_SIGNAL:]
+Specifies the default signal representation for {\bf sls-logic} simulations
+(use A for {\bf Analog} or D for {\bf Digital}).
+\item [SLS\_TIMING\_SIGNAL:]
+Specifies the default signal representation for {\bf sls-timing} simulations
+(use A for {\bf Analog} or D for {\bf Digital}).
+\item [SPICE:]
+Specifies the command for running the
+\tool{spice}
+simulator (use
+\tool{nspice}
+or a derivative of it).
+\item [XDUMP\_FILE:]
+Specifies the name of the X Window dump file that is generated
+when the {\it Hardcopy} command is clicked.
+\item [PRINT:]
+Specifies the command that is executed
+when the {\it Hardcopy} command is clicked
+in order to process the X Window dump file (e.g. to convert the window dump to
+PostScript and to send the output to a laser-printer).
+\item [PRINT\_LABEL:]
+Specifies an optional label that is placed in upper left corner
+of the display window when an X Window dump is generated.
+\item [SETTINGS\_FILE:]
+Specifies the name of the file in (from)
+which the window settings are stored (loaded) when using
+the {\it Save Window} command ({\it Load Window} command or {\bf -L} option).
+\item [DETAIL\_ZOOM\_ON]
+If this keyword is specified in the configuration file,
+the zoom-in function is also defined for the
+y-axis of a (single analog) signal.
+In this case it is not necessary to hold the $<$Shift$>$ key down
+(see command {\it ZoomIn}).
+\item [TRY\_NON\_CAPITAL\_ON]
+If this keyword is specified in the configuration file
+and \tool{simeye} fails to open a command file that starts with a capital letter,
+the program will try to open the same command file but now starting
+with a non-capital letter.
+If this succeeds and
+when performing a simulation, \tool{simeye} will first run the program 
+\tool{arrexp}
+on a copy of the command file
+to expand one dimensional array node names into single node names
+(e.g. a[1..3] is converted into a\_1\_ a\_2\_ a\_3\_).
+\end{description}
+\par
+In the above specifications, the strings '\$circuit' and '\$stimuli' must be
+used to refer to the selected cell or file name for simulation commands,
+'\$file' may be used to refer to the current file on screen
+(use '\$cell' for this name without extension (maximum = 22 chars)),
+'\$date' and '\$time' may be used to refer to the current date and time,
+and '\$user' may be used to refer to your login name.
+\par
+Example of a configuration file (default values are shown):
+
+\begin{verbatim}
+SLS: sls $circuit $stimuli
+SLS_LOGIC_LEVEL: 2
+SPICE: nspice $circuit $stimuli
+PSTAR: npstar $circuit $stimuli
+XDUMP_FILE: simeye.wd
+PRINT: xpr -device ps -output $cell.ps simeye.wd; lp $cell.ps;
+       rm simeye.wd $cell.ps
+PRINT_LABEL: $user  $file  $date  $time
+SETTINGS_FILE: simeye.set
+\end{verbatim}
+
+\section{Files}
+
+\begin{tabular}{ll}
+.simeyerc & (default) configuration file\\
+HOME/.simeyerc & (altern.) configuration file\\
+ICDPATH/share/lib/process/{\it process}/.simeyerc & (altern.) configuration file\}\\
+ICDPATH/share/lib/process/{\it process}/.simeyerc & (altern.) configuration file\}\\
+{\it cell}.res & (default) input file (SLS logic results)\\
+{\it cell}.plt & (opt.) input file (SLS analog results)\\
+{\it cell}.ana & (opt.) input file (SPICE analog results)\\
+{\it cell}.cmd & (opt.) command file\\
+*.cxx & temporary files\\
+simeye.def.d & (default) template for command file\\
+ICDPATH/share/lib/process/{\it process}/simeye.def.d & (altern.) template for command file\\
+ICDPATH/share/lib/process/{\it process}/simeye.def.d & (altern.) template for command file\\
+ICDPATH/share/lib/.X2PSfontmapfile & for PostScript output\\
+simeye.eps & (default) print output file\\
+simeye.set & (default) window-settings file\\
+sim.diag & simulation diagnostics\\
+pr.diag & print diagnostics
+\end{tabular}
+
+\section{X-defaults}
+Some examples of ''.Xdefaults'' values are:
+
+\begin{verbatim}
+simeye*.borderColor:	white
+simeye*StatusArea*.foreground:	yellow
+simeye*cellDialog*.foreground:	cyan
+simeye*iDialog*.foreground:	red
+simeye*pDialog*.foreground:	red
+simeye*qDialog*.foreground:	red
+simeye*commands*.foreground:	white
+simeye*commands*.background:	black
+simeye*canvas.background:	black
+simeye*canvas.foreground:	white
+simeye*canvas.height:	400
+simeye*canvas.width:	800
+simeye.freestateColor:	red
+simeye.high_lowColor:	cyan
+simeye.undefinedColor:	blue
+simeye.valuesColor:	red
+simeye.voltsColor:	green
+simeye.pointerColor:	yellow
+simeye.std_bg:	grey80
+
+Use the following set of accelerator key bindings:
+
+simeye.keymnemonic:	False
+simeye*Add.accelerator:	<Key>a
+simeye*Add.acceleratorText:	a
+simeye*Change.accelerator:	<Key>c
+simeye*Change.acceleratorText:	c
+simeye*Command.accelerator:	Shift<Key>c
+simeye*Command.acceleratorText:	C
+simeye*Copy.accelerator:	<Key>o
+simeye*Copy.acceleratorText:	o
+simeye*Delete.accelerator:	<Key>d
+simeye*Delete.acceleratorText:	d
+simeye*Edit.accelerator:	<Key>e
+simeye*Edit.acceleratorText:	e
+simeye*EraseAll.accelerator:	Ctrl<Key>e
+simeye*EraseAll.acceleratorText:	^e
+simeye*Exit.accelerator:	<Key>x
+simeye*Exit.acceleratorText:	x
+simeye*Full.accelerator:	<Key>f
+simeye*Full.acceleratorText:	f
+simeye*Grid.accelerator:	<Key>g
+simeye*Grid.acceleratorText:	g
+simeye*Hardcopy.accelerator:	Ctrl<Key>h
+simeye*Hardcopy.acceleratorText:	^h
+simeye*Load Window.accelerator:	Shift<Key>l
+simeye*Load Window.acceleratorText:	L
+simeye*Manual.accelerator:	<Key>F1
+simeye*Manual.acceleratorText:	F1
+simeye*Measure.accelerator:	Shift<Key>m
+simeye*Measure.acceleratorText:	M
+simeye*Move.accelerator:	<Key>m
+simeye*Move.acceleratorText:	m
+simeye*New.accelerator:	Ctrl<Key>n
+simeye*New.acceleratorText:	^n
+simeye*Open.accelerator:	Ctrl<Key>o
+simeye*Open.acceleratorText:	^o
+simeye*Prepare.accelerator:	<Key>p
+simeye*Prepare.acceleratorText:	p
+simeye*Print.accelerator:	Ctrl<Key>p
+simeye*Print.acceleratorText:	^p
+simeye*Put.accelerator:	<Key>u
+simeye*Put.acceleratorText:	u
+simeye*ReName.accelerator:	<Key>n
+simeye*ReName.acceleratorText:	n
+simeye*Read Append.accelerator:	Ctrl<Key>q
+simeye*Read Append.acceleratorText:	^q
+simeye*Read.accelerator:	Ctrl<Key>r
+simeye*Read.acceleratorText:	^r
+simeye*Redraw.accelerator:	Ctrl<Key>f
+simeye*Redraw.acceleratorText:	^f
+simeye*Run.accelerator:	<Key>r
+simeye*Run.acceleratorText:	r
+simeye*Save As.accelerator:	Ctrl<Key>a
+simeye*Save As.acceleratorText:	^a
+simeye*Save Window.accelerator:	Shift<Key>s
+simeye*Save Window.acceleratorText:	S
+simeye*Save.accelerator:	Ctrl<Key>s
+simeye*Save.acceleratorText:	^s
+simeye*Speed.accelerator:	<Key>s
+simeye*Speed.acceleratorText:	s
+simeye*T_end.accelerator:	<Key>t
+simeye*T_end.acceleratorText:	t
+simeye*Values.accelerator:	<Key>v
+simeye*Values.acceleratorText:	v
+simeye*Yank.accelerator:	<Key>y
+simeye*Yank.acceleratorText:	y
+simeye*ZoomIn.accelerator:	<Key>z
+simeye*ZoomIn.acceleratorText:	z
+simeye*ZoomOut.accelerator:	Shift<Key>z
+simeye*ZoomOut.acceleratorText:	Z
+\end{verbatim}
+
+\section{See also}
+sls(1ICD),
+spice(1ICD),
+nspice(1ICD),\\
+SLS: Switch-Level Simulator User's Manual,\\
+User's Guide for SPICE, Univ. of California at Berkeley,\\
+X Window System Documentation. \index{simeye|)}
+\cleardoublepage

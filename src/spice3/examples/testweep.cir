@@ -1,0 +1,8 @@
+* Temperature sweep testing
+VIN  1  0 1
+RT1 1 2 RMOD 1
+R2  2 0 1
+
+.MODEL RMOD R TC1=1
+
+.END

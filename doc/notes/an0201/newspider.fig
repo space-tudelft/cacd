@@ -1,0 +1,11 @@
+#FIG 3.1
+Portrait
+Center
+Inches
+1200 2
+4 0 -1 0 0 0 16 0.0000 4 225 3750 600 375 enumPair (tile, newerTile, edgeOrien)\001
+4 0 -1 0 0 0 16 0.0000 4 225 4335 1725 1095 doSpiderPair (tile_l, tile_r, bdr, orientation)\001
+4 0 -1 0 0 0 16 0.0000 4 225 4260 1125 735 spiderPair (tile, newerTile, edgeOrien, bdr)\001
+4 0 -1 0 0 0 16 0.0000 4 225 4080 2250 1500 mesh = recogMesh (tile_l, tile_r, bdr, &i)\001
+4 0 -1 0 0 0 16 0.0000 4 210 2280 2250 1800 for (; m = mesh[i]; i++)\001
+4 0 -1 0 0 0 16 0.0000 4 225 5820 2775 2100 spiderFindNew (tile_l, tile_r, side, x, y, z, level, conductor)\001

@@ -1,0 +1,343 @@
+#!/bin/sh
+# the nextline restarts using wish \
+exec wish "$0" "$@"
+
+set ProgName "TestFlow"
+
+if {[info exists env(OPPROGPATH)]} {
+   set OPPROGPATH $env(OPPROGPATH)
+} else {
+   puts stderr "env OPPROGPATH not set"
+   exit 1
+}
+
+set TclLibPath1 $OPPROGPATH/src_libs/test_flow
+set TclLibPath2 $OPPROGPATH/src_libs/shared
+#the path to the the tcl_library for this program
+
+lappend auto_path $TclLibPath1
+lappend auto_path $TclLibPath2
+if {[info exists env(TESTFLOWLIBPATH)]} {
+   set TestFlowLibPath $env(TESTFLOWLIBPATH)
+} else {
+   set TestFlowLibPath $TclLibPath1
+}
+
+set fnt_s "-*-Courier-Bold-R-Normal--*-100-*"
+set fnt_n "-*-Courier-Bold-R-Normal--*-120-*"
+set fnt_l "-*-Courier-Bold-R-Normal--*-140-*"
+set fnt_h "-*-Courier-Bold-R-Normal--*-180-*"
+
+set fnt $fnt_n
+set Fnt $fnt
+
+set myMaxInt [expr 999999999]
+set myMaxLen [string length $myMaxInt]
+
+set bb_arr(1,1)  "VDD"
+set bb_arr(1,2)  "t8"
+set bb_arr(1,3)  "t7"
+set bb_arr(1,4)  "t6"
+set bb_arr(1,5)  "t5"
+set bb_arr(1,6)  "NC"
+set bb_arr(1,7)  "t4"
+set bb_arr(1,8)  "t3"
+set bb_arr(1,9)  "t2"
+set bb_arr(1,10) "t1"
+set bb_arr(1,11) "NC"
+set bb_arr(1,12) "t17"
+set bb_arr(1,13) "t18"
+set bb_arr(1,14) "t19"
+set bb_arr(1,15) "t20"
+set bb_arr(1,16) "VDD"
+set bb_arr(1,17) "t21"
+set bb_arr(1,18) "t22"
+set bb_arr(1,19) "t23"
+set bb_arr(1,20) "t24"
+set bb_arr(1,21) "NC"
+set bb_arr(1,22) "t25"
+set bb_arr(1,23) "t26"
+set bb_arr(1,24) "t27"
+set bb_arr(1,25) "t28"
+set bb_arr(1,26) "VSS"
+set bb_arr(1,27) "t29"
+set bb_arr(1,28) "t30"
+set bb_arr(1,29) "t31"
+set bb_arr(1,30) "t32"
+set bb_arr(1,31) "NC"
+set bb_arr(1,32) "t16"
+set bb_arr(1,33) "t15"
+set bb_arr(1,34) "t14"
+set bb_arr(1,35) "t13"
+set bb_arr(1,36) "NC"
+set bb_arr(1,37) "t12"
+set bb_arr(1,38) "t11"
+set bb_arr(1,39) "t10"
+set bb_arr(1,40) "t9"
+set bb_arr(2,1)  "NC"
+set bb_arr(2,2)  "t8"
+set bb_arr(2,3)  "t7"
+set bb_arr(2,4)  "t6"
+set bb_arr(2,5)  "t5"
+set bb_arr(2,6)  "VDD"
+set bb_arr(2,7)  "t4"
+set bb_arr(2,8)  "t3"
+set bb_arr(2,9)  "t2"
+set bb_arr(2,10) "t1"
+set bb_arr(2,11) "NC"
+set bb_arr(2,12) "t17"
+set bb_arr(2,13) "t18"
+set bb_arr(2,14) "t19"
+set bb_arr(2,15) "t20"
+set bb_arr(2,16) "NC"
+set bb_arr(2,17) "t21"
+set bb_arr(2,18) "t22"
+set bb_arr(2,19) "t23"
+set bb_arr(2,20) "t24"
+set bb_arr(2,21) "VSS"
+set bb_arr(2,22) "t25"
+set bb_arr(2,23) "t26"
+set bb_arr(2,24) "t27"
+set bb_arr(2,25) "t28"
+set bb_arr(2,26) "NC"
+set bb_arr(2,27) "t29"
+set bb_arr(2,28) "t30"
+set bb_arr(2,29) "t31"
+set bb_arr(2,30) "t32"
+set bb_arr(2,31) "VDD"
+set bb_arr(2,32) "t16"
+set bb_arr(2,33) "t15"
+set bb_arr(2,34) "t14"
+set bb_arr(2,35) "t13"
+set bb_arr(2,36) "NC"
+set bb_arr(2,37) "t12"
+set bb_arr(2,38) "t11"
+set bb_arr(2,39) "t10"
+set bb_arr(2,40) "t9"
+set bb_arr(3,1)  "VSS"
+set bb_arr(3,2)  "t8"
+set bb_arr(3,3)  "t7"
+set bb_arr(3,4)  "t6"
+set bb_arr(3,5)  "t5"
+set bb_arr(3,6)  "NC"
+set bb_arr(3,7)  "t4"
+set bb_arr(3,8)  "t3"
+set bb_arr(3,9)  "t2"
+set bb_arr(3,10) "t1"
+set bb_arr(3,11) "VDD"
+set bb_arr(3,12) "t17"
+set bb_arr(3,13) "t18"
+set bb_arr(3,14) "t19"
+set bb_arr(3,15) "t20"
+set bb_arr(3,16) "NC"
+set bb_arr(3,17) "t21"
+set bb_arr(3,18) "t22"
+set bb_arr(3,19) "t23"
+set bb_arr(3,20) "t24"
+set bb_arr(3,21) "NC"
+set bb_arr(3,22) "t25"
+set bb_arr(3,23) "t26"
+set bb_arr(3,24) "t27"
+set bb_arr(3,25) "t28"
+set bb_arr(3,26) "VDD"
+set bb_arr(3,27) "t29"
+set bb_arr(3,28) "t30"
+set bb_arr(3,29) "t31"
+set bb_arr(3,30) "t32"
+set bb_arr(3,31) "NC"
+set bb_arr(3,32) "t16"
+set bb_arr(3,33) "t15"
+set bb_arr(3,34) "t14"
+set bb_arr(3,35) "t13"
+set bb_arr(3,36) "NC"
+set bb_arr(3,37) "t12"
+set bb_arr(3,38) "t11"
+set bb_arr(3,39) "t10"
+set bb_arr(3,40) "t9"
+set bb_arr(4,1)  "NC"
+set bb_arr(4,2)  "t8"
+set bb_arr(4,3)  "t7"
+set bb_arr(4,4)  "t6"
+set bb_arr(4,5)  "t5"
+set bb_arr(4,6)  "VSS"
+set bb_arr(4,7)  "t4"
+set bb_arr(4,8)  "t3"
+set bb_arr(4,9)  "t2"
+set bb_arr(4,10) "t1"
+set bb_arr(4,11) "NC"
+set bb_arr(4,12) "t17"
+set bb_arr(4,13) "t18"
+set bb_arr(4,14) "t19"
+set bb_arr(4,15) "t20"
+set bb_arr(4,16) "NC"
+set bb_arr(4,17) "t21"
+set bb_arr(4,18) "t22"
+set bb_arr(4,19) "t23"
+set bb_arr(4,20) "t24"
+set bb_arr(4,21) "VDD"
+set bb_arr(4,22) "t25"
+set bb_arr(4,23) "t26"
+set bb_arr(4,24) "t27"
+set bb_arr(4,25) "t28"
+set bb_arr(4,26) "NC"
+set bb_arr(4,27) "t29"
+set bb_arr(4,28) "t30"
+set bb_arr(4,29) "t31"
+set bb_arr(4,30) "t32"
+set bb_arr(4,31) "NC"
+set bb_arr(4,32) "t16"
+set bb_arr(4,33) "t15"
+set bb_arr(4,34) "t14"
+set bb_arr(4,35) "t13"
+set bb_arr(4,36) "VDD"
+set bb_arr(4,37) "t12"
+set bb_arr(4,38) "t11"
+set bb_arr(4,39) "t10"
+set bb_arr(4,40) "t9"
+
+#set col_arr(0)  "black"
+#set col_arr(1)  "brown"
+#set col_arr(2)  "red"
+#set col_arr(3)  "orange"
+#set col_arr(4)  "yellow"
+#set col_arr(5)  "green"
+#set col_arr(6)  "blue"
+#set col_arr(7)  "pink3"
+#set col_arr(8)  "gray70"
+#set col_arr(9)  "white"
+#set col_arr(10) "black"
+#set col_arr(11) "brown"
+#set col_arr(12) "red"
+#set col_arr(13) "orange"
+#set col_arr(14) "yellow"
+#set col_arr(15) "green"
+set col_arr(0)  "brown"
+set col_arr(1)  "red"
+set col_arr(2)  "orange"
+set col_arr(3)  "yellow"
+set col_arr(4)  "green"
+set col_arr(5)  "blue"
+set col_arr(6)  "purple"
+set col_arr(7)  "gray70"
+
+set FREQ_LIST_old {{10 10E-12} {20 20E-12} {25 25E-12} {40 40E-12}\
+               {50 50E-12} {100 100E-12} {200 200E-12} {250 250E-12}\
+               {400 400E-12} {500 500E-12} {1000 1E-9} {2000 2E-9}\
+               {2500 25E-10} {4000 4E-9} {5000 5E-9} {10000 10E-9}\
+               {20000 20E-9} {25000 25E-9} {40000 40E-9} {50000 50E-9}\
+               {100000 1E-6}}
+
+set FREQ_LIST {{10 10E-9} {20 20E-9} {25 25E-9} {40 40E-9}\
+               {50 50E-9} {100 100E-9} {200 200E-9} {250 250E-9}\
+               {400 400E-9} {500 500E-9} {1000 1E-6} {2000 2E-6}\
+               {2500 25E-7} {4000 4E-6} {5000 5E-6} {10000 10E-6}\
+               {20000 20E-6} {25000 25E-6} {40000 40E-6} {50000 50E-6}\
+               {100000 1E-3}}
+
+frame      .menubar       -relief raised -bd 2 -bg gold2
+label      .menubar.pos   -font $fnt -anchor w\
+                          -width 13 -text "cursor: 1.0" -padx 10 -pady 5\
+                          -bg gold2 -bd 2 -relief ridge
+menubutton .menubar.file -text "Commands" -menu .menubar.file.cmds\
+                         -bg gold2 -font $fnt
+menu       .menubar.file.cmds -font $fnt -bg gold2
+           .menubar.file.cmds add command -label "Read_reffile"\
+                                          -command "read_reffile 1"
+           .menubar.file.cmds add command -label "Update_with_buffile"\
+                                          -state disabled\
+                                          -command "read_buffile"
+           .menubar.file.cmds add command -label "Make_csvfile"\
+                                          -state disabled\
+                                          -command "make_csvfile"
+           .menubar.file.cmds add command -label "Show_pod_connections"\
+                                          -state disabled\
+                                          -command "show_cons"
+           .menubar.file.cmds add command -label "Compare"\
+                                          -state disabled\
+                                          -command "compare"
+           .menubar.file.cmds add command -label "Quit"\
+                                          -command {destroy .}
+
+menubutton .menubar.show   -text "Window" -menu .menubar.show.cmds\
+                           -bg gold2 -font $fnt
+menu       .menubar.show.cmds -font $fnt -bg gold2
+           .menubar.show.cmds add command -label "ref_file"\
+                                          -state disabled\
+                                          -command {wm deiconify .reftxt
+                                                    raise .reftxt
+                                                   }
+           .menubar.show.cmds add command -label "csv_file"\
+                                          -state disabled\
+                                          -command {wm deiconify .csvtxt
+                                                    raise .csvtxt
+                                                   }
+           #.menubar.show.cmds add command -label "pg_file"\
+           #                              -state disabled\
+           #                               -command {wm deiconify .pgtxt
+           #                                         raise .pgtxt
+           #                                        }
+           #.menubar.show.cmds add command -label "trf_file"\
+           #                               -state disabled\
+           #                               -command {wm deiconify .trftxt
+           #                                         raise .trftxt
+           #                                        }
+           .menubar.show.cmds add command -label "compare"\
+                                          -state disabled\
+                                          -command {wm deiconify .cmpr
+                                                    raise .cmpr
+                                                   }
+           .menubar.show.cmds add command -label "pod_connections"\
+                                          -state disabled\
+                                          -command {wm deiconify .cons
+                                                    raise .cons
+                                                   }
+
+frame      .frt        -bg wheat3
+# label      .frt.lbls   -text "start:" -font $fnt -bg wheat3
+# entry      .frt.ens    -width 10 -font $fnt -bg wheat3
+# label      .frt.lblp   -text "period:" -font $fnt -bg wheat3
+# entry      .frt.enp    -width 12 -font $fnt -bg wheat3
+# label      .frt.lble   -text "stop:" -font $fnt -bg wheat3
+# entry      .frt.ene    -width 12 -font $fnt -bg wheat3
+# label      .frt.lblc   -text "cycles:" -font $fnt -bg wheat3
+# entry      .frt.enc    -width 12 -font $fnt -bg wheat3
+label      .frt.bb     -text "bondbar:" -font $fnt -bg wheat3
+tk_optionMenu .frt.om  bondbar - 1 2 3 4
+label      .mlbl       -textvariable message -bg wheat -bd 2\
+                       -relief ridge -anchor w -padx 5 -pady 5\
+                       -font $fnt
+text       .termtxt        -width 400 -height 500 -font $fnt -bg wheat \
+                                -yscrollcommand ".termsb set"
+scrollbar  .termsb         -command ".termtxt yview" -bg wheat
+
+
+pack .menubar       -side top   -fill x
+pack .menubar.file  -side left
+pack .menubar.show  -side left
+pack .menubar.pos   -side right
+pack .frt           -side top    -fill x
+# pack .frt.lbls      -side left   -padx 4
+# pack .frt.ens       -side left   -padx 4
+# pack .frt.lblp      -side left   -padx 4
+# pack .frt.enp       -side left   -padx 4
+# pack .frt.lble      -side left   -padx 4
+# pack .frt.ene       -side left   -padx 4
+# pack .frt.lblc      -side left   -padx 4
+# pack .frt.enc       -side left   -padx 4
+pack .frt.om        -side right  -padx 4
+pack .frt.bb        -side right  -padx 4
+pack .mlbl          -side top -fill x    -expand 1
+# pack .mlbl          -side top -fill x    -expand 1 -padx 5 -pady 5
+pack .termsb     -side left  -fill y
+# pack .termtxt    -side right -fill x -expand 1
+pack .termtxt    -side left   -fill both -expand 1
+
+
+.frt.om configure -bg wheat3
+.frt.om.menu configure -bg wheat3
+
+set RefFileName ""
+set RefForCompPresent 0
+
+wm geometry . 600x600+20+20
+

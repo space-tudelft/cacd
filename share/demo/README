@@ -1,0 +1,44 @@
+
+This demo directory contains the following example sub-directories:
+
+- attenua    
+     Attenuator circuit showing the extraction of bipolar transistors.
+- crand      
+     Cmos random counter circuit.  Shows the extraction of cmos 
+     circuits and subsequent switch-level simulation of the extracted 
+     circuit.
+- invert     
+     Cmos inverter circuit.  Shows the extraction of non-linear 
+     junction capacitances (1) as diodes and (2) as drain/source 
+     area and perimeter information attached to the transistors.
+- multiplier
+     Circuit with ram and multiplier described at the functional
+     level.   Demonstrates mixed functional/switch-level simulation.
+- nodenames
+     Example that demonstrates net naming using the names of terminals
+     for local nodes when extracting resistances.
+- ny9t      
+     Example for capacitive coupling via the substrate.
+- poly5      
+     5 Parallel conductors.  Illustrates 3D capacitance extraction.
+- sram       
+     Static RAM cell.  Illustrates 3D capacitance extraction.
+- suboscil
+     Ring oscillator circuit.  Complete substrate coupling example.
+     Shows the interpolation method for substrate resistance 
+     extraction, including subsequent simulation with SPICE.
+- sub3term   
+     3 Substrate contacts.  Illustrates 3D substrate resistance
+     extraction.
+- switchbox
+     Cmos switchbox circuit.  Shows hierarchical extraction, flat
+     extraction, capacitance extraction, resistance extraction,
+     the use of labels, network comparison and back annotation. 
+- FreePDK45
+     Nangate Open Cell Library demos.
+- demo_p3
+     GoWithTheFlow hotel demo project.
+     Place the file .gowiththflowrc in your HOME directory.
+- demo_p44
+     Another GoWithTheFlow demo project.
+

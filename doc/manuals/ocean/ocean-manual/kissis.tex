@@ -1,0 +1,116 @@
+% -*- latex -*-
+
+\chapter{Logic Synthesis with 'kissis'}
+\label{kissis}
+\index{kissis@\tool{kissis}|(bold}
+\index{automatic!logic synthesis|see{\tool{kissis}}}
+
+\protect\tool{SIS} (Berkeley Logic Synthesis System) 
+\index{SIS@\tool{SIS}}
+is an interactive tool
+for synthesis and optimization of sequential circuits. Given a state
+transition table, a logic level description of a sequential circuit or PLA
+(programmable logic array) description, it produces an optimized net-list in
+the target technology while preserving the sequential input-output behavior.
+
+\protect\tool{Kissis} is a front-end to \protect\tool{SIS} which allows
+automatic generation of a circuit for given STG (state transition graph) or
+PLA. For this purpose it runs SIS in batch mode. The resulting circuit is
+automatically placed in
+\protect\tool{Nelsis} database. The following steps are performed:
+
+\begin{itemize}
+\item state minimization using program called stamina (STG input only).
+\item state assignment using program called nova (STG input only).
+\item combinatorial optimization.
+\item technology mapping. 
+\item retiming (STG input only and when -r specified).
+\item conversion from blif output format to sls (Switch Level Simulator) using
+program \protect\tool{blif2sls}\index{blif2sls@\tool{blif2sls}}.
+\item conversion from sls format to the \protect\tool{Nelsis} database using
+\protect\tool{csls} program.  
+\end{itemize}
+ 
+We cannot distribute the \smc{sis} package with the \smc{ocean}
+tools, unfortunately. You can retrieve \smc{sis} yourself using
+anonymous ftp (host ic.berkeley.edu, directory pub/sis) or contact us.
+
+\section{How to use \protect\tool{kissis}?}
+
+You start the tool from command line in the following way:
+
+\type{kissis $[$options$]$ $<$filename$>$}	
+
+where $<$filename$>$ is the input file name.
+
+
+\section{Legal options.}
+
+The kissis can be started with the following options:
+
+\nopagebreak
+-h display help info.
+
+-c run combinatorial synthesis (PLA input format).
+
+-k run sequential synthesis (kiss2 input format).
+
+-b run sequential synthesis (blif input format).
+
+-r run retiming (default not)
+
+
+
+If none of these options is specified then kind of input 
+is determined based on filename extension (default \fname{.kiss2}).  
+If  options are specified than extension does not
+matter. Default extension is \fname{.kiss2}.
+
+\section{What files are required before I can call \protect\tool{kissis}?}
+
+To run properly the command requires that the following
+files are present in your current directory. If the \smc{ocean} system was
+properly installed, all the default files should be in the right position.
+
+\begin{itemize}
+\item \file{proto\_file}  - a file with sls prototypes (see \protect\tool{blif2sls}).
+\item \file{$<$cellname$>.<$kiss2|pla|blif$>$} - input file with STG (PLA)  
+                   description.
+
+\end{itemize}
+Other files:
+
+\begin{itemize}
+\item \file{\$OCEAN/celllibs/\$OCEANPROCESS/<lib\_name>.genlib} - a file with a
+library description (to be used during technology mapping).
+\item \file{<cell\_name>\_out.blif} -  intermediate file (output in blif format).
+
+\item \file{<cell\_name>.sls} - intermediate file (output in sls format).
+
+\item \file{<cell\_name>.sta} - output from \protect\tool{blif2sls} used by 
+                  \protect\tool{simeye}.
+
+\item \file{sis\_logfile} - output from \protect\tool{SIS} (look here if
+something goes wrong). 
+
+\end{itemize}
+
+For an example of running \tool{kissis}, please have a look in 
+section~\ref{kissistutorial} on page~\pageref{kissistutorial}.
+
+\section{More info about \protect\tool{SIS}.}
+\index{SIS@\tool{SIS}}
+For more information about \protect\tool{SIS} we refer to the following
+document:
+
+"SIS: A System for Sequential Circuit Synthesis" Ellen M. Santovich, Kanwar Jit
+Singh, Luciano Lavagno, Cho Moon, Rajeev Murgai, Alexander Saldanha, Hamid
+Savoj,  Paul R. Stephan, Robert K. Brayton, Alberto Sangiovanni-Vincentelli.
+Department of Electrical Engineering and Computer Science, University of
+California, Berkeley, CA 94720. (1992)
+
+It is present in the ocean documentation distribution.
+
+\index{kissis@\tool{kissis}|)}
+
+

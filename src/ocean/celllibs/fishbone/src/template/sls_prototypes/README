@@ -1,0 +1,25 @@
+         *** ABOUT the directory 'sls_prototypes' ***
+
+This directory contains the external definitions for all library cells which
+are distributed with the OCEAN package.  Why? Well.., if you use 'csls' to
+enter you circuit in the database, csls needs the external definitions of all
+instances which you use in the file. This was done delibrately to help you to
+take care of the proper connection of the terminals (have a look at the file
+../.sls_mkdbrc for more details on this subject).
+
+This directory contains one file per library. Each file contains the external
+network description of the circuits cells in that library in sls format. Using
+the command #include<extfile_name> you can include these external definitions
+into your sls-file.
+
+The file "oplib.ext" includes the (current/latest) version of all libraries for
+the op practicum. Example of the use in an sls-file:
+
+    #include<oplib.ext>
+    network neuzel (terminal a, b, c)
+    {
+    .....network description....
+    }
+
+
+Patrick Groeneveld, 8-1993

@@ -1,0 +1,190 @@
+
+library (g_analib8_00) {
+
+    date : "August 15, 2000";
+    revision : 1.0;
+
+    default_inout_pin_cap        :  1.0;
+    default_inout_pin_fall_res   :  0.0;
+    default_inout_pin_rise_res   :  0.0;
+    default_input_pin_cap        :  1.0;
+    default_intrinsic_fall       :  1.0;
+    default_intrinsic_rise       :  1.0;
+    default_output_pin_cap       :  0.0;
+    default_output_pin_fall_res  :  0.0;
+    default_output_pin_rise_res  :  0.0;
+    default_slope_fall           :  0.0;
+    default_slope_rise           :  0.0;
+
+    time_unit : "1ns";
+    voltage_unit : "1V";
+    current_unit : "1uA";
+    pulling_resistance_unit : "1kohm";
+    capacitive_load_unit (1.0,pf);
+
+cell(osc10) {
+   area : 16
+   pin(e) {
+     direction : input
+     capacitance : 0.18
+     fanout_load : 0.18
+   }
+   pin(xi) {
+     direction : input
+     capacitance : 0.18
+     fanout_load : 0.18
+   }
+   pin(xo) {
+     direction : inout
+     capacitance : 0.18
+     fanout_load : 0.18
+   }
+   pin(f) {
+     direction : output
+     max_fanout : 2.5
+   }
+}
+
+cell(mir_nin) {
+   area : 19
+   pin(i) {
+     direction : inout
+     capacitance : 0.18
+     fanout_load : 0.18
+   }
+   pin(g) {
+    direction : output
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+}
+
+cell(mir_pin) {
+   area : 19
+   pin(i) {
+     direction : inout
+     capacitance : 0.18
+     fanout_load : 0.18
+   }
+   pin(g) {
+    direction : output
+    capacitance : 0.18
+    fanout_load : 0.18
+  }
+}
+
+cell(mir_nout) {
+   area : 19
+   pin(i) {
+     direction : input
+     capacitance : 0.18
+     fanout_load : 0.18
+   }
+   pin(g) {
+     direction : input
+     capacitance : 0.18
+     fanout_load : 0.18
+   }
+   pin(o) {
+     direction : inout
+     capacitance : 0.18
+     fanout_load : 0.18
+   }
+}
+
+cell(mir_pout) {
+   area : 19
+   pin(i) {
+     direction : input
+     capacitance : 0.18
+     fanout_load : 0.18
+   }
+   pin(g) {
+     direction : input
+     capacitance : 0.18
+     fanout_load : 0.18
+   }
+   pin(o) {
+     direction : inout
+     capacitance : 0.18
+     fanout_load : 0.18
+   }
+}
+
+cell(ln3x3) {
+   area : 10
+   pin(g) {
+     direction : input
+     capacitance : 0.18
+     fanout_load : 0.18
+   }
+   pin(d) {
+     direction : inout
+     capacitance : 0.18
+     fanout_load : 0.18
+   }
+   pin(s) {
+     direction : inout
+     capacitance : 0.18
+     fanout_load : 0.18
+   }
+}
+
+cell(lp3x3) {
+   area : 10
+   pin(g) {
+     direction : input
+     capacitance : 0.18
+     fanout_load : 0.18
+   }
+   pin(d) {
+     direction : inout
+     capacitance : 0.18
+     fanout_load : 0.18
+   }
+   pin(s) {
+     direction : inout
+     capacitance : 0.18
+     fanout_load : 0.18
+   }
+}
+
+operating_conditions(WCCOM) {
+    process : 1.5 ;
+    temperature : 70 ;
+    voltage : 4.75 ;
+    tree_type : "worst_case_tree" ;
+}
+operating_conditions(BCCOM) {
+    process : 0.6 ;
+    temperature : 0 ;
+    voltage : 5.25 ;
+    tree_type : "best_case_tree" ;
+}
+
+wire_load(small) {
+    resistance : 0 ;
+    capacitance : 1 ;
+    area : 0.2 ;
+    slope : 0.186 ;
+    fanout_length(1,0.39) ;
+}
+wire_load(standard) {
+    resistance : 0 ;
+    capacitance : 1.2 ;
+    area : 0.5 ;
+    slope : 0.311 ;
+    fanout_length(1,0.53) ;
+}
+
+timing_range (BEST) {
+  faster_factor : 0.95
+  slower_factor : 0.99
+}
+      
+timing_range (WORST) {
+  faster_factor : 1.00
+  slower_factor : 1.05
+}
+      
+}

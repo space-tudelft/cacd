@@ -1,0 +1,76 @@
+#!/bin/sh
+#
+# PLAYOUT
+# print nelsis layout on printer. This script is called by seadali
+#
+# Patrick Groeneveld 3-1994
+#
+################# CONFIGURATION AREA ################
+#
+# enter here your postscript print command
+PRINTCOMMAND="lp"
+#
+# enter here you printer queue command
+QUEUECOMMAND="lpstat -opostscript"
+#
+# For the first time, you don't need to edit more.....
+#
+# Maximum file size for printing, to prevent enless printing of long files
+MAXFILESIZE=250000
+#
+############ END OF USER-CONFIGURATION AREA #########
+#
+# Input checking
+if [ "$1" = "" ] ; then
+   echo "playout: Hey! you must specify the cell name as argument!"
+   echo "Usage: playout cellname"
+   exit 1
+fi
+if [ ! -f .dmrc ] ; then
+   echo "playout: HEY! your are not in a project directory"
+   exit 1
+fi
+if [ ! -d layout/$1 ] ; then
+   echo "playout: OOOPS! layout cell '$1' does not exist!"
+   echo "Usage: playout cellname"
+   exit 1
+fi
+#
+#
+# Step 1: run getepslay
+echo "--- getepslay: converting layout into file $1.eps ---"
+getepslay -t $1 || exit 1
+#
+# Just to be sure....
+if [ ! -f $1.eps ] ; then
+   echo "playout: ERROR: cannot find output file $1.eps of getepslay"
+   exit 1
+fi
+#
+# Step 2: How big is the file??
+filesize=`wc -c $1.eps | awk '{ print $1 }' `
+#
+#
+# Feature added to prevent endless printing....
+if [ $filesize -gt $MAXFILESIZE ] ; then
+   echo "playout: SORRY: the postscript file $1.eps"
+   echo "looks too big to print: $filesize bytes, preset maximum is $MAXFILESIZE"
+   echo "Please execute commands manually."
+   rm -f $1.eps
+   exit 1
+fi
+#
+# Step 3: print the stuff
+echo "--- printing postscript file $1.eps ($filesize bytes) ---"
+$PRINTCOMMAND $1.eps
+#
+# Step 4: get rid of postscript file
+echo "--- removing temporary file $1.eps ---"
+rm -f $1.eps
+#
+# Step 5: have a look at the queue
+echo "--- printer queue: ---"
+$QUEUECOMMAND
+#
+# ready!
+exit 0

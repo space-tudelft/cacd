@@ -1,0 +1,80 @@
+.TH GHOTI 1SDF "THE SEADIF PROGRAMMERS MANUAL"
+.UC 4
+.SH NAME
+ghoti - circuit purifier for extracted sea-of-gates layouts
+.SH SYNOPSIS
+.B ghoti
+[-options] <cell_name>
+.SH OPTIONS
+.TP
+.B <cell_name>
+Nelsis circuit to be purified.
+.TP
+.B -h
+Help: print list of options.
+.TP
+.B -c
+Do not remove badly connected cmos transistors.
+.TP
+.B -i
+Do not remove cmos isolation transistors.
+.TP
+.B -p
+Do not remove badly connected resistors and capacitors.
+.TP
+.B -u
+Also remove totally unconnected instances of any sort.
+.TP
+.B -s
+Also remove partially unconnected instances of any sort.
+.TP
+.B -n <number>
+Perform <number> preprocessing steps (defaults to 2).
+.TP
+.B -P
+Do not join power and ground nets.
+.TP
+.B -q
+Quiet option: print nothing except errors.
+.TP
+.B -z
+Print ztatistics about hash table usage.
+.TP
+.B -r
+Reduce series/parallel networks of transistors.
+.TP
+.B -o <out_name>
+Write output to cell name.
+.TP
+.B -C
+Do not require <cell_name> to start with a capital.
+.TP
+.B -D
+Debug: print graph.
+.TP
+.B -M
+Print memory usage.
+.TP
+.B -W
+Debug: no write.
+
+.SH DESCRIPTION
+.I Ghoti
+is a netlist purifier,
+it purifies the Nelsis circuit view of a cell.
+It is used to remove unconnected transistors from a Sea-of-gates design
+after the layout to circuit extraction with the \fIspace\fP(1ICD) program.
+This is needed before starting an \fIsls\fP(ICD) simulation.
+
+.SH EXAMPLE
+To purify the circuit of the cell dcfclock use:
+
+% ghoti -i dcfclock
+
+.SH AUTHORS
+Paul Stravers,
+Patrick Groeneveld
+
+.SH FILES
+.ta 6c
+proj_dir/image.seadif	(technology file)

@@ -1,0 +1,73 @@
+.TH MAKEDELA 1ICD "User Commands"
+.UC 4
+.SH NAME
+makedela - auxiliary program for substrate resistance extraction
+.SH SYNOPSIS
+.B makedela
+[-01Ddenvwx] [-E file] [-m maxmem] cell [...]
+.SH OPTIONS
+.TP
+.B -0
+using sub_res interpolation method 0.
+.TP
+.B -1
+using sub_res interpolation method 1.
+.TP
+.B -D
+delete the input file "cont_aln" from the database when ready.
+.TP
+.BI -E file
+use
+.I file
+as the element definition file
+(default "space.def.t" in the ICD process library).
+.TP
+.B -d
+print debugging information.
+.TP
+.B -e
+eliminate substrate node conductances.
+.TP
+.B -n
+no decrease sub_res method.
+.TP
+.B -v
+verbose mode.
+.TP
+.B -w
+generate information for \fIspace\fP for drawing the Delaunay triangulation.
+.TP
+.B -x
+generate a PIC representation of the Delaunay triangulation in
+a file "\fIcellname\fP.pic".
+.TP
+.B "-m\fImaxmem\fR"
+use \fImaxmem\fR (default 1) MByte of main memory for sorting of edges.
+.SH DESCRIPTION
+.I Makedela
+is an auxiliary program for
+.I space (1ICD)
+that is used for fast substrate resistance extraction.
+.br
+.I Makedela
+uses a Delaunay triangulation to calculate the distances between the different substrate contacts.
+.br
+.I Makedela
+uses \fIselfsubres\fP and \fIcoupsubres\fP data (as specified in a \fIspace\fP technology file)
+to calculate the substrate contact conductance values.
+.br
+.I Makedela
+takes as input line segments from a stream "cont_aln"
+and contact positions + area / perimeter data from a stream "cont_pos"
+(produced by \fIspace\fP during a first pass)
+and produces as output a stream called "subres"
+(read by \fIspace\fP during a second pass).
+.I Makedela
+is automatically invoked by
+.I space (1ICD)
+when using the option \fB-b\fP
+for fast substrate resistance extraction.
+.PP
+.AU "A.J. van Genderen"
+.SH SEE ALSO
+space (1ICD).

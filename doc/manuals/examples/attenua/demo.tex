@@ -1,0 +1,214 @@
+\chapter{attenua Example of Bipolar Extraction}
+\section{Introduction}
+\label{PEintro}
+This example gives a demonstration of an attenuator circuit in bipolar DIMES-01 process.
+See also: A. van Staveren and A.H.M. van Roermund,
+"Low-voltage Low-power Controlled Attenuator for Hearing Aids",
+Electronic Letters, 22 July 1993, Vol. 29, No. 15, pp. 1355-1356.
+\\[1 ex]
+The layout looks as follows, using the layout editor \io{dali} (see \manualpage{dali}):
+
+\begin{figure}[h]
+\centerline{\epsfig{figure=attenua/attenua.eps, width=11cm}}
+\end{figure}
+
+\section{Files}
+This tutorial is located in the directory \CACDTOP{demo/attenua}.
+Initially, it contains the following files:
+\begin{filelist}
+\item[README] A file containing information about the demo.
+\item[attenua.cmd] Command file for a PSPICE simulation.
+\item[attenua.gds] GDS2 file of the layout of the design.
+\item[att\_ref.spc] SPICE file of the reference circuit.
+\item[npnBW.dev] Device file containing npnBW device.
+\item[pnpWP.dev] Device file containing pnpWP device.
+\item[script.sh] Batch file for running all commands of the demo in sequence.
+\item[spice3f3.lib] Library file for circuit listing.
+\item[xspicerc] Init file for circuit listing.
+\end{filelist}
+
+\section{Running the Extractor}
+First, use the following command to change the current working directory '.' into a project directory:
+\small
+\begin{Verbatim}
+% mkpr -p dimes01 -l 0.1 .
+\end{Verbatim}
+\normalsize
+The command specifies the \io{dimes01} process from the technology library
+and a lambda (design unit) of $0.1 \mu m$.
+We use the mask names as defined in the \io{maskdata} file of the library.
+And we use the default technology file \io{space.def.s} and parameter file \io{space.def.p} of the library.
+\\[1 ex]
+Second, the layout description is put into the project database.
+The layout is supplied in a GDS2 file, which is converted into
+an internal database format with the \io{cgi} program:
+\small
+\begin{Verbatim}
+% cgi attenua.gds
+\end{Verbatim}
+\normalsize
+Now, using verbose mode, perform a flat extraction of cell "attenua".
+\small
+\begin{Verbatim}
+% space -vF attenua
+\end{Verbatim}
+\normalsize
+\small \begin{Verbatim}[frame=single]
+Version 5.3.1, compiled on Fri Feb 03 12:45:53 GMT 2006
+See http://www.space.tudelft.nl
+parameter file: $ICDPATH/share/lib/process/dimes01/space.def.p
+technology file: $ICDPATH/share/lib/process/dimes01/space.def.t
+preprocessing attenua (phase 1 - flattening layout)
+preprocessing attenua (phase 2 - removing overlap)
+extracting attenua
+
+extraction statistics for layout attenua:
+	capacitances        : 0
+	resistances         : 0
+	nodes               : 31
+	mos transistors     : 0
+	bipolar vertical    : 39
+	bipolar lateral     : 59
+	substrate nodes     : 0
+
+overall resource utilization:
+	memory allocation  : 0.408 Mbyte
+	user time          :         0.0
+	system time        :         0.0
+	real time          :         2.0   1%
+
+space: --- Finished ---
+\end{Verbatim}
+\normalsize
+You can try out the options \io{-c}, \io{-C}, \io{-r} and \io{-z} for capacitance and resistance extraction.
+\\[1 ex]
+The extracted circuit can be inspected using the \io{xspice} program.
+We use the \io{-a} option to get alpha-numeric node names, type:
+\small
+\begin{Verbatim}
+% xspice -a attenua
+\end{Verbatim}
+\normalsize
+This gives the following output (for an extraction w/o cap and res):
+\small \begin{Verbatim}[frame=single]
+attenua
+
+* circuit attenua iref comp4 comp1 comp2 comp3 comp6 rshunt comp5 ireg vreg
+*                 switch asssymm rschaal2 rschaal1 rcshunt rv ground outneg
+*                 Vcc outpos compv comcomp
+q1 comp4 1 Vcc wp102c
+q2 comp2 1 rschaal1 wp102c
+q3 comp5 1 rschaal2 wp102c
+q4 1 1 Vcc wp102c
+q5 comp2 comp1 ground bw101a
+q6 1 iref ground bw101a
+   ...
+q9 2 2 Vcc wp102c
+q10 comp5 comp4 ground bw101a
+q11 comp1 1 Vcc wp102c
+q12 comp1 comp1 ground bw101a
+q13 iref iref ground bw101a
+q14 rshunt 2 Vcc wp102c
+q15 comp4 comp4 ground bw101a
+q16 2 3 ground bw101a
+q17 comp1 comp1 ground bw101a
+q18 rcshunt rshunt Vcc wp102c
+q19 comp4 comp4 ground bw101a
+q20 3 3 ground bw101a
+q21 switch iref ground bw101a
+q22 comp1 comp3 ground bw101a
+q23 rcshunt iref ground bw101a
+    ...
+q26 comp4 comp6 ground bw101a
+q27 comp6 rcshunt Vcc wp102c
+q28 comp3 comp2 ground bw101a
+q29 3 4 Vcc wp102c
+q30 rshunt iref ground bw101a
+q31 compv switch Vcc wp102c
+q32 compv switch Vcc wp102c
+q33 comp6 comp5 ground bw101a
+q34 4 comcomp ground bw101a
+q35 comp3 rcshunt Vcc wp102c
+q36 8 8 Vcc wp102c
+q37 ireg 8 Vcc wp102c
+q38 outneg comp2 vreg bw101a
+q39 comcomp comp2 vreg bw101a
+q40 comcomp comp5 vreg bw101a
+q41 outpos comp5 vreg bw101a
+q42 5 switch Vcc wp102c
+q43 5 switch Vcc wp102c
+q44 5 5 ireg bw101a
+q45 compv 5 rv bw101a
+q46 6 compv Vcc wp102c
+q47 Vcc 6 rv bw101a
+q48 switch switch Vcc wp102c
+    ...
+q81 7 switch Vcc wp102c
+q82 7 switch Vcc wp102c
+q83 7 7 ground bw101a
+    ...
+q92 8 7 ground bw101a
+q93 comcomp switch Vcc wp102c
+q94 comcomp switch Vcc wp102c
+q95 9 switch Vcc wp102c
+q96 9 switch Vcc wp102c
+q97 outneg asssymm Vcc wp102c
+q98 outpos asssymm Vcc wp102c
+* end attenua
+
+.model wp102c pnp( ... )
+.model bw101a npn( ... )
+\end{Verbatim}
+\normalsize
+If you have PSPICE, you can perform a circuit simulation (after
+customizing the script \io{nspice}) as follows (see \manualpage{nspice}):
+\small
+\begin{Verbatim}
+% nspice attenua attenua.cmd
+\end{Verbatim}
+\normalsize
+
+\section{Running a Circuit Comparison}
+You can compare the extracted circuit against a reference circuit
+with the circuit comparison program \io{match}.
+\\[1 ex]
+First, add device descriptions for the bipolar transistors to the
+database so that the reference circuit can be stored into the database:
+\small
+\begin{Verbatim}
+% putdevmod pnpWP.dev npnBW.dev
+% xcontrol -device pnpWP npnBW
+\end{Verbatim}
+\normalsize
+Second, add the reference circuit description for the "attenua" circuit
+to the database using the program \io{cspice}:
+\small
+\begin{Verbatim}
+% cspice att_ref.spc
+\end{Verbatim}
+\normalsize
+Now, compare this reference circuit with the extracted circuit, type:
+\small
+\begin{Verbatim}
+% match att_ref attenua
+\end{Verbatim}
+\normalsize
+\small \begin{Verbatim}[frame=single]
+
+match: Succeeded.
+
+\end{Verbatim}
+\normalsize
+The above result shows that the circuits are identical.
+Note that you can use the \io{-bindings} option to get more information.
+\\[1 ex]
+You can also try to change the layout of the "attenua".
+For example, use the layout editor \io{dali} to make an error by deleting some connection.
+Before you run the compare tool \io{match} again,
+extract the circuit of cell "attenua" again, type:
+\small
+\begin{Verbatim}
+% space -F attenua
+% match att_ref attenua
+\end{Verbatim}
+\normalsize

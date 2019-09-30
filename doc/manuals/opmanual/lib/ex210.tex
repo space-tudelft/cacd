@@ -1,0 +1,71 @@
+\subsubsection{ex210}
+
+Functie: Exclusive or
+
+Terminals: (A, B, Y, vss, vdd)
+
+
+IEC-symbool:
+%figuur ex210.iec.eps
+\begin{figure}[bth]
+\callpsfig{ex210.iec.eps}{width=.25\textwidth}
+\end{figure}
+
+\begin{minipage}[t]{0.3\textwidth}
+Waarheidstabel:\\
+
+\begin{tabular}{|c|c||c|}
+\hline
+A	&B	&Y\\
+\hline
+L	&L	&L\\
+L	&H	&H\\
+H	&L	&H\\
+H	&H	&L\\
+\hline
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.6\textwidth}
+Timing parameters:\\
+
+\begin{tabular}{|c|cc|ccc|c|}
+\hline
+Parameter               &From            &To   &Min	&Typ	&Max    &Unit\\
+\hline
+T$_{PLH}$               &any    	&Y     &0.22	&0.69	&1.6    &ns\\
+T$_{PHL}$               &any    	&Y     &0.24	&0.41	&0.68    &ns\\
+\hline
+$\Delta$T$_{PLH}$       &any          	&Y     &-	&-	&1.4    &ns/pF\\
+$\Delta$T$_{PHL}$       &any           	&Y     &-	&-	&1.1    &ns/pF\\
+\hline
+C$_{in}$                &any	    	&vss   &-	&0.24	&0.36   &pF\\
+\hline
+\end{tabular}
+\end{minipage}
+\\
+
+Equivalent chip oppervlak: 7
+
+Fanout: 2.4 pF
+
+\makebox[0.98\textwidth]{
+%figuur ex210.cir.eps
+\begin{minipage}[t]{0.6\textwidth}{
+Circuit:\\
+\\
+
+{\callpsfig{ex210.cir.eps}{height=3in}}
+}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.35\textwidth}{
+%figuur ex210.lay.eps
+Layout:\\
+\\
+
+{\callpsfig{ex210.lay.eps}{height=3in}}
+}
+\end{minipage}
+}
+\clearpage

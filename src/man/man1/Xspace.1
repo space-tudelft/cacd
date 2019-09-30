@@ -1,0 +1,272 @@
+.TH XSPACE 1ICD "User Commands"
+.UC 4
+.SH NAME
+Xspace - 3D layout to circuit extractor display program
+.SH SYNOPSIS
+.B Xspace
+[space3d options]
+[-X]
+[X toolkit options]
+[cell]
+.SH OPTIONS
+.TP
+\fB-S disp.\fIoption\fP
+Enable display
+.I option
+for usage.
+.TP
+.B -X
+Omit the menu bar and run
+.I space3d
+immediately.
+A cell name must be given on the command line.
+.SH "TOOLKIT OPTIONS"
+.TP
+.B -bg color
+Set the background color to \fIcolor\fP.
+.TP
+.B -display host:screen
+Tell X server which
+.I host screen
+must be used for graphical I/O.
+Default, the environment variable DISPLAY is used.
+.TP
+.B -fg color
+Set the foreground color to \fIcolor\fP.
+.SH NOTICE
+This manual page only gives a brief introduction to \fIXspace\fP.
+It should in most cases be sufficient, however,
+for performing straight-forward extraction tasks.
+Other documentation is available, see below.
+.SH DESCRIPTION
+.I Xspace
+is the graphical display tool of the
+.I space3d(1ICD)
+program.
+It is an X Window System based application.
+.PP
+.I Xspace
+is extremely useful to inspect 2D resistance meshes
+and 3D capacitance boundary-element meshes.
+But,
+.I Xspace
+can also be used to display in color the used
+.I space3d
+masks tile splitting and edges.
+.PP
+.I Xspace
+can also be started from the
+.I helios(1ICD)
+Space User Interface.
+When using this interface,
+you don't need to remember the options needed.
+You can easy fill in the Extraction and Display options Forms.
+.SH MENUS
+.SS "Extract Menu"
+For all menu items see the
+.I Xspace
+User's Manual.
+.TP 3
+.B extract
+Start
+.I space3d
+to do the extraction process (hotkey: 'e').
+.TP
+.B extract again
+Show last extraction again (hotkey: 'a').
+.I Xspace
+redisplays the display.out file.
+.TP
+.B save pp image
+Don't clear the display after the prepass.
+.TP
+.B save ep image
+Don't clear the display before a new extraction.
+.TP
+.B display clear
+Clear the display (hotkey: 'c').
+.TP
+.B quit
+Stop the program and exit (hotkey: 'q').
+.TP
+.B pause
+Start/stop pause drawing display output (hotkey: 'p').
+.TP
+.B pause afterpp
+Goto pause after each prepass is finished.
+.TP
+.B run free
+No speed control anymore; the fastest drawing speed (hotkey: 'f').
+Be aware that
+.I Xspace
+doesn't look for keyboard events anymore till the end of the extraction.
+.TP
+.B single step
+Start single step mode (hotkey: 's').
+Use the key or menu entry again to single step.
+Use hotkey 'e' or 'd' to go back to delayed (speed controlled) mode.
+.SS "Database Menu"
+To select a layout cell for extraction.
+Maximum 34 cells in one Database menu.
+.SS "Option Menu"
+To set extraction options.
+See the
+.I Xspace
+User's Manual.
+.SS "Display Menu"
+To set display options.
+See also the
+.I Xspace
+User's Manual.
+.SS "Speed Scrollbar"
+Click in the scrollbar to choice a display drawing speed or
+enable speed controlled mode again after single step.
+.SH HOTKEYS
+There are many hotkeys.
+Some are already mentioned above in the Extract Menu.
+For all hotkeys, see the
+.I Xspace
+User's Manual.
+.TP
+.B Key: Left-arrow
+Move picture a half window to the left.
+.TP
+.B Key: Right-arrow
+Move picture a half window to the right.
+.TP
+.B Key: Down-arrow
+Move picture a half window to the down-wards.
+.TP
+.B Key: Up-arrow
+Move picture a half window to the up-wards.
+.TP
+.B Key: m
+Move picture; center around pointer position.
+.TP
+.B Key: b
+Zoom back to cell bounding box again.
+.TP
+.B Key: i
+Zoom in on current pointer position.
+.TP
+.B Key: I
+Zoom in on center of display window.
+.TP
+.B Key: o
+Zoom out on current pointer position.
+.TP
+.B Key: O
+Zoom out on center of display window.
+.TP
+.B Key: u
+Undo last zoom; back to previous view.
+.TP
+.B Key: x
+Zoom, use pointer position as lower left corner.
+.TP
+.B Key: y
+Zoom, use pointer position as upper right corner.
+.TP
+.B Key: .
+Display layout coordinates of pointer position.
+Note that coordinates are default displayed in internal units.
+That are database units multiplied by four.
+.TP
+.B Key: Ctrl-c
+Abort extraction or extract again mode.
+.TP
+.B Key: Ctrl-l
+Redraw display window, but don't use clear.
+.SH PARAMETERS
+For all parameters see the
+.I Xspace
+User's Manual.
+.TP
+\fBdisp.coord_in_dbunits \fIon|off\fR
+Use database units to display coordinate values (default: internal units).
+.TP
+\fBdisp.coord_in_microns \fIon|off\fR
+Use micron meters to display coordinate values (default: internal units).
+.TP
+\fBdisp.draw_file \fIfile\fR
+Additional drawing commands may be specified in a file.
+For the command syntax see the User's Manual.
+.SH COLORS
+The colors that are used by
+.I Xspace
+to display the different masks/conductors tiles,
+are specified in the colors section of the
+.I space3d
+element definition technology file.
+You can use color names as well as RGB values.
+The RGB values must start with a leading '@' sign.
+You can overrule a specific mask color setting with the
+\fBdisp.color_\fPmask parameter.
+For example,
+to give mask 'metal2' the (hex) RGB value '44F',
+specify:
+.PP
+   disp.color_metal2  @44F
+.SH EXAMPLES
+To start the display program for the cell \fIlatch\fP
+and using a local space parameter file,
+type:
+.PP
+% Xspace -P local.p latch
+.PP
+Note that the
+.I space3d
+extraction options can be set in the "Options" menu
+and the
+.I Xspace
+display options can be set in the "Display" menu.
+The extraction can be started by clicking "extract" in the "Extract" menu
+(or by using the 'e' hotkey).
+.PP
+% Xspace -P local.p -r3C latch
+.PP
+The above command does almost the same as the previous command,
+but the extraction options are already specified.
+.PP
+% Xspace -P local.p -r3C -X latch
+.PP
+The above command starts directly an extraction.
+The
+.I Xspace
+menu's cannot be used,
+thus the used display options must be specified in the parameter file
+(or else with a number of
+.B -S
+options on the command line).
+.AU "A.J. van Genderen, N.P. van der Meijs, S. de Graaf"
+.SH FILES
+.TP
+\fCNELSISPROJECT/display.out\fP
+output file from \fIspace3d\fP, read and displayed by \fIXspace\fP.
+.TP
+\fCspace.def.t\fP
+default name of the
+.I space3d
+technology file, which was compiled by \fItecc(1ICD)\fP.
+.SH SEE ALSO
+A.J. van Genderen and N.P. van der Meijs,
+"Space 3D Capacitance Extraction User's Manual",
+Delft University of Technology,
+Delft,
+The Netherlands.
+.PP
+A.J. van Genderen, N.P. van der Meijs and T. Smedes,
+"Space Substrate Resistance Extraction User's Manual",
+Delft University of Technology,
+Delft,
+The Netherlands.
+.PP
+A.J. van Genderen and N.P. van der Meijs,
+"Xspace User's Manual",
+Delft University of Technology,
+Delft.
+.PP
+helios(1ICD),
+space(1ICD),
+space3d(1ICD),
+tecc(1ICD).

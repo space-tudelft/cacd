@@ -1,0 +1,86 @@
+%=========================================================================
+\documentclass[11pt,twoside,fancyheadings]{article}
+\usepackage{a4wide,times}
+\usepackage[dutch]{babel}
+\usepackage{fancyheadings}
+\usepackage{epsfig}
+%=========================================================================
+%\nofiles
+\newcommand{\smc}[1]{{\sc #1}}
+\newcommand{\ii}{\"{\i}}
+
+\setlength{\textwidth}{15.5cm}
+\setlength{\oddsidemargin}{1cm}
+\setlength{\evensidemargin}{-5mm}
+\setlength{\topmargin}{-20mm}
+\addtolength{\topmargin}{1.7cm}
+
+% vertalen naar ps-file met dvips -t legal filenaam
+%\input{psfig}
+
+% for fancy headings.....
+\pagestyle{fancy}
+\newcommand{\hfdaanduiding}{Hoofdstuk~}
+\addtolength{\headwidth}{\marginparsep}
+\addtolength{\headwidth}{\marginparwidth}
+\renewcommand{\sectionmark}[1]{\markboth{#1}{#1}} % remember chapter title
+\renewcommand{\subsectionmark}[1]{\markright{\thesubsection\ #1}}
+%                                                 % section number and title
+\lhead[\fancyplain{}{\bf\thepage}]{\fancyplain{}{\small\rightmark}}
+\rhead[\fancyplain{}{\small\leftmark}]{\fancyplain{}{\bf\thepage}}
+\cfoot{}
+
+% I have to add this macro for the index stuff
+\newcommand{\see}[2]{$\rightarrow$ {\sl #1}}
+\newcommand{\bold}[1]{{\bf #1}}
+
+% Leave some vertical space between paragraphs; No paragraph indent:
+\setlength{\parskip}{0.6\baselineskip} \setlength{\parindent}{0cm}
+
+\newcommand{\thedir}{myproject}
+\newcommand{\cd}[1]{\renewcommand{/\thedir}{#1}}
+
+% this is how the computer displays command lines:
+\newcommand{\type}[1]{\begin{quote}%
+                         {\tt [op5u9/\thedir]~ #1}%
+                      \end{quote}}
+% ...and this is how the computer displays two command lines:
+\newcommand{\typeb}[2]{\begin{quote}%
+                         {\tt [op5u9/\thedir]~ #1%
+                              \newline%
+                              [op5u9/\thedir]~ #2}%
+                       \end{quote}}
+% ...and this is how the computer displays command lines in home dir:
+\newcommand{\typeh}[1]{\begin{quote}%
+                         {\tt [op5/op5u9]~ #1}%
+                      \end{quote}}
+
+% this is how to print mask names:
+\newcommand{\layer}[1]{{\sf #1}}
+\newcommand{\mask}[1]{{\sf #1}}
+% this is how to print names of nelsis tools:
+\newcommand{\tool}[1]{{\sl #1\/}}
+% this is how to print name of a button in an X window:
+\newcommand{\button}[1]{{\fbox{\small\rule[-0.5ex]{0mm}{2ex}$\!\!\!\!$\sf ~ #1}}}
+% this is how to print file names and cell names:
+\newcommand{\fname}[1]{{\tt #1}}
+% this is how to print file names and cell names:
+\newcommand{\file}[1]{{\tt #1}}
+% this is for reading figures from directory plaatjes
+\newcommand{\callpsfig}[2]{\psfig{figure=plaatjes/#1,#2}}
+% To print an attention message:
+% macro for unimplemented figure
+\newcommand{\futurecallpsfig}[2]{\centerline{\psfig{figure=futurepic.eps,#2}}}
+\newcommand{\attention}[2]{\begin{description}\item[{\bf #1}] #2 \end{description}}
+% to print a warning
+\newcommand{\warning}[1]{\begin{description}\item[{\bf Warning}:] #1 \end{description}}
+\sloppy
+\makeindex
+%=========================================================================
+\begin{document}
+%=========================================================================
+\pagestyle{fancy}
+\input{m_schentry}
+%=========================================================================
+\end{document}
+%=========================================================================

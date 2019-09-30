@@ -1,0 +1,36 @@
+.TH DMCKINALL 5ICD "DMI User's Manual"
+.SH NAME
+dmCkinAll - terminate all cell transactions
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+void dmCkinAll (int mode);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "int mode"
+is an integer selecting a specific behavior of dmCheckIn().
+Valid modes as pre-defined in "dmincl.h" are
+.BR COMPLETE ,
+.B QUIT
+and
+.BR CONTINUE .
+See dmCheckIn(5ICD).
+.SH DESCRIPTION
+Function
+.B dmCkinAll
+does dmCheckIn() for all existing cell access keys for all open projects.
+.SH DIAGNOSTICS
+When a check-in operation fails for a particular cell
+the function dmError() will be called.
+See dmCheckIn(5ICD).
+.SH SEE ALSO
+dmCheckIn(5ICD), dmCloseProject(5ICD), dmQuit(5ICD).
+.SH NOTE
+Note that dmCloseProject() can be used to check-in all cells for a
+particular project.
+Also note that dmQuit() checks-in all cells with mode \fBQUIT\fP
+and closes all open projects.

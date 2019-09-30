@@ -1,0 +1,325 @@
+.TH MATCH 1ICD
+.UC 4
+.SH NAME
+match - a network comparison program
+.SH SYNOPSIS
+.B match
+[options] nom_network act_network
+.SH ARGUMENTS
+.TP 14
+nom_network
+Name of the \fInominal\fP network.
+.TP
+act_network
+Name of the \fIactual\fP network.
+.SH OPTIONS
+Options are (may be abbreviated):
+.TP
+.B -help
+Print this list.
+.TP
+.B -release
+Print the release number of this tool.
+.TP
+.B -bindings
+Print a binding table on stdout.
+Nets and terminals and all matched devices are listed.
+.TP
+.B -fullbindings
+Is equivalent to option -bindings.
+.TP
+.B -expand
+Print a listing of both networks after expansion on stderr.
+.TP
+.B -silent
+Silent mode.
+Only error messages are printed.
+.TP
+.B -verbose
+Verbose mode.
+Print additional process information on stderr.
+.TP
+.B -byname
+Match terminals, nets and devices by name before starting the
+actual network comparison.
+Elements having names starting with an underscore ('_') or a
+number ('0'-'9') are not considered in this stage.
+This option can be used to assert equivalences between network elements via
+their names.
+.TP
+.B -capacitors
+Ignore capacitors in both network descriptions.
+Capacitors are simply removed.
+.TP
+.B "-crange \fIvalue\fP"
+Specify the allowable relative difference between two capacitors.
+This option is equivalent to \fI-range cap:v,value\fP.
+\fIv\fP is the name of the parameter to which the size of a capacitor
+is assigned in the database.
+.TP
+.B -edif
+Produce output in an edif-like format that can be used as input for
+the program
+.I highlay(1ICD).
+In addition the option -bindings is set.
+The output goes to stream "match" in the actual_network circuit view,
+only when option -files or -output is not specified.
+.TP
+.B -files
+Specifies that
+.I nom_network
+and
+.I act_network
+are the names of files
+that contain complete SLS network descriptions.
+The last network in each file is the one that needs to be processed.
+This option does not use a project and process directory.
+.TP
+.B "-output \fIfile\fP"
+Redirect program output to the specified file name.
+.TP
+.B "-primitive \fIfile\fP"
+Specify a primitive element SLS description file.
+The terminal permutabilities of primitive elements that are specified
+in this file overrule the default terminal permutability settings
+(note: \fIprocess\fP/match_prim is not read).
+In addition, new primitive elements can be defined.
+Note that option -files does not read the default file.
+Note that no primitive file is read, when the "file" argument is empty
+(can be specified by using only two single or double quotes).
+.TP
+.B "-library \fIfile\fP"
+Specify a (primitive) library SLS description file.
+.TP
+.B "-range \fIdev\fP:\fIpar\fP,\fIvalue\fP"
+Specify the allowable relative difference between parameter values of
+two devices.
+\fIdev\fP is the name of the device type, e.g. 'nenh', 'penh', or 'res'.
+\fIpar\fP is the name of the parameter, e.g. 'w' for 'nenh' or 'v' for 'res'.
+\&'v' is used as the parameter name for unnamed device values such
+as resistor values or capacitor values.
+\fIvalue\fP is the allowable relative difference.
+If \fInom\fP is the parameter value of one device,
+\fIact\fP the parameter value of another device and
+\fIval\fP the relative difference, then the two devices match with respect to
+their parameter values if the following (symmetric) condition is satisfied:
+.in +2
+.nf
+nom <= (1 + val) * act AND act <= (1 + val) * nom
+.fi
+.in
+.TP
+.B -resistors
+Ignore resistors in both network descriptions.
+Resistors are replaced by a connection.
+.TP
+.B "-rrange \fIvalue\fP"
+Specify the allowable relative difference between two resistors.
+This option is equivalent to \fI-range res:v,value\fP.
+\fIv\fP is the name of the parameter to which the size of a resistor
+is assigned in the database.
+.TP
+.B -transistors
+Only compare transistors (equivalent to -cap -res).
+.TP
+.B -annotate
+Generate annotate information for the layout.
+.br
+Streams "annotations" and "torname" are written
+in the actual_network layout view (if existing).
+Only when option -files is not specified.
+.TP
+.B -nomap
+Do not map elements if networks do not match.
+.TP
+.B -parameters
+Print parameter values in binding table.
+.TP
+.B "-progress \fIpercentage\fP"
+Report when specified progress has been made.
+.TP
+.B -xsls
+Use the
+.I xsls
+command to extract the SLS descriptions
+of the specified nominal and actual networks.
+This in place of the internal database read method.
+.br
+It works like option -files,
+but the files are made and parsed internally.
+.SH HIDDEN OPTIONS
+Hidden options can only be specified if env.var. ESEOPTIONS is set.
+Hidden options are:
+.TP
+.B -%help
+Print this list (also hidden options).
+.TP
+.B -%list
+Print a listing of both networks before expansion on stderr.
+.TP
+.B -%rlist
+Print a listing of both networks before reduction on stderr.
+.TP
+.B "-%command \fIstring\fP"
+Specify the command to extract SLS descriptions.
+.br
+Default "xsls -h".
+Only used with option -xsls.
+.TP
+.B -%debug
+Debugging option.
+Add debug info to stderr.
+.TP
+.B -%mstatistics
+Print memory statistics on stderr.
+.TP
+.B -%statistics
+Print some statistics about the matching process on stderr.
+.TP
+.B -%time
+Print info on the time taken by the program.
+.TP
+.B -%trace
+Trace the partitioning process (on stderr).
+.br
+In addition the option -verbose is set.
+
+.SH DESCRIPTION
+.I Match
+is a program that compares two networks.
+The program is designed to be used as a connectivity verification
+tool for VLSI circuits.
+.PP
+The program expects two input networks which by default will be read (extracted)
+from the database.
+The networks will be expanded before
+the matching process is started.
+.PP
+The two networks are:
+.TP
+The \fInominal\fP network.
+This (hierarchical) network is used as a
+reference for the layout connectivity.
+The nominal network description can be obtained from a schematic
+editor or can be made by hand.
+In a top down design process, this description is
+usually already available as a result of an earlier design step
+(e.g. simulator input file).
+.TP
+The \fIactual\fP network.
+This (hierarchical) network
+is usually directly derived from the
+circuit layout using an
+extractor program.
+.PP
+The comparison process is completely independent from the
+individual labelings of the
+nets (terminals) and devices in both network descriptions.
+A graph theoretical partitioning algorithm is used to derive a possible
+isomorphic equivalence of both networks.
+If the two networks are found not to be isomorphic,
+.I match
+tries to determine which parts of the two networks are equivalent
+and which parts are not.
+.PP
+The terminal permutabilities of the primitive network elements
+(that is, the way in which the terminals can be interchanged
+without altering the topology of the network) can be
+defined in a user-specified primitive element file.
+See PRIMITIVES section.
+.PP
+After the comparison, the result is printed on the output.
+A binding table, which specifies which nets (terminals) and devices from both
+network descriptions are to be associated is available as well as
+a list of 'unmatched' nets (terminals) and devices
+in case the two networks are different.
+
+.SH PRIMITIVES
+To define a primitive network, the SLS language is extended as follows:
+.PP
+Network definitions preceded by the keyword \fIprimitive\fR
+consist of exactly one permutability definition followed by a semicolon.
+A permutability definition consists of the keyword "perm"
+followed by a number of classes enclosed by curly brackets.
+Each class contains a set of terminals which may be mutually interchanged.
+Terminals that are not part of the same class are not interchangeable.
+.PP
+As illustration, the default permutability definition of an NMOS enhancement
+transistor is given:
+.nf
+
+        \fBprimitive network\fR nenh \fB(terminal\fR g\fB,\fR d\fB,\fR s\fB)
+        {
+                perm { (\fRg\fB) (\fRd\fB, \fRs\fB) };
+        }\fR
+
+.fi
+Note: you don't need to specify perm for the "g" terminal.
+A standard primitive element file (match_prim) defines the default permutabilities
+of all primitive network elements and is default read (use -verbose).
+Note that definitions for the standard elements "cap", "res", "nenh", "penh"
+and "ndep" don't need to be specified.
+The
+.I match
+program knows these elements already internally.
+
+.SH FUNCTIONS
+The standard functions "invert", "nand", "nor", "and", "or" and "exor" are
+known internally by the
+.I match
+program.
+The inputs have default permutabilities.
+Note that, when reading standard functions calls from database ("mc" stream),
+the "n" attribute needs to be specified to know how many inputs there are (ninputs must be in range 1 to 9).
+Note that, when ninputs is > 1, the value is added to the function name.
+Functions are always considered as primitives.
+Unknown function definitions can be defined using the keyword "function" in place of "network".
+The definition body may only contain a "perm" statement (or be empty).
+.SH EXAMPLES
+Compare two networks from the database and send binding information to
+a file "match_shake.txt":
+.IP
+match -bi handshake flatshake -out match_shake.txt
+.PP
+Compare two networks that are present in an sls file and ignore capacitors
+in both networks:
+.IP
+match -fi handshake.sls flatshake.sls -cap
+.SH REMARKS
+.I Match
+considers terminals and nets as different elements.
+It is thus not possible that an (internal) net of one network
+matches with a terminal of the other.
+.PP
+Before starting the network comparison,
+.I match
+removes all unconnected nets and terminals (including feedthroughs)
+from both descriptions and issues a warning about them.
+.PP
+.I Match
+compares small and medium sized
+networks so fast that it takes more time to read (and expand)
+the networks than to compare them.
+.SH DIAGNOSTICS
+Syntax errors in the sls input specifications and
+references to undefined networks are reported.
+Recursive network definitions are detected as well.
+.PP
+All other error messages are self-explanatory.
+.SH RETURN STATUS
+The program returns the following status:
+.PP
+             \fB0\fP = match succeeded.
+             \fB1\fP = error.
+             \fB2\fP = match failed.
+.AU
+T. Vogel, Delft University of Technology.
+.SH FILES
+.TP
+\fCICDPATH/share/lib/process/\fIprocess\fP/match_prim\fP
+(standard primitive element file)
+.SH SEE ALSO
+T. Vogel, "Connectivity Verification based on Netlist
+Comparison", Delft University of Technology.
+.br
+Sls: Switch-Level Simulator User's Manual.

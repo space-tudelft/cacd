@@ -1,0 +1,64 @@
+\subsection{dfr112}
+\index{flipflop!dfr112}
+Function: D-type positive edge triggered flipflop with synchronous reset
+
+Terminals: (D, R, CK, Q, QN, vss, vdd)
+
+
+IEC-symbol:
+%figuur dfr11.iec.eps
+\begin{figure}[bth]
+\callpsfig{dfr112.iec.eps}{width=.31\textwidth}
+\end{figure}
+
+Function table:
+\begin{table}[bth]
+\begin{tabular}{|c|c|c||c|c|}
+\hline
+R	&D	&CK		&Q	&QN\\
+\hline
+L	&L	&$\uparrow$	&L	&H\\
+L	&H	&$\uparrow$	&H	&L\\
+H	&-	&$\uparrow$	&L	&H\\
+\hline
+\end{tabular}
+\vspace{1cm}
+
+Propagation and load dependent delays:\\
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Parameter               &From            &To   &Typ    &Unit\\
+\hline
+T$_{PLH}$               &CK     	&Q      &1.8    &ns\\
+T$_{PHL}$               &CK    		&Q      &2.3    &ns\\
+T$_{PLH}$               &CK     	&QN     &1.9    &ns\\
+T$_{PHL}$               &CK    		&QN     &2.3    &ns\\
+\hline
+$\Delta$T$_{PLH}$       &CK          	&any    &8.0    &ns/pF\\
+$\Delta$T$_{PHL}$       &CK           	&any    &7.0    &ns/pF\\
+\hline
+C$_{in}$                &D,R	    	&vss    &0.12   &pF\\
+C$_{in}$                &CK	    	&vss    &0.43   &pF\\
+\hline
+\end{tabular}
+\end{table}
+
+Equivalent chip area: 15
+
+
+%figuur dfr11.cir.eps
+\begin{figure}[t]
+circuit:\\
+
+\callpsfig{dfr112.cir.eps}{width=1\textwidth}
+
+%figuur dfr11.lay.eps
+
+layout:\\
+
+\callpsfig{dfr112.lay.eps}{height=5in}
+\end{figure}
+
+
+\clearpage

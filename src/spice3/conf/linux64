@@ -1,0 +1,9 @@
+# Linux 64-bit
+
+INTERFACE_OPTS	= -DWANT_X11
+INCX		= -I/usr/include/X11 -I/usr/include/X11/Xaw
+LIBX		= -lXaw -lXt -lX11
+
+LDFLAGS   = -s -L/usr/lib64 -lm
+LDFLAGSX  = -s -L/usr/lib64 $(LIBX) -lm
+

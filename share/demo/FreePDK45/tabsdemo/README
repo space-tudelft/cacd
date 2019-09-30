@@ -1,0 +1,56 @@
+# directory: demo/FreePDK45/tabsdemo
+
+Demonstration of flat space extractions of a counter cell
+made with the FreePDK45 process and the use of the tabs tool.
+
+STEPS
+=====
+
+1.  Change this directory into a NangateOpenCellLibrary project.
+    It assumes that the NangateOpenCellLibrary is installed.
+    % mkpr -u ../NangateOpenCellLibrary .
+
+2.  To use the NangateOpenCellLibrary project, it must be added
+    to the local project list:
+    % addproj ../NangateOpenCellLibrary
+
+3.  To use the basic cells, they must be imported:
+    % impcell -lc -a ../NangateOpenCellLibrary
+
+4.  Unpack the counter layout gds2 file and make a hierarchical
+    layout cell listing:
+    % cgi c23.gds
+    % dblist -h c23
+
+5.  Inspect the layout with the layout editor dali:
+    % dali c23
+
+6.  Compile the local space technology file:
+    % tecc space.def.s
+
+7.  Perform a flat netlist extraction of the counter:
+    % space -Fv -E space.def.t -P space.def.p c23
+
+8.  Inspect the extraction result in SLS format:
+    % xsls c23
+
+9.  Perform a logic simulation with the sls simulator:
+    % simeye
+
+10. Use xcontrol to change the library status of some basic cells:
+    % xcontrol -regular AND2_X1 AND3_X1 DFF_X1 MUX2_X1 OR2_X1
+
+11. Perform a flat netlist extraction of the counter again:
+    % space -Fv -E space.def.t -P space.def.p c23
+
+12. Inspect the extraction result in SPICE format:
+    % xspice -auo c23
+
+13. Use tabs to add 2D capacitance data to the technology file:
+    % tabs -s space.def.s
+
+14. Perform a flat netlist extraction of the counter with 2D
+    capacitances and show the SPICE netlist:
+    % space -Fv -Cl -E space.def.t -P space.def.p c23
+    % xspice -auo c23
+

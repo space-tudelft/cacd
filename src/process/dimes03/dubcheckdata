@@ -1,0 +1,63 @@
+#
+# dubcheckdata of DIMES03 process, V0.1 (DTS) 14/01/1999
+#
+# General information
+# This file assumes a lambda of 0.1 micron/gridspace
+#
+# File History.
+#
+#   --- 30/10/1995 --  Creation by C.A. Schot
+#
+#   --- 13/11/1995 --  Change by C.A. Schot
+# Addition of test for WN.4.1
+#   --- 14/01/1999 --  Change by C.A. Schot
+# Addition of LBL and NWP
+#     ---Not checked!!!!!----
+#
+#
+dp_vln  bn_vln   NOFILE   0  40  0  0  0  DP.3.1  (separ DP - BN)
+#DRC_BUG# dn_vln  bool_10  bool_11 10  0  0  0  2  DN.3.1  (exten DN inside BN)
+dn_vln  bn_vln   NOFILE   0  40  0  0  0  DN.3.2  (separ DN - BN)
+dn_vln  dp_vln   NOFILE   0  40  0  0  0  DN.4.1  (separ DN - DP)
+lp_vln  dp_vln   NOFILE   0  40  0  0  0  LP.3.1  (separ LP - DP)
+#DRC_BUG# lp_vln  bool_20  bool_21 10  0  0  0  2  LP.3.2  (exten LP inside DP)
+lp_vln  dn_vln   NOFILE   0  30  0  0  0  LP.4.1  (separ LP - DN)
+lb_vln  dp_vln   NOFILE   0  40  0  0  0  LB.3.1  (separ LB - DP)
+lb_vln  dn_vln   NOFILE   0  30  0  0  0  LB.4.1  (separ LB - DN)
+#DRC_BUG# lb_vln  bool_30  bool_31 10  0  0  0  2  LB.5.1  (exten LB inside LP)
+lb_vln  lp_vln   NOFILE   0  20  0  0  0  LB.5.2  (separ LB - LP)
+lbl_vln  dp_vln  NOFILE   0  40  0  0  0  LBL.3.1  (separ LB - DP)
+lbl_vln  dn_vln  NOFILE   0  30  0  0  0  LBL.4.1  (separ LB - DN)
+#DRC_BUG# lbl_vln bool_29  bool_31 10  0  0  0  2  LBL.5.1 (exten LBL inside LP)
+lbl_vln  lp_vln  NOFILE   0  20  0  0  0  LBL.5.2  (separ LB - LP)
+bool_22 dp_vln   NOFILE   5   0  0  0  0  CO.3.1  (ovlap DP over CO)
+#DRC_BUG# ---------------------------------------  CO.4.1  (exten DN inside CO)
+#DRC_BUG# ---------------------------------------  CO.5.1  (exten LP inside CO)
+#DRC_BUG# ---------------------------------------  CO.6.1  (exten LB inside CO)
+# Rule WN.0.1 cannot be checked
+bool_45 wn_vln   NOFILE   5   0  0  0  0  WN.3.1  (ovlap WN over CO)
+wn_vln  co_vln   NOFILE   0   5  0  0  0  WN.3.2  (separ WN - CO)
+bool_41 lb_vln   NOFILE   6   0  0  0  0  WN.4.1  (ovlap LB over N-emitter)
+bool_42 lbl_vln  NOFILE   6   0  0  0  0  WN.4.1  (ovlap LBL over N-emitter)
+bool_47 ic_vln   NOFILE   5   0  0  0  0  IC.3.1  (ovlap IC over CO)
+bool_51 ic_vln   NOFILE   5   0  0  0  0  IC.4.1  (ovlap IC over CAP)
+bool_56 ic_vln   NOFILE   5   0  0  0  0  CT.3.1  (ovlap IC over CT)
+bool_52 cap_vln  NOFILE   5   0  0  0  0  CT.4.1  (ovlap CAP over CT)
+ct_vln  cap_vln  NOFILE   0  10  0  0  0  CT.4.2  (separ CAP - CT)
+bool_54 in_vln   NOFILE   5   0  0  0  0  IN.3.1  (ovlap IN over CAP)
+#Following check + CB.6.0 covers also CB.6.0
+bool_61 in_vln   NOFILE   5   0  0  0  0  IN.4.1  (ovlap IN over CT)
+# Rule CB.3.0 cannot be checked
+dp_vln  cb_vln   NOFILE   0  20  0  0  0  CB.3.1  (separ CB - DP)
+co_vln  cb_vln   NOFILE   0 600  0  0  0  CB.4.1  (separ CB - CO)
+bool_58 ic_vln   NOFILE  20   0  0  0  0  CB.5.1  (ovlap IC over CB)
+ic_vln  cb_vln   NOFILE   0 600  0  0  0  CB.5.2  (separ CB - IC)
+#DRC_BUG# bool_65 bool_67  bool_66 1000000 0 0 0 2  CB.6.0  (exten CB beyond IN)
+#CB.6.0 is covered by checks of CB.7.0 & IN.4.1
+bool_65 in_vln   NOFILE  20   0  0  0  0  CB.6.1  (ovlap IN over CB)
+in_vln  cb_vln   NOFILE   0 600  0  0  0  CB.6.2  (separ CB - IN)
+bool_70 nwp_vln  NOFILE   5   0  0  0  0  NWP.3.1 (ovlap NWP over CO)
+nwp_vln bool_70  NOFILE   0   5  0  0  0  NWP.3.2 (separ NWP - CO+WP)
+bool_70 lb_vln   NOFILE   0  30  0  0  0  NWP.4.1 (separ CO+WP - LB)
+bool_70 lbl_vln  NOFILE   0  30  0  0  0  NWP.4.1 (separ CO+WP - LBL)
+bool_70 lp_vln   NOFILE   0  30  0  0  0  NWP.4.2 (separ CO+WP - LP)

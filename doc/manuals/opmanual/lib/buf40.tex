@@ -1,0 +1,69 @@
+\subsubsection{buf40}
+\index{buffer!buf40}
+Functie: Buffer (4x-drive)
+
+Terminals: (A, Y, vss, vdd)
+
+
+IEC-symbool:
+%figuur buf40.iec.eps
+\begin{figure}[bth]
+\callpsfig{buf40.iec.eps}{width=.31\textwidth}
+\end{figure}
+
+\begin{minipage}[t]{0.3\textwidth}
+Waarheidstabel:\\
+
+\begin{tabular}{|c||c|}
+\hline
+A	&Y\\
+\hline
+L	&L\\
+H	&H\\
+\hline
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.6\textwidth}
+Timing parameters:\\
+
+\begin{tabular}{|c|cc|ccc|c|}
+\hline
+Parameter               &From            &To   	&Min	&Typ	&Max    &Unit\\
+\hline
+T$_{PLH}$               &A     		&Y      &0.46	&0.69	&1.0    &ns\\
+T$_{PHL}$               &A    		&Y      &0.56	&0.84	&1.3    &ns\\
+\hline
+$\Delta$T$_{PLH}$       &A           	&Y      &-	&-	&0.3    &ns/pF\\
+$\Delta$T$_{PHL}$       &A           	&Y      &-	&-	&0.4    &ns/pF\\
+\hline
+C$_{in}$                &A	    	&vss    &-	&0.12	&0.18   &pF\\
+\hline
+\end{tabular}
+\end{minipage}
+\\
+
+Equivalent chip oppervlak: 6
+
+Fanout: 12.0 pF
+
+\makebox[0.98\textwidth]{
+%figuur buf40.cir.eps
+\begin{minipage}[t]{0.70\textwidth}{
+Circuit:\\
+\\
+
+{\callpsfig{buf40.cir.eps}{height=2in}}
+}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.25\textwidth}{
+%figuur buf40.lay.eps
+Layout:\\
+\\
+
+{\callpsfig{buf40.lay.eps}{height=3in}}
+}
+\end{minipage}
+}
+\clearpage

@@ -1,0 +1,92 @@
+/* process : c5th (3u 500A) Philips
+/* author  : A.J. Schooneveld, TU-Delft
+/* date    : 6 May 1987
+*/
+
+/* not determined are :
+/*      rstat and rsatu
+/*      cestat
+/*      cch for pull mode
+*/
+
+vh=5
+vminh=4
+vmaxl=1
+krise=0.91
+kfall=1.19
+
+nenh
+   loffset=0u
+   woffset=0u
+   w=6u l=3u : rstat=1.7k rsatu=6.8k cgstat=16.2f cgrise=12.0f
+	       cgfall=12.4f cestat=12.8f cerise=14.3f cefall=11.3f
+   w=8u	l=3u : rstat=1.3k rsatu=5.2k cgstat=24.4f cgrise=16.3f
+	       cgfall=16.0f cestat=12.9f cerise=13.9f cefall=11.5f
+   w=10u l=3u : rstat=1k rsatu=4k cgstat=23f cgrise=20.5f
+	        cgfall=19.5f cestat=12.9f cerise=13.5f cefall=11.3f
+   w=50u l=3u : rstat=0.2k rsatu=0.8k cgstat=77.8f cgrise=97.8f
+	        cgfall=89.8f cestat=15.8f cerise=15.4f cefall=14.6f
+   pullup
+      /* not determined yet */
+      w=6u l=3u : rdyn=8.2k cch=16.5f
+      w=8u l=3u : rdyn=5.7k cch=24.8f
+      w=10u l=3u : rdyn=4.4k cch=28.3f
+      w=50u l=3u : rdyn=920 cch=103f
+   end
+   pulldown
+      w=6u l=3u : rdyn=8.2k cch=16.5f
+      w=8u l=3u : rdyn=5.7k cch=24.8f
+      w=10u l=3u : rdyn=4.4k cch=28.3f
+      w=50u l=3u : rdyn=920 cch=103f
+   end
+   passup
+      w=6u l=3u : rdyn=6.3k cch=6.6f
+      w=8u l=3u : rdyn=5.5k cch=7.7f
+      w=10u l=3u : rdyn=4.8k cch=10.0f
+      w=50u l=3u : rdyn=846 cch=45.2f
+   end
+   passdown
+      w=6u l=3u : rdyn=3.8k cch=3.1f
+      w=8u l=3u : rdyn=2.7k cch=4.2f
+      w=10u l=3u : rdyn=2.1k cch=5.4f
+      w=50u l=3u : rdyn=449 cch=28.7f
+   end
+end
+
+penh
+   loffset=0u
+   woffset=0.3u
+   w=6u l=3u : rstat=1.7k rsatu=6.8k cgstat=16.2f cgrise=12.4f
+	       cgfall=12.0f cestat=39.7f cerise=35.8f cefall=43.7f
+   w=10u l=3u : rstat=1k rsatu=4k cgstat=24.4f cgrise=20.4f
+		cgfall=20.0f cestat=36.3f cerise=30.3f cefall=41.4f
+   w=15u l=3u : rstat=0.7k rsatu=2.8k cgstat=34.5f cgrise=30.7f
+		cgfall=29.2f cestat=35.6f cerise=29.7f cefall=39.1f
+   w=100u l=3u : rstat=0.1k rsatu=0.4k cgstat=156f cgrise=196f
+		 cgfall=180f cestat=53.6f cerise=47.7f cefall=53.6f
+   pullup
+      w=6u l=3u : rdyn=18.2k cch=16.5f
+      w=10u l=3u : rdyn=11.5k cch=23.6f
+      w=15u l=3u : rdyn=8.1k cch=27.0f
+      w=100u l=3u : rdyn=1.38k cch=107f
+   end
+   pulldown
+      /* not determined yet */
+      w=6u l=3u : rdyn=18.2k cch=16.5f
+      w=10u l=3u : rdyn=11.5k cch=23.6f
+      w=15u l=3u : rdyn=8.1k cch=27.0f
+      w=100u l=3u : rdyn=1.38k cch=107f
+   end
+   passup
+      w=6u l=3u : rdyn=3.3k cch=2.1f
+      w=10u l=3u : rdyn=3.2k cch=9.9f
+      w=15u l=3u : rdyn=2.6k cch=13.9f
+      w=100u l=3u : rdyn=564 cch=81.5f
+   end
+   passdown
+      w=6u l=3u : rdyn=4.2k cch=2.1f
+      w=10u l=3u : rdyn=2.9k cch=7.9f
+      w=15u l=3u : rdyn=1.9k cch=12.7f
+      w=100u l=3u : rdyn=224 cch=76.5f
+   end
+end

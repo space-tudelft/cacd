@@ -1,0 +1,682 @@
+\section{Tutorial Kennismaking met de Computer}
+
+\subsection{Inleiding}
+\subsubsection{Dit hoofdstuk is onderhevig aan veranderingen}
+
+Dit hoofdstuk beschrijft de omgang met de X--terminals zoals die gebruikt
+worden bij het tweedejaars practicum.
+Het gebruik van de X--terminals is in hoge mate configureerbaar.
+Het gaat hier om instellingen als kleur, lettertypes, de gebruikte
+window manager en nog enkele andere zaken.
+Voor het practicum is gekozen voor een relatief eenvoudige set
+van instellingen.
+Doordat inzichten in het gebruik van X--terminals veranderen, kan het
+gebeuren dat kleine veranderingen in de configuratie en dus
+het gebruik worden doorgevoerd.
+Dit kan dan ook enkele verschillen t.o.v.\ dit hoofdstuk met zich meebrengen.
+
+\subsubsection{Hoe moet dit hoofdstuk worden gelezen}
+
+Dit hoofdstuk is bedoeld om de gebruiker snel en eenvoudig de
+basis van het gebruik van X--terminals en UNIX bij te brengen.
+De snelste manier om dit gebruik onder de knie te krijgen is door
+achter een scherm plaats te nemen, in te loggen en ''het'' te doen.
+Ter ondersteuning hiervan is paragraaf~\ref{Een voorbeeld login sessie}
+opgenomen. Deze paragraaf is een voorbeeldsessie.
+Wij raden u aan om paragraaf~\ref{Een voorbeeld login sessie}
+te lezen voordat u achter het scherm gaat zitten.
+\newline
+De meest elementaire zaken zoals inloggen, uitloggen, tekst invoeren,
+manual pages lezen, en de basis UNIX commando's komen aan bod.
+Paragrafen~\ref{Login},~\ref{Logout} gaan iets dieper in op het in- en
+uitlog proces en het uiterlijk van het scherm voor en na inloggen.
+Voor meer achtergrond-informatie over UNIX en X-windows wordt u
+verwezen naar appendix~\ref{UNIX en X-windows}.
+Paragraaf~\ref{Objecten op het scherm} behandelt alle objecten die op
+het scherm zichtbaar zijn na login.
+Paragraaf~\ref{UNIX} gaat in op het gebruik van het operating systeem UNIX.
+Hieronder valt ook het gebruik van de c-shell, de basis UNIX commando's,
+teksteditors en tekstverwerkers, elektronische post en het printen en plotten
+van files.
+
+\subsection{Een voorbeeld login sessie}
+\label{Een voorbeeld login sessie}
+\subsubsection{Login}
+\label{Login}
+
+Het loginscherm wordt gevormd door een donkere achtergrond met in het
+midden een zogenaamd identificatie ''widget'' (window met invul-form).
+Hierin bevindt zich het loginveld en het passwordveld.
+Alle aanslagen op het toetsenbord worden doorgegeven aan dit loginprocess.
+U hoeft de pointer dus niet op het loginveld te zetten om uw
+login-account in te tikken.
+Een login-account naam en password moet gevolgd worden door een {\em Return}.
+Het intikken van passwords wordt niet op het scherm ge\"echoed.
+\newline
+Als het systeem uw account heeft gecontroleerd,
+wordt voor u een sessie opgestart.
+Het eerste wat verschijnt is de ''{\em message of the day}'',
+als er tenminste iets zinnigs te melden valt.\\
+Ook kunnen er andere meldingen verschijnen,
+b.v.\ dat er {\em mail} of ongelezen {\em news} is.\\
+U kunt nu commando's gaan intikken achter de prompt in een {\em xterm}-window.
+
+\subsubsection{Vituele schermen}
+\label{Vituele schermen}
+
+De beeldbuis waar u achter werkt lijkt redelijk groot maar toch is
+deze vaak niet groot genoeg.
+Vaak komt het voor dat u enkele tientallen windows tegelijk open hebt
+en dan is het scherm niet groot genoeg om het netjes te houden.
+Om hier wat aan te doen zijn 4 virtuele schermen naast elkaar geplaatst.
+Linksonderaan op het scherm ziet u een vak met
+de naam {\em Misc} en daaronder een vlak in 4 stukken verdeeld.
+Deze stukken zijn een kleine versie van ieder virtueel scherm.
+\newline
+U kunt uzelf verplaatsen van het ene naar het andere virtuele scherm
+door met de muis tegen de rand van het scherm aan te lopen.
+U zult zien dat het scherm plotseling wordt vervangen door een ander scherm.
+Ook kunt u uzelf verplaatsen middels toetscombinaties.
+Dit werkt op den duur sneller.
+Gebruik de {\em Control} toets en de pijltjes toetsen.
+{\em Ctrl-$<$pijltje naar beneden$>$} betekent uiteraard ga naar
+het virtuele scherm onder het huidige scherm.
+
+\subsubsection{De pointer}
+\label{De pointer}
+
+De pointer kunt u met de muis over het scherm bewegen.
+Wanneer u hierbij de pointer binnen een window brengt zult u zien dat
+de pointer van vorm verandert.
+Op het donkere achtergrondscherm heeft de pointer de vorm van een hoofdletter X.
+In een {\em xterm}-window verandert de pointer in een vorm die lijkt op \index{xterm}
+een hoofdletter I.
+Merk op dat wanneer de pointer binnen een {\em xterm}-window of een ander
+window komt waar iets kan worden gedaan, dat dan de kleur van de rand
+om dit window aangeeft dat het actief is.
+Standaard heeft een actief
+window een roze rand en een niet-actief window een paarse rand.
+In de meeste andere windows zal de pointer een schuin pijltje zijn.
+Wanneer het systeem van u verlangt dat u even wacht zal de pointer veranderen
+in een zandloper.
+Deze zandloper heeft u b.v.\ kunnen zien op het moment dat u inlogde.
+
+Wanneer u de pointer voorzichtig langs de rand van b.v.\ een {\em xterm}
+beweegt, kunt u de pointer  van vorm zien veranderen.
+De pointer geeft dan ongeveer aan wat u met de rand kunt doen.
+Ga b.v.\ naar de onderrand van de {\em xterm}. De pointer
+verandert in een horizontaal streepje met daarop een pijl die naar
+beneden wijst. Druk de linker-muisknop in en houd hem ingedrukt,
+trek nu de rand iets naar beneden. Wanneer u de muisknop loslaat zal
+de {\em xterm} de grootte aannemen die u heeft aangegeven.
+Alle operaties die het kader van een window mogelijk maakt,
+zijn met de linker-muisknop te activeren.
+
+\subsubsection{Windows en iconen} \index{icoon|(bold}
+\label{Windows en iconen}
+
+Rechtsboven in de hoek van het kader van de {\em xterm} bevinden \index{xterm}
+zich 2 vakjes.
+\begin{figure}[bth]
+\centerline{\callpsfig{kader_rb.ps}{width=0.2\textwidth}}
+\caption{Deel van de Motif kaders
+\label{kader_rb}}
+\end{figure}
+Het eerste vakje bevat een driehoekje dat naar beneden wijst en
+tweede vakje bevat een driehoekje dat naar boven wijst.
+Met deze knoppen kan een
+window worden ge{\ii}conificeerd of maximaal worden vergroot.
+Klik \'e\'enmaal op het driehoekje naar beneden van de {\em xterm}.
+Er verschijnt nu een icoon.
+Het hangt een beetje van de applicatie af wat er gebeurd bij maximaal vergroten.
+Het betekent niet dat windows automatisch het hele scherm gaan innemen.
+
+\begin{figure}[bth]
+\centerline{\callpsfig{xterm_icon.ps}{width=0.2\textwidth}}
+\caption{Een standaard icoon
+\label{icon}}
+\end{figure}
+Klik nu tweemaal snel achter elkaar met de linker-muisknop
+op het icoon.
+Het icoon verdwijnt en de originele {\em xterm} komt weer tevoorschijn.
+We kunnen een window verplaatsen door de balk met de titel van een
+window met de linker-muisknop te klikken en vast te houden.
+Er verschijnt nu een dun kader wat verplaatst kan worden met de muis.
+Verplaats de {\em xterm} iets en laat dan los.
+
+\subsubsection{Een tweede xterm}
+\label{Een tweede xterm}
+We cre\"eren nu een tweede {\em xterm}.
+Verplaats de pointer naar het achtergrondscherm.\\
+De pointer is nu in een kruis veranderd.
+Klik op de linker-muisknop en houd hem ingedrukt.
+Er verschijn nu een popup-menu.\\
+Trek de muis iets naar beneden zodat de knop met {\tt idaard} erop
+iets geaccentueerd wordt.
+Laat nu de muisknop los.
+Na enige tijd verschijnt een kader op het scherm
+ter grootte van een {\em xterm}
+dat meteen met de beweging van de muis meeloopt.
+Plaats het kader op een acceptabele plaats en
+klik met de linker-muisknop.
+Het nieuwe window wordt nu volledig geplaatst.
+We hebben slechts \'e\'en window nodig
+dus kan \'e\'en van de twee {\em xterm}'s
+worden ge{\ii}conificeerd.
+Druk met de linker-muisknop op het kleine driehoekje uit
+figuur~\ref{kader_rb}\index{icoon|)} dat naar beneden wijst.
+
+\subsubsection{Het gebruik van de manual pages}\index{manual page}
+\label{Het gebruik van de manual pages}
+
+Onder {\em UNIX} worden manual pages van oudsher gelezen met het commando {\em man}.
+Voor bijna alle commando's onder UNIX bestaat een {\em manual page}.
+De manual van het commando {\em ls} wordt
+b.v.\ opgeroepen middels het commando {\em man ls}.
+
+{\em Man} is tekst ge\"orienteerd.
+Er zijn ook grafische versies van {\em man}.
+De bekendste hiervan heet (geheel in UNIX stijl) {\em xman}.
+In veel gevallen is deze {\em manual-browser} handiger dan {\em man}.\\
+U kunt hem opstarten door op het {\em manual}-icoon onderaan te klikken.
+
+\subsubsection{Het veranderen van de achtergrondkleur}
+\label{Het veranderen van de achtergrondkleur}
+
+We gaan nu de achtergrondkleur proberen te veranderen van
+de standaard login kleur in een mooie kleur groen.
+We gebruiken hiervoor het commando \tool{xsetroot}.
+U moet het commando \tool{xsetroot} aanroepen met een optie
+die we nu eerst met de manual page gaan opzoeken.
+Klik op het {\em manual}-icoon om de manual-browser {\em xman} op te starten.
+Ga naar het {\em Sections} pulldown-menu van het {\em Manual Page}
+window en kies voor de {\em User Commands} optie.
+Scroll met de balk naar beneden totdat u \tool{xsetroot} hebt gevonden.
+Klik nu op \tool{xsetroot} en de manual page van \tool{xsetroot} komt
+tevoorschijn.
+Ga nu op zoek naar de optie die gebruikt moet worden om
+de achtergrondkleur te veranderen.
+Als u die gevonden heeft tikt u in:
+\begin{verbatim}
+        [idaard:op5/op5u9] xsetroot <de juiste optie> seagreen
+\end{verbatim}
+Als het u pijn aan uw ogen doet,
+dan kunt u \tool{xsetroot} zonder optie intikken
+om een standaard grijze achtergrond terug te krijgen.
+Om de paarse achtergrond terug te krijgen moet u intikken:
+\begin{verbatim}
+        [idaard:op5/op5u9] xsetroot <de juiste optie> #554055
+\end{verbatim}
+
+\subsubsection{Tekst editen}
+\label{Tekst editen}
+We gaan nu een stukje tekst genereren \index{jet|(bold}
+m.b.v.\ de teksteditor {\em jet}.
+Een teksteditor moet niet worden verward met een tekstprocessor.
+Met een teksteditor bewerkt (edit) u een stukje ASCII tekst,
+maar een tekstprocessor verwerkt een stuk tekst.
+Ga met de muis (pointer) naar een {\em xterm} en
+tik achter de prompt het commando {\em jet} in
+gevolgd door een {\em Return}.\\
+U kunt ook gewoon op het {\em editor}-icoon klikken
+die onderaan het scherm te vinden is,
+maar dan wordt {\em jet} in uw home directory opgestart.
+Om {\em jet} als achtergrond-proces op te starten en
+het window van figuur~\ref{jet_1} te krijgen tikt u:
+\begin{verbatim}
+        [idaard:op5/op5u9] jet &
+\end{verbatim}
+
+\begin{figure}[bth]
+\centerline{\callpsfig{jet.ps}{width=0.5\textwidth}}
+\caption{Het {\em jet} window
+\label{jet_1}}
+\end{figure}
+
+Voordat u iets kunt intikken moet u een file openen of
+een nieuwe file opgeven.
+Ga met de muis naar de {\em File} pulldown-menu knop rechtsboven,
+klik hem aan en houdt hem vast.
+Ga nu met de muis naar beneden totdat u bij {\em New} komt en
+laat de muisknop dan los.
+Bij een nieuwe file vraagt {\em jet} om een naam.
+Tik hier b.v.\ in {\tt my\_demo\_file}.
+
+Ga nu naar het grote tekstveld binnen het {\em jet} window en
+tik een stukje tekst in.
+Dit kan b.v.\ een klein programma zijn of een sls-beschrijving.
+Fouten kunt u met de {\em Backspace} toets weghalen.
+U kunt de tekst opslaan door te klikken op {\em File} waarna
+u in het ontstane pulldown-menu de optie {\em Save} selecteert.
+We bevelen van harte aan om met deze editor te experimenteren.
+
+Wanneer u i.p.v.\ {\em New} voor {\em Open} kiest verschijnt er een
+window waarmee u kunt bladeren (browsen) in de files die u heeft.
+Alle files die beginnen met een {\em punt} zijn uw
+systeem-omgeving-configuratie files,
+deze kunt u beter niet veranderen.
+\index{jet|)}
+
+\subsubsection{Het gebruikt van de c-shell}
+\label{Het gebruikt van de c-shell}
+Nu u een kleine file heeft,
+kunnen we enkele leuke dingen doen met de {\em c-shell}.
+Dit is het programma dat in de {\em xterm} draait en
+tegen het operating systeem UNIX praat.
+Ga met de pointer naar de {\em xterm} en volg de volgende sessie.
+\index{ls|(bold}
+Bekijk eerst de inhoud van uw directory met het commando {\em ls} (list short):
+\begin{verbatim}
+   [idaard:op5/op5u9] ls
+   my_demo_file
+\end{verbatim}
+
+Dit is echter niet de enige file in uw home directory.
+Files die beginnen met een ''.'' worden door {\em ls} standaard niet getoond.
+Vaak zijn files die beginnen met een ''.'' speciale files.\\
+U kunt ze toch zien door de optie ''-a'' (all) aan {\em ls} mee te geven.
+Tik in:
+\begin{verbatim}
+   [idaard:op5/op5u9] ls -a
+   ./            .alias*        .cshrc*     .login*        .simeyerc*
+   ../           .alias.hp700*  .emacs*     .motifbind*    .terminalrc*
+   .Xauthority   .alias.hp800*  .fvwm2rc    .prompt*       my_demo_file
+\end{verbatim}
+
+U ziet dat er naast ''{\tt my\_demo\_file}'' nog heel wat andere files in uw
+directory staan.
+Files die eindigen met een ''{\tt $\ast$}'' zijn
+executeerbare files, althans dat denkt UNIX.
+Files die eindigen met een ''{\tt /}'' zijn directories.
+''{\tt ./}'' wijst naar de huidige directory en
+''{\tt ../}'' wijst naar de directory \'e\'en hoger in de hierarchie.
+Een aantal van de files die met een punt beginnen zullen binnenkort verdwijnen.
+\newline
+U kunt nog veel meer over de files in uw directory te weten komen.
+Hiervoor gebruikt u het commando {\em ll} \index{ll}(long listing)
+of {\em ls -al} (list -all -long).
+Bijvoorbeeld:
+
+\begin{verbatim}
+  [idaard:op5/op5u9] ls -al
+  total 66
+  drwxr-xr-x   2 op5u9    op5         2048 Jul  2 11:22 ./
+  drwxr-xr-x  20 root     op5         1024 Dec  8  1994 ../
+  -rw-------   1 op5u9    op5           49 Jul  2 11:48 .Xauthority
+  -r-xr-xr-x   1 op5u9    sys          841 Jul  2 10:09 .alias*
+  -r-xr-xr-x   1 op5u9    sys          127 Jul  2 10:09 .alias.hp700*
+  -r-xr-xr-x   1 op5u9    sys          126 Jul  2 10:09 .alias.hp800*
+  -r-xr-xr-x   1 op5u9    sys         1586 Jul  2 10:09 .cshrc*
+  -r-xr-xr-x   1 op5u9    sys        15537 Jul  2 10:09 .emacs*
+  -rw-r--r--   1 op5u9    sys        10554 Jul  2 10:09 .fvwm2rc
+  -r-xr-xr-x   1 op5u9    sys          744 Jul  2 10:09 .login*
+  -r-xr-xr-x   1 op5u9    sys          572 Jul  2 10:09 .motifbind*
+  -r-xr-xr-x   1 op5u9    sys         2558 Jul  2 10:09 .prompt*
+  -r-xr-xr-x   1 op5u9    sys          118 Jul  2 10:09 .simeyerc*
+  -r-xr-xr-x   1 op5u9    sys          461 Jul  2 10:09 .terminalrc*
+  -rw-r--r--   1 op5u9    op5          113 Jul  2 12:05 my_demo_file
+\end{verbatim}
+
+De meest interessante informatie
+die u uit de bovenstaande listing kunt halen
+is wie de eigenaar van een file is,
+hoe groot de file is en wat de protecties zijn.
+Voor de file {\tt my\_demo\_file} in uw directory kunt u zien dat de eigenaar
+de gebruiker ''{\tt op5u9}'' is,
+en dat deze persoon deel uitmaakt van de groep ''{\tt op5}''.
+Bij u zal het iets zijn als gebruiker ''{\tt opXuY}'' en groep ''{\tt opX}''.
+Verder kunt u de lengte van b.v.\ ''{\tt my\_demo\_file}'' zien.
+Deze is 113 karakters (bytes).
+De tijdsaanduiding geeft aan wanneer er voor het laatst iets aan een file
+is veranderd.
+De bovenste 2 files zijn directories,
+dit kunt u zien aan de ''{\tt d}'' waarmee het protectieveld begint.
+De rest van het protectieveld laten we nu \index{ls|)} onbesproken.
+''{\tt my\_demo\_file}'' is de file die u net heeft gemaakt met {\em jet}.
+U kunt de inhoud van deze file ook
+bekijken zonder dat u een editor hoeft op te starten.
+Hiervoor gebruikt u het commando {\em cat}
+(afkorting van con{\em cat}enate):\index{cat|bold}
+
+\begin{verbatim}
+   [idaard:op5/op5u9] cat my_demo_file
+
+          This is my demo file.
+          It doesn't tell you very much!
+          In fact, it tells you nothing at all.
+\end{verbatim}
+\index{more|(bold}Als een file zo lang is dat hij niet in z'n geheel in een window past,
+heeft het zin om i.p.v.\ {\em cat} het commando {\em more} te gebruiken.
+De file wordt dan in stukken op het scherm getoond.
+Steeds als er een nieuw scherm vol is wacht {\em more}
+tot u een karakter intikt.
+Als u een {\em Spatie} intikt (op de Space-bar klopt)
+verschijnt het volgende scherm,
+als u een {\em Return} intikt verschijnt alleen de volgende regel.
+Een lange file op het systeem is
+b.v.\ de file ''.cshrc'' in uw home directory.
+Let u niet op de inhoud.
+Probeer het volgende commando, en
+bedenk dat het intikken van een {\em q} in plaats van een {\em Spatie}
+het programma stopt:
+\begin{verbatim}
+   [idaard:op5/op5u9] more .cshrc
+   if ( ! ${?LOGNAME} ) setenv LOGNAME `whoami`
+   if ( ! ${?HOSTNAME} ) setenv HOSTNAME `uname -n`
+   if ( ! ${?CACD} ) setenv CACD ~cacd     # default release/3 directory
+   ...
+                ~ocean/bin/$OCEAN_BIN \
+   --More--(30%)
+\end{verbatim}
+\index{more|)}
+De naam van een file kan vrij lang zijn.
+Ook de naam ''{\tt my\_demo\_file}'' is al lang
+en veel tikwerk begint snel te vervelen
+(en geeft sneller aanleiding tot het maken van fouten).
+Als u weet dat de naam van een file met ''{\tt my}'' begint,
+dan kunt u de computer ({\em c-shell}) zelf de naam laten afmaken.
+Dit doet u door na het intikken van ''{\tt my}''
+op de {\em Tab} toets te drukken.
+Automatisch zal nu de volle naam verschijnen.
+Als er meerdere files zijn die met ''{\tt my}'' beginnen zal
+er niets gebeuren en moet u eerst nog verder tikken.\\
+Om te zien welke files dat zijn
+kunt u ook {\em Ctrl-D} intikken.
+\index{cat}
+\begin{verbatim}
+   [idaard:op5/op5u9] cat my<TAB>
+\end{verbatim}
+
+wordt
+
+\begin{verbatim}
+   [idaard:op5/op5u9] cat my_demo_file
+\end{verbatim}
+
+U kunt ook gebruik maken van X-windows om sneller commando's te genereren
+dan met normaal tikken mogelijk zou zijn.
+Zo kunt u b.v.\ de string ''{\tt my\_demo\_file}'' in de muisbuffer zetten,
+en deze op een andere plaats weer op het scherm zetten.
+Ga b.v.\ met de pointer van de muis naar
+de ''{\tt m}'' van ''{\tt my\_demo\_file}'' in uw vorige commando.
+Klik met de linker-muisknop en houd hem vast.
+Trek de pointer naar rechts totdat de
+hele string ''{\tt my\_demo\_file}'' in inverse video is verschenen
+en laat de muisknop weer los (snel dubbel klikken had ook gekund).
+De tekst staat nu in de buffer van de muis.
+Tik nu {\em cat} en een spatie in en
+druk daarna op de middelste-muisknop (deze leegt het muisbuffer).
+U ziet dat de tekst ''{\tt my\_demo\_file}'' verschijnt
+waar u bent opgehouden met tikken.
+Pas op,
+alles wat u met de linker-muisknop toevallig in inverse video zet,
+staat in het muisbuffer.
+Leeg het muisbuffer daarom niet zomaar!
+
+Als u een fout maakt tijdens het intikken,
+kunt u met de {\em Backspace} toets op de regel terug gaan.
+De laatste karakters worden dan gewist.
+Als u het commando helemaal niet meer ziet zitten
+kunt u {\em Ctrl-U} intikken.
+Dan wordt de hele regel gewist.
+Zet nu ''{\tt cat my\_demo\_file}'' met de muis opnieuw achter de prompt:
+\begin{verbatim}
+   [idaard:op5/op5u9] cat my_demo_file
+\end{verbatim}
+
+Toets nu 7 keer het {\em Backspace} karakter in
+en geef dan een {\em Ctrl-U}
+omdat u de inhoud van die file nu al zo vaak heeft gezien.
+Met het commando {\em cp}\index{cp|bold} (copy) kunt u files kopi\"eren.
+Bijvoorbeeld:
+\begin{verbatim}
+   [idaard:op5/op5u9] cp my_demo_file new_file
+\end{verbatim}
+
+U heeft nu twee identieke files.
+U wilt nu beide files bekijken met het commando {\em ls -l},
+maar u wilt niet de ander files in uw directory zien.
+Dit kan,
+door aan {\em ls} op te geven welke files u precies wilt zien:
+\begin{verbatim}
+   [idaard:op5/op5u9] ls -l my_demo_file new_file
+\end{verbatim}
+
+Maar dit kan ook handiger.
+B.v.\ door het gebruik van een zogenaamde wildcard
+(zie paragraaf~\ref{File namen en wildcards}).
+Dit is een constructie waarbij de \tool{c-shell} voor u uitzoekt
+welke files aan de door u gestelde criteria voldoen.
+Een ''{\tt $\ast$}'' betekent dat de \tool{c-shell}
+op die plaats zelf alles mag invullen.
+Een ''{\tt $\ast$}'' staat voor nul of meer karakters.
+Daarom is de volgende constructie ook mogelijk:
+\begin{verbatim}
+   [idaard:op5/op5u9] ls -l *file
+\end{verbatim}
+
+Dit wordt door de \tool{c-shell} vertaald naar het vorige commando
+en dan pas uitgevoerd.
+Overigens zou ''{\tt ls -l $\ast$e}'' ook al gewerkt hebben
+aangezien er maar 2 files in uw directory zijn
+die met een ''{\tt e}'' eindigen.
+Files die met een punt beginnen worden met ''{\tt $\ast$}'' niet geselecteerd.
+\newline
+Gooi nu de laatste file weg:
+\begin{verbatim}
+   [idaard:op5/op5u9] rm new_file
+\end{verbatim}
+
+U begrijpt dat u vroeg of laat \index{rm|bold}
+in de problemen kunt komen als u een dergelijke wildcard gebruikt tezamen
+met het {\em rm} (remove) commando.
+Daarom is voor uw veiligheid
+in het practicum {\em rm} een alias voor {\em rm -i} (inquery).
+\newline
+Om overzicht te kunnen houden over uw files is het handig om files die bij elkaar horen in \'e\'en subdirectory te zetten. Het commando om een subdirectory te maken is \tool{mkdir} (make directory).
+Maak nu onder uw home directory een subdirectory ''{\tt tekst}'':
+\begin{verbatim}
+   [idaard:op5/op5u9] mkdir tekst
+\end{verbatim}
+
+Bekijk met \tool{ls} of \tool{ll} of het gelukt is.\\
+Files kunnen van de ene directory naar de andere verplaatst worden met \tool{mv} (move):\index{mv|bold}
+\begin{verbatim}
+   [idaard:op5/op5u9] mv my_demo_file tekst
+\end{verbatim}
+
+Controleer het resultaat weer met \tool{ls} of \tool{ll}.
+Of doe eens ''{\tt ll tekst}''.
+
+We gaan nu een \smc{nelsis} project cre\"eren.
+Een \smc{nelsis} project \index{project}
+is een database waarin alle gegevens m.b.t.\ het ontwerp van een IC (integrated circuit) staan.
+Voor het ontwerppracticum wordt een speciale database gemaakt waar u de beschikking heeft over een aantal bibliotheken.
+Het commando hiervoor is \tool{mkopr} (make ontwerppracticum project).\index{mkopr|(bold}
+Tik in:
+\begin{verbatim}
+   [idaard:op5/op5u9] mkopr test
+\end{verbatim}
+
+In feite is \tool{mkopr} een afgeleide van het commando \tool{mkpr}.
+Met dit laatste commando wordt een nieuwe \smc{nelsis} database gecre\"eerd.
+Er wordt van u een process-type verwacht en ook een zogenaamde lambda.
+Deze lambda is de steek in micrometers waarmee u gaat ontwerpen.
+Verder wordt voor het ontwerppracticum gebruik gemaakt van een cellen-bibliotheek.
+Deze zult u bekend moeten maken aan de database middels enkele mistige
+commando's.
+Omdat deze acties voor iedereen in het ontwerppracticum hetzelfde zijn
+is \tool{mkopr} bedacht.
+Eigenlijk doet het niet meer dan het kopi\"eren van
+een template-project naar uw directory.
+Het enige wat u hoeft op te
+geven is de naam van het project.\index{mkopr|)}
+\index{cd|(bold}
+Om gebruik te kunnen maken van de nieuwe database,
+moet u 'naar het project' gaan.
+Het project is echter niets anders dan een nieuwe subdirectory
+en dus kunt
+u met het commando {\em cd} (change directory) naar het project gaan.
+Als volgt:
+\begin{verbatim}
+   [idaard:op5/op5u9] cd test
+   [idaard:op5u9/test]
+\end{verbatim}
+
+U ziet dat de prompt veranderd is.
+De prompt geeft het laatste stuk van uw huidige werkdirectory weer.
+Zo heeft u altijd een redelijk idee waar u zich
+bevindt binnen het systeem.
+In het laatste geval bent u van directory veranderd.
+U kunt nu kijken waar u zich in totaliteit bevindt
+met het commando {\em pwd} (print working directory):
+\begin{verbatim}
+   [idaard:op5u9/test] pwd
+   /usrI1/op/op5/op5u9/test
+\end{verbatim}
+
+De volgende drie {\em cd} commando's brengen u allemaal weer \'e\'en directory hoger
+naar uw zogenaamde home directory:
+\begin{verbatim}
+   [idaard:op5u9/test] cd
+\end{verbatim}
+
+of
+
+\begin{verbatim}
+   [idaard:op5u9/test] cd ..
+\end{verbatim}
+
+of
+
+\begin{verbatim}
+   [idaard:op5u9/test] cd /usrI1/op/op5/op5u9
+\end{verbatim}
+
+''{\tt cd}'' zonder opties betekent: ga terug naar de home directory.
+''{\tt cd ..}'' betekent: ga naar de directory die boven de huidige ligt.
+Dit verklaart
+meteen het nut van een file in iedere directory die wijst naar de directory
+daarboven.
+''{\tt cd /usrI1/op/op5/op5u9}'' geeft een specifiek pad aan waarnaar
+verhuisd moet worden.
+Uiteraard verandert de prompt steeds weer mee.
+We gaan toch nog even terug naar het project ''{\tt test}''
+en kijken eens in het rond.
+Tik de commando's achter de prompt in en vergelijk het resultaat op het scherm met hieronder:
+\begin{verbatim}
+   [idaard:op5/op5u9] cd test
+   [idaard:op5u9/test] ls
+   circuit/         layout/          sls_prototypes/
+   floorplan/       projlist
+   [idaard:op5u9/test] ls -l
+   total 10
+   drwxr-xr-x   2 op5u9    op5        1024 Jul  3 11:19 circuit/
+   drwxr-xr-x   2 op5u9    op5        1024 Jul  3 11:19 floorplan/
+   drwxr-xr-x   2 op5u9    op5        1024 Jul  3 11:19 layout/
+   -rw-r--r--   1 op5u9    op5         263 Jul  3 11:19 projlist
+   drwxr-xr-x   2 op5u9    op5        1024 Jul  3 11:19 sls_prototypes/
+\end{verbatim}
+
+\subsubsection{Het printen van een file}\index{printen|bold}
+\label{Het printen van een file}
+U wilt nog even de inhoud van een file printen,
+b.v.\ de file ''{\tt .cshrc}'' in uw home directory.
+Dat kunt u als volgt doen:
+\index{lp}\index{printen!lp}
+\begin{verbatim}
+   [idaard:op5u9/test] cd
+   [idaard:op5/op5u9] lp .cshrc
+   Converting your ASCII file to Postscript.
+   request id is midlum-8585 (1 file)
+\end{verbatim}
+\index{cd|)}
+
+De printer zal vrijwel meteen beginnen met ratelen.
+U kunt kijken hoe het gesteld is met alle print jobs.
+Dit is handig als uw print-job niet meteen aan de beurt is.
+Geef het volgende commando:
+\index{lpq}
+\begin{verbatim}
+   [idaard:op5/op5u9] lpq
+   midlum-8585     op5u9   caslp.6198      13601   bytes
+\end{verbatim}
+
+Als de printer om de een of andere reden niet wil printen,
+b.v.\ als hij off-line staat,
+dan komt er mogelijk een andere melding.
+
+Als u de print-job alsnog niet wilt laten printen,
+kunt u deze (als u snel genoeg bent)
+als volgt uit de print-queue verwijderen:
+\index{cancel}
+\begin{verbatim}
+   [idaard:op5/op5u9] cancel midlum-8585
+   request "midlum-8585" cancelled
+\end{verbatim}
+
+Het bovenstaande geldt voor het printen van zogenaamde ASCII files.
+Dit zijn files die u kunt editen, cat-en en more-en.
+Maar hetzelfde geldt ook voor Postscript files.
+Soms moet of wilt u echter bij het commando \tool{lp}
+nog andere opties opgeven (b.v.\ voor HPGL files).\\
+Zie voor meer informatie paragraaf~\ref{Printen en Plotten}.
+
+\subsubsection{Electronic mail}
+\label{Electronic mail} \index{pine|(bold}
+
+Alle e-mail van de OP accounts zijn gekoppeld met de persoonlijk
+studmail adressen van de faculteit. Dit betekent dat u wel e-mail
+onder uw OP account kunt versturen maar niets kunt ontvangen. E-mail
+die u verstuurd wordt zodanig bewerkt dat het lijkt alsof ze van uw
+studmail account komen. E-mail die u verstuurd aan een OP account
+wordt geforward naar het corresponderende studmail account.
+Dit betekent dat u uw e-mail op {\tt elektron} moet lezen.
+Zie ook paragraaf~\ref{domeinnamen}.
+\index{pine|)}
+
+\subsubsection{Logout}
+\label{Logout}
+Voordat u uitlogt wilt u nog even weten hoe laat het is,
+en of er nog meer mensen op het systeem werken.
+Hiervoor heeft u de commando's {\em date} en {\em who}\/:
+\begin{verbatim}
+   [idaard:op5/op5u9] date
+   Thu Jul  3 12:45:24 METDST 1997
+   [idaard:op5/op5u9] who
+   antoon     pty/ttyv0    Jun 26 17:15
+   op5u9      ttyp7        Jul  3 11:18
+\end{verbatim}
+
+Na deze {\em c-shell sessie} kunt u proberen uit te loggen.
+Klik met de linker-muisknop op de paarse achtergrond.
+Het {\em Utilities} popup-menu verschijnt.
+Onderaan bevindt zich een een {\em Exit} submenu.
+Hierin kun u kiezen voor ''{\em Yes, Realy Quit}\/''.
+Als u hier de muisknop weer los laat wordt u uitgelogd.
+
+\subsection{Belangrijke commando's om te onthouden}
+
+Hieronder volgt een opsomming van de belangrijkste commando's die in het voorgaande aan bod zijn geweest.
+\begin{itemize}
+\item
+\tool{ls, ls -a, ll} : listen van files.
+\item
+\tool{cat, more} : op het scherm laten zien van ASCII files.
+\item
+\tool{cp} : kopi\"eren van files en directories.
+\item
+\tool{rm} : verwijderen van files en directories.
+\item
+\tool{mv} : verplaatsen van files en directories.
+\item
+\tool{cd} : veranderen van directory.
+\item
+\tool{mkdir} : Maken van een subdirectory.
+\item
+\tool{lp} : printen van files op line printer.
+\item
+\tool{mkopr} : maken van een database voor het ontwerppracticum.
+\end{itemize}
+
+\cleardoublepage

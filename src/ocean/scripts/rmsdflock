@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+if [ "`echo seadif/*.sdk`" = "seadif/*.sdk" ] ; then
+   echo "There are no lockfiles seadif/*.sdk ..."
+else
+   echo Removing lockfiles seadif/*.sdk ...
+   rm -f seadif/*.sdk
+fi

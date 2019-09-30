@@ -1,0 +1,27 @@
+# process dimes01
+# alternative bmlist.gds
+#
+# In the gds file, terminals and labels for a layer are
+# described by text structures with a same layer number
+# as the layer number that is used for layout records.
+# Labels additionally have a type 9.
+bn       1
+dp       2
+dn       3
+sp       4
+sn       5
+bs       6
+bi       7
+ci       8
+cw       9
+wp       10
+bw       11
+wn       12
+co       13
+ic       14
+ic:term  14
+ic:label 14 9
+ct       15
+in       16
+in:term  16
+in:label 16 9

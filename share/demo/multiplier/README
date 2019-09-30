@@ -1,0 +1,52 @@
+# directory: demo/multiplier
+
+Demonstration of functional/switch-level simulation
+
+A network 'total' is simulated that has a ram and a 
+multiplier that are described at the functional level.
+Pass transistors are used to demultiplex the output
+signals of the ram and to multiply two subsequent
+words that come out of the ram.
+
+Warning: This demo does not always work, due to library linking problems.
+When you have these problems and want to use function blocks, contact us.
+
+STEPS
+=====
+
+1. Create a project for a cmos technology, e.g. scmos_n
+   $ mkpr -p scmos_n projectname
+
+Rest assumes that you and your files are in the project directory.
+
+2. Run cfun to compile the functional description of ram.fun 
+   and mul8x8.fun, and add them to the database:
+   $ cfun ram.fun
+   $ cfun mul8x8.fun
+
+3. Run csls to add the network 'total' to the database:
+   $ csls total.sls
+
+4. Start simeye
+   $ simeye &
+
+5. In the Simulate -> Prepare menu, select circuit 'total' and 
+   stimuli 'total.cmd', click on Run and watch the simulation
+   output.
+
+   NOTE: On some machines and in some occasions, simeye will 
+   respond with the message "Text file busy".
+   This is because a new sls executable is created by an existing 
+   one.  In that case, first execute:
+   $ sls_exp total
+
+6. Zoom-in onto the lowest 3 signals using View -> ZoomIn, execute
+   View -> Measure, and click on the right mouse button the watch
+   the integer values of the multiplied signals.
+
+7. For xspice netlisting, device instances can be used for the
+   ram and mul8x8 function instances.
+   $ putdevmod ram.dev mul8x8.dev
+   $ xcontrol -device ram mul8x8
+   $ xspice -a total
+

@@ -1,0 +1,5 @@
+# directory: demo/invert
+
+model ndif  d (is=2u  cjo=100u vj=0.8 m=0.5)
+model nwell d (is=2u  cjo=100u vj=0.8 m=0.5)
+model pdif  d (is=10u cjo=500u vj=0.8 m=0.5)

@@ -1,0 +1,32 @@
+.TH CLAMBDA 1ICD "User Commands"
+.UC 4
+.SH NAME
+clambda - change lambda value of the ICD database
+.SH SYNOPSIS
+.B clambda
+[lambda]
+.SH DESCRIPTION
+.I Clambda
+changes the lambda value of a project database.
+You can use this program only in a project directory.
+It can be used to set the correct value of lambda (in microns)
+which specifies your database unit in the GDS outputfile.
+.PP
+You may only do this,
+if you had set an incorrect lambda value with the \fImkpr\fP program,
+and was working in other user units.
+.PP
+Note that cell data in the ICD database is NOT changed,
+all cell descriptions
+are expressed in terms of lambda rather than microns.
+.PP
+.I Clambda
+prints the current lambda value,
+when no lambda value is specified on the command line.
+.AU "R. Paulussen"
+.SH FILES
+\&./.dmrc
+.SH SEE ALSO
+cgi(1ICD),
+cig(1ICD),
+mkpr(1ICD).

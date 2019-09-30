@@ -1,0 +1,67 @@
+.TH MATCH_PRIM 4ICD "File Formats"
+.UC 4
+.SH NAME
+match_prim - standard primitive element file for match
+.SH DESCRIPTION
+Before
+.I match
+(1ICD)
+starts comparing both the nominal and actual networks, the
+.I "standard primitive element file"
+is read.
+This file contains the descriptions of the primitive network
+elements.
+Each primitive network element contains  a description of the allowed
+permutations on its ports.
+The permutability description consists of a list of the permutation
+classes enclosed by parentheses.
+Each permutation class is a list of ports.
+All ports which are members of the same permutation class are fully
+interchangeable.
+Individual ports are not permutable.
+.SH EXAMPLE
+As an example, the standard primitive element descriptions are given below.
+.PP
+.L{
+.nf
+Primitive network nenh ( terminal g, d, s )
+{
+    perm { (g), (d,s) };
+}
+
+Primitive network penh ( terminal g, d, s )
+{
+    perm { (g), (d,s) };
+}
+
+Primitive network ndep ( terminal g, d, s )
+{
+    perm { (g), (d,s) };
+}
+
+Primitive network res ( terminal a, b )
+{
+    perm { (a, b) };
+}
+
+Primitive network cap ( terminal a, b )
+{
+    perm { (a, b) };
+}
+.fi
+.L}
+.PP
+.AU "T. Vogel, I. Widya"
+.SH FILES
+.TP
+\fCICDPATH/share/lib/process/\fIpr_name\fP/match_prim\fP
+(standard primitive element file)
+.fi
+.SH SEE ALSO
+match (1ICD), matchprim (1ICD)
+.br
+T. Vogel, "Connectivity Verification based on Netlist
+Comparison", Delft University of Technology.
+.br
+A.C. de Graaf, A.J. van Genderen, "SLS: Switch-Level
+Simulator Users Manual", Delft University of Technology.

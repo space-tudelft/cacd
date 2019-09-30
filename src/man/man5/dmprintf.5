@@ -1,0 +1,41 @@
+.TH DMPRINTF 5ICD "DMI User's Manual"
+.SH NAME
+dmPrintf - print formatted data into the database
+.SH SYNOPSIS
+.nf
+\fB
+#include "dmincl.h"
+
+int dmPrintf (DM_STREAM *streamkey, char *format, ...);
+\fP
+.fi
+.SH PARAMETERS
+.TP
+.B "DM_STREAM *streamkey"
+is a pointer to a valid \fBDM_STREAM\fP as obtained
+from function dmOpenStream().
+It is the access key of a named stream
+to which the data is written.
+.TP
+.B "char *format"
+is a control string
+which contains conversion specifications
+to be used for the data that is written
+(see printf(3S)).
+.SH DESCRIPTION
+Function
+.B dmPrintf
+writes the arguments under control
+of the \fBformat\fP to the open data stream specified by \fBstreamkey\fP.
+.PP
+The function can be used by programmers
+who wish to define their own
+representation of data in the database
+(this data is not stored in PACKED format).
+.SH DIAGNOSTICS
+Function \fBdmPrintf\fP returns the number of bytes written,
+or \fBEOF\fP if an error was encountered.
+.SH SEE ALSO
+dmOpenStream(5ICD),
+dmPutDesignData(5ICD),
+printf(3S).

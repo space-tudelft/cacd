@@ -1,0 +1,52 @@
+
+
+wn=2.4u
+wp=2.4u
+ln=1.6u
+lp=1.6u
+tstep=0.015ns
+tend=2.0ns
+
+export wn
+export wp
+export ln
+export lp
+export tstep
+export tend
+
+what=dospice
+
+# begin
+
+                        $what fig5.1
+cx=30f nx=3             $what fig5.2
+cx=60f nx=3             $what fig5.2b
+                        $what fig5.4
+rx=30k                  $what fig5.5
+cx=30f                  $what fig5.6
+nx=5                    $what fig5.7
+                        $what fig5.4_8
+                        $what fig5.4_9
+nx=6                    $what fig5.8
+nx=6                    $what fig5.9
+cx=10f nx=2             $what fig5.10
+cx=10f nx=2             $what fig5.11
+nx=6                    $what fig5.12
+nx=6                    $what fig5.13
+cx=20f nx=1             $what fig5.14
+cx=20f nx=1  tend=2.2ns $what fig5.15
+
+                        $what fig5.16
+rx=30k                  $what fig5.18
+cx=30f                  $what fig5.19
+nx=3                    $what fig5.20
+                        $what fig5.4_8p
+                        $what fig5.4_9p
+nx=6                    $what fig5.21
+nx=6                    $what fig5.22
+cx=10f nx=1             $what fig5.23
+cx=10f nx=1             $what fig5.24
+nx=6                    $what fig5.25
+nx=6                    $what fig5.26
+cx=20f nx=1  tend=2.5ns $what fig5.27
+cx=20f nx=1  tend=2.5ns $what fig5.28

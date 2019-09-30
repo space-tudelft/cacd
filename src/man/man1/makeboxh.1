@@ -1,0 +1,82 @@
+.TH MAKEBOXH 1ICD "User Commands"
+.UC 4
+.SH NAME
+makeboxh - expand a cell hierarchically to boxes
+.SH SYNOPSIS
+.B makeboxh
+[-v] [-cL] [-oM] [-wXl,Xr,Yb,Yt] cell
+.SH OPTIONS
+.TP 8
+\fB-c\fPL
+select check level 'L' (positive integer value).
+The check level specifies the level of the lowest
+cells in the cell hierarchy which are expanded.
+These are separate cell expansions,
+which contains all overlaps of the underlaying cell levels
+(default: only the cell on top of the hierarchy
+is expanded (minimum level = 1)).
+.TP
+\fB-o\fPN
+set the size of the active region to 'N' (default: 6 micron).
+.TP
+.B -v
+verbose mode.
+.TP
+\fB-w\fPXl,Xr,Yb,Yt
+select a partial expansion window.
+The window coordinates (integer values) must be
+specified as one argument (no blanks are allowed).
+Xl,Xr,Yb,Yt are respectively the left and right
+X-coordinates,
+and bottom and top Y-coordinates
+(default: the expansion window is the cell bounding box).
+.SH DESCRIPTION
+.I Makeboxh
+takes the internal database description of the cell and converts it to boxes.
+.sp
+.I Makeboxh
+expands the cell \fIhierarchically\fP,
+i.e. the cell and all lower cells are expanded based on
+the assumption that the lower cells are already verified.
+If an expansion window is specified,
+only the boxes in that window are expanded.
+.sp
+The cell argument is the cell name and must be the last argument.
+The current working directory must be the project directory.
+.I Makeboxh
+creates a special file "exp_dat",
+which contains the names of the cells which are expanded.
+.AU "J. Annevelink S. de Graaf"
+.SH FILES
+.TP
+\fCNELSISPROJECT/.dmrc\fP
+(input file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/box\fP
+(input file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/mc\fP
+(input file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/term\fP
+(input file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/info\fP
+(in/output file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/tid\fP
+(output file)
+.TP
+\fCNELSISPROJECT/layout/\fIcell\fP/LC_bxx\fP
+(output files) LC=LayerCode
+.TP
+\fCNELSISPROJECT/exp_dat\fP
+(output file)
+.SH SEE ALSO
+T.G.R. van Leuken, J. Liedorp,
+"An Hierarchial and Technology Independent Design Rule Checker",
+in "The Integrated Circuit Design Book".
+.br
+exp(1ICD),
+makeboxl(1ICD),
+makevln(1ICD).

@@ -1,0 +1,385 @@
+%-----------------------------------------------------------------------------
+% The following is a prologue designed to create layout descriptions in
+% PostScript for inclusion in troff files
+% Pattern generating is copied from: Bit Pattern Screens, demo provided with
+% Transcript
+%-----------------------------------------------------------------------------
+%
+
+/EPSLayDict 140 dict def EPSLayDict begin
+
+% Defaults
+/Tailwd    1 def % width of arrow tails, in points
+/Tipwd     6 def % width of arrow heads, in points
+/FontSize 14 def % points
+/Height    0 def % height of picture, in cm, 0 means maximum.
+/Width     0 def % width of picture, in cm, 0 means maximum.
+/Rotate    false def % set to true to rotate picture to adjust to drawing area.
+/Xpos     -1 def % y-position of picture, -1 means center.
+/Ypos     -1 def % y-position of picture, -1 means center.
+% freq can be adapted, by adjusting Bfreq.
+/Bfreq 1 def
+
+
+0 setlinewidth
+
+
+/cm { 72 mul 2.54 div } def              % cm -> pt
+/Count    0          def
+
+/basketweave  [1 8 <d1e3c5885c3e1d88>] def
+/fishscale    [1 8 <3e418080e3140808>] def
+
+/p2 [2 16 <1010200840048002000100000000000010100820044002800100000000000000>]
+def
+/p4 [2 16 <18000c00040000000004000c00180030006000c0008000008000c00060003000>]
+def
+/p5 [2 16 <c071c00101e001e001e0e001e001e3c103c003c0000f1c0f1c0f1c000070c071>]
+def
+/p6 [2 16 <1000001000000200000040000008010000000000100200000000004000000001>]
+def
+/p7 [2 16 <002100210021ffe1e1e1e1e1e1ffe1ff210021002100e1ffe1e1e1e1ffe1ffe1>]
+def
+/p8 [2 16 <0000000080c0c0c160033006180c0c1806300360c1c0c08000000000cccccccc>]
+def
+/p9 [2 16 <00000000c0c0c0c00000000000c000c000000000cccccccc0000000000c000c0>]
+def
+/p13 [2 16 <00ff00ff00ff00ff00ff00ff00ff00ffff00ff00ff00ff00ff00ff00ff00ff00>]
+def
+/p15 [2 16 <ffff0202040408081010202040408080ffff4040202010100808040402020101>]
+def
+/p16 [2 16 <4040202010100808040402020101808040402020101008080404020201018080>]
+def
+/p17 [2 16 <c0c06060303018180c0c060603038181c0c06060303018180c0c060603038181>]
+def
+/p18 [2 16 <0180024004200810100820044002800180014002200410080810042002400180>]
+def
+/p19 [2 16 <8080808080808080808080808080808080808080808080808080808080808080>]
+def
+
+/lines0    [1 8 <ff000000ff000000>] def % lines 0 degrees inclined (horiz)
+/lines45   [1 8 <0102040810204080>] def % lines 45 degrees inclined (/)
+/lines90   [1 8 <1111111111111111>] def % lines 90 degrees inclined (vert)
+/lines135  [1 8 <8040201008040201>] def % lines 135 degrees inclined (\)
+/flines0   [1 8 <ffff000000000000>] def % fat lines 0 dg. inclined (horiz)
+/flines45  [1 8 <03060C183060C081>] def % fat lines 45 dg. inclined (/)
+/flines90  [1 8 <3333333333333333>] def % fat lines 90 dg. inclined (vert)
+/flines135 [1 8 <81C06030180C0603>] def % fat lines 135 dg. inclined (\)
+/cross0    [1 8 <ff01010101010101>] def % lines 0 and 90
+/cross45   [1 8 <110a040a11a040a0>] def % lines 45 and 135
+/fcross45  [1 8 <331e0c1e33e1c0e1>] def % lines 45 and 135
+/black     [1 8 <ffffffffffffffff>] def % black (or dots 100%)
+/dots50    [1 8 <aa55aa55aa55aa55>] def % dots 50%
+/dots25    [1 8 <8822882288228822>] def % dots 25%
+/dots12    [1 8 <8800220088002200>] def % dots ~12% (1 of 8)
+/dots6     [1 8 <8800000088000000>] def % dots ~ 6% (1 of 16)
+/dots3     [1 8 <8000000080000000>] def % dots ~ 3% (1 of 32)
+/dots2     [1 8 <8000000000000000>] def % dots ~ 2% (1 of 64)
+/white     [1 8 <0000000000000000>] def % white (or dots 0%)
+
+/bitison                                    % This function does bit
+  {/ybit exch def /xbit exch def            % addressing within a string whose
+  bstring ybit bwidth mul                   % dimensions and contents have
+  xbit 8 idiv add get                       % been stored into the variables
+  1 7 xbit 8 mod sub bitshift               % `bstring', `bpside', and
+  and 0 ne} def                             % `bwidth'. `bstring' holds the
+					    % bit pattern, `bwidth' is an
+					    % integer giving the pattern width
+					    % in bytes, and `bpside' is an
+					    % integer giving the width and
+					    % height of the pattern in bits.
+					    % This function returns `true' if
+					    % the bit at position (xbit, ybit)
+					    % in bstring is on.
+
+/setpattern                                 % This routine sets up the
+  {                                         % halftone screen machinery so
+                                            % that a repeating bitmap pattern
+                                            % will be used for subsequent
+   /bstring exch def                        % output. The screens are device
+   /onbits 0 def /offbits 0 def             % dependent, i.e., the caller of
+					    % this routine must understand the
+					    % device resolution and rotation.
+   freq 0                                   % Here, we begin to set up the
+					    % arguments to `setscreen'.
+     {/y exch def /x exch def               % This begins the screen function
+					    % argument to `setscreen'.
+      /xindex x 1 add 2 div                 % First, we transform the (x, y)
+	 bpside mul cvi def                 % position into a position to
+      /yindex y 1 add 2 div                 % address into the bit pattern.
+	 bpside mul cvi def
+      xindex yindex bitison
+	{/onbits onbits 1 add def 1}        % If that bit is on, count it and
+					    % return a high value.
+	{/offbits offbits 1 add def         % If that bit is off, count it and
+	 0}                                 % return a low value.
+	ifelse
+      }  setscreen
+   {} settransfer                           % Don't allow correction of gray
+					    % values, because we want to set
+					    % the gray exactly according to
+					    % the off-bit, total-bits ratio.
+   offbits offbits onbits add div
+     setgray                                % By setting the gray this way,
+					    % exactly the number of on bits
+					    % will turn on in the screen.
+  } def                                     % Finish the definition of
+					    % `setpattern'. Use hex-string
+
+% Cookbook Example Program from First Printing, Revised 7 Jan 1985
+% Program: Drawing Arrows     Number: 8
+%-----------------------------------------------------------------------------
+% modified to take extra boolean argument for double-headed arrow.
+%
+/arrowdict 16 dict def                      % Local storage for the procedure
+					    % ``arrow.''
+
+/arrow                                      % The procedure ``arrow'' adds an
+  { arrowdict begin                         % arrow shape to the current path.
+      /ArrowType exch def		    % according to dali definitions
+      /headlength exch def                  % It takes eight arguments: the x
+      /halfheadthickness exch 2 div def     % and y coordinates of the tail
+      /halfthickness exch 2 div def         % (imagine that a line has been
+      /tipy exch def /tipx exch def         % drawn down the center of the
+      /taily exch def /tailx exch def       % arrow from the tip to the tail,
+					    % then x and y lie on this line),
+					    % the x and y coordinates of the
+					    % tip of the arrow, the thickness
+					    % of the arrow in the tail
+					    % portion, the thickness of the
+					    % arrow at the widest part of the
+					    % arrowhead and the length of the
+					    % arrowhead.
+
+      /dx tipx tailx sub def                % Compute the differences in x and
+      /dy tipy taily sub def                % y for the tip and tail. These
+      /arrowlength dx dx mul dy dy mul add  % will be used to compute the
+	sqrt def                            % length of the arrow and to
+      /angle dy dx atan def                 % compute the angle of direction
+					    % that the arrow is facing with
+					    % respect to the current user
+					    % coordinate system origin.
+      /base arrowlength headlength sub def  % Compute where the base of the
+					    % arrowhead will be.
+
+      /savematrix matrix currentmatrix def  % Save the current user coordinate
+					    % system. We are using the same
+					    % strategy to localize the effect
+					    % of transformations as was used
+					    % in the program to draw an
+					    % ellipse.
+      tailx taily translate                 % Translate to the starting point
+					    % of the tail.
+      angle rotate                          % Rotate the x-axis to correspond
+					    % with the center line of the
+					    % arrow.
+      /Forward false def
+      /Backward false def
+
+      ArrowType 1 eq {/Forward true def} if
+      ArrowType 3 eq {/Forward true def} if
+      ArrowType 2 eq {/Backward true def} if
+      ArrowType 3 eq {/Backward true def} if
+      0 0 moveto
+
+      Backward {
+	  headlength halfheadthickness neg lineto
+	  headlength halfthickness neg lineto
+      } {
+	  0 halfthickness neg lineto
+      } ifelse
+
+      Forward {
+	  base halfthickness neg lineto
+	  base halfheadthickness neg lineto
+	  arrowlength 0 lineto
+	  base halfheadthickness lineto
+	  base halfthickness lineto
+      } {
+	  arrowlength halfthickness neg lineto
+	  arrowlength halfthickness lineto
+      } ifelse
+
+      Backward {
+	  headlength halfthickness lineto
+	  headlength halfheadthickness lineto
+      } {
+	  0 halfthickness lineto
+      } ifelse
+
+      closepath
+
+      savematrix setmatrix                  % Restore the current user
+					    % coordinate system.
+    end
+  } def
+
+% end of arrow procedure
+%-----------------------------------------------------------------------------
+%
+
+% X Y AdjustType String Text -
+% shows string at x y, on white background
+% AdjustType has meaning as define in dali/comment.h
+/Text {
+    /String exch def
+    /AdjustType exch def
+    /Y exch def
+    /X exch def
+    String stringwidth pop /W exch def
+    /S Tailwd 2 mul def
+    /Y Y FontSize 2 div sub def
+    AdjustType 0 eq { /X X S add def} if       % left adjust
+    AdjustType 1 eq { /X X W sub S sub def} if % right adjust
+    AdjustType 2 eq { /X X W 2 div sub def} if % center
+
+    % determine bbox of text.
+    gsave newpath X Y moveto String true charpath pathbbox
+    /st exch def /sr exch def /sb exch def /sl exch def
+    % define a margin around bbox of text
+    /Margin st sb sub 0.3 mul def
+    /sb sb Margin sub def
+    /sl sl Margin sub def
+    /sr sr Margin add def
+    /st st Margin add def
+    % construct path corresponding to bbox
+    newpath sl sb moveto sr sb lineto sr st lineto sl st lineto closepath
+    % make it white.
+    1 setgray fill grestore
+
+    X Y moveto String show
+} def
+
+/BeginLayout {
+      /EPSLayGC save def
+      /Transformation exch def
+
+      % Transformation ==
+
+      Rotate { % Rotate
+	  /xl Transformation 7 get neg def
+	  /xr Transformation 5 get neg def
+	  /yb Transformation 4 get def
+	  /yt Transformation 6 get def
+
+	  Transformation 4 xl put
+	  Transformation 6 xr put
+	  Transformation 5 yb put
+	  Transformation 7 yt put
+      } if
+
+      % Transformation ==
+
+
+      /DrawWidth  Transformation 2 get Transformation 0 get sub def
+      /DrawHeight Transformation 3 get Transformation 1 get sub def
+
+      /PicHeight Transformation 7 get Transformation 5 get sub def
+      /PicWidth  Transformation 6 get Transformation 4 get sub def
+
+      /WidthScale  DrawWidth  PicWidth  div def
+      /HeightScale DrawHeight PicHeight div def
+
+      /ScaleFactor
+	 WidthScale HeightScale lt { WidthScale } { HeightScale } ifelse def
+
+      % now move to center
+      Transformation 0 get DrawWidth  PicWidth  ScaleFactor mul sub 2 div add
+      Transformation 1 get DrawHeight PicHeight ScaleFactor mul sub 2 div add
+      translate
+
+      ScaleFactor ScaleFactor scale                   % and SCALE (finally)
+
+
+      % but following items should not be scaled, so undo it.
+      /Tailwd Tailwd ScaleFactor div def
+      /Tipwd Tipwd ScaleFactor div def
+      /FontSize FontSize ScaleFactor div def
+
+      /AvantGarde-Book findfont FontSize scalefont setfont
+
+      % set user origin
+      Transformation 4 get neg Transformation 5 get neg translate
+
+      % 100 0 dtransform exch == ==
+      Rotate {90 rotate} if
+      % 100 0 dtransform exch == ==
+
+    } def
+
+/SetLayer     { /Layer exch def SetStyle clear newpath } def
+/StrokedLayer { SetLayer /Filled false def } def
+/FilledLayer  { SetLayer /Filled true  def } def
+
+/StartPolygon { moveto /Count Count 1 add def } def
+
+/Segment      { lineto /Count Count 1 add def } def
+
+/EndPolygon   { closepath Count 1000 gt { DrawPolygons } if } def
+
+/EndLayer     { Count 0 gt { DrawPolygons } if } def
+/EndLayout    { EndLayer showpage
+                % EPSLayDict length =
+                EPSLayGC restore
+                end
+} def
+
+/DrawPolygons { Filled {gsave FillPolygons grestore} if
+		OutlinePolygons
+		/Count 0 def
+	      } def
+
+/FillPolygons    { FillPattern setpattern fill } def
+
+/OutlinePolygons {
+    /freq   18.75 def
+    /bwidth 1    def
+    /bpside 8    def
+    <ffffffffffffffff> setpattern
+    LineWidth setlinewidth
+    0 setgray
+    stroke
+} def
+
+
+/SetStyle  {
+    Style Layer get aload pop
+    /LineWidth exch def
+    /Pfreq exch def
+    aload pop
+    /FillPattern exch def
+    /bpside exch def
+    /bwidth exch def
+    /freq 300 bpside div Pfreq div Bfreq div def
+    % bpside ==
+    % bwidth ==
+    % freq   ==
+    % FillPattern ==
+} def
+
+% X1 Y1 X2 Y2 ArrowType DrawArrow
+% ArrowType has meaning as defined in dali/comment.h
+/DrawArrow {
+    /ArrowType exch def
+    /Y2 exch def
+    /X2 exch def
+    /Y1 exch def
+    /X1 exch def
+    newpath
+    X1 Y1 X2 Y2 Tailwd Tipwd Tipwd 2 mul ArrowType arrow
+    fill
+} def
+
+%%Order:    ni nb nx nd np nm nc ng
+%%Restroke: ni nb nx nd np nm nc ng
+
+/Style 20 dict def
+%%    mask   pattern    pscale linewidth
+Style (np) [ dots25     1.0    0 ] put
+Style (nd) [ dots12     1.0    0 ] put
+Style (nm) [ dots50     1.0    0 ] put
+Style (ni) [ dots6      1.0    0 ] put
+Style (nb) [ dots6      1.0    1 ] put
+Style (nx) [ white      1.0    1 ] put
+Style (ng) [ white      1.0    0 ] put
+Style (nc) [ black      1.0    0 ] put

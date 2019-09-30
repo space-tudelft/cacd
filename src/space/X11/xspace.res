@@ -1,0 +1,1 @@
+Xspace*.font: fixed

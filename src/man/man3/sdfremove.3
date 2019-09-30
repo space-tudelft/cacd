@@ -1,0 +1,38 @@
+.ll 77
+.hy
+.TH SDFREMOVE 3SDF "THE SEADIF PROGRAMMERS MANUAL"
+.SH NAME
+sdfremovelib, sdfremovefun, sdfremovecir, sdfremovelay - functions that remove an object from the seadif library
+.SH SYNOPSIS
+ #include <sealib.h>
+
+ public int sdfremovelib(STRING libname)
+
+ public int sdfremovefun(STRING funname, STRING libname)
+
+ public int sdfremovecir(STRING cirname, STRING funname,
+                         STRING libname)
+
+ public int sdfremovelay(STRING layname, STRING cirname,
+                         STRING funname, STRING libname)
+
+.SH DESCRIPTION
+These functions remove the named object from the seadf database.
+The removal only takes place when
+.I sdfclose (3SDF)
+is called.
+Until that time,
+.I sdfremove
+does not prevent the programmer from accessing a cell that has been "removed".
+.SH "RETURN VALUE"
+The functions return TRUE for success and NIL for failure.
+.SH WARNING
+As usual, the argument strings of these functions must be canonic, see
+.I cs (3SDF).
+.SH "AUTHOR"
+Paul Stravers, Delft University of Technology.
+
+.SH "SEE ALSO"
+sealib(3SDF), sdfexists(3SDF), sdfread(3SDF), sdfwrite(3SDF), sdfopen(3SDF),
+sdfclose(3SDF), sdfattachlib(3SDF), cs(3SDF), memman(3SDF), seadif(4SDF),
+sdfimage(4SDF).

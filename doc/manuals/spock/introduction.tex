@@ -1,0 +1,58 @@
+%% Introduction
+%%
+% Onderwerp : Ontwikkeling van een programma waarmee de technologie bestanden van SPACE
+%             op een snelle manier gemaakt kunnen worden.
+%
+%
+% Hoofdvraag: Wat zijn de belangrijkste problemen bij de ontwikkeling en hoe zijn deze opgelost?
+%
+% Achtergrondvragen:
+%   - Wat is de omgeving waarin het programma is ontwikkeld?
+%   - Welke ontwerpmethodes zijn toegepast?
+%   - Waarom helpt dit programma bij de ontwikkeling van technologie bestanden? (Waarom optimaal)
+%  
+% Kernvragen:
+%   - technische haalbaarheid
+%   - flexibiliteit
+%   - betrouwbaarheid
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Introduction}
+\label{chap:introduction}
+
+A layout-to-circuit extractor like SPACE\footnote{\emph{SPACE} is the 
+layout--to--circuit extractor developed at the Circuits and Systems group of 
+the Electrical Engineering faculty. SPACE has been quite successful so far. It 
+is used by several companies and universities, including Agilent (Hewlett 
+Packard) and Level One (Intel).}  must (of course) be able to handle all kinds 
+of processes. In SPACE, each of these processes is described by a set of 
+\emph{technology files}. The contents of these files vary from simple layer 
+specification to complex capacitance tables.
+
+Until now, the technology files were maintained by hand. This means that for 
+each process all the technology files had to be entered manually, a 
+time-consuming and error-prone task. Also, the user must be familiar with the 
+file format of each of the technology files, which makes process entry and 
+maintenance a specialized task.
+
+\emph{SPOCK} is to alleviate the problems described above by presenting the 
+user with a graphical user interface in which the required data can be entered.
+
+\bigskip \noindent
+The main goal of this thesis is to identify the problems encountered during 
+the design and implementation of SPOCK and to describe the solutions that were 
+used to solve these problems.
+
+\bigskip \noindent
+Chapter \ref{chap:demands} presents the demanded functionality of the 
+application as well as some imposed constraints. Chapter \ref{chap:design} 
+discusses and explains the final design. The user interface plays an important 
+role in this application. Some standard and custom user interface elements are 
+therefore presented in Chapter \ref{chap:uidesign}. Chapter 
+\ref{chap:language} describes the configuration file language. As will become 
+clear later, the configuration file describes the technology files supported 
+by the application.
+%Chapter \ref{chap:environment}) describes the tools used during development. Some 
+%comments on the testing and debugging process will be given in Chapter 
+%\ref{chap:testing}. 
+The final chapter will contain some concluding remarks.

@@ -1,0 +1,213 @@
+.de OP
+\fB\\$1\fP\\fI\\$2\\fP\\$3
+..
+.TH HIGHLAY 1ICD "User Commands"
+.UC 4
+.SH NAME
+highlay - high-light the layout of conductors and/or devices
+.SH SYNOPSIS
+.B highlay
+[-npeoFvmidL -l mask -w width -c outcell]
+[-N \fIn1,n2...\fP -P \fIp1,p2...\fP -E \fIe1,e2...\fP]
+cell [namefile]
+.SH OPTIONS
+.TP
+.B -n
+Select nets.
+.TP
+.B -p
+Select ports.
+.TP
+.B -e
+Select devices (fets and bipolar transistors).
+.TP
+.B -L
+High-light with the conductor masks
+(default: all original masks
+that are present at that position).
+.TP
+.B "-l \fImask\fP"
+Use specified mask for high-lighting (default: all original masks
+that are present at that position).
+.TP
+.B "-w \fIwidth\fP"
+The width of an area with which a selected conductor
+area should be extended (can only be used in
+combination with the option -l, default is 0).
+.TP
+.B "-c \fIoutcell\fP"
+Name of output cell (default: HIGH_OUT).
+.TP
+.B -o
+Do not include the original cell as a sub-cell.
+.TP
+.B -F
+Include the original cell at the same level.
+.TP
+.B -v
+Verbose mode. Print the nets, ports and devices that are selected.
+.PP
+The following options are only appropriate when using match results
+(no namefile is specified).
+.TP
+.B -m
+Select matching items.
+.TP
+.B -i
+Select inconclusive items.
+.TP
+.B -d
+Select deficient items.
+.TP
+.B "-N \fIn1,n2...\fP"
+Select the nets that are part of groups \fIn1,n2...\fP.
+.TP
+.B "-P \fIp1,p2...\fP"
+Select the ports that are part of groups \fIp1,p2...\fP.
+.TP
+.B "-E \fIe1,e2...\fP"
+Select the devices that are part of groups \fIe1,e2...\fP.
+.SH DESCRIPTION
+.I Highlay(1ICD)
+is a program for high-lighting one or more (extracted) conductors
+and/or devices in a layout-editor/viewer.
+In order to use
+.I highlay
+for a particular cell, first run the layout-to-circuit extractor
+.I space(1ICD)
+for this cell using the option
+.OP -x "" .
+.PP
+The conductors (nets/ports) and devices that are high-lighted
+can be specified in two different ways:
+(1) they are specified in a namefile, or
+(2) they are selected from the output of the circuit comparison
+program
+.I match(1ICD).
+.PP
+When a namefile is specified,
+the names of the nets, ports and/or devices
+that are high-lighted are read from this file.
+The names must be separated by tabs, spaces and/or newline characters.
+For the devices, the database names must be used.
+These are the names that are obtained when
+.I xsls(1ICD)
+or
+.I xspice(ICD)
+is used with the option
+.OP -d "" ,
+but without the prefix character.
+Nets, ports and/or devices are selected for high-lighting according to
+the use of the options
+.OP -n "" ,
+.OP -p ""
+and/or
+.OP -e "" .
+.PP
+When no namefile is specified,
+.I highlay
+will read output of the program
+.I match
+for the specified cell.
+In that case, it will select nets, ports and/or devices
+according to the use of the options
+.OP -m "" ,
+.OP -i "" ,
+.OP -d "" ,
+.OP -n "" ,
+.OP -N "" ,
+.OP -p "" ,
+.OP -P "" ,
+.OP -e
+and/or
+.OP -E "" .
+A net, port or device is high-lighted if and only if it is selected by one
+of the options
+.OP -m "" ,
+.OP -i ""
+or
+.OP -d ""
+and by one of the options
+.OP -n "" ,
+.OP -N "" ,
+.OP -p "" ,
+.OP -P "" ,
+.OP -e ""
+or
+.OP -E "" .
+In order to obtain correct input for
+.I highlay
+from
+.I match,
+the latter program should be run using the option
+.OP -edif "" .
+.PP
+.I Highlay
+will generate
+a new cell that contains (default)
+the high-lighted parts of the specified cell,
+plus a copy of the specified cell as a sub-cell.
+The name of the new cell that is generated is (default) HIGH_OUT.
+This name can be changed by using the option
+.OP -c "" .
+The nets, ports and/or devices that are selected
+for high-lighting are (default) displayed in their original mask colors.
+An alternative mask for high-lighting can be specified by using
+the option
+.OP -l "" .
+.SH NOTE
+Note that names that are printed in spice descriptions as
+in_1_ in_2_, might be known in the layout database - and must
+therefore be referred to in the namefile of
+.I highlay
+- as in[1] in[2].
+.SH EXAMPLE
+An example of a namefile "\fClatch.hil\fP" for
+.I highlay
+is as follows:
+.nf
+.if n .sp 1
+.if t .sp 0.5
+vdd
+a1
+a2
+_T2
+.if n .sp 1
+.if t .sp 0.5
+.fi
+This namefile may be used to obtain a cell HIGH_OUT in which
+the nets vdd, a1 and a2 and the device _T1
+of cell latch are high-lighted, as follows.
+.nf
+.if n .sp 1
+.if t .sp 0.5
+$ highlay -n -e latch latch.hil
+.fi
+.SH EXAMPLE2
+Name wildcards can also be used in the namefile.
+For example to select all names:
+.nf
+.if n .sp 1
+.if t .sp 0.5
+*
+.if n .sp 1
+.if t .sp 0.5
+For example to select names "grp1" to "grp12":
+.if n .sp 1
+.if t .sp 0.5
+grp*
+.if n .sp 1
+.if t .sp 0.5
+For example to select only names "grp11" and "grp12":
+.if n .sp 1
+.if t .sp 0.5
+grp??
+.if n .sp 1
+.if t .sp 0.5
+.fi
+Note that only one '*' may be used in a name.
+Characters behind the '*' are not supported.
+.AU "A.J. van Genderen"
+.SH SEE ALSO
+.I match(1ICD),
+.I space(1ICD).

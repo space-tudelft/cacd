@@ -1,0 +1,200 @@
+.TH CELL.RES 4ICD "File Formats"
+.UC 4
+.SH NAME
+\fIcell\fP.res - file for descriptions of logic signals
+.SH DESCRIPTION
+The file \fIcell\fP.res contains descriptions of logic signals
+as a function of time.
+Programs that write this file are for example
+.I sls
+and
+.I simeye.
+Programs that read this file are for example
+.I sls
+and
+.I simeye.
+.SH FORMAT
+First the scale factor for the time values is printed.
+Each time value in the file
+has to be multiplied with this factor in order to obtain
+the real time value.
+.PP
+Next, on the same line, the signals names are printed.
+Each signal is enclosed between parentheses.
+E.g. ( signame ).
+When a signal
+name has an array specification, the name is
+preceded by a left parenthesis and closed by a right parenthesis,
+while the array specification directly follows the signal name.
+For example:
+.sp
+.nf
+( (in (0 6)) )     denoting  in[0..6]
+( (out 5 (0 7)) )  denoting  out[5,0..7]
+.fi
+.sp
+When a signal name is preceded
+by one or more instance names,
+the instance names are printed in the same format
+and precede the signal name.
+.sp
+E.g.
+.nf
+( (adder 3) in )  denoting  adder[3].in
+.fi
+.sp
+The end of the list of signal names is denoted by an end of line
+character.
+Furthermore, in this part of the file
+space characters are optional between all tokens,
+while they should always be present
+after a signal name and between
+two integers.
+.PP
+Next, the signal values are listed.
+For the different time values on which signals
+change, the values of all signals
+are given.
+Each such a specification
+occurs on one line, which has a fixed length.
+First 15 character positions are reserved for
+printing the time value.
+The time value should be an integer value
+and it should be printed right adjusted.
+Space characters should be used to precede the integer value
+and to complete the 15 character positions.
+Directly following the time value,
+the signal values are printed with values 'h' for I, 'l'
+for O, 'x' for undefined, and '.' for previous value.
+No spaces should separate these items and they
+should be followed by an end of line character.
+.PP
+Between two different signal value specifications,
+the signal is assumed to have
+the value that was given with the signal specification
+with the smallest time.
+The first signal value specification should be for t=0
+and there may be more than one value specification for the same
+time.
+The signal descriptions are valid until
+the time of the last value specification.
+.SH EXAMPLES
+The following .res file is the result of an sls
+simulation at level 1.
+.nf
+
+1.000000e+000  ( vdd ) ( vss ) ( phi1 ) ( phi2 ) ( in ) ( out )
+              0hlhlhx
+              1hllhhh
+              2hlhlhh
+              3hllhhh
+              4hlhllh
+              5hllhll
+              6hlhlll
+              7hllhll
+              8hlhlhl
+              9hllhhh
+             10hlhlhh
+.fi
+The corresponding .out file is listed below.
+.nf
+.L{
+
+======================================================
+                         S L S
+                      version: 3.0
+          S I M U L A T I O N   R E S U L T S
+======================================================
+ time         | v v p p i o
+ in 1e+00 sec | d s h h n u
+              | d s i i   t
+              |     1 2
+======================================================
+            0 | 1 0 1 0 1 x
+            1 | 1 0 0 1 1 1
+            2 | 1 0 1 0 1 1
+            3 | 1 0 0 1 1 1
+            4 | 1 0 1 0 0 1
+            5 | 1 0 0 1 0 0
+            6 | 1 0 1 0 0 0
+            7 | 1 0 0 1 0 0
+            8 | 1 0 1 0 1 0
+            9 | 1 0 0 1 1 1
+           10 | 1 0 1 0 1 1
+======================================================
+  network : latch                         nodes : 10
+======================================================
+
+.L}
+.fi
+The second .res file is the result of an sls
+simulation at level 3.
+.nf
+.L{
+
+1.000000e-011  ( phi1 ) ( phi2 ) ( in ) ( out ) ( (inv (1 3)) o )
+              0hlhxlhx
+           1000lhhxlhx
+           1167lhhhlhh
+           2000hlhhlhh
+           3000lhhhlhh
+           4000hllhlhh
+           4313hllhhhh
+           4357hllhhlh
+           5000lhlhhlh
+           5274lhllhll
+           6000hlllhll
+           7000lhllhll
+           8000hlhlhll
+           8078hlhllll
+           8245hlhllhl
+           9000lhhllhl
+           9167lhhhlhh
+          10000hlhhlhh
+
+.L}
+.fi
+The .out file that belongs to it is given below.
+.nf
+.L{
+
+======================================================
+                         S L S
+                      version: 3.0
+          S I M U L A T I O N   R E S U L T S
+======================================================
+ time         | p p i o i i i
+ in 1e-09 sec | h h n u n n n
+              | i i   t v v v
+              | 1 2     * * *
+              |         1 2 3
+              |         * * *
+              |         . . .
+              |         o o o
+======================================================
+         0.00 | 1 0 1 x 0 1 x
+        10.00 | 0 1 1 x 0 1 x
+        11.67 | 0 1 1 1 0 1 1
+        20.00 | 1 0 1 1 0 1 1
+        30.00 | 0 1 1 1 0 1 1
+        40.00 | 1 0 0 1 0 1 1
+        43.13 | 1 0 0 1 1 1 1
+        43.57 | 1 0 0 1 1 0 1
+        50.00 | 0 1 0 1 1 0 1
+        52.74 | 0 1 0 0 1 0 0
+        60.00 | 1 0 0 0 1 0 0
+        70.00 | 0 1 0 0 1 0 0
+        80.00 | 1 0 1 0 1 0 0
+        80.78 | 1 0 1 0 0 0 0
+        82.45 | 1 0 1 0 0 1 0
+        90.00 | 0 1 1 0 0 1 0
+        91.67 | 0 1 1 1 0 1 1
+       100.00 | 1 0 1 1 0 1 1
+======================================================
+  network : latch                         nodes : 10
+======================================================
+
+.L}
+.fi
+.SH SEE ALSO
+sls(1ICD), simeye(1ICD).

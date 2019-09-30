@@ -1,0 +1,171 @@
+\chapter{crand Example of Extraction/Switch-Level Simulation}
+\section{Introduction}
+\label{PEintro}
+In this example, we will be studying a random counter circuit.
+We will see how Space is used for circuit extraction.
+And how you can do a switch-level simulation of the circuit.
+\\[1 ex]
+The layout looks as follows, using the layout editor \io{dali} (see \manualpage{dali}):
+
+\begin{figure}[h]
+\centerline{\epsfig{figure=crand/crand.eps, width=15cm}}
+\end{figure}
+
+\section{Files}
+This tutorial is located in the directory \CACDTOP{demo/crand}.
+Initially, it contains the following files:
+\begin{filelist}
+\item[README] A file containing information about the demo.
+\item[crand.cmd] Command file for circuit simulation.
+\item[crand.gds] GDS2 file of the layout of the crand design.
+\item[script.sh] Batch file for running all commands of the demo in sequence.
+\end{filelist}
+
+\section{Running the Extractor}
+First, use the following command to change the current working directory '.' into a project directory:
+\small
+\begin{Verbatim}
+% mkpr -p scmos_n -l 0.2 .
+\end{Verbatim}
+\normalsize
+The command specifies the \io{scmos\_n} process from the technology library
+and a lambda (design unit) of $0.2 \mu m$.
+We use the mask names as defined in the \io{maskdata} file of the library.
+And we are using the default technology file \io{space.def.s}
+and parameter file \io{space.def.p} of the library.
+\small
+\begin{Verbatim}
+% cgi crand.gds
+\end{Verbatim}
+\normalsize
+Now, we can extract a circuit description for the layout of the \io{crand} cell, as follows:
+\small
+\begin{Verbatim}
+% space -vFc crand
+\end{Verbatim}
+\normalsize
+\small \begin{Verbatim}[frame=single]
+Version 5.3.1, compiled on Fri Feb 03 12:45:53 GMT 2006
+See http://www.space.tudelft.nl
+parameter file: $ICDPATH/share/lib/process/scmos_n/space.def.p
+technology file: $ICDPATH/share/lib/process/scmos_n/space.def.t
+preprocessing crand (phase 1 - flattening layout)
+preprocessing crand (phase 2 - removing overlap)
+extracting crand
+
+extraction statistics for layout crand:
+	capacitances        : 221
+	resistances         : 0
+	nodes               : 222
+	mos transistors     : 419
+	bipolar vertical    : 0
+	bipolar lateral     : 0
+	substrate nodes     : 0
+
+overall resource utilization:
+	memory allocation  : 0.287 Mbyte
+	user time          :         0.0
+	system time        :         0.0
+	real time          :         1.5   5%
+
+space: --- Finished ---
+\end{Verbatim}
+\normalsize
+You can show the resulting circuit with one of the circuit listing tools.
+For example, to list the circuit in a SLS description, use \io{xsls} (see \io{icdman}).
+\small
+\begin{Verbatim}
+% xsls crand
+\end{Verbatim}
+\normalsize
+The output is default going to "stdout", a part is shown below:
+\small \begin{Verbatim}[frame=single]
+   ...
+network crand (terminal out_7, out_6, out_5, out_4, out_3, out_2, out_1, out_0,
+               inpar_7, inpar_6, inpar_5, inpar_4, inpar_3, inpar_2, inpar_1,
+               inpar_0, serial, vss_lb, vss_lo, sc_l, nsc_l, vdd_lb, vdd_lo,
+               nphi1_l, phi1_l, nphi2_l, phi2_l, phi1_r, phi2_r, nphi2_r,
+               nphi1_r, vss_ro, vss_rb, vdd_rb, nsc_r, sc_r, vdd_ro)
+{
+    net {vdd_lo, vdd_ro};
+    net {phi1_l, phi1_r};
+    net {phi2_l, phi2_r};
+    net {nphi2_l, nphi2_r};
+    net {nphi1_l, nphi1_r};
+    net {sc_l, sc_r};
+    net {vdd_lb, vdd_rb};
+    net {nsc_l, nsc_r};
+    net {SUBSTR, vss_lb};
+    net {SUBSTR, vss_rb};
+    net {SUBSTR, vss_ro};
+    net {SUBSTR, vss_lo};
+    cap 2.8f (1, GND);
+    nenh w=4u l=1.2u (14, 1, 14);
+    cap 11.44f (2, GND);
+    penh w=6.8u l=1.2u (14, 2, 14);
+    cap 11.44f (3, GND);
+    penh w=6.8u l=1.2u (vdd_lb, 3, 12);
+    cap 2.8f (4, GND);
+    nenh w=4u l=1.2u (SUBSTR, 4, SUBSTR);
+    nenh w=4u l=1.2u (phi1_l, 13, 14);
+    penh w=6.8u l=1.2u (nphi1_l, 13, 14);
+    penh w=6.8u l=1.2u (serial, 12, vdd_lb);
+    nenh w=4u l=1.2u (serial, 5, SUBSTR);
+    nenh w=4u l=1.2u (phi2_l, 10, 13);
+    penh w=6.8u l=1.2u (nphi2_l, 10, 13);
+    penh w=6.8u l=1.2u (nsc_l, 12, vdd_lb);
+    cap 3.2f (5, GND);
+    nenh w=4u l=1.2u (nsc_l, 5, 14);
+    cap 72.16f (6, GND);
+    penh w=6.8u l=1.2u (vdd_lo, 6, 8);
+    cap 16f (7, GND);
+    nenh w=4u l=1.2u (SUBSTR, 7, 9);
+    nenh w=4u l=1.2u (10, 10, 10);
+    penh w=6.8u l=1.2u (10, 10, 10);
+    penh w=6.8u l=1.2u (inpar_0, 12, 14);
+    nenh w=4u l=1.2u (inpar_0, 11, 14);
+    nenh w=7.2u l=1.2u (inpar_0, SUBSTR, SUBSTR);
+    ...
+    ...
+}
+\end{Verbatim}
+\normalsize
+
+\section{Running the Switch-Level Simulation}
+For this simulation you are using the switch-level simulator \io{sls}.
+See the "SLS: Switch-Level Simulator User's Manual" and for the manual page \manualpage{sls}.
+This simulator is started from the simulation GUI \io{simeye} and
+the results are shown in the output window (see \manualpage{simeye}).
+\\[1 ex]
+First, start the simulation GUI \io{simeye}.
+\small
+\begin{Verbatim}
+% simeye
+\end{Verbatim}
+\normalsize
+Second, prepare the simulation:
+\\[1 ex]
+Click on the "Simulate" menu and choice the "Prepare" item.
+Select in the "Circuit:" field cell name "crand" and
+in the "Stimuli:" field file name "crand.cmd" (click on it).
+To inspect or edit the input signals, click on the "Edit" button.
+\\[1 ex]
+Third, start the switch-level simulation:
+\\[1 ex]
+Go back to the "Simulate" menu and choice the "Prepare" dialog item again:
+
+\begin{figure}[h]
+\centerline{\epsfig{figure=crand/dialog.eps, width=9cm}}
+\end{figure}
+
+\noindent
+In the dialog window, choice simulation "Type: sls-timing" and for "Read: Analog".
+Now, start the switch-level timing simulation by clicking on the "Run" button and wait for simulation results.
+Below, you see the output waveforms.
+
+\begin{figure}[h]
+\centerline{\epsfig{figure=crand/simeye.eps, width=14cm}}
+\end{figure}
+
+Note, to exit \io{simeye},
+go to the "File" menu and click on "Exit" and "Yes".

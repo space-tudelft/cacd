@@ -1,0 +1,68 @@
+.TH SPACE 4ICD "File Formats"
+.UC 4
+.SH NAME
+space - technology files for the space layout to circuit extractor
+.SH DESCRIPTION
+The
+.I space
+(1ICD)
+layout to circuit extractor is technology independent.
+At start up,
+it reads a tabular element definition file
+specifying
+how the different elements like conductors and transistors
+can be recognized from the different mask combinations,
+and which values should be used for, for example, conductor
+capacitivity and conductor resistivity.
+This tabular element file is constructed
+from a user-defined element definition file by the
+space technology compiler \fItecc\fP(1ICD).
+For a description of the format of such a file,
+see \fItecc\fP(1ICD).
+.PP
+The default element definition file is
+\fIspace.def.t\fP in the appropriate directory of the ICD process library.
+However,
+there can be several other element definition files for a particular
+process.
+For example,
+the file \fIspace.max.t\fP may
+contain an element description with worst-case capacitance
+and resistance values.
+This file can be read rather than the standard file by
+specifying \fI-e max\fP while invoking space.
+The user can also prepare his own element definition file
+and specify the name of that file with the \fI-E\fP option of space.
+For preparation of a customized element definition file,
+it is perhaps best to modify a copy of the source of one of the ``official''
+element definition tables.
+These sources are also in the ICD process library.
+.PP
+Additionaly,
+some aspects of
+.I space
+are under control of some parameters that
+are specified in a parameter file.
+This file contains some key-value pairs,
+one per line,
+adjusting some of the defaults of space.
+For a description of all settable parameters,
+see space (1ICD).
+.PP
+The default parameter file is
+\fIspace.def.p\fP in the appropriate directory of the ICD process library,
+but the user can choose other parameter files with the -p or -P options
+of space.
+.AU "A.J. van Genderen, N.P. van der Meijs"
+.SH FILES
+.TP
+\fCICDPATH/share/lib/process/\fIprocess\fP/space.def.t\fP
+default element definition file
+.TP
+\fCICDPATH/share/lib/process/\fIprocess\fP/space.def.s\fP
+source of default element definition file
+.TP
+\fCICDPATH/share/lib/process/\fIprocess\fP/space.def.p\fP
+default parameter file
+.SH SEE ALSO
+space (1ICD), tecc (1ICD)

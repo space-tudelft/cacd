@@ -1,0 +1,22 @@
+set terminal postscript color 10
+set output "ny9t_re_y12.eps"
+set xlabel "Frequency (Hz)"
+set logscale x
+set logscale y
+set key 3e10,1e-7
+set size 0.5,0.5
+set ylabel "Re(Y12) (S)"
+set pointsize 0.5 # size of points on curves
+plot \
+    "meas.dat" using 1:(abs($4)) title "measured" with linespoints 2 7, \
+    "ny9t_sub.dat" using 2:4 title "with substrate" with lines 1, \
+    "ny9t_nosub.dat" using 2:4 title "no substrate" with lines 3
+#
+set output "ny9t_im_y12.eps"
+set ylabel "Im(Y12) (S)"
+set yrange [1e-09:0.1]
+set key 3e10,2e-7
+plot \
+    "meas.dat" using 1:(abs($5)) title "measured" with linespoints 2 7, \
+    "ny9t_sub.dat" using 2:5 title "with substrate" with lines 1, \
+    "ny9t_nosub.dat" using 2:5 title "no substrate" with lines 3
