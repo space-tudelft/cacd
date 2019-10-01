@@ -52,11 +52,10 @@ If you are working in a "sh" environment, type:
 All tools are installed in "$ICDPATH/bin" and libraries in "$ICDPATH/lib".
 Some stuff is already installed in directory "$ICDPATH/share".
 
-Note that "share/demo", "share/doc", "share/lib/process", "share/man" and
-"share/tutorial" are already installed.
+Note that "share/demo", "share/doc" and "share/tutorial" are already installed.
 Directory "share" must be copied, if you choice to use another ICDPATH.
-Note that no sources of documents are distributed (only .pdf files).
-And that also no sources of "demo" and "tutorial" are distributed.
+Note that also the sources of most documents are distributed. You must go
+to directory "doc" if you want to remake them. See the "doc/README" file.
 
 Before starting "make", your Linux PC must have the following libraries:
 
